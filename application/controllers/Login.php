@@ -11,9 +11,14 @@ class Login extends CI_Controller {
 		$this->load->view('Login_view');
 	}
 	
-	public function verifica_login() {
+	public function encriptar($pass) {
+		return password_hash($pass, PASSWORD_DEFAULT);
+	}
+	
+	public function verificar() {
 		if ($this->input->post('Enviar')) {
-			if ($this->Usuario_model->Verificarusuario() == true) {
+			$cryptpass = encriptar($this->input->post('pass'));
+			if ($this->Usuario_model->Verificarusuario($cryptpass) == true) {
 				$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
 				$this->load->view('Principal_view');
 			} else {
