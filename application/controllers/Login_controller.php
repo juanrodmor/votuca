@@ -18,7 +18,7 @@ class Login extends CI_Controller {
 	public function verificar() {
 		if ($this->input->post('Enviar')) {
 			$cryptpass = encriptar($this->input->post('pass'));
-			if ($this->Usuario_model->Verificarusuario($cryptpass) == true) {
+			if ($this->Usuario_model->verificar($cryptpass) == true) {
 				$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
 				$this->load->view('Principal_view');
 			} else {
