@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_DEPRECATED);
 
-class Login extends CI_Controller {
+class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
