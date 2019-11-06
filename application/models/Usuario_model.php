@@ -6,8 +6,11 @@ class Usuario_model extends CI_Model {
 	}
 	
 	public function getPass($usuario) {
-		$consulta = $this->db->get_where('usuario', array('usuario' => $usuario));
-		return $consulta->result()->pass;
+		$this->db->select('pass');
+		$this->db->where(array('usuario' => $usuario));
+		return $this->db->get('usuarios');
+		/*$consulta = $this->db->get_where('usuarios', array('usuario' => $usuario));
+		return $consulta->result()->pass;*/
 	}
 	
 	/*public function verify_login() {
