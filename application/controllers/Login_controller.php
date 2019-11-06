@@ -17,13 +17,19 @@ class Login extends CI_Controller {
 	
 	public function verificar() {
 		if ($this->input->post('Enviar')) {
-			$cryptpass = encriptar($this->input->post('pass'));
-			if ($this->Usuario_model->verificar($cryptpass) == true) {
-				$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
-				$this->load->view('Principal_view');
-			} else {
-				$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
-				$this->load->view('Login_view', $data);
+			$this->form_validation->set_rules('usuario', 'Usuario', 'required|trim');
+			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
+			$this->form_validation->set_message('required', 'El campo %s es obligatorio.');
+			
+			if ($this->form_validation->run() == true) {
+				$cryptpass = encriptar($this->input->post('pass'));
+				if ($this->Usuario_model->getPass($this->input->post('usuario')) == $cryptpass) {
+					$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
+					$this->load->view('Principal_view');
+				} else {
+					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
+					$this->load->view('Login_view', $data);
+				}
 			}
 		} else $this->load->view('Login_view');
 	}
