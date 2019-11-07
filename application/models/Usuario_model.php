@@ -3,14 +3,17 @@
 class Usuario_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
+		$this->load->database();
 	}
 	
 	public function getPass($usuario) {
-		$this->db->select('pass');
-		$this->db->where(array('usuario' => $usuario));
-		return $this->db->get('usuarios');
-		/*$consulta = $this->db->get_where('usuarios', array('usuario' => $usuario));
-		return $consulta->result()->pass;*/
+		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
+		return $consulta->row()->Pass;
+	}
+	
+	public function userExists($usuario) {
+		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
+		return ($consulta->num_rows() == 1);
 	}
 	
 	/*public function verify_login() {

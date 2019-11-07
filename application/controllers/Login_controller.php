@@ -5,7 +5,6 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
-		$this->load->library('form_validation');
 	}
 	
 	public function index() {
@@ -22,9 +21,9 @@ class Login_controller extends CI_Controller {
 			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
 			$this->form_validation->set_message('required', 'El campo %s es obligatorio.');
 			
-			if ($this->form_validation->run() == true) {
-				$cryptpass = $this->encriptar($this->input->post('pass'));
-				if ($this->Usuario_model->getPass($this->input->post('usuario')) == $cryptpass) {
+			if ($this->form_validation->run() != false) {
+				if ($this->Usuario_model->userExists($this->input->post('usuario'))
+					&& password_verify($this->input->post('pass'), $this->Usuario_model->getPass($this->input->post('usuario')))) {
 					$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
 					$this->load->view('Principal_view');
 				} else {
