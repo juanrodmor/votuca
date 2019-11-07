@@ -66,6 +66,9 @@
     <?php if(isset($mensaje)): ?>
           <h2><?= $mensaje ?></h2>
       <?php endif; ?>
+      <h3><?= validation_errors();?></h3>
+
+
 
   <!-- FORMULARIO DE VOTACION -->
     <section>
@@ -151,6 +154,7 @@
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+
 
   </body>
 </html>

@@ -28,6 +28,29 @@ class Administracion extends CI_Controller{
     }
   }
 
+  function validarFechaInicio(){
+    $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
+    $hoy = date('Y-m-d');
+    if($fechaInicio < $hoy){
+        $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');
+        return FALSE;
+    }
+    else{
+      return TRUE;
+    }
+  }
+  function validarFechaFinal(){
+    $fechaFinal = date('Y-m-d',strtotime($this->input->post('fecha_final')));
+    $hoy = date('Y-m-d');
+    if($fechaFinal < $hoy){
+        $this->form_validation->set_message('validarFechaFinal','Introduzca bien la fecha %s');
+        return FALSE;
+    }
+    else{
+      return TRUE;
+    }
+  }
+
   function crearVotacion()
   {
     //$this->load->view('prueba');
@@ -39,17 +62,17 @@ class Administracion extends CI_Controller{
 				$this->form_validation->set_rules('descripcion','Descripcion','required');
 				$this->form_validation->set_rules('inicio','Fecha Inicio','required');
         $this->form_validation->set_rules('final','Fecha Final','required');
+        $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
+        $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
 
 				// MENSAJES DE ERROR.
-				//$this->form_validation->set_message('required','Introduzca bien los campos');
+				$this->form_validation->set_message('required','El campo %s es obligatorio');
 
         if($this->form_validation->run() == FALSE)
-        { // CORRECTO
-
-          // Conversion de fecha a un formato valido
+        {
+          $this->index(); // Mostrar mensajes de error en la vista
           $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d',strtotime($this->input->post('fecha_final')));
-
           $votacion = new Votacion(
             //$this->input->post('id'),
             $this->input->post('titulo'),
@@ -58,10 +81,11 @@ class Administracion extends CI_Controller{
             $fechaFin,
             false,
             false
-
           );
-          $this->insertarVotacion($votacion);
+          //$this->insertarVotacion($votacion);
 				}
+
+
       }
     }
   }
