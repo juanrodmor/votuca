@@ -1,16 +1,19 @@
 <?php
 
 class Usuario_model extends CI_Model {
+	//Nos aseguramos que cargue la base de datos.
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
 	}
 	
+	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
 		return $consulta->row()->Pass;
 	}
 	
+	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
 		return ($consulta->num_rows() == 1);
