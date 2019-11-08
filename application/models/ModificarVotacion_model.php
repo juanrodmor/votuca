@@ -1,0 +1,13 @@
+<?php
+
+class ModificarVotacion_model extends CI_Model
+{
+	function getVotaciones()
+	{
+		$query = $this->db->get('votaciones');
+  	//return $query->result();
+		return $query->result_array();
+	}
+}
+
+?>

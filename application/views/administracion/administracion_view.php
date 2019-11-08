@@ -30,8 +30,8 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">Crear</a>
-              <a class="dropdown-item" href="#">Modificar</a>
+              <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
+              <a class="dropdown-item" href="<?= base_url().'modificarVotacion/'?>">Modificar</a>
               <a class="dropdown-item" href="#">Eliminar</a>
             </div>
           </li>
@@ -62,87 +62,35 @@
       </div>
     </main><!-- /.container -->
 
-  <!-- IMPRIME SI SE HA GUARDADO BIEN -->
-    <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
-      <?php endif; ?>
-      <h3><?= validation_errors();?></h3>
-
-
-
-  <!-- FORMULARIO DE VOTACION -->
     <section>
-    <?=form_open(base_url().'administracion/crearVotacion',
-    		    array('name'=>'crearVotacion'));?>
-            <!-- ESPERAR A SABER CÓMO COMPROBAR QUE UNA VOTACION NO EXISTE YA -->
-            <!--<div class="form-group">
-              <?php $atributos = array(
-                  'name' => 'id',
-                  'class' => 'form-control',
-                  'id' => 'id',
-                  'required' => true,
-              ); ?>
-              <?= form_label('ID','id'); ?>
-              <?= form_input($atributos) ?> <br/><br/>
-            </div>-->
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Titulo</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Fecha Inicio</th>
+          <th scope="col">Fecha Final</th>
+        </tr>
+      </thead>
+    <tbody>
 
-             <div class="form-group">
-               <?php $atributos = array(
-                   'name' => 'titulo',
-                   'class' => 'form-control',
-                   'id' => 'titulo',
-                   'required' => true,
-               ); ?>
-               <?= form_label('Titulo','titulo'); ?>
-               <!-- Igual a: <label for="titulo">Titulo</label> -->
-               <?= form_input($atributos) ?> <br/><br/>
-             </div>
-
-             <div class="form-group">
-               <?php $atributos = array(
-                   'name' => 'descripcion',
-                   'class' => 'form-control',
-                   'id' => 'descripcion',
-                   'required' => true,
-               ); ?>
-               <?= form_label('Descripcion','descripcion'); ?>
-               <?= form_textarea($atributos) ?> <br/><br/>
-             </div>
-
-        <div class="form-group">
-          <?php $atributos = array(
-              'name' => 'fecha_inicio',
-              'class' => 'form-control',
-              'data-provide' => 'datepicker',
-              'id' => 'fecha_inicio',
-              'required' => true
-
-          ); ?>
-          <?= form_label('Fecha Inicio','fecha_inicio'); ?>
-          <?= form_input($atributos) ?> <br/><br/>
-        </div>
-
-        <div class="form-group">
-          <?php $atributos = array(
-              'name' => 'fecha_final',
-              'class' => 'form-control',
-              'data-provide' => 'datepicker',
-              'id' => 'fecha_final',
-              'required' => true
-          ); ?>
-          <?= form_label('Fecha Final','fecha_final'); ?>
-          <?= form_input($atributos) ?> <br/><br/>
-        </div>
-
-        <?php $atributos = array(
-            'name' => 'submit_reg',
-            'class' => 'btn btn-primary',
-            'type' => 'submit',
-            'value' => 'Enviar'
-        ); ?>
-        <?= form_submit($atributos);?>
-      <?= form_close(); ?>
+      <?php foreach($votaciones as $votacion){?>
+      <tr>
+        <th scope="row">
+          <a href="<?= base_url().'/modificarVotacion'?>">
+          <?php echo $votacion['id'];?>
+        </th>
+        <td><?php echo $votacion['titulo']?></td>
+        <td><?php echo $votacion['descripcion'];?></td>
+        <td><?php echo $votacion['fechaInicio'];?></td>
+        <td><?php echo $votacion['fechaFinal'];?></td>
+      </tr>
+    <?php }?>
+    </tbody>
+    </table>
     </section>
+
 
 
     <!-- Bootstrap core JavaScript
