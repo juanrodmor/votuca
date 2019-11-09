@@ -6,6 +6,7 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
+		include $_SERVER['DOCUMENT_ROOT'] . '/pinf/classes/Usuario.php';
 	}
 	
 	//Por defecto carga la vista de login.

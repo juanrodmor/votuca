@@ -10,7 +10,7 @@ class Usuario_model extends CI_Model {
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
-		return $consulta->row()->Pass;
+		return $consulta->row()->Password;
 	}
 	
 	//Comprueba si el usuario recibido existe en la base de datos.
