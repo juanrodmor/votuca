@@ -9,14 +9,21 @@ class Usuario_model extends CI_Model {
 	
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
-		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return $consulta->row()->Pass;
 	}
 	
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
-		$consulta = $this->db->get_where('usuario', array('Id' => $usuario));
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return ($consulta->num_rows() == 1);
+	}
+	
+	//Devuelve el rol de un usuario específico.
+	public function getRol($usuario) {
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		$consulta2 = $this->db->get_where('rol', array('Id' => $consulta->row()->Id_Rol));
+		return $consulta2->row()->Nombre;
 	}
 	
 	/*public function verify_login() {

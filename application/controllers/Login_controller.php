@@ -20,17 +20,19 @@ class Login_controller extends CI_Controller {
 	
 	//Función de verificación de los datos introducidos en el login.
 	public function verificar() {
+		//include('../../classes/Usuario.php');	//Esto no funciona
 		if ($this->input->post('Enviar')) {		//Si se accede mediante envío de datos y no por URL...
-			$this->form_validation->set_rules('usuario', 'username', 'required|trim');
-			$this->form_validation->set_rules('pass', 'pass', 'required|trim');
-			$this->form_validation->set_message('required', 'El campo %s es obligatorio.');
+			$this->form_validation->set_rules('usuario', 'Nombre de usuario', 'required|trim');
+			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
+			$this->form_validation->set_message('required', 'El campo \'%s\' es obligatorio.');
 			
 			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
 				$usuario = new Usuario($this->input->post('usuario'), $this->input->post('pass'));
 				if ($this->Usuario_model->userExists($usuario->getId())	//Si existe el usuario y coincide la pass...
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
-					$this->session->set_userdata(array('usuario' => $this->input->post('usuario')));
-					$this->load->view('Principal_view');
+					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
+					if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector_view');
+					else $this->load->view('Admin_view');
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
 					$this->load->view('Login_view', $data);

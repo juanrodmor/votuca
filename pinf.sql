@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 09-11-2019 a las 10:21:38
+-- Tiempo de generación: 09-11-2019 a las 12:46:20
 -- Versión del servidor: 5.7.26
 -- Versión de PHP: 7.2.18
 
@@ -30,10 +30,18 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `rol`;
 CREATE TABLE IF NOT EXISTS `rol` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`Id`, `Nombre`) VALUES
+(1, 'Elector'),
+(2, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -50,7 +58,15 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UNIQUE` (`NombreUsuario`),
   KEY `Id_Rol` (`Id_Rol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
+(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(2, 2, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG');
 
 -- --------------------------------------------------------
 
@@ -77,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `usuario_votación` (
 
 DROP TABLE IF EXISTS `votación`;
 CREATE TABLE IF NOT EXISTS `votación` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Título` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `Descripción` varchar(1024) COLLATE utf8_spanish_ci NOT NULL,
   `FechaInicio` date NOT NULL,
@@ -94,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `votación` (
 
 DROP TABLE IF EXISTS `voto`;
 CREATE TABLE IF NOT EXISTS `voto` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
