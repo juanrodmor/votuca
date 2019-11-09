@@ -10,8 +10,9 @@
 .container
 {
     margin: 5%;
-    /**padding-left: 15px;
-    padding-right: 15px;**/
+    padding-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc
 }
 
 .center {
@@ -26,4 +27,12 @@
     display: block;
     margin-right: auto;
     margin-left: auto;
+}
+
+div #container-data
+{
+    width: 50% ; 
+    display: block ;
+    align-content: center;
+    margin-left: 25%;
 }
