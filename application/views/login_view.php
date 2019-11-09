@@ -3,10 +3,11 @@
 
 <head>
     <title> Login - VotUCA </title>
+    <meta charset="UTF-8">
 
-    <link hred="<?php echo base_url('assets/css/main.css')?>" rel="stylesheet" type="text/css">
     <style> @import url(<?php echo base_url('assets/css/main.css')?>); </style>
-    <!-- Bootstrap core CSS -->
+
+    <!-- Bootstrap and JQUERY resources -->
     <link href="<?php echo base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +26,7 @@
         </div>       
             <br><br>
 
+            <!--Display error messages-->
             <div id="container-data">
 
                 <?php 
@@ -38,6 +40,7 @@
                     }
                 ?>
                 
+                <!--Display form-->
                 <form id="login-form" class="form-horizontal" action="<?php echo base_url('login_controller/verificar')?>" method="post">
                     <div class="form-group">
                         <label for="username">Nombre de usuario: </label><input name="usuario" type="text" class="form-control" id="u">
