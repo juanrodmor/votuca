@@ -9,7 +9,7 @@ class Administracion_model extends CI_Model{
   {
     //$hoy = date('Y-m-d');
     $query = $this->db->query("SELECT * from votacion WHERE isDelected = '0';");
-    return $query->result_array();
+    return $query->result();
 
   }
   public function eliminarVotacion($id)

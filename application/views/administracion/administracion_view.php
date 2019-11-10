@@ -81,25 +81,25 @@
       <?php foreach($votaciones as $votacion){?>
         <tr>
         <?php
-          if ($votacion['FechaFinal'] <= date('Y-m-d'))
+          if ($votacion->FechaFinal <= date('Y-m-d'))
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
 
         ?>
-        <a href="<?= base_url().'administracion/prueba/'.$votacion['Id']?>">
-         <?php echo $votacion['Id'];?>
+        <a href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>">
+         <?php echo $votacion->Id;?>
         </th>
-        <td><?php echo $votacion['Titulo']?></td>
-        <td><?php echo $votacion['Descripcion'];?></td>
-        <td><?php echo $votacion['FechaInicio'];?></td>
-        <td><?php echo $votacion['FechaFinal'];?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion['Id']?>" role="button">Eliminar</a></td>
+        <td><?php echo $votacion->Titulo?></td>
+        <td><?php echo $votacion->Descripcion;?></td>
+        <td><?php echo $votacion->FechaInicio;?></td>
+        <td><?php echo $votacion->FechaFinal;?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>" role="button">Eliminar</a></td>
       </tr>
     <?php }?>
     </tbody>
-    </table>
+    </table>    
     </div>
     </section>
 
