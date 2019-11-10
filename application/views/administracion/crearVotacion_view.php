@@ -53,12 +53,12 @@
       </div>
     </nav>
 
-
+      <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-        <div class="container">
+
             <center><h1>Crear Votacion</h1></center>
-        </div>
+
       </div>
     </main><!-- /.container -->
 
@@ -136,7 +136,7 @@
               'name' => 'fecha_final',
               'class' => 'form-control',
               'placeholder' =>'Selecciona una fecha de finalizacion',
-              'data-provide' => 'datepicker',                         
+              'data-provide' => 'datepicker',
               'id' => 'fecha_final',
               'required' => true,
               'value' => set_value('fecha_final')
@@ -154,7 +154,7 @@
         <?= form_submit($atributos);?>
       <?= form_close(); ?>
     </section>
-
+</div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

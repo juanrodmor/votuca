@@ -71,9 +71,13 @@ class Administracion extends CI_Controller{
     }
   }
 
-  public function prueba(){
-    echo "Has pulsado en prueba";
-    $this->load->view('administracion/crearVotacion_view');
+  public function prueba($id){
+    $eliminada = $this->administracion_model->eliminarVotacion($id);
+    if($eliminada){
+        
+      $this->index();
+
+    }
   }
 
   /*******************************************/

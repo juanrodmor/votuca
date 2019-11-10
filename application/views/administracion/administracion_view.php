@@ -14,7 +14,7 @@
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="#">VotUCA</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -63,6 +63,8 @@
     </main><!-- /.container -->
 
     <section>
+    <?=form_open(base_url().'administracion/prueba');?>
+    <div class="container">
     <table class="table table-hover">
       <thead>
         <tr>
@@ -71,24 +73,34 @@
           <th scope="col">Descripcion</th>
           <th scope="col">Fecha Inicio</th>
           <th scope="col">Fecha Final</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
     <tbody>
-
       <?php foreach($votaciones as $votacion){?>
-      <tr>
-        <th scope="row">
-          <a href="<?= base_url().'/modificarVotacion'?>">
-          <?php echo $votacion['id'];?>
+        <tr>
+        <?php
+          if ($votacion['FechaFinal'] <= date('Y-m-d'))
+          {
+             echo "<th scope=row class=table-danger>";  // Ha finalizado
+          }
+          else{echo "<th scope=row class=table-success>";}
+
+        ?>
+        <a href="<?= base_url().'administracion/prueba/'.$votacion['Id']?>">
+         <?php echo $votacion['Id'];?>
         </th>
-        <td><?php echo $votacion['titulo']?></td>
-        <td><?php echo $votacion['descripcion'];?></td>
-        <td><?php echo $votacion['fechaInicio'];?></td>
-        <td><?php echo $votacion['fechaFinal'];?></td>
+        <td><?php echo $votacion['Titulo']?></td>
+        <td><?php echo $votacion['Descripcion'];?></td>
+        <td><?php echo $votacion['FechaInicio'];?></td>
+        <td><?php echo $votacion['FechaFinal'];?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion['Id']?>" role="button">Eliminar</a></td>
       </tr>
     <?php }?>
     </tbody>
     </table>
+    </div>
     </section>
 
 
