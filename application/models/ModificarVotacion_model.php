@@ -6,7 +6,7 @@ class ModificarVotacion_model extends CI_Model
 	{
 		$query = $this->db->get('votacion');
   	//return $query->result();
-		return $query->result_array();
+		return $query->result();
 	}
 }
 

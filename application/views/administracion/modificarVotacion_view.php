@@ -74,19 +74,19 @@
             <?php foreach($VOTACIONES as $votacion){?>
                 <tr>
                     <td>
-                        <?=$votacion['Id'];?>
+                        <?=$votacion->Id;?>
                     </td>
                     <td>
-                        <?=$votacion['Titulo'];?>
+                        <?=$votacion->Titulo;?>
                     </td>
                     <td>
-                        <?=$votacion['Descripcion'];?>
+                        <?=$votacion->Descripcion;?>
                     </td>
                     <td>
-                        <?=$votacion['FechaInicio'];?>
+                        <?=$votacion->FechaInicio;?>
                     </td>
                     <td>
-                        <?=$votacion['FechaFinal']?>
+                        <?=$votacion->FechaFinal?>
                     </td>
                 </tr>
                 <?php }?>
