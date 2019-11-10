@@ -1,0 +1,38 @@
+.navbar-brand {
+    padding: 0px;
+  }
+  .navbar-brand>img {
+    height: 100%;
+    padding: 0px;
+    width: 100%;
+  }
+
+.container
+{
+    margin: 5%;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+#button-form
+{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div #container-data
+{
+    width: 50% ; 
+    display: block ;
+    align-content: center;
+    margin-left: 25%;
+}
