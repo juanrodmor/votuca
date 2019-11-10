@@ -31,8 +31,6 @@
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
-              <a class="dropdown-item" href="<?= base_url().'modificarVotacion/'?>">Modificar</a>
-              <a class="dropdown-item" href="#">Eliminar</a>
             </div>
           </li>
           <li class="nav-item">
@@ -53,18 +51,15 @@
         </form>
       </div>
     </nav>
-
+  <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-        <div class="container">
             <center><h1>Administracion</h1></center>
-        </div>
       </div>
     </main><!-- /.container -->
 
-    <section>
+<div class = "container">
     <?=form_open(base_url().'administracion/prueba');?>
-    <div class="container">
     <table class="table table-hover">
       <thead>
         <tr>
@@ -78,6 +73,7 @@
         </tr>
       </thead>
     <tbody>
+
       <?php foreach($votaciones as $votacion){?>
         <tr>
         <?php
@@ -95,13 +91,19 @@
         <td><?php echo $votacion->Descripcion;?></td>
         <td><?php echo $votacion->FechaInicio;?></td>
         <td><?php echo $votacion->FechaFinal;?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/FormEdicion/'.$votacion->Id;?>" role="button">Modificar</a></td>
         <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>" role="button">Eliminar</a></td>
       </tr>
     <?php }?>
     </tbody>
-    </table>    
-    </div>
-    </section>
+    </table>
+    <!-- Paginacion -->
+    <div class="pagination">
+    <?php echo $this->pagination->create_links(); ?>
+  </div>
+</nav>
+</div>
+
 
 
 

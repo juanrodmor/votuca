@@ -7,12 +7,34 @@ class Administracion extends CI_Controller{
   public function __construct(){
     parent::__construct();
     $this->load->model('administracion_model');
+    $this->load->library('pagination');
 
   }
+  // FALTA PAGINACION
   public function index(){  // PANTALLA PRINCIPAL
-    $votaciones['votaciones'] = $this->administracion_model->recuperarVotacion();
+    /*$paginas = 2;
+    $config['total_rows'] = $this->administracion_model->totalVotaciones();//calcula el número de filas
+    $config['per_page'] = $paginas; //Número de registros mostrados por páginas
+    $config['base_url'] = base_url().'administracion/';
+    $config['num_links'] = 3; //Número de links mostrados en la paginación
+    $config['first_link'] = 'Primera';//primer link
+    $config['last_link'] = 'Última';//último link
+    $config["uri_segment"] = 3;//el segmento de la paginación
+    $config['next_link'] = '>';//siguiente link
+    $config['prev_link'] = '<';//anterior link
+    $config['full_tag_open'] = '<div class="pagination">';
+    $config['full_tag_close'] = '</div>';
+    $this->pagination->initialize($config); //inicializamos la paginación
+    //$votaciones['votaciones'] = $this->administracion_model->recuperarVotacion();
+    $votaciones['votaciones'] = $this->administracion_model->obtenerVotacionesLimite($config['per_page'],$this->uri->segment(3));
+    $this->pagination->create_links();*/
+    $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
     $this->load->view('administracion/administracion_view',$votaciones);
   }
+
+  /************************************/
+  /*********** CREAR VOTACION *********/
+  /************************************/
 
   public function crearVotacion(){
     $this->load->view('administracion/crearVotacion_view');
@@ -71,14 +93,56 @@ class Administracion extends CI_Controller{
     }
   }
 
+  /************************************/
+  /*********** ELIMINAR VOTACION ******/
+  /************************************/
+
   public function prueba($id){
     $eliminada = $this->administracion_model->eliminarVotacion($id);
     if($eliminada){
-        
+
       $this->index();
 
     }
   }
+
+  /************************************/
+  /*********** MODIFICAR VOTACION *****/
+  /************************************/
+
+  public function FormEdicion($id)
+	{
+
+		$data['votaciones'] =  $this->administracion_model->getVotacion($id);
+		$this->load->view('administracion/FormEdicion_view', $data);
+	}
+
+  // AUN NO FUNCIONA
+  public function updateVotacion()
+	{
+		//$id = $this->input->post('id');
+		$votacion = new Votacion(
+			$this->input->post('id'),
+			$this->input->post('titulo'),
+			$this->input->post('descripcion'),
+			$this->input->post('fecha_inicio'),
+			$this->input->post('fecha_final'),
+			false
+
+		);
+		// ESTO NO ES RESPONSABILIDAD DEL MODELO
+		//$this->db->where('id', $votacion->getId());
+		//$this->db->update('votacion', $votacion);
+    echo var_dump($votacion);
+		/*$modificada = $this->administracion_model->updateVotacion($votacion);
+    if($modificada){
+      echo "Se ha modificado correctamente";
+    }
+    else{
+      echo "HA SUCEDIDO ALGUN ERROR";
+    }*/
+
+	}
 
   /*******************************************/
   /********* FUNCIONES DE AYUDA **************/

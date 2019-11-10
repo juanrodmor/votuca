@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<title>Lista de votaciones</title>
+	<title>EDICION DE VOTACIONES</title>
 	<!-- Bootstrap core CSS -->
 	<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -55,44 +55,83 @@
 			<main role="main" class="container">
 				<div class="jumbotron">
 					<div class="container">
-							<center><h1>Modificar Votacion</h1></center>
+							<center><h1>Lista de votaciones</h1></center>
 					</div>
 				</div>
 			</main><!-- /.container -->
 
-<div class="row">
-    <div style="width:500px;margin:50px;">
-        <h4>Tabla votaciones</h4>
-        <table class="table table-striped table-bordered">
-            <tr>
-                <td><strong>ID</strong></td>
-                <td><strong>TITULO</strong></td>
-                <td><strong>DESCRIPCION</strong></td>
-                <td><strong>FECHA INICIO</strong></td>
-                <td><strong>FECHA FIN</strong></td>
-            </tr>
-            <?php foreach($VOTACIONES as $votacion){?>
-                <tr>
-                    <td>
-                        <?=$votacion->Id;?>
-                    </td>
-                    <td>
-                        <?=$votacion->Titulo;?>
-                    </td>
-                    <td>
-                        <?=$votacion->Descripcion;?>
-                    </td>
-                    <td>
-                        <?=$votacion->FechaInicio;?>
-                    </td>
-                    <td>
-                        <?=$votacion->FechaFinal?>
-                    </td>
-                </tr>
-                <?php }?>
-        </table>
-    </div>
-</div>
+	  <?=form_open(base_url().'administracion/updateVotacion');?>
+		<?php $atributos = array(
+				'name' => 'id',
+				'class' => 'form-control',
+				'id' => 'id',
+				'required' => true,
+				'value' => $votaciones->Id,
+				'disabled' => true
+		); ?>
+		<?= form_label('ID','id'); ?>
+		<?= form_input($atributos) ?> <br/><br/>
+		<!-- TITULO -->
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'class' => 'form-control',
+					'id' => 'titulo',
+					'required' => true,
+					'value' => $votaciones->Titulo
+			); ?>
+			<?= form_label('Titulo','titulo'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'class' => 'form-control',
+					'id' => 'descripcion',
+					'required' => true,
+					'value' => $votaciones->Descripcion
+			); ?>
+			<?= form_label('Descripcion','descripcion'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'name' => 'fecha_inicio',
+					'class' => 'form-control',
+					'data-provide' => 'datepicker',
+					'data-date-format' => "dd-mm-yyyy",
+					'data-date-start-date'=>"0d",
+					'id' => 'fecha_inicio',
+					'required' => true,
+					'value' => $votaciones->FechaInicio
+			); ?>
+			<?= form_label('Fecha Inicio','fecha_inicio'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+		<div class="form-group">
+			<?php $atributos = array(
+					'name' => 'fecha_final',
+					'class' => 'form-control',
+					'data-provide' => 'datepicker',
+					'data-date-format' => "dd-mm-yyyy",
+					'id' => 'fecha_final',
+					'required' => true,
+					'value' => $votaciones->FechaFinal
+			); ?>
+			<?= form_label('Fecha Final','fecha_final'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+		<?php $atributos = array(
+				'name' => 'submit_reg',
+				'class' => 'btn btn-primary',
+				'type' => 'submit',
+				'value' => 'Enviar'
+		); ?>
+		<?= form_submit($atributos);?>
+	<?= form_close(); ?>
+
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
