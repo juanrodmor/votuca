@@ -32,9 +32,9 @@ class Administracion_model extends CI_Model{
 
 	public function updateVotacion($votacion){
 		$encontrado = $this->db->where('id', $votacion->getId());
-    echo var_dump($votacion);
-    if($encontrado){$this->db->update('votacion', $votacion);}
-		else{return false;}
+    $realizado = false;
+    if($encontrado){$realizado = $this->db->update('votacion', $votacion);}
+		return $realizado;
 	}
 
   public function recuperarVotaciones()

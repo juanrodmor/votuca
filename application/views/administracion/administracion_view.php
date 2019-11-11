@@ -58,6 +58,8 @@
       </div>
     </main><!-- /.container -->
 
+  <h1><?php $mensaje ?> </h1>
+
 <div class = "container">
     <?=form_open(base_url().'administracion/prueba');?>
     <table class="table table-hover">
@@ -91,7 +93,7 @@
         <td><?php echo $votacion->Descripcion;?></td>
         <td><?php echo $votacion->FechaInicio;?></td>
         <td><?php echo $votacion->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/FormEdicion/'.$votacion->Id;?>" role="button">Modificar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$votacion->Id;?>" role="button">Modificar</a></td>
         <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>" role="button">Eliminar</a></td>
       </tr>
     <?php }?>

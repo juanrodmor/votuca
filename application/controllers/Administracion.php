@@ -12,24 +12,11 @@ class Administracion extends CI_Controller{
   }
   // FALTA PAGINACION
   public function index(){  // PANTALLA PRINCIPAL
-    /*$paginas = 2;
-    $config['total_rows'] = $this->administracion_model->totalVotaciones();//calcula el número de filas
-    $config['per_page'] = $paginas; //Número de registros mostrados por páginas
-    $config['base_url'] = base_url().'administracion/';
-    $config['num_links'] = 3; //Número de links mostrados en la paginación
-    $config['first_link'] = 'Primera';//primer link
-    $config['last_link'] = 'Última';//último link
-    $config["uri_segment"] = 3;//el segmento de la paginación
-    $config['next_link'] = '>';//siguiente link
-    $config['prev_link'] = '<';//anterior link
-    $config['full_tag_open'] = '<div class="pagination">';
-    $config['full_tag_close'] = '</div>';
-    $this->pagination->initialize($config); //inicializamos la paginación
-    //$votaciones['votaciones'] = $this->administracion_model->recuperarVotacion();
-    $votaciones['votaciones'] = $this->administracion_model->obtenerVotacionesLimite($config['per_page'],$this->uri->segment(3));
-    $this->pagination->create_links();*/
+
     $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
     $this->load->view('administracion/administracion_view',$votaciones);
+
+
   }
 
   /************************************/
@@ -110,11 +97,11 @@ class Administracion extends CI_Controller{
   /*********** MODIFICAR VOTACION *****/
   /************************************/
 
-  public function FormEdicion($id)
+  public function modificarVotacion($id)
 	{
 
 		$data['votaciones'] =  $this->administracion_model->getVotacion($id);
-		$this->load->view('administracion/FormEdicion_view', $data);
+		$this->load->view('administracion/modificarVotacion_view', $data);
 	}
 
   // AUN NO FUNCIONA
@@ -122,25 +109,23 @@ class Administracion extends CI_Controller{
 	{
 		//$id = $this->input->post('id');
 		$votacion = new Votacion(
-			$this->input->post('id'),
-			$this->input->post('titulo'),
-			$this->input->post('descripcion'),
-			$this->input->post('fecha_inicio'),
-			$this->input->post('fecha_final'),
+			$_POST['titulo'],
+			$_POST['descripcion'],
+			$_POST['fecha_inicio'],
+			$_POST['fecha_final'],
 			false
 
 		);
+    $votacion->setId($_POST['id']);
 		// ESTO NO ES RESPONSABILIDAD DEL MODELO
 		//$this->db->where('id', $votacion->getId());
 		//$this->db->update('votacion', $votacion);
-    echo var_dump($votacion);
-		/*$modificada = $this->administracion_model->updateVotacion($votacion);
+
+		$modificada = $this->administracion_model->updateVotacion($votacion);
     if($modificada){
-      echo "Se ha modificado correctamente";
+      $this->index();
     }
-    else{
-      echo "HA SUCEDIDO ALGUN ERROR";
-    }*/
+
 
 	}
 

@@ -59,23 +59,26 @@
 					</div>
 				</div>
 			</main><!-- /.container -->
-			<h1> MI RAMA </h1>
 
-	  <?=form_open(base_url().'administracion/updateVotacion');?>
-		<?php $atributos = array(
-				'name' => 'id',
-				'class' => 'form-control',
-				'id' => 'id',
-				'required' => true,
-				'value' => $votaciones->Id,
-				'disabled' => true
-		); ?>
-		<?= form_label('ID','id'); ?>
-		<?= form_input($atributos) ?> <br/><br/>
+	  <?=form_open(base_url().'administracion/updateVotacion/');?>
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'name' => 'id',
+					'class' => 'form-control',
+					'id' => 'id',
+					'readonly'=> 'readonly',
+					'value' => $votaciones->Id
+			); ?>
+			<?= form_label('ID','id'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+
 		<!-- TITULO -->
 		<div class="form-group">
 			<?php
 			 $atributos = array(
+				  'name' => 'titulo',
 					'class' => 'form-control',
 					'id' => 'titulo',
 					'required' => true,
@@ -87,6 +90,7 @@
 		<div class="form-group">
 			<?php
 			 $atributos = array(
+				 'name' => 'descripcion',
 					'class' => 'form-control',
 					'id' => 'descripcion',
 					'required' => true,
