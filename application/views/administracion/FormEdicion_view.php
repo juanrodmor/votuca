@@ -59,6 +59,7 @@
 					</div>
 				</div>
 			</main><!-- /.container -->
+			<h1> MI RAMA </h1>
 
 	  <?=form_open(base_url().'administracion/updateVotacion');?>
 		<?php $atributos = array(
