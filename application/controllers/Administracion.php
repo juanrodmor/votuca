@@ -11,11 +11,13 @@ class Administracion extends CI_Controller{
 
   }
   // FALTA PAGINACION
-  public function index(){  // PANTALLA PRINCIPAL
-
+  public function index($mensaje = ''){  // PANTALLA PRINCIPAL
     $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
-    $this->load->view('administracion/administracion_view',$votaciones);
-
+    $datos = array(
+      'votaciones'=> $votaciones,
+      'mensaje' => $mensaje
+    );
+    $this->load->view('administracion/administracion_view',$datos);
 
   }
 
@@ -23,10 +25,7 @@ class Administracion extends CI_Controller{
   /*********** CREAR VOTACION *********/
   /************************************/
 
-  public function crearVotacion(){
-    $this->load->view('administracion/crearVotacion_view');
-
-  }
+  public function crearVotacion(){$this->load->view('administracion/crearVotacion_view');}
   public function insertarVotacion()
   {
     //$this->load->view('prueba');
@@ -76,7 +75,7 @@ class Administracion extends CI_Controller{
     }
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
-      $this->load->view('administracion/crearVotacion_view',$datos);
+      $this->index('La votación se ha guardado correctamente');
     }
   }
 
@@ -86,11 +85,7 @@ class Administracion extends CI_Controller{
 
   public function prueba($id){
     $eliminada = $this->administracion_model->eliminarVotacion($id);
-    if($eliminada){
-
-      $this->index();
-
-    }
+    if($eliminada){$this->index('La votación se ha eliminado correctamente');}
   }
 
   /************************************/
@@ -99,7 +94,6 @@ class Administracion extends CI_Controller{
 
   public function modificarVotacion($id)
 	{
-
 		$data['votaciones'] =  $this->administracion_model->getVotacion($id);
 		$this->load->view('administracion/modificarVotacion_view', $data);
 	}
@@ -107,23 +101,18 @@ class Administracion extends CI_Controller{
   // AUN NO FUNCIONA
   public function updateVotacion()
 	{
-		//$id = $this->input->post('id');
 		$votacion = new Votacion(
-			$_POST['titulo'],
-			$_POST['descripcion'],
-			$_POST['fecha_inicio'],
-			$_POST['fecha_final'],
-			false
-
-		);
+		                    $_POST['titulo'],
+		                    $_POST['descripcion'],
+			                  $_POST['fecha_inicio'],
+			                  $_POST['fecha_final'],
+			                  false
+		            );
     $votacion->setId($_POST['id']);
-		// ESTO NO ES RESPONSABILIDAD DEL MODELO
-		//$this->db->where('id', $votacion->getId());
-		//$this->db->update('votacion', $votacion);
 
 		$modificada = $this->administracion_model->updateVotacion($votacion);
     if($modificada){
-      $this->index();
+      $this->index('La modificacion se ha realizado correctamente');
     }
 
 

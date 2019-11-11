@@ -58,7 +58,9 @@
       </div>
     </main><!-- /.container -->
 
-  <h1><?php $mensaje ?> </h1>
+    <?php if(isset($mensaje)): ?>
+          <h2><?= $mensaje ?></h2>
+      <?php endif; ?>
 
 <div class = "container">
     <?=form_open(base_url().'administracion/prueba');?>
@@ -76,26 +78,29 @@
       </thead>
     <tbody>
 
-      <?php foreach($votaciones as $votacion){?>
+      <?php
+       foreach($votaciones as $votacion){?>
+         <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if ($votacion->FechaFinal <= date('Y-m-d'))
+          if ($objeto->FechaFinal <= date('Y-m-d'))
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
 
         ?>
-        <a href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>">
-         <?php echo $votacion->Id;?>
+        <a href="<?= base_url().'administracion/prueba/'.$objeto->Id;?>">
+         <?php echo $objeto->Id;?>
         </th>
-        <td><?php echo $votacion->Titulo?></td>
-        <td><?php echo $votacion->Descripcion;?></td>
-        <td><?php echo $votacion->FechaInicio;?></td>
-        <td><?php echo $votacion->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$votacion->Id;?>" role="button">Modificar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>" role="button">Eliminar</a></td>
+        <td><?php echo $objeto->Titulo?></td>
+        <td><?php echo $objeto->Descripcion;?></td>
+        <td><?php echo $objeto->FechaInicio;?></td>
+        <td><?php echo $objeto->FechaFinal;?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$objeto->Id;?>" role="button">Modificar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$objeto->Id;?>" role="button">Eliminar</a></td>
       </tr>
+    <?php }?>
     <?php }?>
     </tbody>
     </table>
