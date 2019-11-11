@@ -64,7 +64,7 @@
 
 <div class = "container">
     <?=form_open(base_url().'administracion/prueba');?>
-    <table class="table table-hover">
+    <table class="table table-hover" id="tabla-votaciones">
       <thead>
         <tr>
           <th scope="col">ID</th>
@@ -120,6 +120,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/eliminarVotacion.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
