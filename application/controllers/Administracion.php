@@ -11,7 +11,7 @@ class Administracion extends CI_Controller{
 
   }
   // FALTA PAGINACION
-  public function index($mensaje = ''){  // PANTALLA PRINCIPAL
+  public function index($mensaje = 'Bienvenido a la pagina de administración'){  // PANTALLA PRINCIPAL
     $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
     $datos = array(
       'votaciones'=> $votaciones,
@@ -83,7 +83,7 @@ class Administracion extends CI_Controller{
   /*********** ELIMINAR VOTACION ******/
   /************************************/
 
-  public function prueba($id){
+  public function eliminarVotacion($id){
     $eliminada = $this->administracion_model->eliminarVotacion($id);
     if($eliminada){$this->index('La votación se ha eliminado correctamente');}
   }
@@ -130,7 +130,7 @@ class Administracion extends CI_Controller{
         return FALSE;
     }
     else{
-      echo "Devuelvo true inicio";
+      //echo "Devuelvo true inicio";
       return TRUE;
     }
   }
@@ -143,7 +143,7 @@ class Administracion extends CI_Controller{
         return FALSE;
     }
     else{
-      echo "Devuelvo true final";
+      //echo "Devuelvo true final";
       return TRUE;
     }
   }

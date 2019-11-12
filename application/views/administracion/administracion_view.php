@@ -51,20 +51,20 @@
         </form>
       </div>
     </nav>
+
   <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
             <center><h1>Administracion</h1></center>
       </div>
-    </main><!-- /.container -->
+    </main>
 
     <?php if(isset($mensaje)): ?>
           <h2><?= $mensaje ?></h2>
       <?php endif; ?>
 
 <div class = "container">
-    <?=form_open(base_url().'administracion/prueba');?>
-    <table class="table table-hover" id="tabla-votaciones">
+    <table class="display table table-striped table-bordered" id="tabla-votaciones">
       <thead>
         <tr>
           <th scope="col">ID</th>
@@ -90,7 +90,7 @@
           else{echo "<th scope=row class=table-success>";}
 
         ?>
-        <a href="<?= base_url().'administracion/prueba/'.$objeto->Id;?>">
+        <a href="<?= base_url().'administracion/'.$objeto->Id;?>">
          <?php echo $objeto->Id;?>
         </th>
         <td><?php echo $objeto->Titulo?></td>
@@ -98,17 +98,16 @@
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
         <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$objeto->Id;?>" role="button">Modificar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$objeto->Id;?>" role="button">Eliminar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
       </tr>
     <?php }?>
     <?php }?>
+
     </tbody>
     </table>
     <!-- Paginacion -->
-    <div class="pagination">
-    <?php echo $this->pagination->create_links(); ?>
-  </div>
-</nav>
+    <!-- NO SÉ COMO ES -->
+
 </div>
 
 
@@ -120,7 +119,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
-    <script src="<?php echo base_url()."assets/js/behaviour/eliminarVotacion.js"?>"></script>
+    <script src="<?php echo base_url()."/assets/js/behaviour/eliminarVotacion.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>

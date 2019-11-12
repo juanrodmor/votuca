@@ -60,6 +60,7 @@
 				</div>
 			</main><!-- /.container -->
 
+<div class = "container">
 	  <?=form_open(base_url().'administracion/updateVotacion/');?>
 		<div class="form-group">
 			<?php
@@ -135,6 +136,7 @@
 		); ?>
 		<?= form_submit($atributos);?>
 	<?= form_close(); ?>
+</div>
 
 
 <!-- Bootstrap core JavaScript
