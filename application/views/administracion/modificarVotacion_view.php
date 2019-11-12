@@ -12,7 +12,7 @@
 <body>
 
 	    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-	      <a class="navbar-brand" href="#">Navbar</a>
+	      <a class="navbar-brand" href="#">VotUCA</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
 	      </button>
@@ -29,8 +29,6 @@
 	            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
 	              <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
-	              <a class="dropdown-item" href="<?= base_url().'modificarVotacion/'?>">Modificar</a>
-	              <a class="dropdown-item" href="#">Eliminar</a>
 	            </div>
 	          </li>
 	          <li class="nav-item">
@@ -51,6 +49,7 @@
 	        </form>
 	      </div>
 	    </nav>
+
 
 			<main role="main" class="container">
 				<div class="jumbotron">
