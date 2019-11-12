@@ -11,13 +11,14 @@ class Administracion extends CI_Controller{
 
   }
   // FALTA PAGINACION
-  public function index($mensaje = 'Bienvenido a la pagina de administración'){  // PANTALLA PRINCIPAL
-    $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
-    $datos = array(
-      'votaciones'=> $votaciones,
-      'mensaje' => $mensaje
-    );
-    $this->load->view('administracion/administracion_view',$datos);
+  public function index($mensaje = 'Bienvenido a la pagina de administración'){
+      $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+      $datos = array(
+        'votaciones'=> $votaciones,
+        'mensaje' => $mensaje
+      );
+      $this->load->view('administracion/administracion_view',$datos);
+
 
   }
 

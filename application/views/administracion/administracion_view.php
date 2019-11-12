@@ -1,3 +1,9 @@
+<?php session_start();?>
+<?php if (isset($_SESSION['loggedAdmin']) && $_SESSION['loggedAdmin'] == true) {
+    // NO HACER NADA COMO COÑO SE CIERRA SESION
+} else {
+    header('Location:'. base_url().'Login_controller/');
+}?>
 <!doctype html>
 <html lang="en">
   <head>
