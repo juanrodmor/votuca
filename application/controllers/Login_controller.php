@@ -34,10 +34,10 @@ class Login_controller extends CI_Controller {
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					if ($this->session->userdata('rol') == 'Elector') $this->load->view('listar_votaciones');
-					else{
+					else {
 						$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
-						$this->load->view('administracion/administracion_view',$votaciones);
-					 };
+						$this->load->view('administracion/administracion_view', $votaciones);
+					};
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
 					$this->load->view('login_view', $data);
@@ -46,6 +46,17 @@ class Login_controller extends CI_Controller {
 				$this->load->view('login_view');
 			}
 		} else $this->load->view('login_view');		//Si se accede de forma ilegal (no por envío de formulario)...
+	}
+
+	//Función para desconectarse de la web.
+	public function logout() {
+		if (isset($this->session->userdata('usuario'))) {	//Si estaba loggeado...
+			$this->session->unset_userdata(array('usuario', 'rol'));
+			$data = array('mensaje' => 'La sesión se ha cerrado con éxito.');
+			$this->load->view('login_view', $data);
+		} else {	//Si no...
+			$this->load->view('login_view');
+		}
 	}
 
 	//Funciones de registro
