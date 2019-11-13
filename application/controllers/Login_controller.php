@@ -52,6 +52,17 @@ class Login_controller extends CI_Controller {
 		} else $this->load->view('login_view');		//Si se accede de forma ilegal (no por envío de formulario)...
 	}
 
+	//Función para desconectarse de la web.
+	public function logout() {
+		if (isset($this->session->userdata('usuario'))) {	//Si estaba loggeado...
+			$this->session->unset_userdata(array('usuario', 'rol'));
+			$data = array('mensaje' => 'La sesión se ha cerrado con éxito.');
+			$this->load->view('login_view', $data);
+		} else {	//Si no...
+			$this->load->view('login_view');
+		}
+	}
+	
 	//Funciones de registro
 	/*
 	public function registro() {
