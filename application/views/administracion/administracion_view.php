@@ -9,6 +9,8 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+
   </head>
 
   <body>
@@ -51,19 +53,23 @@
         </form>
       </div>
     </nav>
+
   <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
             <center><h1>Administracion</h1></center>
       </div>
-    </main><!-- /.container -->
+    </main>
+
+    <?php if(isset($mensaje)): ?>
+          <h2><?= $mensaje ?></h2>
+      <?php endif; ?>
 
 <div class = "container">
-    <?=form_open(base_url().'administracion/prueba');?>
-    <table class="table table-hover">
+    <table class="display table table-striped table-bordered" style="width:100%" id="votaciones_admin">
       <thead>
         <tr>
-          <th scope="col">ID</th>
+          <th scope="col" class="no-sort">ID</th>
           <th scope="col">Titulo</th>
           <th scope="col">Descripcion</th>
           <th scope="col">Fecha Inicio</th>
@@ -74,34 +80,34 @@
       </thead>
     <tbody>
 
-      <?php foreach($votaciones as $votacion){?>
+      <?php
+       foreach($votaciones as $votacion){?>
+         <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if ($votacion->FechaFinal <= date('Y-m-d'))
+          if ($objeto->FechaFinal <= date('Y-m-d'))
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
 
         ?>
-        <a href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>">
-         <?php echo $votacion->Id;?>
+        <a href="<?= base_url().'administracion/'.$objeto->Id;?>">
+         <?php echo $objeto->Id;?>
         </th>
-        <td><?php echo $votacion->Titulo?></td>
-        <td><?php echo $votacion->Descripcion;?></td>
-        <td><?php echo $votacion->FechaInicio;?></td>
-        <td><?php echo $votacion->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/FormEdicion/'.$votacion->Id;?>" role="button">Modificar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/prueba/'.$votacion->Id;?>" role="button">Eliminar</a></td>
+        <td><?php echo $objeto->Titulo?></td>
+        <td><?php echo $objeto->Descripcion;?></td>
+        <td><?php echo $objeto->FechaInicio;?></td>
+        <td><?php echo $objeto->FechaFinal;?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$objeto->Id;?>" role="button">Modificar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'administracion/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
       </tr>
     <?php }?>
+    <?php }?>
+
     </tbody>
     </table>
-    <!-- Paginacion -->
-    <div class="pagination">
-    <?php echo $this->pagination->create_links(); ?>
-  </div>
-</nav>
+
 </div>
 
 
@@ -114,8 +120,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
 
+    <!-- Scripts para la tabla de votaciones -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/administracion_votaciones.js"?>"></script>
+
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+
+
 
 
   </body>

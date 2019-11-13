@@ -33,11 +33,15 @@ class Login_controller extends CI_Controller {
 				if ($this->Usuario_model->userExists($usuario->getId())	//Si existe el usuario y coincide la pass...
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
-					if ($this->session->userdata('rol') == 'Elector') $this->load->view('listar_votaciones');
+
+					if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else {
 						$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
-						$this->load->view('administracion/administracion_view', $votaciones);
-					};
+				    $datos = array(
+				      'votaciones'=> $votaciones
+				    );
+				    $this->load->view('administracion/administracion_view',$datos);
+					 };
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
 					$this->load->view('login_view', $data);
