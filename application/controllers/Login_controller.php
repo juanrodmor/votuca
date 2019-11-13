@@ -12,7 +12,19 @@ class Login_controller extends CI_Controller {
 
 	//Por defecto carga la vista de login.
 	public function index() {
-		$this->load->view('login_view');
+		$loggeado = $this->session->userdata('usuario');
+		if (isset($loggeado)) {	//Si estaba loggeado...
+			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
+			else {
+				$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+				$datos = array(
+				'votaciones'=> $votaciones
+				);
+				$this->load->view('administracion/administracion_view',$datos);
+			};
+		} else {	//Si no...
+			$this->load->view('login_view');
+		}
 	}
 
 	//Función auxiliar de encriptación de contraseñas.
@@ -22,7 +34,6 @@ class Login_controller extends CI_Controller {
 
 	//Función de verificación de los datos introducidos en el login.
 	public function verificar() {
-		//include('../../classes/Usuario.php');	//Esto no funciona
 		if ($this->input->post('Enviar')) {		//Si se accede mediante envío de datos y no por URL...
 			$this->form_validation->set_rules('usuario', 'Nombre de usuario', 'required|trim');
 			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
