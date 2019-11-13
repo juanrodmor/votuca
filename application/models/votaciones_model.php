@@ -3,30 +3,20 @@
 		public function __construct ()
 		{
 			parent::__construct ();
+			/* CONEXION A LA BD EN CONSTRUCTOR
+
+			$mysqli = mysqli_connect("localhost", "root", "", "votuca"); 
+			if($mysqli == false) { 
+			    die("ERROR: Could not connect. ".mysqli_connect_error()); 
+			}
+			*/
 		}
 
 		// Lista los datos de las votaciones
 		public function _listar ( $select, $from, $where )
 		{
-			// select mediante conexion a la BD con mysqli
-			$mysqli = mysqli_connect("localhost", "root", "", "NombreBD"); 
-			if($mysqli == false) { 
-			    die("ERROR: Could not connect. ".mysqli_connect_error()); 
-			}  
-			$sql = "select ' ".$select."' from '".$from."' where '".$where."'";
-			$query = mysqli_query($mysqli, $sql);
-			if( mysqli_num_rows($query) == 0 ) {  
-			    echo "No rows matched. ".mysqli_error($mysqli); 
-			} else { 
-			    return $query; 
-			} 
-			mysqli_close($mysqli);
-
-			// select mediante envio de consulta directa, sin conexion
-			$sql = "select ' ".$select."' from '".$from."' where '".$where."'";
-				// elegir un metodo de ejecucion de query de los dos
-			// $query = mysqli_query ($sql);
-			// $query = $this -> db -> query($sql);
+			$sql = "select ' ".$select."' from '".$from."' where '".$where."';";
+			$query = $this -> db -> query($sql);
 			if ( mysqli_num_rows($query) == 0 )
 			{
 				echo "No rows matched. ".mysqli_error($mysqli); 
@@ -38,31 +28,48 @@
 		// Realizar votacion
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
-			// update mediante conexion a la BD con mysqli
-			$mysqli = mysqli_connect("localhost", "root", "", "NombreBD"); 
-			if($mysqli == false) { 
-			    die("ERROR: Could not connect. ".mysqli_connect_error()); 
-			}   
-			$sql = "update 'votaciones' set '_votos.id_usuario' = '".$id_usuario."', '_votos.voto' = '".$voto."', where id_votacion = '".$id_votacion."'";
-			$query = mysqli_query($mysqli, $sql);
-			if($query) { 
-			    echo "Record was updated successfully."; 
-			} else { 
-			    echo "ERROR: Could not able to execute $sql. ".mysqli_error($mysqli); 
-			}  
-			mysqli_close($mysqli);
+			$sql = "select Id from voto where Nombre = '".$voto."'";
+			$query = $this -> db -> query($sql);
+			$id_voto = mysqli_fetch_array($query) or die(mysqli_error());
 
-
-			// update mediante envio de consulta directa, sin conexion
-			$sql = "update 'votaciones' set '_votos.id_usuario' = '".$id_usuario."', '_votos.voto' = '".$voto."', where id_votacion = '".$id_votacion."'";
-				// elegir un metodo de ejecucion de query de los dos
-			// $query = mysqli_query ($sql);
-			// $query = $this -> db -> query($sql);
+			$sql = "insert into 'usuario_votacion' (Id_Usuario, Id_Votacion, Id_voto) values ("$id_usuario",".$id_votacion.",".$id_voto['Id'].");";
+			$query = $this -> db -> query($sql);
 			if($query) {  
-			    echo "Record was updated successfully."; 
+			    echo "Voto insertado correctamente."; 
 			} else { 
 			    echo "ERROR: Could not able to execute $sql. ".mysqli_error($mysqli); 
 			} 
 		}
+
+		// Indica si un usuario ya ha votado
+		public function _haVotado ( $id_usuario, $id_votacion )
+		{
+			$sql = "select id_voto from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+			$query = $this -> db -> query($sql);
+			if( mysqli_num_rows($query) == 0 ) {  
+			    return false;
+			} else { 
+			    return true;
+			} 
+		}
+
+		// Rectificar votacion
+		public function _rectificarVoto ( $id_usuario, $id_votacion, $voto )
+		{
+			$sql = "select Id from voto where Nombre = '".$voto."'";
+			$query = $this -> db -> query($sql);
+			$id_voto = mysqli_fetch_array($query) or die(mysqli_error());
+
+			$sql = "update usuario_votacion set Id_voto = '".$id_voto."', where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+			$query = $this -> db -> query($sql);
+			if($query) {  
+			    echo "Voto rectificado correctamente."; 
+			} else { 
+			    echo "ERROR: Could not able to execute $sql. ".mysqli_error($mysqli); 
+			} 
+
+
+		}
+
 	}
 ?>

@@ -19,6 +19,9 @@
 <body>
 
         
+
+
+        
         <div class="container navbar-default">
                 
         <div id=logo>
@@ -28,7 +31,6 @@
 
             <!--Display error messages-->
             <div id="container-data">
-
                 <?php 
 
                     echo form_error('usuario', '<div class="alert alert-danger" role="alert">', '</div>');
@@ -42,23 +44,24 @@
                 
                 <!--Display form-->
                 <form id="login-form" class="form-horizontal" action="<?php echo base_url('login_controller/verificar')?>" method="post">
-                    <div class="form-group">
-                        <label for="username">Nombre de usuario: </label><input name="usuario" type="text" class="form-control" id="u">
+                    <label for="username">Nombre de usuario: </label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input name="usuario" type="text" class="form-control" id="u" placeholder="Nombre de usuario">
                     </div>
                         <br>
-                    <div class="form-group">    
-                        <label for="pass">Contraseña: </label><input name="pass" type="password" class="form-control" id="passwd">
+                    <label for="pass">Contraseña: </label>
+                    <div class="input-group">    
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input name="pass" type="password" class="form-control" id="passwd" placeholder ="Contraseña">
                     </div>
-
-                    <input id="button-form" class="btn btn-default" type="submit" name="Enviar" value="Enviar">
-
+                    <br>
+                    <input id="button-form" class="btn btn-primary" type="submit" name="Enviar" value="Enviar">
                 </form>
 
             </div>
             
         </div>
-
-
 
 </body>
 </html>
