@@ -75,7 +75,7 @@
          <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if ($objeto->FechaFinal <= date('Y-m-d'))
+          if($objeto->FechaFinal == date('Y-m-d'))
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
@@ -89,10 +89,13 @@
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/delegarVotacion/'.$objeto->Id;?>" role="button">Delegar secretario</a></td>
-
-
+          <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
+        <?php
+          if($objeto->FechaFinal != date('Y-m-d'))
+          {
+            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar secretario</a></td>';
+          }
+        ?>
         </tr>
     <?php }?>
     <?php }?>

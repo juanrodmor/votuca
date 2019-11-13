@@ -67,13 +67,11 @@
       <?php
        foreach($secretarios as $secretario){?>
          <?php foreach($secretario as $objeto){?>
-        <tr>
+      <tr>
         <td><?php echo $objeto->Id?></td>
         <td><?php echo $objeto->NombreUsuario?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/aceptarDelegacion/'.$objeto->Id.'/'.$idVotacion;?>"  onclick="return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?');" role="button">Delegar secretario</a></td>
-
-
-        </tr>
+        <td><a class="btn btn-primary" href="<?= base_url().'secretario/aceptarDelegacion/'.$idVotacion.'/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?');" role="button">Delegar secretario</a></td>
+      </tr>
     <?php }?>
     <?php }?>
 

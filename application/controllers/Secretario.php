@@ -135,14 +135,14 @@ class Secretario extends CI_Controller{
 
   }
 
-  public function aceptarDelegacion($idVotacion,$idSecretario){
+  public function aceptarDelegacion($idVotacion,$secretario){
     // Guardar en la BD
-    $noGuardado = $this->secretario_model->guardarSecretarioDelegado($idVotacion,$idSecretario);
+    $noGuardado = $this->secretario_model->guardarSecretarioDelegado($secretario,$idVotacion);
     if($noGuardado){
       $this->index('Has delegado correctamente la votacion');
     }
     else{
-      $this->index('Existe algun problema al delegar la votacion');
+      $this->index('Esta votación ya tiene un máximo de dos delegados');
     }
 
   }
