@@ -6,7 +6,7 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
-		$this->load->model('administracion_model');
+		$this->load->model('secretario_model');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
@@ -16,11 +16,11 @@ class Login_controller extends CI_Controller {
 		if (isset($loggeado)) {	//Si estaba loggeado...
 			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 			else {
-				$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				$datos = array(
 				'votaciones'=> $votaciones
 				);
-				$this->load->view('administracion/administracion_view',$datos);
+				$this->load->view('secretario/secretario_view',$datos);
 			};
 		} else {	//Si no...
 			$this->load->view('login_view');

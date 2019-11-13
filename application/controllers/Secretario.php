@@ -2,22 +2,22 @@
 
 include 'classes/Votacion.php';
 
-class Administracion extends CI_Controller{
+class Secretario extends CI_Controller{
 
   public function __construct(){
     parent::__construct();
-    $this->load->model('administracion_model');
+    $this->load->model('secretario_model');
     $this->load->library('pagination');
 
   }
 
-  public function index($mensaje = 'Bienvenido a la pagina de administración'){
-      $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+  public function index($mensaje = 'Bienvenido a la pagina del secretario'){
+      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
       $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje
       );
-      $this->load->view('administracion/administracion_view',$datos);
+      $this->load->view('secretario/secretario_view',$datos);
 
   }
 
@@ -27,7 +27,7 @@ class Administracion extends CI_Controller{
 
   public function crearVotacion()
   {
-    $this->load->view('administracion/crearVotacion_view');
+    $this->load->view('secretario/crearVotacion_view');
   }
   public function insertarVotacion()
   {
@@ -72,10 +72,10 @@ class Administracion extends CI_Controller{
   public function guardarVotacion($datos)
   {
 
-    $noGuardado = $this->administracion_model->guardarVotacion($datos);
+    $noGuardado = $this->secretario_model->guardarVotacion($datos);
     if($noGuardado){
       $datos = array('mensaje'=>'La votación NO se ha guardado');
-      $this->load->view('administracion/crearVotacion_view',$datos);
+      $this->load->view('secretario/crearVotacion_view',$datos);
     }
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
@@ -88,7 +88,7 @@ class Administracion extends CI_Controller{
   /************************************/
 
   public function eliminarVotacion($id){
-    $eliminada = $this->administracion_model->eliminarVotacion($id);
+    $eliminada = $this->secretario_model->eliminarVotacion($id);
     if($eliminada){$this->index('La votación se ha eliminado correctamente');}
   }
 
@@ -98,8 +98,8 @@ class Administracion extends CI_Controller{
 
   public function modificarVotacion($id)
 	{
-		$data['votaciones'] =  $this->administracion_model->getVotacion($id);
-		$this->load->view('administracion/modificarVotacion_view', $data);
+		$data['votaciones'] =  $this->secretario_model->getVotacion($id);
+		$this->load->view('secretario/modificarVotacion_view', $data);
 	}
 
   public function updateVotacion()
@@ -113,12 +113,40 @@ class Administracion extends CI_Controller{
 		            );
     $votacion->setId($_POST['id']);
 
-		$modificada = $this->administracion_model->updateVotacion($votacion);
+		$modificada = $this->secretario_model->updateVotacion($votacion);
     if($modificada){
       $this->index('La modificacion se ha realizado correctamente');
     }
 
 	}
+  /************************************/
+  /*********** DELEGAR VOTACION *******/
+  /************************************/
+
+  public function delegarVotacion($idVotacion)
+  {
+    $rol = 3;
+    $secretarios['secretarios'] = $this->secretario_model->recuperarUsuariosRol($rol);
+    $datos = array(
+      'idVotacion' => $idVotacion,
+      'secretarios'=> $secretarios
+    );
+    $this->load->view('secretario/delegar_view',$datos);
+
+  }
+
+  public function aceptarDelegacion($idVotacion,$idSecretario){
+    // Guardar en la BD
+    $noGuardado = $this->secretario_model->guardarSecretarioDelegado($idVotacion,$idSecretario);
+    if($noGuardado){
+      $this->index('Has delegado correctamente la votacion');
+    }
+    else{
+      $this->index('Existe algun problema al delegar la votacion');
+    }
+
+  }
+
 
   /*******************************************/
   /********* FUNCIONES DE AYUDA **************/

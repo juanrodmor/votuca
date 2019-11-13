@@ -27,7 +27,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
+              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
             </div>
           </li>
         </ul>
@@ -45,13 +45,15 @@
   <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-            <center><h1>Administracion</h1></center>
+            <center><h1>Secretario</h1></center>
       </div>
     </main>
 
     <?php if(isset($mensaje)): ?>
           <h2><?= $mensaje ?></h2>
       <?php endif; ?>
+
+      <p> Si desea modificar una votacion pinche en el id de la misma </p>
 
 <div class = "container">
     <table class="display table table-striped table-bordered" style="width:100%" id="votaciones_admin">
@@ -80,16 +82,18 @@
           else{echo "<th scope=row class=table-success>";}
 
         ?>
-        <a href="<?= base_url().'administracion/'.$objeto->Id;?>">
-         <?php echo $objeto->Id;?>
+        <a href="<?= base_url().'secretario/'.$objeto->Id;?>">
+         <?php echo '<a href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.'>'.$objeto->Id.'</a>';?>
         </th>
         <td><?php echo $objeto->Titulo?></td>
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$objeto->Id;?>" role="button">Modificar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
-      </tr>
+        <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'secretario/delegarVotacion/'.$objeto->Id;?>" role="button">Delegar secretario</a></td>
+
+
+        </tr>
     <?php }?>
     <?php }?>
 

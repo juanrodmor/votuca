@@ -1,6 +1,6 @@
 <?php
 
-class Administracion_model extends CI_Model{
+class Secretario_model extends CI_Model{
 
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
   public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
@@ -38,6 +38,22 @@ class Administracion_model extends CI_Model{
     $query = $this->db->query("UPDATE votacion SET isDelected = '1' WHERE Id = '$id'");
     return $query;
 
+  }
+
+  public function recuperarUsuariosRol($rol)
+  {
+    $query = $this->db->query("SELECT * from usuario WHERE Id_rol = '$rol';");
+    return $query->result();
+  }
+
+  public function guardarSecretarioDelegado($idVotacion,$idSecretario)
+  {
+    $datos = array(
+      'Id_secretario' => $idSecretario,
+      'Id_votacion' => $idVotacion
+    );
+    $realizada = $this->db->insert('secretariosDelegados',$datos);
+    return $realizada;
   }
 }
 
