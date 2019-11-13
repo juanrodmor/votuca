@@ -64,10 +64,10 @@
           <th scope="col">Fecha Final</th>
           <th scope="col"></th>
           <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
     <tbody>
-
       <?php
        foreach($votaciones as $votacion){?>
          <?php foreach($votacion as $objeto){?>
@@ -78,11 +78,10 @@
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
-          echo '<a href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.'>'.$objeto->Id.'</a>';
-
         ?>
+        <?php echo $objeto->Id;?>
         </th>
-        <td><?php echo $objeto->Titulo?></td>
+        <td><?php echo $objeto->Titulo;?></td>
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
@@ -90,7 +89,8 @@
         <?php
           if($objeto->FechaFinal != date('Y-m-d'))
           {
-            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar secretario</a></td>';
+            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
+            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar</a></td>';
           }
         ?>
         </tr>
@@ -100,10 +100,8 @@
     </table>
 
 </div>
-</div>
-<footer>
-Pagina creada por VotUCA empresa.
-</footer>
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -113,9 +111,9 @@ Pagina creada por VotUCA empresa.
 
     <!-- Scripts para la tabla de votaciones -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-    <script src="<?php echo base_url()."assets/js/behaviour/votacion_elector.js"?>"></script>
+   <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
+   <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>

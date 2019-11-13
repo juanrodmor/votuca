@@ -1,9 +1,10 @@
 var base_url = window.location.origin+"/votuca/";
-console.log("HE ENTRADO");
+
 $(document).ready(function(){
     $('#votaciones_admin').DataTable({
-      paging: true,
-      "scrollY": 200,
+      serverSide: true,
+      paging: false,
+      "scrollY": 300,
       ordering: false,
       "language": {
             "lengthMenu": "Muestra _MENU_ votaciones por pagina",
