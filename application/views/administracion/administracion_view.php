@@ -14,7 +14,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <!-- PARTE IZQUIERDA DEL MENU -->
        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
