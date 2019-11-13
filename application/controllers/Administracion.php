@@ -10,7 +10,7 @@ class Administracion extends CI_Controller{
     $this->load->library('pagination');
 
   }
-  // FALTA PAGINACION
+
   public function index($mensaje = 'Bienvenido a la pagina de administración'){
       $votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
       $datos = array(
@@ -19,17 +19,18 @@ class Administracion extends CI_Controller{
       );
       $this->load->view('administracion/administracion_view',$datos);
 
-
   }
 
   /************************************/
   /*********** CREAR VOTACION *********/
   /************************************/
 
-  public function crearVotacion(){$this->load->view('administracion/crearVotacion_view');}
+  public function crearVotacion()
+  {
+    $this->load->view('administracion/crearVotacion_view');
+  }
   public function insertarVotacion()
   {
-    //$this->load->view('prueba');
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
         // VALIDACIONES
@@ -50,8 +51,10 @@ class Administracion extends CI_Controller{
 
 				}
         else{  // Correcta
+          // Convierte la fecha en un formato valido para la BD
           $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d',strtotime($this->input->post('fecha_final')));
+
           $votacion = new Votacion(
             //$this->input->post('id'),
             $this->input->post('titulo'),
@@ -99,7 +102,6 @@ class Administracion extends CI_Controller{
 		$this->load->view('administracion/modificarVotacion_view', $data);
 	}
 
-  // AUN NO FUNCIONA
   public function updateVotacion()
 	{
 		$votacion = new Votacion(
@@ -115,7 +117,6 @@ class Administracion extends CI_Controller{
     if($modificada){
       $this->index('La modificacion se ha realizado correctamente');
     }
-
 
 	}
 
