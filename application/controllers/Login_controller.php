@@ -50,7 +50,8 @@ class Login_controller extends CI_Controller {
 
 	//Función para desconectarse de la web.
 	public function logout() {
-		if (isset($this->session->userdata('usuario'))) {	//Si estaba loggeado...
+		$loggeado = $this->session->userdata('usuario');
+		if (isset($loggeado)) {	//Si estaba loggeado...
 			$this->session->unset_userdata(array('usuario', 'rol'));
 			$data = array('mensaje' => 'La sesión se ha cerrado con éxito.');
 			$this->load->view('login_view', $data);
