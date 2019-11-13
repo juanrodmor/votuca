@@ -12,7 +12,7 @@
 <body>
 
 	    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-	      <a class="navbar-brand" href="#">Navbar</a>
+	      <a class="navbar-brand" href="#">VotUCA</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
 	      </button>
@@ -29,8 +29,6 @@
 	            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
 	              <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
-	              <a class="dropdown-item" href="<?= base_url().'modificarVotacion/'?>">Modificar</a>
-	              <a class="dropdown-item" href="#">Eliminar</a>
 	            </div>
 	          </li>
 	          <li class="nav-item">
@@ -52,6 +50,7 @@
 	      </div>
 	    </nav>
 
+
 			<main role="main" class="container">
 				<div class="jumbotron">
 					<div class="container">
@@ -60,21 +59,26 @@
 				</div>
 			</main><!-- /.container -->
 
-	  <?=form_open(base_url().'administracion/updateVotacion');?>
-		<?php $atributos = array(
-				'name' => 'id',
-				'class' => 'form-control',
-				'id' => 'id',
-				'required' => true,
-				'value' => $votaciones->Id,
-				'disabled' => true
-		); ?>
-		<?= form_label('ID','id'); ?>
-		<?= form_input($atributos) ?> <br/><br/>
+<div class = "container">
+	  <?=form_open(base_url().'administracion/updateVotacion/');?>
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'name' => 'id',
+					'class' => 'form-control',
+					'id' => 'id',
+					'readonly'=> 'readonly',
+					'value' => $votaciones->Id
+			); ?>
+			<?= form_label('ID','id'); ?>
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+
 		<!-- TITULO -->
 		<div class="form-group">
 			<?php
 			 $atributos = array(
+				  'name' => 'titulo',
 					'class' => 'form-control',
 					'id' => 'titulo',
 					'required' => true,
@@ -86,6 +90,7 @@
 		<div class="form-group">
 			<?php
 			 $atributos = array(
+				 'name' => 'descripcion',
 					'class' => 'form-control',
 					'id' => 'descripcion',
 					'required' => true,
@@ -130,6 +135,7 @@
 		); ?>
 		<?= form_submit($atributos);?>
 	<?= form_close(); ?>
+</div>
 
 
 <!-- Bootstrap core JavaScript

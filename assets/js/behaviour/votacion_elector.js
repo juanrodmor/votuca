@@ -1,5 +1,5 @@
 var table;
-var base_url = window.location.origin+"/Proyectopinf/";
+var base_url = window.location.origin+"/votuca/";
 var select = false;
 
 $(document).ready(function(){

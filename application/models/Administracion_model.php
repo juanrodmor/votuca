@@ -5,21 +5,11 @@ class Administracion_model extends CI_Model{
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
   public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
 
-  public function totalVotaciones() {
-  $consulta = $this->db->get('votacion');
-   return  $consulta->num_rows() ;
+  public function totalVotaciones()
+  {
+    $consulta = $this->db->get('votacion');
+    return  $consulta->num_rows() ;
   }
-
-  /*public function obtenerVotacionesLimite($por_pagina, $segmento) {
-    $consulta = $this->db->get('votacion',$por_pagina,$segmento);
-
-           if($consulta->num_rows()>0){
-               foreach($consulta->result() as $fila){
-                 $data[] = $fila;
-                }
-                return $data;
-           }
-  }*/
 
   public function getVotacion($id)
 	{
@@ -29,17 +19,16 @@ class Administracion_model extends CI_Model{
 		return $query->row();
 	}
 
-
-	public function updateVotacion($votacion){
+	public function updateVotacion($votacion)
+  {
 		$encontrado = $this->db->where('id', $votacion->getId());
-    echo var_dump($votacion);
-    if($encontrado){$this->db->update('votacion', $votacion);}
-		else{return false;}
+    $realizado = false;
+    if($encontrado){$realizado = $this->db->update('votacion', $votacion);}
+		return $realizado;
 	}
 
   public function recuperarVotaciones()
   {
-    //$hoy = date('Y-m-d');
     $query = $this->db->query("SELECT * from votacion WHERE isDelected = '0';");
     return $query->result();
 
