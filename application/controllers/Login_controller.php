@@ -35,7 +35,7 @@ class Login_controller extends CI_Controller {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else{
-						$_SESSION['loggedAdmin'] = 1; // Variable que indica que se puede entrar
+						//$_SESSION['loggedAdmin'] = 1; // Variable que indica que se puede entrar
 						$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
 				    $datos = array(
 				      'votaciones'=> $votaciones

@@ -1,9 +1,3 @@
-<?php session_start();?>
-<?php if (isset($_SESSION['loggedAdmin']) && $_SESSION['loggedAdmin'] == true) {
-    // NO HACER NADA COMO COÑO SE CIERRA SESION
-} else {
-    header('Location:'. base_url().'Login_controller/');
-}?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -15,6 +9,8 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+
   </head>
 
   <body>
@@ -70,10 +66,10 @@
       <?php endif; ?>
 
 <div class = "container">
-    <table class="display table table-striped table-bordered" id="tabla-votaciones">
+    <table class="display table table-striped table-bordered" style="width:100%" id="votaciones_admin">
       <thead>
         <tr>
-          <th scope="col">ID</th>
+          <th scope="col" class="no-sort">ID</th>
           <th scope="col">Titulo</th>
           <th scope="col">Descripcion</th>
           <th scope="col">Fecha Inicio</th>
@@ -111,8 +107,6 @@
 
     </tbody>
     </table>
-    <!-- Paginacion -->
-    <!-- NO SÉ COMO ES -->
 
 </div>
 
@@ -125,10 +119,17 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
-    <script src="<?php echo base_url()."/assets/js/behaviour/eliminarVotacion.js"?>"></script>
+
+    <!-- Scripts para la tabla de votaciones -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/administracion_votaciones.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+
+
 
 
   </body>
