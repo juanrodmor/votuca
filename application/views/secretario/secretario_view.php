@@ -42,7 +42,7 @@
       </div>
     </nav>
 
-  <div class="container">
+<div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
             <center><h1>Secretario</h1></center>
@@ -53,10 +53,8 @@
           <h2><?= $mensaje ?></h2>
       <?php endif; ?>
 
-      <p> Si desea modificar una votacion pinche en el id de la misma </p>
-
-<div class = "container">
-    <table class="display table table-striped table-bordered" style="width:100%" id="votaciones_admin">
+  <div class = "container">
+    <table class="display table table-striped table-bordered" id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
@@ -80,16 +78,15 @@
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
+          echo '<a href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.'>'.$objeto->Id.'</a>';
 
         ?>
-        <a href="<?= base_url().'secretario/'.$objeto->Id;?>">
-         <?php echo '<a href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.'>'.$objeto->Id.'</a>';?>
         </th>
         <td><?php echo $objeto->Titulo?></td>
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
-          <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
         <?php
           if($objeto->FechaFinal != date('Y-m-d'))
           {
@@ -99,12 +96,14 @@
         </tr>
     <?php }?>
     <?php }?>
-
     </tbody>
     </table>
 
 </div>
-
+</div>
+<footer>
+Pagina creada por VotUCA empresa.
+</footer>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -116,11 +115,10 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-    <script src="<?php echo base_url()."assets/js/behaviour/administracion_votaciones.js"?>"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/votacion_elector.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
-
 
   </body>
 </html>

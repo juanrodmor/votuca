@@ -47,11 +47,11 @@ class Login_controller extends CI_Controller {
 
 					if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else {
-						$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+						$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				    $datos = array(
 				      'votaciones'=> $votaciones
 				    );
-				    $this->load->view('administracion/administracion_view',$datos);
+				    $this->load->view('secretario/secretario_view',$datos);
 					 };
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
