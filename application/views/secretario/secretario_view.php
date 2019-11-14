@@ -9,7 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">    
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
   </head>
@@ -74,7 +74,7 @@
          <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if($objeto->FechaFinal == date('Y-m-d'))
+          if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
@@ -88,7 +88,7 @@
         <td><?php echo $objeto->FechaFinal;?></td>
         <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
         <?php
-          if($objeto->FechaFinal != date('Y-m-d'))
+          if($objeto->FechaFinal >= date('Y-m-d'))
           {
             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar</a></td>';
