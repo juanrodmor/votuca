@@ -6,7 +6,7 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
-		$this->load->model('administracion_model');
+		$this->load->model('secretario_model');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
@@ -16,11 +16,11 @@ class Login_controller extends CI_Controller {
 		if (isset($loggeado)) {	//Si estaba loggeado...
 			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 			else {
-				$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				$datos = array(
 				'votaciones'=> $votaciones
 				);
-				$this->load->view('administracion/administracion_view',$datos);
+				$this->load->view('secretario/secretario_view',$datos);
 			};
 		} else {	//Si no...
 			$this->load->view('login_view');
@@ -45,14 +45,40 @@ class Login_controller extends CI_Controller {
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 
-					if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
+					switch($this->session->userdata('rol'))
+					{
+						case 'Elector':
+							 $this->load->view('Elector/listar_votaciones');
+							 break;
+						case 'Secretario':
+							 $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+							 $datos = array(
+													'votaciones'=> $votaciones
+												);
+							 $this->load->view('secretario/secretario_view',$datos);
+							 break;
+						case 'Secretario delegado':
+								$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+								$datos = array(
+											 'votaciones'=> $votaciones
+										 );
+							  $this->load->view('secretario/delegado_view',$datos);
+							  break;
+
+						case 'Administrador':
+							// Cargar vista de administracion;
+							break;
+
+					}
+				/*	if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else {
-						$votaciones['votaciones'] = $this->administracion_model->recuperarVotaciones();
+						if($this->session->userdata('rol') == 'Elector')
+						$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				    $datos = array(
 				      'votaciones'=> $votaciones
 				    );
-				    $this->load->view('administracion/administracion_view',$datos);
-					 };
+				    $this->load->view('secretario/secretario_view',$datos);
+					};*/
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
 					$this->load->view('login_view', $data);

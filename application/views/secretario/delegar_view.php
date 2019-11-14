@@ -27,7 +27,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'administracion/crearVotacion'?>">Crear</a>
+              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
             </div>
           </li>
         </ul>
@@ -45,7 +45,7 @@
   <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-            <center><h1>Administracion</h1></center>
+            <center><h1>Secretario</h1></center>
       </div>
     </main>
 
@@ -58,37 +58,19 @@
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
-          <th scope="col">Titulo</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Fecha Inicio</th>
-          <th scope="col">Fecha Final</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th scope="col">Nombre Usuario</th>
+          <th scope="col"> </th>
         </tr>
       </thead>
     <tbody>
 
       <?php
-       foreach($votaciones as $votacion){?>
-         <?php foreach($votacion as $objeto){?>
-        <tr>
-        <?php
-          if ($objeto->FechaFinal <= date('Y-m-d'))
-          {
-             echo "<th scope=row class=table-danger>";  // Ha finalizado
-          }
-          else{echo "<th scope=row class=table-success>";}
-
-        ?>
-        <a href="<?= base_url().'administracion/'.$objeto->Id;?>">
-         <?php echo $objeto->Id;?>
-        </th>
-        <td><?php echo $objeto->Titulo?></td>
-        <td><?php echo $objeto->Descripcion;?></td>
-        <td><?php echo $objeto->FechaInicio;?></td>
-        <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/modificarVotacion/'.$objeto->Id;?>" role="button">Modificar</a></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'administracion/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
+       foreach($secretarios as $secretario){?>
+         <?php foreach($secretario as $objeto){?>
+      <tr>
+        <td><?php echo $objeto->Id?></td>
+        <td><?php echo $objeto->NombreUsuario?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'secretario/aceptarDelegacion/'.$idVotacion.'/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?');" role="button">Delegar secretario</a></td>
       </tr>
     <?php }?>
     <?php }?>
