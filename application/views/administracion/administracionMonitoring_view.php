@@ -35,6 +35,26 @@
         <center><h3>Auditoría</h3></center>
     </div>
 
+    <form action="" id="monitoring_search">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkLogin" name="checkLogin" value="option1" checked>
+          <label class="form-check-label" for="checkLogin">Login</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkLogout" name="checkLogout" value="option2" checked>
+          <label class="form-check-label" for="checkLogout">Logout</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="checkVotos" name="checkVotos" value="option3" disabled>
+          <label class="form-check-label" for="checkVotos">Votos</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+          <input class="btn btn-primary" type="submit" value="Consultar">
+        </div>
+      </form>
+
+
     <div class="card">
         <div class="card-body">Hola</div>
     </div>

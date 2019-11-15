@@ -23,14 +23,18 @@ class Usuario_model extends CI_Model {
 	public function getRol($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		$consulta2 = $this->db->get_where('rol', array('Id' => $consulta->row()->Id_Rol));
-		return $consulta2->row()->NombreUsuario;
+		return $consulta2->row()->Nombre;
 	}
 	
 	//Modifica el rol de un usuario específico.
 	public function setRol($usuario, $rol) {
+		
+		$consultaId = $this->db->get_where('rol', array('Nombre' => $rol));
+		$rol_id = $consultaId->row()->Id;
+		
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		$this->db->where('Id', $consulta->row()->Id);
-		$this->db->update('usuario', array('Rol' => $rol));
+		$this->db->update('usuario', array('Id_Rol' => $rol_id));
 	}
 	
 	/*public function verify_login() {

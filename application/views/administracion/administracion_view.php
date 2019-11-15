@@ -30,10 +30,11 @@
 
     <div class="container">
   
-    <div class="jumbotron">
-        <center><h1>Administración</h1></center>
-        <center><h3>Gestión de roles</h3></center>
-    </div>
+      <div class="jumbotron">
+          <center><h1>Administración</h1></center>
+          <center><h3>Gestión de roles</h3></center>
+      </div>
+
 
   </div>
 

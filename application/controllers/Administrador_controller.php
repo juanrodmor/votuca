@@ -13,7 +13,7 @@ class Administrador_controller extends CI_Controller {
 	public function index() {
 		switch ($this->session->userdata('rol')) {
 			case 'Administrador':
-				$this->load->view('Administrador_view');
+				$this->load->view('administracion/administracion_view');
 				break;
 			case 'Elector':
 				redirect('Elector_controller');
@@ -76,18 +76,18 @@ class Administrador_controller extends CI_Controller {
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}
-			$this->load->view('administracion/administracionCambiaRol_view', $data);
+			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
 	
 	public function nuevoRol() {
-		if ($this->input->post('Cambiar rol')) {
+		if ($this->input->post('checkBoxInput')) {
 			$usuario = $this->input->post('usuario');
 			$oldrol = $this->Usuario_model->getRol($usuario);
-			$newrol = $this->input->post('rol');
+			$newrol = $this->input->post('checkBoxInput');
 			$this->Usuario_model->setRol($usuario, $newrol);
-			$data = array('mensaje' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');
-			$this->load->view('administracion/administracionCambiaRol_view', $data);
+			$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');
+			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
 }
