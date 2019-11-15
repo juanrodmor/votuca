@@ -57,7 +57,7 @@
 		// Indica si un usuario ya ha votado
 		public function _haVotado ( $id_usuario, $id_votacion )
 		{
-			$sql = "select id_voto from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."' and Id_Voto = 'No votado';";
 			$query = $this -> db -> query($sql);
 			if( $query->num_rows() == 0 ) {  
 			    return false;
@@ -80,8 +80,30 @@
 			} else { 
 			    echo "ERROR: Could not able to execute $sql. "; 
 			} 
+		}
 
-
+		/********************************/
+		/******* RECUENTO DE VOTOS ******/
+		/********************************/
+		public function recuentoVotos($idVotacion)
+		{
+			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$idVotacion';");
+			return $query->num_rows();
+		}
+		/********************************************/
+		/******* INSERTAR UN USUARIO DEL CENSO ******/
+		/********************************************/
+		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
+			for($i = 0; $i < sizeof($usuarios); $i++)
+	    {
+				$id = (int)$usuarios[$i];
+				$datos = array(
+					'Id_Usuario' => $id,
+					'Id_Votacion' => $nuevoId,
+					'Id_Voto' => $sinVoto
+				);
+				$this->db->insert('usuario_votacion',$datos);				
+			}
 		}
 
 	}
