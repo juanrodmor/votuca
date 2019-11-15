@@ -14,8 +14,8 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
-			else {
+			if ($this->session->userdata('rol') == 'Elector'){
+					redirect('/Elector_controller');
 				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				$datos = array(
 				'votaciones'=> $votaciones
@@ -53,7 +53,7 @@ class Login_controller extends CI_Controller {
 						case 'Secretario':
 							 redirect('/Secretario');
 							 break;
-						case 'Secretario delegado':
+						case 'SecretarioDelegado':
 								redirect('/Secretario/delegado');
 								break;
 						case 'MiembroElectoral':
@@ -62,6 +62,10 @@ class Login_controller extends CI_Controller {
 
 						case 'Administrador':
 							// Cargar vista de administracion;
+							break;
+
+						default:
+							redirect('/Login_controller');
 							break;
 
 					}
