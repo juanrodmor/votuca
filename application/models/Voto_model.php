@@ -15,11 +15,12 @@
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select votacion.Titulo, votacion.Descripcion, voto.Nombre, votacion.FechaInicio, votacion.FechaFinal
+			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, voto.Nombre, votacion.FechaInicio, votacion.FechaFinal
 						from votacion, usuario_votacion, voto
 						where votacion.Id = usuario_votacion.Id_Votacion 
 							AND usuario_votacion.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Voto = voto.Id ;";
+							AND usuario_votacion.Id_Voto = voto.Id 
+						order by votacion.FechaFinal ASC;";
 							
 			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
 			$query = $this -> db -> query($sql);
@@ -48,10 +49,20 @@
 			$sql = "update usuario_votacion set Id_voto = '".$id_voto."', where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 			$query = $this -> db -> query($sql);
 			if($query) {  
-			    echo "Voto rectificado correctamente."; 
+			    echo "Voto actualizado correctamente."; 
 			} else { 
 			    echo "ERROR: Could not able to execute $sql. "; 
 			} 
+		}
+
+		public function _votosDisponibles () {
+			$sql = "select Nombre from voto where id != '1';";
+			$query = $this -> db -> query($sql);
+			if($query) {  
+			    return $query->result();
+			} else { 
+			    echo "ERROR: Could not able to execute $sql. "; 
+			}
 		}
 
 		/*
