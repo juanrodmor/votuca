@@ -32,10 +32,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
 
-        public function register_action_login($username)
+        public function register_action_login($username, $flag = "")
         {
             
-            $action_message = "[" . mdate($this->hour_format) . "] [LOGIN]" . " El usuario " . $username . " inició sesión.";
+            $action_message = "[" . mdate($this->hour_format) . "] [LOGIN]" . " El usuario " . $username;
+
+            if($flag == 'success')
+            {
+                $action_message .= " inició sesión exitosamente.";
+            }
+            else
+            {
+                $action_message .= " realizó un intento fallido.";
+            }
+
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r", FILE_APPEND);
         }
 
