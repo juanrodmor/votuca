@@ -37,64 +37,23 @@
       </div>
     </nav>
 
-<div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
-        <center><h1>Elector</h1></center>
-      </div>
-    </main>
+    <div class="container">
+        <main role="main" class="container">
+          <div class="jumbotron">
+            <center><h1>Elector</h1></center>
+          </div>
+        </main>
+      <div class = "container"></div>
+    </div>
 
-  <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
-       <thead>
-         <tr>
-           <th scope="col">Titulo</th>
-           <th scope="col">Descripcion</th>
-           <th scope="col">Fecha Inicio</th>
-           <th scope="col">Fecha Final</th>
-           <th scope="col">Voto</th>
-         </tr>
-       </thead>
-      <tbody>
+    <form action="" method="post">
+      <?php foreach($votos as $voto) { ?>
+        <input type="radio" name="voto" value=""> <?php echo $voto->Nombre?> <br>
+      <?php }?>
+      <input type="submit" value="Submit">
+    </form>
 
-      <?php
-        if($datos == NULL)
-        {
-          echo '<h2> No tienes votaciones pendientes</h2>';
-        }
-        else {
-          foreach($datos as $objeto) { ?>
-            <tr>
-              <?php
-                if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
-                {
-                  echo "<th scope=row class=table-danger>";  // Ha finalizado
-                }
-                else{echo "<th scope=row class=table-success>";}
-              ?>
-              <?php echo $objeto->Titulo;?>
-              </th>
-              <td><?php echo $objeto->Descripcion;?></td>
-              <td><?php echo $objeto->FechaInicio;?></td>
-              <td><?php echo $objeto->FechaFinal;?></td>
-              <td><?php echo $objeto->Nombre;?></td>
-
-        <?php
-          if($objeto->FechaFinal >= date('Y-m-d')) {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.' role="button">Votar</a></td>';
-          }
-          else {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/resultados/ role="button">Ver resultados</a></td>';
-          }
-        ?>
-        </tr>
-          <?php }?>
-        <?php }?>
-      </tbody>
-    </table>
-
-</div>
-</div>
+</body>
 
   <br>
   <footer class="footer">
@@ -175,5 +134,4 @@
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
 
-  </body>
 </html>
