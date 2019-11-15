@@ -14,8 +14,8 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
-			else {
+			if ($this->session->userdata('rol') == 'Elector'){
+					redirect('/Elector_controller');
 				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
 				$datos = array(
 				'votaciones'=> $votaciones

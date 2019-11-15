@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.0/css/buttons.dataTables.min.css"/>
-    
+
 
     <link rel="stylesheet" type="text/css" href="<?php echo base_url()."assets/css/behaviour/votacion_view.css" ?>"/>
 </head>
@@ -52,8 +52,15 @@
         </thead>
         <tbody>
 
-            <?php
-            foreach($datos as $objeto) {?>
+        <?php
+         if($datos == NULL)
+         {
+          echo '<h2> No tienes votaciones pendientes</h2>';
+         }
+         else{
+           foreach($datos as $objeto) {
+
+        ?>
                 <tr>
                     <td><?php echo $objeto->Titulo;?></td>
                     <td><?php echo $objeto->Descripcion;?></td>
@@ -62,6 +69,7 @@
                     <td><?php echo $objeto->Nombre;?></td>
                 </tr>
             <?php }?>
+          <?php }?>
 
         </tbody>
         <tfoot>
