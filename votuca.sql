@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-11-2019 a las 20:50:17
+-- Tiempo de generación: 15-11-2019 a las 13:04:04
 -- Versión del servidor: 10.4.8-MariaDB
 -- Versión de PHP: 7.2.23
 
@@ -25,6 +25,51 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `censo`
+--
+
+CREATE TABLE `censo` (
+  `Id_Usuario` int(11) NOT NULL,
+  `Id_Votacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `censo`
+--
+
+INSERT INTO `censo` (`Id_Usuario`, `Id_Votacion`) VALUES
+(1, 2),
+(1, 3),
+(2, 3),
+(1, 4),
+(3, 4),
+(4, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `grupo`
+--
+
+CREATE TABLE `grupo` (
+  `Id` int(11) NOT NULL,
+  `Nombre` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mesa_electoral`
+--
+
+CREATE TABLE `mesa_electoral` (
+  `Id_Usuario` int(11) NOT NULL,
+  `Id_Votacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `rol`
 --
 
@@ -39,8 +84,21 @@ CREATE TABLE `rol` (
 
 INSERT INTO `rol` (`Id`, `Nombre`) VALUES
 (1, 'Elector'),
-(2, 'Admin'),
-(3, 'Secretario');
+(2, 'Secretario'),
+(3, 'Secretario delegado'),
+(4, 'Administrador'),
+(5, 'MiembroElectoral');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `secretariosDelegados`
+--
+
+CREATE TABLE `secretariosDelegados` (
+  `Id_Secretario` int(11) NOT NULL,
+  `Id_Votacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -62,7 +120,8 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
 (1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (2, 2, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG'),
-(3, 3, 's00000000', '$2y$12$IAuZ40LZiE8HQ2hZATzDau.817xDgTBW.KtJqC3avOJRbW4nTMvpK');
+(3, 3, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(4, 5, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.');
 
 -- --------------------------------------------------------
 
@@ -96,8 +155,9 @@ CREATE TABLE `votacion` (
 --
 
 INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDelected`) VALUES
-(1, 'Primera Votacion', 'Esta es la primera votacion de mi sistema', '2019-11-10', '2019-11-16', 0),
-(2, 'Otra Votacion', 'Soy otra votacion', '2019-11-24', '2019-11-27', 0);
+(1, 'Primera', 'Descripcion 1', '2019-11-17', '2019-11-23', 0),
+(2, 'Segunda', 'Descripcion 2', '2019-11-24', '2019-11-26', 0),
+(3, 'Tercera', 'Descripcion 3', '2019-11-26', '2019-11-29', 0);
 
 -- --------------------------------------------------------
 
@@ -113,6 +173,12 @@ CREATE TABLE `voto` (
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `rol`
@@ -143,22 +209,28 @@ ALTER TABLE `voto`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `votacion`
 --
 ALTER TABLE `votacion`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `voto`
