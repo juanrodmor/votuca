@@ -4,16 +4,17 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 class Elector_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-		// $this->load->model('Votacion_model');
+		$this->load->model('Voto_model');
 	}
 	
 	public function index() {
-        // $this->Votacion_model->_list();
-        $data=Array();
-		$this->load->view('Elector/listar_votaciones',$data);
+
+        $id_user = $this->Voto_model->_userId($_SESSION['usuario']);
+        $datos = $this->Voto_model->_listar($id_user);
+        $votos = array( 
+        	'datos' => $datos
+        );
+		$this->load->view('Elector/votacion_view', $votos);
     }
 
-    // public function datatable(){
-        // $this->Votacion_model->_list();
-    // }
 }
