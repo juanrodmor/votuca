@@ -26,11 +26,13 @@ class Login_controller extends CI_Controller {
 			$this->load->view('login_view');
 		}
 	}
-
+	
+	/*
 	//Función auxiliar de encriptación de contraseñas.
-	public function encriptar($pass) {
+	private function encriptar($pass) {
 		return password_hash($pass, PASSWORD_DEFAULT);
 	}
+	*/
 
 	//Función de verificación de los datos introducidos en el login.
 	public function verificar() {
@@ -44,31 +46,26 @@ class Login_controller extends CI_Controller {
 				if ($this->Usuario_model->userExists($usuario->getId())	//Si existe el usuario y coincide la pass...
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
+					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
 
 					switch($this->session->userdata('rol'))
 					{
 						case 'Elector':
-							 $this->load->view('Elector/listar_votaciones');
-							 break;
-						case 'Secretario':
-							 $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-							 $datos = array(
-													'votaciones'=> $votaciones
-												);
-							 $this->load->view('secretario/secretario_view',$datos);
-							 break;
-						case 'Secretario delegado':
-								$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-								$datos = array(
-											 'votaciones'=> $votaciones
-										 );
-							  $this->load->view('secretario/delegado_view',$datos);
-							  break;
-
-						case 'Administrador':
-							// Cargar vista de administracion;
+							$this->load->library('../controllers/Elector_controller');
+							$this->Elector_controller->index();
 							break;
-
+						case 'Secretario':
+							$this->load->library('../controllers/Secretario');
+							$this->Secretario->index();
+							break;
+						case 'Secretario delegado':
+							$this->load->library('../controllers/Secretario_delegado');
+							$this->Secretario_delegado->index();
+							break;
+						case 'Administrador':
+							$this->load->library('../controllers/Administrador_controller');
+							$this->Administrador_controller->index();
+							break;
 					}
 				/*	if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else {
@@ -80,6 +77,7 @@ class Login_controller extends CI_Controller {
 				    $this->load->view('secretario/secretario_view',$datos);
 					};*/
 				} else {	//Si no existe el usuario o la pass no coincide...
+					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
 					$this->load->view('login_view', $data);
 				}
@@ -93,6 +91,7 @@ class Login_controller extends CI_Controller {
 	public function logout() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
+			$this->monitoring->register_action_logout($this->session->userdata('usuario'));	//Almacena la info del logout en un log.
 			$this->session->unset_userdata(array('usuario', 'rol'));
 			$data = array('mensaje' => 'La sesión se ha cerrado con éxito.');
 			$this->load->view('login_view', $data);
