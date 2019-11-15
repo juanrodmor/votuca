@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 15-11-2019 a las 13:04:04
+-- Tiempo de generación: 15-11-2019 a las 13:13:12
 -- Versión del servidor: 10.4.8-MariaDB
 -- Versión de PHP: 7.2.23
 
@@ -92,10 +92,10 @@ INSERT INTO `rol` (`Id`, `Nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `secretariosDelegados`
+-- Estructura de tabla para la tabla `secretarios_delegados`
 --
 
-CREATE TABLE `secretariosDelegados` (
+CREATE TABLE `secretarios_delegados` (
   `Id_Secretario` int(11) NOT NULL,
   `Id_Votacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
