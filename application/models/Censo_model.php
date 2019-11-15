@@ -14,11 +14,6 @@ class Censo_model extends CI_Model{
 
   }
 
-  public function getElectores($idVotacion)
-  {
-    $query = $this->db->query("SELECT Id_Usuario from censo WHERE Id_Votacion = '$idVotacion';");
-    return $query->result();
-  }
 
 }
 

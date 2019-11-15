@@ -26,6 +26,9 @@ class Usuario_model extends CI_Model {
 		return $consulta2->row()->Nombre;
 	}
 
+	/*****************************/
+	/******* FUNCIONES INMA ******/
+	/*****************************/
 	public function recuperarTodos()
 	{
 		$query = $this->db->query("SELECT * from usuario;");
