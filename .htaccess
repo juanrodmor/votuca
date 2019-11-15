@@ -2,6 +2,6 @@ RewriteEngine On
 RewriteCond $1 !^(index\.php|resources|robots\.txt)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /votuca/index.php/$1 [L] # esta linea no lo necesita
-#RewriteRule ^(.*)$ index.php/$1 [L,QSA] esta linea necesita index en la url
+RewriteRule ^(.*)$ /votuca/index.php/$1 [L] 
+#RewriteRule ^(.*)$ index.php/$1 [L,QSA]
 
