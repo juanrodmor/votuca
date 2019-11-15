@@ -48,7 +48,7 @@ class Login_controller extends CI_Controller {
 					switch($this->session->userdata('rol'))
 					{
 						case 'Elector':
-							 $this->load->view('Elector/listar_votaciones');
+							 redirect('/Elector_controller');
 							 break;
 						case 'Secretario':
 							 redirect('/Secretario');

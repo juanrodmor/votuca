@@ -56,49 +56,54 @@
 
   <div class = "container">
     <table class="display table table-striped table-bordered" id="votaciones_admin">
-      <thead>
-        <tr>
-          <th scope="col" class="no-sort">ID</th>
-          <th scope="col">Titulo</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Fecha Inicio</th>
-          <th scope="col">Fecha Final</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-    <tbody>
-      <?php
-       foreach($votaciones as $votacion){?>
-         <?php foreach($votacion as $objeto){?>
-        <tr>
-        <?php
-          if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
-          {
-             echo "<th scope=row class=table-danger>";  // Ha finalizado
-          }
-          else{echo "<th scope=row class=table-success>";}
-        ?>
-        <?php echo $objeto->Id;?>
-        </th>
-        <td><?php echo $objeto->Titulo;?></td>
-        <td><?php echo $objeto->Descripcion;?></td>
-        <td><?php echo $objeto->FechaInicio;?></td>
-        <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
-        <?php
-          if($objeto->FechaFinal >= date('Y-m-d'))
-          {
-            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
-            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar</a></td>';
-          }
-        ?>
-        </tr>
-    <?php }?>
-    <?php }?>
-    </tbody>
-    </table>
+       <thead>
+         <tr>
+           <th scope="col" class="no-sort">ID</th>
+           <th scope="col">Titulo</th>
+           <th scope="col">Descripcion</th>
+           <th scope="col">Fecha Inicio</th>
+           <th scope="col">Fecha Final</th>
+           <th scope="col"></th>
+           <th scope="col"></th>
+           <th scope="col"></th>
+         </tr>
+       </thead>
+     <tbody>
+       <?php
+        foreach($votaciones as $votacion){?>
+          <?php foreach($votacion as $objeto){?>
+         <tr>
+         <?php
+           if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+           {
+              echo "<th scope=row class=table-danger>";  // Ha finalizado
+           }
+           else{echo "<th scope=row class=table-success>";}
+         ?>
+         <?php echo $objeto->Id;?>
+         </th>
+         <td><?php echo $objeto->Titulo;?></td>
+         <td><?php echo $objeto->Descripcion;?></td>
+         <td><?php echo $objeto->FechaInicio;?></td>
+         <td><?php echo $objeto->FechaFinal;?></td>
+
+         <?php
+           if($objeto->FechaFinal >= date('Y-m-d'))
+           {
+             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/eliminarVotacion/'.$objeto->Id.'onclick="return confirm(¿Estás seguro de que quieres eliminar esta votación?);">Eliminar</a></td>';
+             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
+             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar</a></td>';
+           }
+           else
+           {
+             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/eliminarVotacion/'.$objeto->Id.'onclick="return confirm(¿Estás seguro de que quieres eliminar esta votación?);">Eliminar</a></td>';
+           }
+         ?>
+         </tr>
+     <?php }?>
+     <?php }?>
+     </tbody>
+     </table>
 
 </div>
 </div>

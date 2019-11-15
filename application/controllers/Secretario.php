@@ -9,6 +9,7 @@ class Secretario extends CI_Controller{
     parent::__construct();
     $this->load->model('usuario_model');
     $this->load->model('secretario_model');
+    $this->load->model('votaciones_model');
     $this->load->model('censo_model');
     $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
@@ -83,10 +84,12 @@ class Secretario extends CI_Controller{
 
   public function guardarVotacion($datos)
   {
-
+    $ultimoId = $this->secretario_model->getLastId();
     $noGuardado = $this->secretario_model->guardarVotacion($datos);
     $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
-    if($noGuardado && $noGuardadoCenso ){
+    $votoUsuarioDefecto = $this->votaciones_model->votoDefecto($this->input->post('censo'),(int)$ultimoId[0]['Id']+1,1);
+
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto ){
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
     }

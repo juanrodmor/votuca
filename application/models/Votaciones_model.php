@@ -80,6 +80,26 @@
 			return $query->num_rows();
 		}
 
+		/********************************************/
+		/******* INSERTAR UN USUARIO DEL CENSO ******/
+		/********************************************/
+
+		public function votoDefecto($usuarios,$nuevoId,$sinVoto){
+			for($i = 0; $i < sizeof($usuarios); $i++)
+	    {
+				$id = (int)$usuarios[$i];
+				$datos = array(
+					'Id_Usuario' => $id,
+					'Id_Votacion' => $nuevoId,
+					'Id_Voto' => $sinVoto
+				);
+				$this->db->insert('usuario_votacion',$datos);				
+			}
+
+
+		}
+
+
 
 
 	}
