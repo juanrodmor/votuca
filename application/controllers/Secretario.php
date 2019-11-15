@@ -2,11 +2,15 @@
 
 include 'classes/Votacion.php';
 
+
 class Secretario extends CI_Controller{
 
   public function __construct(){
     parent::__construct();
+    $this->load->model('usuario_model');
     $this->load->model('secretario_model');
+    $this->load->model('censo_model');
+    $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
 
   }
@@ -25,9 +29,11 @@ class Secretario extends CI_Controller{
   /*********** CREAR VOTACION *********/
   /************************************/
 
+
   public function crearVotacion()
   {
-    $this->load->view('secretario/crearVotacion_view');
+    $data['usuarios'] = $this->usuario_model->recuperarTodos();
+    $this->load->view('secretario/crearVotacion_view',$data);
   }
   public function insertarVotacion()
   {
@@ -41,6 +47,7 @@ class Secretario extends CI_Controller{
         $this->form_validation->set_rules('final','Fecha Final','required');
         $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
         $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+        $this->form_validation->set_rules('censo','Censo','callback_validarCenso');
 
 				// MENSAJES DE ERROR.
 				$this->form_validation->set_message('required','El campo %s es obligatorio');
@@ -62,18 +69,24 @@ class Secretario extends CI_Controller{
             $fechaInicio,
             $fechaFin,
             false
-
           );
+
           $this->guardarVotacion($votacion);
         }
       }
     }
+  public function insertarCenso($usuarios)
+  {
+    $ultimoId = $this->secretario_model->getLastId();
+    return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']+1);
+  }
 
   public function guardarVotacion($datos)
   {
 
     $noGuardado = $this->secretario_model->guardarVotacion($datos);
-    if($noGuardado){
+    $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
+    if($noGuardado && $noGuardadoCenso ){
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
     }
@@ -126,7 +139,7 @@ class Secretario extends CI_Controller{
   public function delegarVotacion($idVotacion)
   {
     $rol = 3;
-    $secretarios['secretarios'] = $this->secretario_model->recuperarUsuariosRol($rol);
+    $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
     $datos = array(
       'idVotacion' => $idVotacion,
       'secretarios'=> $secretarios
@@ -137,7 +150,7 @@ class Secretario extends CI_Controller{
 
   public function aceptarDelegacion($idVotacion,$secretario){
     // Guardar en la BD
-    $noGuardado = $this->secretario_model->guardarSecretarioDelegado($secretario,$idVotacion);
+    $noGuardado = $this->SecretariosDelegados_model->guardarSecretarioDelegado($secretario,$idVotacion);
     if($noGuardado){
       $this->index('Has delegado correctamente la votacion');
     }
@@ -147,12 +160,19 @@ class Secretario extends CI_Controller{
 
   }
 
-  /************************************/
-  /***** VISTA SECRETARIO DELEGADO ****/
-  /************************************/
+  /*******************************************/
+  /********* SECRETARIO DELEGADO *************/
+  /*******************************************/
 
+  public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
+      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+      $datos = array(
+        'votaciones'=> $votaciones,
+        'mensaje' => $mensaje
+      );
+      $this->load->view('secretario/delegado_view',$datos);
 
-
+  }
 
   /*******************************************/
   /********* FUNCIONES DE AYUDA **************/
@@ -182,6 +202,16 @@ class Secretario extends CI_Controller{
       //echo "Devuelvo true final";
       return TRUE;
     }
+  }
+
+  public function validarCenso(){
+    $elegidos = $this->input->post('censo');
+    if($elegidos == NULL)
+    {
+      $this->form_validation->set_message('validarCenso','Introduzca al menos un usuario en el censo');
+      return FALSE;
+    }
+    else{return TRUE;}
   }
 
 

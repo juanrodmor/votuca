@@ -3,7 +3,7 @@
 class Secretario_model extends CI_Model{
 
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
-  public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
+  public function guardarVotacion($datos){return $this->db->insert('votacion',$datos);}
 
   public function totalVotaciones()
   {
@@ -33,6 +33,12 @@ class Secretario_model extends CI_Model{
     return $query->result();
 
   }
+  public function recuperarVotacionesAcabadas()
+  {
+    $hoy = date('Y-m-d');
+    $query = $this->db->query("SELECT * from votacion WHERE FechaFinal <= '$hoy'");
+    return $query->result();
+  }
   public function eliminarVotacion($id)
   {
     $query = $this->db->query("UPDATE votacion SET isDelected = '1' WHERE Id = '$id'");
@@ -40,33 +46,17 @@ class Secretario_model extends CI_Model{
 
   }
 
-  public function recuperarUsuariosRol($rol)
+  public function getLastId()
   {
-    $query = $this->db->query("SELECT * from usuario WHERE Id_rol = '$rol';");
-    return $query->result();
+    $query = $this->db->query("SELECT Id FROM votacion ORDER BY Id DESC LIMIT 1");
+    if($query->num_rows() > 0) {return $query->result_array();}
+    else{return 1;}
   }
 
-  public function restriccionDelegacion($idVotacion)
-  {
-    $query = $this->db->query("SELECT Id_Secretario from secretariosDelegados WHERE Id_votacion = '$idVotacion';");
-    $numeroSecretarios = $query->num_rows();
-    return $numeroSecretarios;
-  }
-  public function guardarSecretarioDelegado($idSecretario,$idVotacion)
-  {
-    $totales = $this->restriccionDelegacion($idVotacion);
-    if($totales >= 2){return false;}
-    else
-    {
-      $datos = array(
-        'Id_Secretario' => $idSecretario,
-        'Id_Votacion' => $idVotacion
-      );
-      $realizada = $this->db->insert('secretariosDelegados',$datos);
-      return $realizada;
-    }
 
-  }
+
+
+
 }
 
 

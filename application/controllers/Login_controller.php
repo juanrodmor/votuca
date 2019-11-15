@@ -51,19 +51,14 @@ class Login_controller extends CI_Controller {
 							 $this->load->view('Elector/listar_votaciones');
 							 break;
 						case 'Secretario':
-							 $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-							 $datos = array(
-													'votaciones'=> $votaciones
-												);
-							 $this->load->view('secretario/secretario_view',$datos);
+							 redirect('/Secretario');
 							 break;
 						case 'Secretario delegado':
-								$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-								$datos = array(
-											 'votaciones'=> $votaciones
-										 );
-							  $this->load->view('secretario/delegado_view',$datos);
-							  break;
+								redirect('/Secretario/delegado');
+								break;
+						case 'MiembroElectoral':
+								redirect('/MesaElectoral');
+								break;
 
 						case 'Administrador':
 							// Cargar vista de administracion;
