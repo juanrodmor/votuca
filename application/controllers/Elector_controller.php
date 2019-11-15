@@ -17,4 +17,24 @@ class Elector_controller extends CI_Controller {
 		$this->load->view('Elector/votacion_view', $votos);
     }
 
+    public function votar($id_votacion) {
+    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+    	$votos = $this->Voto_model->_votosDisponibles();
+    	$datos = array(
+    		'id_votacion' => $id_votacion,
+    		'id_usuario' => $id_usuario,
+    		'votos' => $votos
+    	);
+    	$this->load->view('Elector/voto_view', $datos);
+    }
+
+    public function guardarVoto() {
+    	$voto = $_POST['voto']; 
+    	//$voto = $this->input->post('voto');
+
+    	//usar formulario hidden=true para obtener las variables
+
+    	//$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
+    	index();
+    }
 }
