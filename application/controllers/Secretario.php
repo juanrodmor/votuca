@@ -8,7 +8,7 @@ class Secretario extends CI_Controller{
   public function __construct(){
     parent::__construct();
     $this->load->model('usuario_model');
-    $this->load->model('secretario_model');
+    $this->load->model('votaciones_model');
     $this->load->model('voto_model');
     $this->load->model('censo_model');
     $this->load->model('SecretariosDelegados_model');
@@ -17,7 +17,7 @@ class Secretario extends CI_Controller{
   }
 
   public function index($mensaje = 'Bienvenido a la pagina del secretario'){
-      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
       $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje
@@ -78,14 +78,14 @@ class Secretario extends CI_Controller{
     }
   public function insertarCenso($usuarios)
   {
-    $ultimoId = $this->secretario_model->getLastId();
+    $ultimoId = $this->votaciones_model->getLastId();
     return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']+1);
   }
 
   public function guardarVotacion($datos)
   {
-    $ultimoId = $this->secretario_model->getLastId();
-    $noGuardado = $this->secretario_model->guardarVotacion($datos);
+    $ultimoId = $this->votaciones_model->getLastId();
+    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($this->input->post('censo'),(int)$ultimoId[0]['Id']+1,1);
 
@@ -104,7 +104,7 @@ class Secretario extends CI_Controller{
   /************************************/
 
   public function eliminarVotacion($id){
-    $eliminada = $this->secretario_model->eliminarVotacion($id);
+    $eliminada = $this->votaciones_model->eliminarVotacion($id);
     if($eliminada){$this->index('La votación se ha eliminado correctamente');}
   }
 
@@ -114,8 +114,11 @@ class Secretario extends CI_Controller{
 
   public function modificarVotacion($id)
 	{
-		$data['votaciones'] =  $this->secretario_model->getVotacion($id);
-		$this->load->view('secretario/modificarVotacion_view', $data);
+  $usuariosCenso = $this->censo_model->getElectores();
+  echo var_dump($usuariosCenso);
+
+		/*$data['votaciones'] =  $this->votaciones_model->getVotacion($id);
+		$this->load->view('secretario/modificarVotacion_view', $data);*/
 	}
 
   public function updateVotacion()
@@ -129,7 +132,7 @@ class Secretario extends CI_Controller{
 		            );
     $votacion->setId($_POST['id']);
 
-		$modificada = $this->secretario_model->updateVotacion($votacion);
+		$modificada = $this->votaciones_model->updateVotacion($votacion);
     if($modificada){
       $this->index('La modificacion se ha realizado correctamente');
     }
@@ -168,7 +171,7 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
-      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
       $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje

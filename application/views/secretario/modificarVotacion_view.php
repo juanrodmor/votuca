@@ -114,6 +114,34 @@
 			<?= form_label('Fecha Final','fecha_final'); ?>
 			<?= form_input($atributos) ?> <br/><br/>
 		</div>
+    <!-- TABLA DE CENSO -->
+		 <div class = "container">
+		  <table class="display table table-striped table-bordered" id="votaciones_admin">
+		      <thead>
+		          <tr>
+		            <th scope="col" class="no-sort">Nombre de usuario</th>
+		          </tr>
+		      </thead>
+		      <tbody>
+		          <tr>
+		           <?php foreach($usuarios as $usuario){ ?>
+		           <?php
+		                echo '<div class="form-check">';
+		                 $atributos = array(
+		                    'name' => 'censo[]',
+		                    'class' => 'form-control',
+		                    'type' => 'checkbox',
+		                    'id' => 'censo',
+		                    'value' => $usuario->Id
+		                );
+		                ?>
+		              <td><?= form_checkbox($atributos); ?><?php echo $usuario->NombreUsuario?></td>
+		            </div>
+		            <?php echo '</tr>'; ?>
+		            <?php }?>
+		          </tbody>
+		        </table>
+		      </div>
 		<?php $atributos = array(
 				'name' => 'submit_reg',
 				'class' => 'btn btn-primary',

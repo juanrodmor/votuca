@@ -6,7 +6,7 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
-		$this->load->model('secretario_model');
+		$this->load->model('votaciones_model');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
