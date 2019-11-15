@@ -53,7 +53,7 @@ class Login_controller extends CI_Controller {
 						case 'Secretario':
 							 redirect('/Secretario');
 							 break;
-						case 'Secretario delegado':
+						case 'SecretarioDelegado':
 								redirect('/Secretario/delegado');
 								break;
 						case 'MiembroElectoral':
@@ -62,6 +62,10 @@ class Login_controller extends CI_Controller {
 
 						case 'Administrador':
 							// Cargar vista de administracion;
+							break;
+
+						default:
+							redirect('/Login_controller');
 							break;
 
 					}

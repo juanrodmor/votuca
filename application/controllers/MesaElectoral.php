@@ -7,7 +7,8 @@ class MesaElectoral extends CI_Controller{
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('votaciones_model');
+    $this->load->model('voto_model');
+    $this->load->model('secretario_model');
 
 
   }
@@ -24,12 +25,12 @@ class MesaElectoral extends CI_Controller{
   }
 
   public function recuentoVotos($idVotacion){
-    $nVotos = $this->votaciones_model->recuentoVotos($idVotacion);
+    $nVotos = $this->voto_model->recuentoVotos($idVotacion);
     $datos = array(
       'total' => $nVotos,
       'votacion' => $idVotacion
-    )
-    
+    );
+
     //echo "Se han hecho: ". $nVotos. " en la votacion ".$idVotacion;
 
   }
