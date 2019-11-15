@@ -45,9 +45,9 @@
             <tr>
                 <th>Título</th>
                 <th>Descripción</th>
-                <th>Votado</th>
                 <th>Fecha inicio</th>
                 <th>Fecha Fin</th>
+                <th>Votado</th>
             </tr>
         </thead>
         <tbody>
@@ -57,9 +57,9 @@
                 <tr>
                     <td><?php echo $objeto->Titulo;?></td>
                     <td><?php echo $objeto->Descripcion;?></td>
-                    <td><?php echo $objeto->Nombre;?></td>
                     <td><?php echo $objeto->FechaInicio;?></td>
                     <td><?php echo $objeto->FechaFinal;?></td>
+                    <td><?php echo $objeto->Nombre;?></td>
                 </tr>
             <?php }?>
 
@@ -68,9 +68,9 @@
             <tr>
                 <th>Título</th>
                 <th>Descripción</th>
-                <th>Votado</th>
                 <th>Fecha inicio</th>
                 <th>Fecha Fin</th>
+                <th>Votado</th>
             </tr>
         </tfoot>
     </table>
