@@ -34,19 +34,19 @@
 
 		public function _userId($Nombre) {
 			//print_r($Nombre);
-			$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $Nombre));
-			//print_r($consulta->row()->Id);
-			return $consulta->row()->Id;
+			$sql = $this->db->get_where('usuario', array('NombreUsuario' => $Nombre));
+			//print_r($sql->row()->Id);
+			return $sql->row()->Id;
 		}
 
 		// Votar
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
-			$sql = "select Id from voto where Nombre = '".$voto."'";
-			$query = $this -> db -> query($sql);
-			$id_voto = mysql_fetch_array($query) or die(mysqli_error());
+			$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+			$id_voto = $sql->row()->Id;
+			//print_r($id_voto);
 
-			$sql = "update usuario_votacion set Id_voto = '".$id_voto."', where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+			$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 			$query = $this -> db -> query($sql);
 			if($query) {  
 			    echo "Voto actualizado correctamente."; 
@@ -55,8 +55,8 @@
 			} 
 		}
 
-		public function _votosDisponibles () {
-			$sql = "select Nombre from voto where id != '1';";
+		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
+			$sql = "select Nombre from voto where id != '1';";		// habra que pasarle el id de la votacion para que muestre sus votos disponibles
 			$query = $this -> db -> query($sql);
 			if($query) {  
 			    return $query->result();
