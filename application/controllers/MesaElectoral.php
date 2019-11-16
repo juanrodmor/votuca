@@ -8,19 +8,39 @@ class MesaElectoral extends CI_Controller{
   {
     parent::__construct();
     $this->load->model('voto_model');
-    $this->load->model('secretario_model');
+    $this->load->model('votaciones_model');
 
 
   }
 
   public function index($mensaje = 'Bienvenido a la pagina de la mesa electoral')
   {
-      $votaciones['votaciones'] = $this->secretario_model->recuperarVotacionesAcabadas();
-      $datos = array(
-        'votaciones'=> $votaciones,
-        'mensaje' => $mensaje
-      );
-      $this->load->view('MesaElectoral/MesaElectoral_view',$datos);
+    switch ($this->session->userdata('rol')) {
+       case 'Administrador':
+        break;
+       case 'Elector':
+        redirect('/Elector_controller');
+        break;
+       case 'Secretario':
+        redirect('/Secretario');
+        break;
+        case 'MiembroElectoral':
+          $votaciones['votaciones'] = $this->votaciones_model->recuperarVotacionesAcabadas();
+          $datos = array(
+                    'votaciones'=> $votaciones,
+                    'mensaje' => $mensaje
+                  );
+          $this->load->view('MesaElectoral/MesaElectoral_view',$datos);
+        break;
+
+       case 'Secretario delegado':
+        redirect('/secretario/delegado');
+        break;
+       default:
+        redirect('/Login_controller');
+        break;
+    }
+
 
   }
 

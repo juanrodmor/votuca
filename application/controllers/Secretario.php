@@ -18,12 +18,29 @@ class Secretario extends CI_Controller{
   }
 
   public function index($mensaje = 'Bienvenido a la pagina del secretario'){
-      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-      $datos = array(
-        'votaciones'=> $votaciones,
-        'mensaje' => $mensaje
-      );
-      $this->load->view('secretario/secretario_view',$datos);
+    // Seguridad Básica URL
+    switch ($this->session->userdata('rol')) {
+       case 'Administrador':
+        break;
+       case 'Elector':
+        redirect('/Elector_controller');
+        break;
+       case 'Secretario':
+       $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
+       $datos = array(
+         'votaciones'=> $votaciones,
+         'mensaje' => $mensaje
+       );
+       $this->load->view('secretario/secretario_view',$datos);
+        break;
+       case 'Secretario delegado':
+        redirect('/secretario/delegado');
+        break;
+       default:
+        redirect('/Login_controller');
+        break;
+    }
+
 
   }
 
