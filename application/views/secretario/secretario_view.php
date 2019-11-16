@@ -86,14 +86,67 @@
          <td><?php echo $objeto->Descripcion;?></td>
          <td><?php echo $objeto->FechaInicio;?></td>
          <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/eliminarVotacion/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres eliminar esta votación?');">Eliminar</a></td>
-         <?php
-           if($objeto->FechaFinal >= date('Y-m-d'))
-           {
-             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
-             echo '<td><a class="btn btn-primary" href='.base_url().'secretario/delegarVotacion/'.$objeto->Id.' role="button">Delegar</a></td>';
-           }
-         ?>
+
+         <!-- BOTON DE ELIMINAR -->
+         <?=form_open(base_url().'secretario/eliminarVotacion',
+         		    array('name'=>'eliminarVotacion'));?>
+                <?php
+                $atributos = array(
+                   'eliminar' => $objeto->Id // ID => Valor
+
+               );
+                ?>
+          <?= form_hidden($atributos);?>
+          <?php $atributos = array(
+              'name' => 'boton_eliminar',
+              'class' => 'btn btn-primary',
+              'type' => 'submit',
+              'value' => 'Eliminar',
+              'onclick' => "return confirm('¿Estás seguro de que quieres eliminar esta votación?')"
+          ); ?>
+          <td><?= form_submit($atributos);?></td>
+          <?= form_close(); ?>
+
+         <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
+           <!-- BOTON DE MODIFICAR -->
+           <?=form_open(base_url().'secretario/modificarVotacion',
+                   array('name'=>'modificarVotacion'));?>
+                  <?php
+                  $atributos = array(
+                     'modificar' => $objeto->Id
+
+                 );
+                  ?>
+            <?= form_hidden($atributos);?>
+            <?php $atributos = array(
+                'name' => 'boton_modificar',
+                'class' => 'btn btn-primary',
+                'type' => 'submit',
+                'value' => 'Modificar'
+            ); ?>
+            <td><?= form_submit($atributos);?></td>
+            <?= form_close(); ?>
+
+            <!-- BOTON DE DELEGAR -->
+            <?=form_open(base_url().'secretario/delegarVotacion',
+                    array('name'=>'delegarVotacion'));?>
+                   <?php
+                   $atributos = array(
+                      'delegar' => $objeto->Id
+
+                  );
+                   ?>
+             <?= form_hidden($atributos);?>
+             <?php $atributos = array(
+                 'name' => 'boton_delegar',
+                 'class' => 'btn btn-primary',
+                 'type' => 'submit',
+                 'value' => 'Delegar'
+             ); ?>
+             <td><?= form_submit($atributos);?></td>
+             <?= form_close(); ?>
+
+          <?php } ?> <!-- FIN DEL IF DATE -->
          </tr>
      <?php }?>
      <?php }?>

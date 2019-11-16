@@ -70,7 +70,25 @@
       <tr>
         <td><?php echo $objeto->Id?></td>
         <td><?php echo $objeto->NombreUsuario?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'secretario/aceptarDelegacion/'.$idVotacion.'/'.$objeto->Id;?>"  onclick="return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?');" role="button">Delegar secretario</a></td>
+
+        <!-- EXTRAYENDO LA INFORMACION -->
+        <?=form_open(base_url().'secretario/aceptarDelegacion');?>
+               <?php
+               $atributos = array(
+                  'idSecretario' => $objeto->Id,
+                  'idVotacion' => $idVotacion
+                );
+               ?>
+         <?= form_hidden($atributos);?>
+         <?php $atributos = array(
+             'name' => 'boton_finalizar',
+             'class' => 'btn btn-primary',
+             'type' => 'submit',
+             'onclick' => "return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?')",
+             'value' => 'Delegar Secretario'
+         ); ?>
+         <td><?= form_submit($atributos);?></td>
+         <?= form_close(); ?>        
       </tr>
     <?php }?>
     <?php }?>

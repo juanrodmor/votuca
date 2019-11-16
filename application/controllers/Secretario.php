@@ -117,19 +117,34 @@ class Secretario extends CI_Controller{
   /*********** ELIMINAR VOTACION ******/
   /************************************/
 
-  public function eliminarVotacion($id){
+  /*public function eliminarVotacion($id){
     $eliminada = $this->votaciones_model->eliminarVotacion($id);
     if($eliminada){$this->index('La votación se ha eliminado correctamente');}
+  }*/
+
+  public function eliminarVotacion(){
+    if($this->input->post('boton_eliminar'))
+    {
+      $id = $this->input->post('eliminar');
+      $eliminada = $this->votaciones_model->eliminarVotacion($id);
+      if($eliminada){$this->index('La votación se ha eliminado correctamente');}
+    }
+
   }
 
   /************************************/
   /*********** MODIFICAR VOTACION *****/
   /************************************/
 
-  public function modificarVotacion($id)
+  public function modificarVotacion()
 	{
-    $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
-		$this->load->view('secretario/modificarVotacion_view', $data);
+    if($this->input->post('boton_modificar'))
+    {
+      $id = $this->input->post('modificar');
+      $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
+      $this->load->view('secretario/modificarVotacion_view', $data);
+
+    }
 	}
 
   public function updateVotacion()
@@ -153,27 +168,36 @@ class Secretario extends CI_Controller{
   /*********** DELEGAR VOTACION *******/
   /************************************/
 
-  public function delegarVotacion($idVotacion)
+  public function delegarVotacion()
   {
-    $rol = 3;
-    $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
-    $datos = array(
-      'idVotacion' => $idVotacion,
-      'secretarios'=> $secretarios
-    );
-    $this->load->view('secretario/delegar_view',$datos);
-
+    if($this->input->post('boton_delegar'))
+    {
+      $rol = 3; // Rol secretario
+      $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
+      $idVotacion = $this->input->post('delegar');
+      $datos = array(
+        'idVotacion' => $idVotacion,
+        'secretarios'=> $secretarios
+      );
+      $this->load->view('secretario/delegar_view',$datos);
+    }
   }
 
-  public function aceptarDelegacion($idVotacion,$secretario){
-    // Guardar en la BD
-    $noGuardado = $this->SecretariosDelegados_model->guardarSecretarioDelegado($secretario,$idVotacion);
-    if($noGuardado){
-      $this->index('Has delegado correctamente la votacion');
+  public function aceptarDelegacion(){
+    if($this->input->post('boton_finalizar'))
+    {
+      $secretario = $this->input->post('idSecretario');
+      $idVotacion = $this->input->post('idVotacion');
+      // Guardar en la BD
+      $noGuardado = $this->SecretariosDelegados_model->guardarSecretarioDelegado($secretario,$idVotacion);
+      if($noGuardado){
+        $this->index('Has delegado correctamente la votacion');
+      }
+      else{
+        $this->index('Esta votación ya tiene un máximo de dos delegados');
+      }
     }
-    else{
-      $this->index('Esta votación ya tiene un máximo de dos delegados');
-    }
+
 
   }
 
