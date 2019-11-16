@@ -5,7 +5,7 @@
     <title> Login - VotUCA </title>
     <meta charset="UTF-8">
 
-    <style> @import url(<?php echo base_url('assets/css/main.css')?>); </style>
+    <style> @import url(<?php echo base_url('assets/css/login_css.css')?>); </style>
 
     <!-- Bootstrap and JQUERY resources -->
     <link href="<?php echo base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
