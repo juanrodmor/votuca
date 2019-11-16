@@ -46,11 +46,23 @@
       <div class = "container"></div>
     </div>
 
-    <form action="" method="post">
-      <?php foreach($votos as $voto) { ?>
-        <input type="radio" name="voto" value=""> <?php echo $voto->Nombre?> <br>
-      <?php }?>
-      <input type="submit" value="Submit">
+    <div class="container">
+      <center><h2> <?php echo $titulo ?> </h2></center>
+    </div>
+    <br>
+
+    <form action="<?= base_url().'Elector_controller/guardarVoto/'.$id_votacion.'/'?>" method="post">
+      <center>
+        <div class="btn-group" data-toggle="buttons">
+          <?php foreach($votos as $voto) { ?>
+            <label class="btn btn-primary">
+              <input type="radio" name="voto" autocomplete="off" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?> 
+            </label>
+          <?php } ?>
+        </div>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Votar">
+      </center>
     </form>
 
 </body>

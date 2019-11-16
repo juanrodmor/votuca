@@ -81,7 +81,7 @@
 
         <?php
           if($objeto->FechaFinal >= date('Y-m-d')) {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.' role="button">Votar</a></td>';
+            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Votar</a></td>';
           }
           else {
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/resultados/ role="button">Ver resultados</a></td>';
