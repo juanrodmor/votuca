@@ -14,14 +14,30 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			if ($this->session->userdata('rol') == 'Elector'){
-					redirect('/Elector_controller');
-				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-				$datos = array(
-				'votaciones'=> $votaciones
-				);
-				$this->load->view('secretario/secretario_view',$datos);
-			};
+			switch($this->session->userdata('rol'))
+			{
+				case 'Elector':
+					 redirect('/Elector_controller');
+					 break;
+				case 'Secretario':
+					 redirect('/Secretario');
+					 break;
+				case 'SecretarioDelegado':
+						redirect('/Secretario/delegado');
+						break;
+				case 'MiembroElectoral':
+						redirect('/MesaElectoral');
+						break;
+
+				case 'Administrador':
+					// Cargar vista de administracion;
+					break;
+
+				default:
+					redirect('/Login_controller');
+					break;
+
+			}
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
