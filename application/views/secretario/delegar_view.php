@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Administracion</title>
+    <title>Delegar Votacion</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -88,7 +88,7 @@
              'value' => 'Delegar Secretario'
          ); ?>
          <td><?= form_submit($atributos);?></td>
-         <?= form_close(); ?>        
+         <?= form_close(); ?>
       </tr>
     <?php }?>
     <?php }?>
