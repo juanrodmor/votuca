@@ -46,13 +46,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $action_message .= " realizó un intento fallido.";
             }
 
-            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r", FILE_APPEND);
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
         public function register_action_logout($username)
         {
             $action_message = "[" . mdate($this->hour_format) . "] [LOGOUT]" . " El usuario " . $username . " cerró sesión.";
-            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r", FILE_APPEND);
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+        }
+
+        public function register_action_vote($username)
+        {
+            $action_message = "[" . mdate($this->hour_format) . "] [VOTE]" . " El usuario " . $username . " ha realizado su voto.";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
 }

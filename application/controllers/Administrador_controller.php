@@ -32,7 +32,7 @@ class Administrador_controller extends CI_Controller {
 	
 	private function logs() {
 		$datename = mdate("%Y%m%d");
-		$file = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/' . $this->datename, "r");
+		$file = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/' . $datename .'.txt', "r");
 		return $file;
 	}
 	
@@ -40,9 +40,9 @@ class Administrador_controller extends CI_Controller {
 		$file = $this->logs();
 		$logarray = array();
 		if ($this->input->post('Filtrar')) {
-			$login = $this->input->post('cLogin');
-			$logout = $this->input->post('cLogout');
-			$vote = $this->input->post('cVote');
+			$login = $this->input->post('cLogin'); if($login === 'true'){$login = true;} else{$login = false;}
+			$logout = $this->input->post('cLogout'); if($logout === 'true'){$logout = true;} else{$logout = false;}
+			$vote = $this->input->post('cVote'); if($vote === 'true'){$vote = true;} else{$vote = false;}
 			$included = false;
 			while (($line = fgets($file)) !== false) {
 				if ($login === true && strpos($line, '[LOGIN]') !== false) {
@@ -60,9 +60,15 @@ class Administrador_controller extends CI_Controller {
 				$included = false;
 			}
 		} else
+		{
 			while (($line = fgets($file)) !== false)
+			{
 				array_push($logarray, $line);
-		$this->load->view('administracion/administracionMonitoring_view', $logarray);
+			}
+		}
+		
+		$data = array('loginfo' => $logarray); 
+		$this->load->view('administracion/administracionMonitoring_view', $data);
 	}
 	
 	public function buscador() {
