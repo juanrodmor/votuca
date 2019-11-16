@@ -135,8 +135,7 @@
             <thead>
               <tr>
                 <th scope="col" class="no-sort">Usuario</th>
-                <th scope="col" class="no-sort">Censo</th>
-                <th scope="col" class="no-sort">Mesa Electoral</th>
+                <th scope="col" class="no-sort">Censo</th>                
               </tr>
             </thead>
           <tbody>
@@ -154,17 +153,6 @@
                 );
                 ?>
               <td><?= form_checkbox($atributos); ?></td>
-
-              <?php
-              echo '<div class="form-check">';
-               $atributos = array(
-                  'name' => 'mesa[]',
-                  'class' => 'form-control',
-                  'type' => 'checkbox',
-                  'id' => 'mesa'
-                );
-              ?>
-                <td><?= form_checkbox($atributos); ?></td>
             </div>
             <?php echo '</tr>'; ?>
             <?php }?>
