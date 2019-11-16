@@ -79,7 +79,12 @@ class Secretario extends CI_Controller{
   public function insertarCenso($usuarios)
   {
     $ultimoId = $this->votaciones_model->getLastId();
-    return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']+1);
+    return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']);
+  }
+
+  public function insertarMesaElectoral()
+  {
+
   }
 
   public function guardarVotacion($datos)
@@ -209,9 +214,9 @@ class Secretario extends CI_Controller{
 
   public function validarCenso(){
     $elegidos = $this->input->post('censo');
-    if($elegidos == NULL)
+    if($elegidos == NULL || sizeof($elegidos) < 3)
     {
-      $this->form_validation->set_message('validarCenso','Introduzca al menos un usuario en el censo');
+      $this->form_validation->set_message('validarCenso','Introduzca al menos tres usuarios en el censo');
       return FALSE;
     }
     else{return TRUE;}

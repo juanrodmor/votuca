@@ -140,7 +140,7 @@
           <table class="display table table-striped table-bordered" id="votaciones_admin">
             <thead>
               <tr>
-                <th scope="col" class="no-sort">Nombre de usuario</th>
+                <th scope="col" class="no-sort">Nombre de usuario</th>                
               </tr>
             </thead>
           <tbody>
