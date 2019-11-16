@@ -9,6 +9,7 @@ class Secretario extends CI_Controller{
     parent::__construct();
     $this->load->model('usuario_model');
     $this->load->model('votaciones_model');
+    $this->load->model('mesa_model');
     $this->load->model('voto_model');
     $this->load->model('censo_model');
     $this->load->model('SecretariosDelegados_model');
@@ -58,7 +59,8 @@ class Secretario extends CI_Controller{
           $this->crearVotacion(); // Mostrar mensajes de error en la vista
 
 				}
-        else{  // Correcta
+        else
+        {  // Correcta
           // Convierte la fecha en un formato valido para la BD
           $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d',strtotime($this->input->post('fecha_final')));
@@ -74,17 +76,20 @@ class Secretario extends CI_Controller{
 
           $this->guardarVotacion($votacion);
         }
-      }
     }
+  }
+
+
   public function insertarCenso($usuarios)
   {
     $ultimoId = $this->votaciones_model->getLastId();
-    return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']);
+    $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']);
   }
 
-  public function insertarMesaElectoral()
+  public function insertarMesaElectoral($elegidos)
   {
-
+    $ultimoId = $this->votaciones_model->getLastId();
+    return $this->mesa_model->insertar($elegidos,(int)$ultimoId[0]['Id']);
   }
 
   public function guardarVotacion($datos)
@@ -94,7 +99,11 @@ class Secretario extends CI_Controller{
     $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($this->input->post('censo'),(int)$ultimoId[0]['Id']+1,1);
 
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto ){
+    $elegidos = $this->usuariosAleatorios($this->input->post('censo'));
+    $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
+
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
     }
@@ -220,6 +229,26 @@ class Secretario extends CI_Controller{
       return FALSE;
     }
     else{return TRUE;}
+  }
+
+  public function usuariosAleatorios($usuariosDisponibles)
+  {
+    $finArray = sizeof($usuariosDisponibles)-1;
+    $elegidos = array();
+    $i = 1;
+    $lleno = false;
+
+    $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
+    $elegidos[] = $random;
+
+    while($i < 3){
+      $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
+      $encontrado = array_search($random,$elegidos);
+      if($encontrado == false && is_bool($encontrado)){$elegidos[] = $random; ++$i;}
+
+    }
+  return $elegidos;
+
   }
 
 

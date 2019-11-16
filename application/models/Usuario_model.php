@@ -31,7 +31,7 @@ class Usuario_model extends CI_Model {
 	/*****************************/
 	public function recuperarTodos()
 	{
-		$query = $this->db->query("SELECT * from usuario;");
+		$query = $this->db->query("SELECT  * from usuario;");
     return $query->result();
 	}
 	public function recuperarUsuariosRol($rol)
@@ -39,7 +39,10 @@ class Usuario_model extends CI_Model {
     $query = $this->db->query("SELECT * from usuario WHERE Id_rol = '$rol';");
     return $query->result();
   }
-
+	public function getUsuario($id) {
+		$query = $this->db->query("SELECT * from usuario WHERE Id = '$id';");
+		return $query->result();
+	}
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)
