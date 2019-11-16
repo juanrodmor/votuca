@@ -4,6 +4,7 @@ class Votacion{
 
   public $id, $titulo, $descripcion, $fechaInicio,$fechaFinal;
   private $isDelected;
+  private $mesaElectoral;
 
   public function __construct($titulo,$descripcion,$fechaInicio,$fechaFinal,
                               $isDelected)
@@ -26,7 +27,7 @@ class Votacion{
   public function setTitulo($titulo){$this->titulo = $titulo;}
   public function setDescripcion($descripcion){$this->descripcion = $descripcion;}
   public function setFechaInicio($fecha){$this->fechaInicio= $fecha;}
-  public function setFechaFinal($fecha){$this->fechaFinal = $fecha;}  
+  public function setFechaFinal($fecha){$this->fechaFinal = $fecha;}
   public function setDelected($delected){$this->isDelected = $delected;}
 
 

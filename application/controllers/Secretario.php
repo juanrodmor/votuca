@@ -8,7 +8,8 @@ class Secretario extends CI_Controller{
   public function __construct(){
     parent::__construct();
     $this->load->model('usuario_model');
-    $this->load->model('secretario_model');
+    $this->load->model('votaciones_model');
+    $this->load->model('mesa_model');
     $this->load->model('voto_model');
     $this->load->model('censo_model');
     $this->load->model('SecretariosDelegados_model');
@@ -17,12 +18,29 @@ class Secretario extends CI_Controller{
   }
 
   public function index($mensaje = 'Bienvenido a la pagina del secretario'){
-      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-      $datos = array(
-        'votaciones'=> $votaciones,
-        'mensaje' => $mensaje
-      );
-      $this->load->view('secretario/secretario_view',$datos);
+    // Seguridad Básica URL
+    switch ($this->session->userdata('rol')) {
+       case 'Administrador':
+        break;
+       case 'Elector':
+        redirect('/Elector_controller');
+        break;
+       case 'Secretario':
+       $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
+       $datos = array(
+         'votaciones'=> $votaciones,
+         'mensaje' => $mensaje
+       );
+       $this->load->view('secretario/secretario_view',$datos);
+        break;
+       case 'Secretario delegado':
+        redirect('/secretario/delegado');
+        break;
+       default:
+        redirect('/Login_controller');
+        break;
+    }
+
 
   }
 
@@ -58,7 +76,8 @@ class Secretario extends CI_Controller{
           $this->crearVotacion(); // Mostrar mensajes de error en la vista
 
 				}
-        else{  // Correcta
+        else
+        {  // Correcta
           // Convierte la fecha en un formato valido para la BD
           $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d',strtotime($this->input->post('fecha_final')));
@@ -74,22 +93,34 @@ class Secretario extends CI_Controller{
 
           $this->guardarVotacion($votacion);
         }
-      }
     }
+  }
+
+
   public function insertarCenso($usuarios)
   {
-    $ultimoId = $this->secretario_model->getLastId();
-    return $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']+1);
+    $ultimoId = $this->votaciones_model->getLastId();
+    $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']);
+  }
+
+  public function insertarMesaElectoral($elegidos)
+  {
+    $ultimoId = $this->votaciones_model->getLastId();
+    return $this->mesa_model->insertar($elegidos,(int)$ultimoId[0]['Id']);
   }
 
   public function guardarVotacion($datos)
   {
-    $ultimoId = $this->secretario_model->getLastId();
-    $noGuardado = $this->secretario_model->guardarVotacion($datos);
+    $ultimoId = $this->votaciones_model->getLastId();
+    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($this->input->post('censo'),(int)$ultimoId[0]['Id']+1,1);
 
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto ){
+    $elegidos = $this->usuariosAleatorios($this->input->post('censo'));
+    $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
+
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
     }
@@ -103,19 +134,34 @@ class Secretario extends CI_Controller{
   /*********** ELIMINAR VOTACION ******/
   /************************************/
 
-  public function eliminarVotacion($id){
-    $eliminada = $this->secretario_model->eliminarVotacion($id);
+  /*public function eliminarVotacion($id){
+    $eliminada = $this->votaciones_model->eliminarVotacion($id);
     if($eliminada){$this->index('La votación se ha eliminado correctamente');}
+  }*/
+
+  public function eliminarVotacion(){
+    if($this->input->post('boton_eliminar'))
+    {
+      $id = $this->input->post('eliminar');
+      $eliminada = $this->votaciones_model->eliminarVotacion($id);
+      if($eliminada){$this->index('La votación se ha eliminado correctamente');}
+    }
+
   }
 
   /************************************/
   /*********** MODIFICAR VOTACION *****/
   /************************************/
 
-  public function modificarVotacion($id)
+  public function modificarVotacion()
 	{
-		$data['votaciones'] =  $this->secretario_model->getVotacion($id);
-		$this->load->view('secretario/modificarVotacion_view', $data);
+    if($this->input->post('boton_modificar'))
+    {
+      $id = $this->input->post('modificar');
+      $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
+      $this->load->view('secretario/modificarVotacion_view', $data);
+
+    }
 	}
 
   public function updateVotacion()
@@ -129,7 +175,7 @@ class Secretario extends CI_Controller{
 		            );
     $votacion->setId($_POST['id']);
 
-		$modificada = $this->secretario_model->updateVotacion($votacion);
+		$modificada = $this->votaciones_model->updateVotacion($votacion);
     if($modificada){
       $this->index('La modificacion se ha realizado correctamente');
     }
@@ -139,27 +185,36 @@ class Secretario extends CI_Controller{
   /*********** DELEGAR VOTACION *******/
   /************************************/
 
-  public function delegarVotacion($idVotacion)
+  public function delegarVotacion()
   {
-    $rol = 3;
-    $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
-    $datos = array(
-      'idVotacion' => $idVotacion,
-      'secretarios'=> $secretarios
-    );
-    $this->load->view('secretario/delegar_view',$datos);
-
+    if($this->input->post('boton_delegar'))
+    {
+      $rol = 3; // Rol secretario
+      $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
+      $idVotacion = $this->input->post('delegar');
+      $datos = array(
+        'idVotacion' => $idVotacion,
+        'secretarios'=> $secretarios
+      );
+      $this->load->view('secretario/delegar_view',$datos);
+    }
   }
 
-  public function aceptarDelegacion($idVotacion,$secretario){
-    // Guardar en la BD
-    $noGuardado = $this->SecretariosDelegados_model->guardarSecretarioDelegado($secretario,$idVotacion);
-    if($noGuardado){
-      $this->index('Has delegado correctamente la votacion');
+  public function aceptarDelegacion(){
+    if($this->input->post('boton_finalizar'))
+    {
+      $secretario = $this->input->post('idSecretario');
+      $idVotacion = $this->input->post('idVotacion');
+      // Guardar en la BD
+      $noGuardado = $this->SecretariosDelegados_model->guardarSecretarioDelegado($secretario,$idVotacion);
+      if($noGuardado){
+        $this->index('Has delegado correctamente la votacion');
+      }
+      else{
+        $this->index('Esta votación ya tiene un máximo de dos delegados');
+      }
     }
-    else{
-      $this->index('Esta votación ya tiene un máximo de dos delegados');
-    }
+
 
   }
 
@@ -168,7 +223,7 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
-      $votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
+      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
       $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje
@@ -209,12 +264,32 @@ class Secretario extends CI_Controller{
 
   public function validarCenso(){
     $elegidos = $this->input->post('censo');
-    if($elegidos == NULL)
+    if($elegidos == NULL || sizeof($elegidos) < 3)
     {
-      $this->form_validation->set_message('validarCenso','Introduzca al menos un usuario en el censo');
+      $this->form_validation->set_message('validarCenso','Introduzca al menos tres usuarios en el censo');
       return FALSE;
     }
     else{return TRUE;}
+  }
+
+  public function usuariosAleatorios($usuariosDisponibles)
+  {
+    $finArray = sizeof($usuariosDisponibles)-1;
+    $elegidos = array();
+    $i = 1;
+    $lleno = false;
+
+    $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
+    $elegidos[] = $random;
+
+    while($i < 3){
+      $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
+      $encontrado = array_search($random,$elegidos);
+      if($encontrado == false && is_bool($encontrado)){$elegidos[] = $random; ++$i;}
+
+    }
+  return $elegidos;
+
   }
 
 

@@ -14,6 +14,7 @@ class Censo_model extends CI_Model{
 
   }
 
+
 }
 
 

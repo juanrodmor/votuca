@@ -1,6 +1,6 @@
 <?php
 
-class Secretario_model extends CI_Model{
+class Votaciones_model extends CI_Model{
 
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
   public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
