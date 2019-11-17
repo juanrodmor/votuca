@@ -42,14 +42,8 @@
     </nav>
 
 
-      <div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
+<div class="container">
 
-            <center><h1>Crear Votacion</h1></center>
-
-      </div>
-    </main><!-- /.container -->
 
   <!-- IMPRIME SI SE HA GUARDADO BIEN -->
     <?php if(isset($mensaje)): ?>
@@ -133,6 +127,38 @@
           <?= form_label('Fecha Final','fecha_final'); ?>
           <?= form_input($atributos) ?> <br/><br/>
         </div>
+
+
+        <!-- TABLA DE CENSO -->
+        <div class = "container">
+          <table class="display table table-striped table-bordered" id="votaciones_admin">
+            <thead>
+              <tr>
+                <th scope="col" class="no-sort">Usuario</th>
+                <th scope="col" class="no-sort">Censo</th>                
+              </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <?php foreach($usuarios as $usuario){ ?>
+                <td><?php echo $usuario->NombreUsuario. $usuario->Id?></td>
+                <?php
+                echo '<div class="form-check">';
+                 $atributos = array(
+                    'name' => 'censo[]',
+                    'class' => 'form-control',
+                    'type' => 'checkbox',
+                    'id' => 'censo',
+                    'value' => $usuario->Id
+                );
+                ?>
+              <td><?= form_checkbox($atributos); ?></td>
+            </div>
+            <?php echo '</tr>'; ?>
+            <?php }?>
+          </tbody>
+        </table>
+      </div>
 
         <?php $atributos = array(
             'name' => 'submit_reg',

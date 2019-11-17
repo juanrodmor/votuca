@@ -114,6 +114,7 @@
 			<?= form_label('Fecha Final','fecha_final'); ?>
 			<?= form_input($atributos) ?> <br/><br/>
 		</div>
+    
 		<?php $atributos = array(
 				'name' => 'submit_reg',
 				'class' => 'btn btn-primary',

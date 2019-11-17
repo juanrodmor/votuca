@@ -6,19 +6,19 @@ class Usuario_model extends CI_Model {
 		parent::__construct();
 		$this->load->database();
 	}
-	
+
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return $consulta->row()->Password;
 	}
-	
+
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return ($consulta->num_rows() == 1);
 	}
-	
+
 	//Devuelve el rol de un usuario específico.
 	public function getRol($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -37,6 +37,25 @@ class Usuario_model extends CI_Model {
 		$this->db->update('usuario', array('Id_Rol' => $rol_id));
 	}
 	
+
+	/*****************************/
+	/******* FUNCIONES INMA ******/
+	/*****************************/
+	public function recuperarTodos()
+	{
+		$query = $this->db->query("SELECT  * from usuario;");
+    return $query->result();
+	}
+	public function recuperarUsuariosRol($rol)
+  {
+    $query = $this->db->query("SELECT * from usuario WHERE Id_rol = '$rol';");
+    return $query->result();
+  }
+	public function getUsuario($id) {
+		$query = $this->db->query("SELECT * from usuario WHERE Id = '$id';");
+		return $query->result();
+	}
+
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)
@@ -44,7 +63,7 @@ class Usuario_model extends CI_Model {
 		else
 			return false;
 	}*/
-	
+
 	/*public function add_usuario() {
 		$this->db->insert('usuario', array('Nombre' => $this->input->post('nombre', true),
 											'Correo' => $this->input->post('correo', true),

@@ -6,7 +6,7 @@ class Login_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
-		$this->load->model('secretario_model');
+		$this->load->model('votaciones_model');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
@@ -14,14 +14,30 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
-			else {
-				$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-				$datos = array(
-				'votaciones'=> $votaciones
-				);
-				$this->load->view('secretario/secretario_view',$datos);
-			};
+			switch($this->session->userdata('rol'))
+			{
+				case 'Elector':
+					 redirect('/Elector_controller');
+					 break;
+				case 'Secretario':
+					 redirect('/Secretario');
+					 break;
+				case 'SecretarioDelegado':
+						redirect('/Secretario/delegado');
+						break;
+				case 'MiembroElectoral':
+						redirect('/MesaElectoral');
+						break;
+
+				case 'Administrador':
+					// Cargar vista de administracion;
+					break;
+
+				default:
+					redirect('/Login_controller');
+					break;
+
+			}
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
@@ -51,21 +67,25 @@ class Login_controller extends CI_Controller {
 					switch($this->session->userdata('rol'))
 					{
 						case 'Elector':
-							$this->load->library('../controllers/Elector_controller');
-							$this->Elector_controller->index();
-							break;
+							 redirect('/Elector_controller');
+							 break;
 						case 'Secretario':
-							$this->load->library('../controllers/Secretario');
-							$this->Secretario->index();
-							break;
-						case 'Secretario delegado':
-							$this->load->library('../controllers/Secretario_delegado');
-							$this->Secretario_delegado->index();
-							break;
+							 redirect('/Secretario');
+							 break;
+						case 'SecretarioDelegado':
+								redirect('/Secretario/delegado');
+								break;
+						case 'MiembroElectoral':
+								redirect('/MesaElectoral');
+								break;
 						case 'Administrador':
-							$this->load->library('../controllers/Administrador_controller');
-							$this->Administrador_controller->index();
+							redirect('/Administrador_controller');
 							break;
+              
+						default:
+							redirect('/Login_controller');
+							break;
+
 					}
 				/*	if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
 					else {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Secretario</title>
+    <title>Mesa Electoral</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -25,12 +25,6 @@
             <li>
               <a class="nav-link" href="<?= base_url().'inicio/'?>">Home <span class="sr-only">(current)</span></a>
             </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            </div>
-          </li>
         </ul>
       </div>
         <!-- PARTE DERECHA DEL MENU -->
@@ -46,7 +40,7 @@
 <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-            <center><h1>Secretario</h1></center>
+            <center><h1>Mesa Electoral</h1></center>
       </div>
     </main>
 
@@ -55,103 +49,33 @@
       <?php endif; ?>
 
   <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
-       <thead>
-         <tr>
-           <th scope="col" class="no-sort">ID</th>
-           <th scope="col">Titulo</th>
-           <th scope="col">Descripcion</th>
-           <th scope="col">Fecha Inicio</th>
-           <th scope="col">Fecha Final</th>
-           <th scope="col"></th>
-           <th scope="col"></th>
-           <th scope="col"></th>
-         </tr>
-       </thead>
-     <tbody>
-       <?php
-        foreach($votaciones as $votacion){?>
-          <?php foreach($votacion as $objeto){?>
-         <tr>
-         <?php
-           if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
-           {
-              echo "<th scope=row class=table-danger>";  // Ha finalizado
-           }
-           else{echo "<th scope=row class=table-success>";}
-         ?>
-         <?php echo $objeto->Id;?>
-         </th>
-         <td><?php echo $objeto->Titulo;?></td>
-         <td><?php echo $objeto->Descripcion;?></td>
-         <td><?php echo $objeto->FechaInicio;?></td>
-         <td><?php echo $objeto->FechaFinal;?></td>
-
-         <!-- BOTON DE ELIMINAR -->
-         <?=form_open(base_url().'secretario/eliminarVotacion',
-         		    array('name'=>'eliminarVotacion'));?>
-                <?php
-                $atributos = array(
-                   'eliminar' => $objeto->Id // ID => Valor
-
-               );
-                ?>
-          <?= form_hidden($atributos);?>
-          <?php $atributos = array(
-              'name' => 'boton_eliminar',
-              'class' => 'btn btn-primary',
-              'type' => 'submit',
-              'value' => 'Eliminar',
-              'onclick' => "return confirm('¿Estás seguro de que quieres eliminar esta votación?')"
-          ); ?>
-          <td><?= form_submit($atributos);?></td>
-          <?= form_close(); ?>
-
-         <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
-           <!-- BOTON DE MODIFICAR -->
-           <?=form_open(base_url().'secretario/modificarVotacion',
-                   array('name'=>'modificarVotacion'));?>
-                  <?php
-                  $atributos = array(
-                     'modificar' => $objeto->Id
-
-                 );
-                  ?>
-            <?= form_hidden($atributos);?>
-            <?php $atributos = array(
-                'name' => 'boton_modificar',
-                'class' => 'btn btn-primary',
-                'type' => 'submit',
-                'value' => 'Modificar'
-            ); ?>
-            <td><?= form_submit($atributos);?></td>
-            <?= form_close(); ?>
-
-            <!-- BOTON DE DELEGAR -->
-            <?=form_open(base_url().'secretario/delegarVotacion',
-                    array('name'=>'delegarVotacion'));?>
-                   <?php
-                   $atributos = array(
-                      'delegar' => $objeto->Id
-
-                  );
-                   ?>
-             <?= form_hidden($atributos);?>
-             <?php $atributos = array(
-                 'name' => 'boton_delegar',
-                 'class' => 'btn btn-primary',
-                 'type' => 'submit',
-                 'value' => 'Delegar'
-             ); ?>
-             <td><?= form_submit($atributos);?></td>
-             <?= form_close(); ?>
-
-          <?php } ?> <!-- FIN DEL IF DATE -->
-         </tr>
-     <?php }?>
-     <?php }?>
-     </tbody>
-     </table>
+    <table class="display table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col" class="no-sort">ID</th>
+          <th scope="col">Titulo</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Fecha Inicio</th>
+          <th scope="col">Fecha Final</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+    <tbody>
+      <?php
+       foreach($votaciones as $votacion){?>
+         <?php foreach($votacion as $objeto){?>
+      <tr>
+        <td scope="row" class="table-danger"><?php echo $objeto->Id;?></td>
+        <td><?php echo $objeto->Titulo;?></td>
+        <td><?php echo $objeto->Descripcion;?></td>
+        <td><?php echo $objeto->FechaInicio;?></td>
+        <td><?php echo $objeto->FechaFinal;?></td>
+        <td><a class="btn btn-primary" href="<?= base_url().'MesaElectoral/recuentoVotos/'.$objeto->Id;?>">Recuento</a></td>
+      </tr>
+    <?php }?>
+    <?php }?>
+    </tbody>
+    </table>
 
 </div>
 </div>
