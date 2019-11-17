@@ -9,6 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
   </head>
 
   <body>
@@ -46,11 +47,11 @@
 
 
   <!-- IMPRIME SI SE HA GUARDADO BIEN -->
+  <div class ="mensaje">
     <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
+          <br/><h1><?= $mensaje ?></h1><br/>
       <?php endif; ?>
-      <h3><?= validation_errors();?></h3>
-
+    </div>
 
 
   <!-- FORMULARIO DE VOTACION -->
@@ -135,7 +136,7 @@
             <thead>
               <tr>
                 <th scope="col" class="no-sort">Usuario</th>
-                <th scope="col" class="no-sort">Censo</th>                
+                <th scope="col" class="no-sort">Censo</th>
               </tr>
             </thead>
           <tbody>

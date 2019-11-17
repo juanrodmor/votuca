@@ -553,6 +553,10 @@ pre code {
   margin-left: auto;
 }
 
+.mensaje{
+  margin-top: 100px;
+}
+
 @media (min-width: 576px) {
   .container {
     max-width: 540px;
