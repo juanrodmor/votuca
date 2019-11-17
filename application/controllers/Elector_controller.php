@@ -6,14 +6,15 @@ class Elector_controller extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Voto_model');
 	}
-	
+
 	public function index() {
 
         $id_user = $this->Voto_model->_userId($_SESSION['usuario']);
         $datos = $this->Voto_model->_listar($id_user);
-        $votos = array( 
+        $votos = array(
         	'datos' => $datos
         );
+
 		$this->load->view('Elector/votacion_view', $votos);
     }
 
@@ -30,7 +31,7 @@ class Elector_controller extends CI_Controller {
     }
 
     public function guardarVoto($id_votacion) {
-    	$voto = $_POST['voto']; 
+    	$voto = $_POST['voto'];
     	//$voto = $this->input->post('voto');
     	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
