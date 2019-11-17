@@ -32,7 +32,7 @@ class Usuario_model extends CI_Model {
 		$consulta = $this->db->get('rol');
 		$result = $consulta->result_array();
 		$roles = array();
-		foreach ($rol as &$result) {
+		foreach ($result as &$rol) {
 			array_push($roles, $rol['Nombre']);
 		}
 		return $roles;
