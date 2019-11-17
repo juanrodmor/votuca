@@ -11,3 +11,6 @@
 [13:24:14] [LOGOUT] El usuario u00000000 cerró sesión.
 [13:24:19] [LOGIN] El usuario a00000000 inició sesión exitosamente.
 [13:24:21] [LOGOUT] El usuario a00000000 cerró sesión.
+[18:33:46] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[18:38:51] [LOGOUT] El usuario s00000000 cerró sesión.
+[18:40:15] [LOGIN] El usuario u12345678 inició sesión exitosamente.
