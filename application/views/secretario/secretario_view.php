@@ -17,6 +17,15 @@
 
   <body>
   <header>
+    <!-- MINI MENU BOTONES -->
+
+  <div class="imagen">
+
+    <!-- IMAGEN DEL LOGO -->
+    <h1><img src="<?php echo base_url('assets/img/logo_uca_header.png')?>"class="img-fluid" alt="Responsive image"></h1>
+</div>
+    <!-- MENU PRINCIPAL -->
+    
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#">VotUCA</a>
       <!-- Boton de diseño adaptable -->
@@ -43,6 +52,7 @@
         </ul>
       </div>
     </nav>
+  </div>
   </header>
 
 <div class="container">

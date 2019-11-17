@@ -35,6 +35,15 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/***********************/
+.mensaje{
+  margin-top: 100px;
+}
+.imagenHeader img{
+  width: 100%;
+}
+/***********************/
+
 *,
 *::before,
 *::after {
@@ -551,10 +560,6 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-}
-
-.mensaje{
-  margin-top: 100px;
 }
 
 @media (min-width: 576px) {
