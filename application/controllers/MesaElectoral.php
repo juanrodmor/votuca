@@ -17,6 +17,7 @@ class MesaElectoral extends CI_Controller{
   {
     switch ($this->session->userdata('rol')) {
        case 'Administrador':
+       redirect('/Administrador_controller');
         break;
        case 'Elector':
         redirect('/Elector_controller');
