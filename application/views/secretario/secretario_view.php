@@ -46,7 +46,7 @@
 <div class="container">
     <main role="main" class="container">
       <div class="jumbotron">
-            <center><h1>Secretario</h1></center>
+            <center><h1>Secretarios</h1></center>
       </div>
     </main>
 
