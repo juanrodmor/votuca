@@ -21,6 +21,7 @@ class Secretario extends CI_Controller{
     // Seguridad Básica URL
     switch ($this->session->userdata('rol')) {
        case 'Administrador':
+       redirect('/Administrador_controller');
         break;
        case 'Elector':
         redirect('/Elector_controller');
