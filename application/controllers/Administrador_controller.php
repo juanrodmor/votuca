@@ -91,9 +91,19 @@ class Administrador_controller extends CI_Controller {
 			$usuario = $this->input->post('usuario');
 			$oldrol = $this->Usuario_model->getRol($usuario);
 			$newrol = $this->input->post('checkBoxInput');
-			$this->Usuario_model->setRol($usuario, $newrol);
-			$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');
-			$this->load->view('administracion/administracion_view', $data);
+			$roles = $this->Usuario_model->getRoles();
+			$valido = false;
+			foreach ($rol as &$roles) {
+				if ($valido == false && $rol == $newrol) $valido = true;
+			}
+			if ($valido == true) {
+				$this->Usuario_model->setRol($usuario, $newrol);
+				$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');
+				$this->load->view('administracion/administracion_view', $data);
+			} else {
+				$data = array('mensaje_failure' => 'Se ha intentado modificar el rol de forma ilegal. Por favor, seleccione uno de los valores mostrados.');
+				$this->load->view('administracion/administracion_view', $data);
+			}
 		}
 	}
 }

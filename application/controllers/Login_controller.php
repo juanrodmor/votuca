@@ -113,6 +113,7 @@ class Login_controller extends CI_Controller {
 		if (isset($loggeado)) {	//Si estaba loggeado...
 			$this->monitoring->register_action_logout($this->session->userdata('usuario'));	//Almacena la info del logout en un log.
 			$this->session->unset_userdata(array('usuario', 'rol'));
+			session_destroy();
 			$data = array('mensaje' => 'La sesión se ha cerrado con éxito.');
 			$this->load->view('login_view', $data);
 		} else {	//Si no...
