@@ -43,7 +43,7 @@
         </ul>
       </div>
     </nav>
-  </header> 
+  </header>
 
 <div class="container">
 
@@ -54,7 +54,7 @@
     </div>
 
   <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
+    <table class="display table table-responsive" id="votaciones_admin">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
