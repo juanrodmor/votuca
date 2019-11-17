@@ -25,17 +25,17 @@ class Administrador_controller extends CI_Controller {
 				redirect('Secretario_delegado');
 				break;
 			default:
-				$this->load->view('login_view');
+				redirect('/Login_controller');
 				break;
 		}
 	}
-	
+
 	private function logs() {
 		$datename = mdate("%Y%m%d");
 		$file = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/' . $datename .'.txt', "r");
 		return $file;
 	}
-	
+
 	public function monitoring() {
 		$file = $this->logs();
 		$logarray = array();
@@ -66,11 +66,11 @@ class Administrador_controller extends CI_Controller {
 				array_push($logarray, $line);
 			}
 		}
-		
-		$data = array('loginfo' => $logarray); 
+
+		$data = array('loginfo' => $logarray);
 		$this->load->view('administracion/administracionMonitoring_view', $data);
 	}
-	
+
 	public function buscador() {
 		if ($this->input->post('Buscar')) {
 			$usuario = $this->input->post('usuario');
@@ -85,7 +85,7 @@ class Administrador_controller extends CI_Controller {
 			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
-	
+
 	public function nuevoRol() {
 		if ($this->input->post('checkBoxInput')) {
 			$usuario = $this->input->post('usuario');
