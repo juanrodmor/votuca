@@ -30,7 +30,14 @@ class Login_controller extends CI_Controller {
 				redirect('/Administrador_controller');
 				break;
 			default:
-				redirect('/Login_controller');
+				$loggeado = $this->session->userdata('usuario');
+				if (isset($loggeado)) {	//Si estaba loggeado...
+					session_destroy();
+					$data = array('mensaje' => 'Se produjo un error con la información de usuario. Si continua sucediendo, contacte con el administrador.');
+					$this->load->view('login_view', $data);
+				} else {	//Si no...
+					redirect('/Login_controller');
+				}
 				break;
 		}
 	}
