@@ -93,7 +93,7 @@ class Administrador_controller extends CI_Controller {
 			$newrol = $this->input->post('checkBoxInput');
 			$roles = $this->Usuario_model->getRoles();
 			$valido = false;
-			foreach ($rol as &$roles) {
+			foreach ($roles as &$rol) {
 				if ($valido == false && $rol == $newrol) $valido = true;
 			}
 			if ($valido == true) {
