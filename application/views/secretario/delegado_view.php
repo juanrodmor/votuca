@@ -84,14 +84,27 @@
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
-        <?php
-          if($objeto->FechaFinal >= date('Y-m-d'))
-          {
-            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
+        <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
+          <!-- BOTON DE MODIFICAR -->
+          <?=form_open(base_url().'secretario/modificarVotacion',
+                  array('name'=>'modificarVotacion'));?>
+                 <?php
+                 $atributos = array(
+                    'modificar' => $objeto->Id
 
-          }
-        ?>
+                );
+                 ?>
+           <?= form_hidden($atributos);?>
+           <?php $atributos = array(
+               'name' => 'boton_modificar',
+               'class' => 'btn btn-primary',
+               'type' => 'submit',
+               'value' => 'Modificar'
+           ); ?>
+           <td><?= form_submit($atributos);?></td>
+           <?= form_close(); ?>
         </tr>
+      <?php }?>
     <?php }?>
     <?php }?>
     </tbody>
