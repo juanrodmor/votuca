@@ -33,11 +33,13 @@
               <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
             </div>
           </li>
+
+        </ul>
+        <ul class="navbar-nav ">
           <li class="nav-item my-2 my-lg-0 mr-sm-2">
             <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
           </li>
         </ul>
-
         <!--<form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
