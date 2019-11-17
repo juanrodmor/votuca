@@ -27,7 +27,7 @@ class Login_controller extends CI_Controller {
 					redirect('/MesaElectoral');
 					break;
 			case 'Administrador':
-				// Cargar vista de administracion;
+				redirect('/Administrador_controller');
 				break;
 			default:
 				redirect('/Login_controller');
@@ -65,7 +65,7 @@ class Login_controller extends CI_Controller {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
 
-					$this->redireccionar()			
+					$this->redireccionar();
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
