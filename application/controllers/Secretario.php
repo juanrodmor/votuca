@@ -224,12 +224,19 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
-      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-      $datos = array(
+    $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
+    $idSecretario = $consulta[0]->Id;
+    $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
+
+    $votaciones = array();
+    foreach($encontradas as $votacion){
+    $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
+    }
+    $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje
       );
-      $this->load->view('secretario/delegado_view',$datos);
+    $this->load->view('secretario/delegado_view',$datos);
 
   }
 

@@ -69,28 +69,27 @@
     <tbody>
       <?php
        foreach($votaciones as $votacion){?>
-         <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+          if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
         ?>
-        <?php echo $objeto->Id;?>
+        <?php echo $votacion->Id;?>
         </th>
-        <td><?php echo $objeto->Titulo;?></td>
-        <td><?php echo $objeto->Descripcion;?></td>
-        <td><?php echo $objeto->FechaInicio;?></td>
-        <td><?php echo $objeto->FechaFinal;?></td>
-        <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
+        <td><?php echo $votacion->Titulo;?></td>
+        <td><?php echo $votacion->Descripcion;?></td>
+        <td><?php echo $votacion->FechaInicio;?></td>
+        <td><?php echo $votacion->FechaFinal;?></td>
+        <?php if($votacion->FechaFinal > date('Y-m-d')){?>
           <!-- BOTON DE MODIFICAR -->
           <?=form_open(base_url().'secretario/modificarVotacion',
                   array('name'=>'modificarVotacion'));?>
                  <?php
                  $atributos = array(
-                    'modificar' => $objeto->Id
+                    'modificar' => $votacion->Id
 
                 );
                  ?>
@@ -106,7 +105,7 @@
         </tr>
       <?php }?>
     <?php }?>
-    <?php }?>
+
     </tbody>
     </table>
 
