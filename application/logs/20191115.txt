@@ -1,0 +1,1 @@
+[09:51:09] [LOGIN] El usuario u00000000 inició sesión.[09:52:16] [LOGOUT] El usuario u00000000 cerró sesión.

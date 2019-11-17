@@ -1,0 +1,49 @@
+.container
+{
+    margin-top: 5%;
+}
+
+#monitoring_search
+{
+    display: inline-block;
+}
+
+body
+{
+    text-align: center;
+}
+
+#user_searcher
+{
+    text-align: left;
+    float: left;
+}
+
+#button-search
+{
+    float: left;
+    margin-left: 3%;
+}
+
+#button_update
+{
+    float:right;
+}
+
+#error_alert
+{
+    margin-top: 10%;
+    margin-bottom: -9%;
+}
+
+#search_results
+{
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+#roles_dropdown
+{
+    padding: 3%;
+}
+

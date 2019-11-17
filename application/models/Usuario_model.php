@@ -25,6 +25,18 @@ class Usuario_model extends CI_Model {
 		$consulta2 = $this->db->get_where('rol', array('Id' => $consulta->row()->Id_Rol));
 		return $consulta2->row()->Nombre;
 	}
+	
+	//Modifica el rol de un usuario específico.
+	public function setRol($usuario, $rol) {
+		
+		$consultaId = $this->db->get_where('rol', array('Nombre' => $rol));
+		$rol_id = $consultaId->row()->Id;
+		
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		$this->db->where('Id', $consulta->row()->Id);
+		$this->db->update('usuario', array('Id_Rol' => $rol_id));
+	}
+	
 
 	/*****************************/
 	/******* FUNCIONES INMA ******/
@@ -43,6 +55,7 @@ class Usuario_model extends CI_Model {
 		$query = $this->db->query("SELECT * from usuario WHERE Id = '$id';");
 		return $query->result();
 	}
+
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)
