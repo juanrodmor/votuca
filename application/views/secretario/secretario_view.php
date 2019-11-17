@@ -16,6 +16,7 @@
   </head>
 
   <body>
+  <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#">VotUCA</a>
       <!-- Boton de diseño adaptable -->
@@ -40,38 +41,9 @@
             <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
           </li>
         </ul>
-        <!--<form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>-->
       </div>
     </nav>
-    <!--<header>
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">VotUCA</a>
-        <!-- PARTE IZQUIERDA DEL MENU
-        <div class ="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-              <li>
-                <a class="nav-link" href="<?= base_url().'secretario/'?>">Inicio <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                  <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-                </div>
-              </li>
-            </ul>
-          </div>
-        <!-- PARTE DERECHA DEL MENU
-          <ul class="navbar-nav ml-auto my-2 my-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-            </li>
-          </ul>
-
-    </nav>
-  </header>-->
+  </header> 
 
 <div class="container">
 
@@ -187,7 +159,7 @@
       <div class="row">
       <div class="col-sm-3">
       <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
-      <div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>
+      <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
       </div>
 
 
