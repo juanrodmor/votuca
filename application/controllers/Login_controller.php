@@ -10,39 +10,40 @@ class Login_controller extends CI_Controller {
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
+
+	public function redireccionar(){
+		switch($this->session->userdata('rol'))
+		{
+			case 'Elector':
+				 redirect('/Elector_controller');
+				 break;
+			case 'Secretario':
+				 redirect('/Secretario');
+				 break;
+			case 'SecretarioDelegado':
+					redirect('/Secretario/delegado');
+					break;
+			case 'MiembroElectoral':
+					redirect('/MesaElectoral');
+					break;
+			case 'Administrador':
+				// Cargar vista de administracion;
+				break;
+			default:
+				redirect('/Login_controller');
+				break;
+		}
+	}
 	//Por defecto carga la vista de login.
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			switch($this->session->userdata('rol'))
-			{
-				case 'Elector':
-					 redirect('/Elector_controller');
-					 break;
-				case 'Secretario':
-					 redirect('/Secretario');
-					 break;
-				case 'SecretarioDelegado':
-						redirect('/Secretario/delegado');
-						break;
-				case 'MiembroElectoral':
-						redirect('/MesaElectoral');
-						break;
-
-				case 'Administrador':
-					// Cargar vista de administracion;
-					break;
-
-				default:
-					redirect('/Login_controller');
-					break;
-
-			}
+			$this->redireccionar();
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
 	}
-	
+
 	/*
 	//Función auxiliar de encriptación de contraseñas.
 	private function encriptar($pass) {
@@ -64,38 +65,7 @@ class Login_controller extends CI_Controller {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
 
-					switch($this->session->userdata('rol'))
-					{
-						case 'Elector':
-							 redirect('/Elector_controller');
-							 break;
-						case 'Secretario':
-							 redirect('/Secretario');
-							 break;
-						case 'SecretarioDelegado':
-								redirect('/Secretario/delegado');
-								break;
-						case 'MiembroElectoral':
-								redirect('/MesaElectoral');
-								break;
-						case 'Administrador':
-							redirect('/Administrador_controller');
-							break;
-              
-						default:
-							redirect('/Login_controller');
-							break;
-
-					}
-				/*	if ($this->session->userdata('rol') == 'Elector') $this->load->view('Elector/listar_votaciones');
-					else {
-						if($this->session->userdata('rol') == 'Elector')
-						$votaciones['votaciones'] = $this->secretario_model->recuperarVotaciones();
-				    $datos = array(
-				      'votaciones'=> $votaciones
-				    );
-				    $this->load->view('secretario/secretario_view',$datos);
-					};*/
+					$this->redireccionar()			
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
