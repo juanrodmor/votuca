@@ -41,3 +41,21 @@
 [19:40:07] [LOGIN] El usuario s00000000 inició sesión exitosamente.
 [19:47:02] [LOGOUT] El usuario s00000000 cerró sesión.
 [19:47:06] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[20:00:55] [LOGOUT] El usuario s00000000 cerró sesión.
+[20:01:03] [LOGIN] El usuario u12345678 inició sesión exitosamente.
+[20:01:58] [LOGOUT] El usuario u12345678 cerró sesión.
+[20:02:53] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[20:03:01] [LOGOUT] El usuario s00000000 cerró sesión.
+[20:03:38] [LOGIN] El usuario u12345678 inició sesión exitosamente.
+[20:03:48] [LOGOUT] El usuario u12345678 cerró sesión.
+[20:04:51] [LOGIN] El usuario u11111111 inició sesión exitosamente.
+[20:04:56] [LOGOUT] El usuario u11111111 cerró sesión.
+[20:07:13] [LOGIN] El usuario u00000000 inició sesión exitosamente.
+[20:08:26] [LOGOUT] El usuario u00000000 cerró sesión.
+[20:08:32] [LOGIN] El usuario s00000000 realizó un intento fallido.
+[20:08:39] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[20:13:39] [LOGOUT] El usuario s00000000 cerró sesión.
+[20:14:16] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[20:17:39] [LOGOUT] El usuario s00000000 cerró sesión.
+[20:22:00] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[20:23:40] [LOGOUT] El usuario s00000000 cerró sesión.

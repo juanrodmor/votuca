@@ -15,33 +15,34 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <!-- PARTE IZQUIERDA DEL MENU -->
-       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="navbar-brand" href="#">VotUCA</a>
-            </li>
-            <li>
-              <a class="nav-link" href="<?= base_url().'inicio/'?>">Home <span class="sr-only">(current)</span></a>
-            </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-        <!-- PARTE DERECHA DEL MENU -->
-      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-          <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <header>
+  		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  			<a class="navbar-brand" href="#">VotUCA</a>
+  			<!-- Boton de diseño adaptable -->
+  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  				<span class="navbar-toggler-icon"></span>
+  			</button>
+  			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  				<ul class="navbar-nav mr-auto">
+  					<li class="nav-item active">
+  							<a class="nav-link" href="<?= base_url().'secretario/delegado'?>">Inicio <span class="sr-only">(current)</span></a>
+  					</li>
+  					<li class="nav-item dropdown">
+  						<a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
+  						<div class="dropdown-menu" aria-labelledby="dropdown01">
+  							<a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
+  						</div>
+  					</li>
+
+  				</ul>
+  				<ul class="navbar-nav ">
+  					<li class="nav-item my-2 my-lg-0 mr-sm-2">
+  						<a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
+  					</li>
+  				</ul>
+  			</div>
+  		</nav>
+  	</header>
 
 <div class="container">
     <main role="main" class="container">
@@ -111,67 +112,16 @@
 
 </div>
 </div>
-
-  <footer class="footer">
+<footer class="footer">
   <div class="container">
       <div class="row">
       <div class="col-sm-3">
-          <h4 class="title">Sumi</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin suscipit, libero a molestie consectetur, sapien elit lacinia mi.</p>
-          <ul class="social-icon">
-          <a href="#" class="social"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-google" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-          </ul>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">My Account</h4>
-          <span class="acount-icon">
-          <a href="#"><i class="fa fa-heart" aria-hidden="true"></i> Wish List</a>
-          <a href="#"><i class="fa fa-cart-plus" aria-hidden="true"></i> Cart</a>
-          <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-          <a href="#"><i class="fa fa-globe" aria-hidden="true"></i> Language</a>
-        </span>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Category</h4>
-          <div class="category">
-          <a href="#">men</a>
-          <a href="#">women</a>
-          <a href="#">boy</a>
-          <a href="#">girl</a>
-          <a href="#">bag</a>
-          <a href="#">teshart</a>
-          <a href="#">top</a>
-          <a href="#">shos</a>
-          <a href="#">glass</a>
-          <a href="#">kit</a>
-          <a href="#">baby dress</a>
-          <a href="#">kurti</a>
-          </div>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Payment Methods</h4>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-          <ul class="payment">
-          <li><a href="#"><i class="fa fa-cc-amex" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-paypal" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-cc-visa" aria-hidden="true"></i></a></li>
-          </ul>
-          </div>
-      </div>
-      <hr>
-
-      <div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>
+      <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
+      <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
       </div>
 
 
   </footer>
-
 
 
     <!-- Bootstrap core JavaScript
