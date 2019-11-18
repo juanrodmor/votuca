@@ -40,14 +40,8 @@
 			</div>
 		</nav>
 	</header>
-			<main role="main" class="container">
-				<div class="jumbotron">
-					<div class="container">
-							<center><h1>Lista de votaciones</h1></center>
-					</div>
-				</div>
-			</main><!-- /.container -->
 
+<br><br><br><br>
 <div class = "container">
 	  <?=form_open(base_url().'secretario/updateVotacion/');?>
 		<div class="form-group">
@@ -127,6 +121,7 @@
 	<?= form_close(); ?>
 </div>
 
+<br>
 <footer class="footer">
   <div class="container">
       <div class="row">

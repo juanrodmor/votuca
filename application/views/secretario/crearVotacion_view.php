@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>CREACIÓN VOTACIONES</title>
+    <title>CREACION VOTACIONES</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">-->
@@ -112,6 +112,7 @@
               'class' => 'form-control',
               'placeholder' =>'Selecciona una fecha de finalizacion',
               'data-provide' => 'datepicker',
+              'data-date-start-date'=>"0d",
               'id' => 'fecha_final',
               'required' => true,
               'value' => set_value('fecha_final')
@@ -183,6 +184,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
 
     <!-- DATE PICKER -->
+    <script src="<?php echo base_url()."assets/js/behaviour/datepicker.js"?>"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
 
 
