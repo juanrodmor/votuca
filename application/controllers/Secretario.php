@@ -17,7 +17,7 @@ class Secretario extends CI_Controller{
 
   }
 
-  public function index($mensaje = 'Bienvenido a la pagina del secretario'){
+  public function index($mensaje = ''){
     // Seguridad Básica URL
     switch ($this->session->userdata('rol')) {
        case 'Administrador':

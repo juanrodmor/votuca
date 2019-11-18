@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Crear Votacion</title>
+    <title>CREACIÓN VOTACIONES</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
-      <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+    <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
   </head>
 
   <body>
@@ -44,18 +45,8 @@
 
 
 <div class="container">
-
-
-  <!-- IMPRIME SI SE HA GUARDADO BIEN -->
-  <div class ="mensaje">
-    <?php if(isset($mensaje)): ?>
-          <br/><h1><?= $mensaje ?></h1><br/>
-      <?php endif; ?>
-    </div>
-
-
+  <br><br><br><br>
   <!-- FORMULARIO DE VOTACION -->
-    <section>
     <?=form_open(base_url().'secretario/insertarVotacion',
     		    array('name'=>'crearVotacion'));?>
             <!-- ESPERAR A SABER CÓMO COMPROBAR QUE UNA VOTACION NO EXISTE YA -->
@@ -167,11 +158,11 @@
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
-        <?= form_submit($atributos);?>
+        <center><?= form_submit($atributos);?></center>
       <?= form_close(); ?>
-    </section>
 </div>
 
+<br>
 <footer class="footer">
   <div class="container">
       <div class="row">
@@ -179,9 +170,10 @@
       <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
       <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
       </div>
+    </div>
+  </div>
 
-
-  </footer>
+</footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
