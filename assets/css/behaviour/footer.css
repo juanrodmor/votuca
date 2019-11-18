@@ -2,11 +2,11 @@
 /*FOOTER START///////////////////*/
 
 .footer {
-  bottom: 0;
-  margin: 0 auto;
-    padding: 50px 0 20px 0;
-    background-color: #35404f;
-    color: #fff;
+  padding: 50px 0 20px 0;
+  background-color: #35404f;
+  color: #fff;
+  margin-top: 1.5em;
+
 
 }
 .footer .title{text-align: left;color:#fff;font-size:25px;}
