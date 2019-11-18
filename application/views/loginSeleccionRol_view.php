@@ -33,19 +33,19 @@
                 <div class="inputs">
                 <?php
                     if(isset($roles))
-                    {
+                    {   
+                        echo '<form id="chooseRole" method="post" action="' . base_url().'login_controller/seleccionRol' . '">';
                         foreach($roles as $rol)
                         {
                             echo
-                            '
-                            <form id="chooseRole" class="input-group" method="post" action="">
+                            '   <div class="input-group"> 
                                 <span class="input-group-addon">
                                     <input type="radio" name="radio'.$rol.'" value="'.$rol.'">
                                 </span>
                                 <input type="text" class="form-control" value="' . $rol . '"disabled>
-                            </form><!-- /input-group -->
-                             <br>';
+                                </div><br>';
                         }
+                        echo '</form>';
                     }
                 ?>
                 </div>
