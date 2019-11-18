@@ -24,6 +24,12 @@ class SecretariosDelegados_model extends CI_Model{
 
   }
 
+  public function getVotacionesSecretario($idSecretario)
+  {
+    $query = $this->db->query("SELECT Id_Votacion from secretarios_delegados WHERE Id_Secretario = '$idSecretario';");
+    return $query->result();
+  }
+
 }
 
 

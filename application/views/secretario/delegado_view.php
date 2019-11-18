@@ -15,47 +15,10 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <!-- PARTE IZQUIERDA DEL MENU -->
-       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="navbar-brand" href="#">VotUCA</a>
-            </li>
-            <li>
-              <a class="nav-link" href="<?= base_url().'inicio/'?>">Home <span class="sr-only">(current)</span></a>
-            </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-        <!-- PARTE DERECHA DEL MENU -->
-      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-          <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
 
 <div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
-            <center><h1>Secretario</h1></center>
-      </div>
-    </main>
-
-    <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
-      <?php endif; ?>
-
-  <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
+    <br><br><br><br>
+    <table class="display table table-striped table-responsive"id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
@@ -69,97 +32,46 @@
     <tbody>
       <?php
        foreach($votaciones as $votacion){?>
-         <?php foreach($votacion as $objeto){?>
         <tr>
         <?php
-          if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+          if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
           else{echo "<th scope=row class=table-success>";}
         ?>
-        <?php echo $objeto->Id;?>
+        <?php echo $votacion->Id;?>
         </th>
-        <td><?php echo $objeto->Titulo;?></td>
-        <td><?php echo $objeto->Descripcion;?></td>
-        <td><?php echo $objeto->FechaInicio;?></td>
-        <td><?php echo $objeto->FechaFinal;?></td>
-        <?php
-          if($objeto->FechaFinal >= date('Y-m-d'))
-          {
-            echo '<td><a class="btn btn-primary" href='.base_url().'secretario/modificarVotacion/'.$objeto->Id.' role="button">Modificar</a></td>';
+        <td><?php echo $votacion->Titulo;?></td>
+        <td><?php echo $votacion->Descripcion;?></td>
+        <td><?php echo $votacion->FechaInicio;?></td>
+        <td><?php echo $votacion->FechaFinal;?></td>
+        <?php if($votacion->FechaFinal > date('Y-m-d')){?>
+          <!-- BOTON DE MODIFICAR -->
+          <?=form_open(base_url().'secretario/modificarVotacion',
+                  array('name'=>'modificarVotacion'));?>
+                 <?php
+                 $atributos = array(
+                    'modificar' => $votacion->Id
 
-          }
-        ?>
+                );
+                 ?>
+           <?= form_hidden($atributos);?>
+           <?php $atributos = array(
+               'name' => 'boton_modificar',
+               'class' => 'btn btn-primary',
+               'type' => 'submit',
+               'value' => 'Modificar'
+           ); ?>
+           <td><?= form_submit($atributos);?></td>
+           <?= form_close(); ?>
         </tr>
+      <?php }?>
     <?php }?>
-    <?php }?>
+
     </tbody>
     </table>
-
 </div>
-</div>
-
-  <footer class="footer">
-  <div class="container">
-      <div class="row">
-      <div class="col-sm-3">
-          <h4 class="title">Sumi</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin suscipit, libero a molestie consectetur, sapien elit lacinia mi.</p>
-          <ul class="social-icon">
-          <a href="#" class="social"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-google" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-          </ul>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">My Account</h4>
-          <span class="acount-icon">
-          <a href="#"><i class="fa fa-heart" aria-hidden="true"></i> Wish List</a>
-          <a href="#"><i class="fa fa-cart-plus" aria-hidden="true"></i> Cart</a>
-          <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-          <a href="#"><i class="fa fa-globe" aria-hidden="true"></i> Language</a>
-        </span>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Category</h4>
-          <div class="category">
-          <a href="#">men</a>
-          <a href="#">women</a>
-          <a href="#">boy</a>
-          <a href="#">girl</a>
-          <a href="#">bag</a>
-          <a href="#">teshart</a>
-          <a href="#">top</a>
-          <a href="#">shos</a>
-          <a href="#">glass</a>
-          <a href="#">kit</a>
-          <a href="#">baby dress</a>
-          <a href="#">kurti</a>
-          </div>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Payment Methods</h4>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-          <ul class="payment">
-          <li><a href="#"><i class="fa fa-cc-amex" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-paypal" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-cc-visa" aria-hidden="true"></i></a></li>
-          </ul>
-          </div>
-      </div>
-      <hr>
-
-      <div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>
-      </div>
-
-
-  </footer>
-
 
 
     <!-- Bootstrap core JavaScript

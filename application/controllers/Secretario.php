@@ -17,7 +17,7 @@ class Secretario extends CI_Controller{
 
   }
 
-  public function index($mensaje = 'Bienvenido a la pagina del secretario'){
+  public function index($mensaje = ''){
     // Seguridad Básica URL
     switch ($this->session->userdata('rol')) {
        case 'Administrador':
@@ -27,12 +27,16 @@ class Secretario extends CI_Controller{
         redirect('/Elector_controller');
         break;
        case 'Secretario':
+       $titulo['titulo'] = 'SECRETARIO';  // Titulo del head
+       $this->load->view('elementos/head',$titulo);
+       $this->load->view('elementos/headerSecretario');
        $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
        $datos = array(
          'votaciones'=> $votaciones,
          'mensaje' => $mensaje
        );
        $this->load->view('secretario/secretario_view',$datos);
+       $this->load->view('elementos/footer');
         break;
        case 'Secretario delegado':
         redirect('/secretario/delegado');
@@ -52,8 +56,12 @@ class Secretario extends CI_Controller{
 
   public function crearVotacion()
   {
+    $titulo['titulo'] = 'CREAR VOTACION';  // Titulo del head
+    $this->load->view('elementos/head',$titulo);
+    $this->load->view('elementos/headerSecretario');
     $data['usuarios'] = $this->usuario_model->recuperarTodos();
     $this->load->view('secretario/crearVotacion_view',$data);
+    $this->load->view('elementos/footer');
   }
   public function insertarVotacion()
   {
@@ -135,11 +143,6 @@ class Secretario extends CI_Controller{
   /*********** ELIMINAR VOTACION ******/
   /************************************/
 
-  /*public function eliminarVotacion($id){
-    $eliminada = $this->votaciones_model->eliminarVotacion($id);
-    if($eliminada){$this->index('La votación se ha eliminado correctamente');}
-  }*/
-
   public function eliminarVotacion(){
     if($this->input->post('boton_eliminar'))
     {
@@ -158,9 +161,13 @@ class Secretario extends CI_Controller{
 	{
     if($this->input->post('boton_modificar'))
     {
+      $titulo['titulo'] = 'MODIFICAR VOTACION';  // Titulo del head
+      $this->load->view('elementos/head',$titulo);
+      $this->load->view('elementos/headerSecretario');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
       $this->load->view('secretario/modificarVotacion_view', $data);
+      $this->load->view('elementos/footer');
 
     }
 	}
@@ -190,6 +197,9 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post('boton_delegar'))
     {
+      $titulo['titulo'] = 'DELEGAR';  // Titulo del head
+      $this->load->view('elementos/head',$titulo);
+      $this->load->view('elementos/headerSecretario');
       $rol = 3; // Rol secretario
       $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
       $idVotacion = $this->input->post('delegar');
@@ -198,6 +208,7 @@ class Secretario extends CI_Controller{
         'secretarios'=> $secretarios
       );
       $this->load->view('secretario/delegar_view',$datos);
+      $this->load->view('elementos/footer');
     }
   }
 
@@ -224,12 +235,24 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
-      $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-      $datos = array(
+    $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
+    $idSecretario = $consulta[0]->Id;
+    $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
+
+    $titulo['titulo'] = 'SECRETARIO DELEGADO';  // Titulo del head
+    $this->load->view('elementos/head',$titulo);
+    $inicio['inicio'] = 'secretario/delegado';
+    $this->load->view('elementos/headerComun',$inicio);
+    $votaciones = array();
+    foreach($encontradas as $votacion){
+    $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
+    }
+    $datos = array(
         'votaciones'=> $votaciones,
         'mensaje' => $mensaje
       );
-      $this->load->view('secretario/delegado_view',$datos);
+    $this->load->view('secretario/delegado_view',$datos);
+    $this->load->view('elementos/footer');
 
   }
 

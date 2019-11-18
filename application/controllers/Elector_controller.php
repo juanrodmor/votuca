@@ -6,7 +6,7 @@ class Elector_controller extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Voto_model');
 	}
-	
+
 	public function index() {
 		if ($this->session->userdata('rol') != 'Elector') {
 			redirect('/Login_controller');
@@ -18,7 +18,8 @@ class Elector_controller extends CI_Controller {
 	        	'datos' => $datos
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
-	    }     
+	    }    
+
     }
 
     public function votar($id_votacion, $titulo) {
@@ -34,6 +35,7 @@ class Elector_controller extends CI_Controller {
     }
 
     public function guardarVoto($id_votacion) {
+
     	if($_POST['voto'] == NULL) {
     		echo("selecciona una opcion valida");
     		$this->index();
@@ -43,10 +45,12 @@ class Elector_controller extends CI_Controller {
 	    	//$voto = $this->input->post('voto');
 	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
+
 	    	$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
 	    	$this->index();
     	}
     }
+
 
     public function verResultados($id_votacion, $titulo) {
     	$datos = $this->Voto_model->recuentoVotos($id_votacion);
@@ -62,3 +66,4 @@ class Elector_controller extends CI_Controller {
     }
 
 }
+

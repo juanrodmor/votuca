@@ -22,6 +22,16 @@
     width: 50%;
   }
 
+  .navbar{
+    background-color:#384850 ;
+
+  }
+
+  .navbar-brand{
+    color:#fff;
+
+  }
+
 #button-form
 {
     display: block;
@@ -31,7 +41,7 @@
 
 div #container-data
 {
-    width: 50% ; 
+    width: 50% ;
     display: block ;
     align-content: center;
     margin-left: 25%;

@@ -5,7 +5,7 @@ $(document).ready(function(){
       serverSide: false,
       paging: true,
       "scrollY": 300,
-      ordering: true,
+      ordering: false,
       "language": {
             "lengthMenu": "Muestra _MENU_ votaciones por pagina",
             "zeroRecords": "Votación no encontrada",
@@ -20,6 +20,6 @@ $(document).ready(function(){
 
             }
         }
-        
+
     });
 });
