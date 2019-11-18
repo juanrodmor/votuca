@@ -7,36 +7,24 @@
 
     <style> @import url(<?php echo base_url('assets/css/login_css.css')?>); </style>
 
+    <link href="<?php echo base_url(); ?>/assets/css/login_css.css" rel="stylesheet">
     <!-- Bootstrap and JQUERY resources -->
-    <link href="<?php echo base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <a class="navbar-brand" href="#">UNIVERSIDAD DE CÁDIZ</a>
-
-    </nav>
+    <div class="navbar">
+      <p id="tipografiaLogin" >UNIVERSIDAD DE CÁDIZ</p>
+    </div>
   </header>
-
-
-
-
-
-        <div class="container navbar-default">
-
-        <div id=logo>
-            <center><img src="<?php echo base_url('assets/img/logo.png')?>" class="img-fluid" alt="Responsive image"></center>
-        </div>
-            <br><br>
-
-            <!--Display error messages-->
-            <div id="container-data">
+  <div class="container navbar-default">
+    <center><img src="<?php echo base_url('assets/img/logo.png')?>" class="img-fluid" alt="Responsive image"></center>
+    <br><br>
+    <!--Display error messages-->
+    <div id="container-data">
                 <?php
 
                     echo form_error('usuario', '<div class="alert alert-danger" role="alert">', '</div>');
@@ -68,6 +56,10 @@
             </div>
 
         </div>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </body>
 </html>

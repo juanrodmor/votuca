@@ -106,7 +106,7 @@
           <tbody>
             <tr>
               <?php foreach($usuarios as $usuario){ ?>
-                <td><?php echo $usuario->NombreUsuario. $usuario->Id?></td>
+                <td><?php echo $usuario->NombreUsuario?></td>
                 <?php
                 echo '<div class="form-check">';
                  $atributos = array(
