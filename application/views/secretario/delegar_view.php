@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Delegar Votacion</title>
+    <title>DELEGAR VOTACION</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.css" rel="stylesheet">-->
+    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
 
 
   </head>
@@ -46,24 +48,15 @@
   		</nav>
   	</header>
 
-  <div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
-            <center><h1>Secretario</h1></center>
-      </div>
-    </main>
 
-    <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
-      <?php endif; ?>
-
+<br><br><br><br>
 <div class = "container">
-    <table class="display table table-striped table-bordered" style="width:100%" id="votaciones_admin">
+    <table class="display table table-striped table-responsive" id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
           <th scope="col">Nombre Usuario</th>
-          <th scope="col"> </th>
+          <th scope="col"></th>
         </tr>
       </thead>
     <tbody>
@@ -99,8 +92,19 @@
 
     </tbody>
     </table>
-
 </div>
+
+<br>
+<footer class="footer">
+  <div class="container">
+      <div class="row">
+      <div class="col-sm-3">
+      <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
+      <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
+      </div>
+
+
+  </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -113,7 +117,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-    <script src="<?php echo base_url()."assets/js/behaviour/administracion_votaciones.js"?>"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
