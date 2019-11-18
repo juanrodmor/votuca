@@ -3,6 +3,8 @@
   <body>
 
     <br><br><br><br><br>
+    <center><h2> Escoja una opción </h2></center>
+    <br><br>
     <form action="<?= base_url().'Elector_controller/guardarVoto/'.$id_votacion.'/'?>" method="post">
       <center>
         <div class="btn-group" data-toggle="buttons">

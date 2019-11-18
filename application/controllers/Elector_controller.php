@@ -41,7 +41,7 @@ class Elector_controller extends CI_Controller {
     		'votos' => $votos
     	);
     	$this->load->view('Elector/voto_view', $datos);
-			//$this->load->view('elementos/footer');
+			$this->load->view('elementos/footer');
 
     }
 
@@ -78,7 +78,7 @@ class Elector_controller extends CI_Controller {
     		'votos' => $recVotos
     	);
     	$this->load->view('Elector/resultados_view', $datos);
-			//$this->load->view('elementos/footer');
+			$this->load->view('elementos/footer');
     }
 
 }
