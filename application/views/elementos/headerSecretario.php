@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <!-- Logo -->
     <a class="navbar-brand">
-          <img src="<?php echo base_url('assets/img/logo.png')?>" class="imagenMenu" alt="">
+          <img src="<?php echo base_url('assets/img/logo_menus.png')?>" class="imagenMenu" alt="">
         </a>
     <!--<a class="navbar-brand" href="#">VotUCA</a>-->
     <!-- Boton de diseño adaptable -->
