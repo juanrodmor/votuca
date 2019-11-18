@@ -4,7 +4,8 @@
   <body>
 <br><br><br><br><br>
 <div class="container">
-    <table class="display table table-bordered"  id="votaciones_admin" >
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="display table table-bordered" id="votaciones_admin" >
        <thead>
          <tr>
            <th scope="col">Titulo</th>
@@ -50,6 +51,7 @@
         <?php }?>
       </tbody>
     </table>
+  </div>
 </div>
 
 

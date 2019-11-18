@@ -19,7 +19,7 @@
 
 <div class="container">
     <br><br><br><br>
-    <table class="display table table-striped table-responsive"id="votaciones_admin">
+    <table class="display table table-striped"id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
@@ -72,6 +72,7 @@
 
     </tbody>
     </table>
+  
 </div>
 
 
