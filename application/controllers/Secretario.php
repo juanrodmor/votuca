@@ -27,8 +27,7 @@ class Secretario extends CI_Controller{
         redirect('/Elector_controller');
         break;
        case 'Secretario':
-       $titulo['titulo'] = 'SECRETARIO';  // Titulo del head
-       $this->load->view('elementos/head',$titulo);
+
        $this->load->view('elementos/headerSecretario');
        $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
        $datos = array(
@@ -56,8 +55,6 @@ class Secretario extends CI_Controller{
 
   public function crearVotacion()
   {
-    $titulo['titulo'] = 'CREAR VOTACION';  // Titulo del head
-    $this->load->view('elementos/head',$titulo);
     $this->load->view('elementos/headerSecretario');
     $data['usuarios'] = $this->usuario_model->recuperarTodos();
     $this->load->view('secretario/crearVotacion_view',$data);
@@ -120,6 +117,7 @@ class Secretario extends CI_Controller{
 
   public function guardarVotacion($datos)
   {
+
     $ultimoId = $this->votaciones_model->getLastId();
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
@@ -161,8 +159,7 @@ class Secretario extends CI_Controller{
 	{
     if($this->input->post('boton_modificar'))
     {
-      $titulo['titulo'] = 'MODIFICAR VOTACION';  // Titulo del head
-      $this->load->view('elementos/head',$titulo);
+    
       $this->load->view('elementos/headerSecretario');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
@@ -197,8 +194,6 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post('boton_delegar'))
     {
-      $titulo['titulo'] = 'DELEGAR';  // Titulo del head
-      $this->load->view('elementos/head',$titulo);
       $this->load->view('elementos/headerSecretario');
       $rol = 3; // Rol secretario
       $secretarios['secretarios'] = $this->usuario_model->recuperarUsuariosRol($rol);
@@ -239,8 +234,6 @@ class Secretario extends CI_Controller{
     $idSecretario = $consulta[0]->Id;
     $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
 
-    $titulo['titulo'] = 'SECRETARIO DELEGADO';  // Titulo del head
-    $this->load->view('elementos/head',$titulo);
     $inicio['inicio'] = 'secretario/delegado';
     $this->load->view('elementos/headerComun',$inicio);
     $votaciones = array();

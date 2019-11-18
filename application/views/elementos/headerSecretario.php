@@ -3,7 +3,7 @@
     <!-- Logo -->
     <a class="navbar-brand">
           <img src="<?php echo base_url('assets/img/logo_menus.png')?>" class="imagenMenu" alt="">
-        </a>
+      </a>
     <!--<a class="navbar-brand" href="#">VotUCA</a>-->
     <!-- Boton de diseño adaptable -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,6 +18,7 @@
           <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
             <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
+            <a class="dropdown-item"> Hey </a>
           </div>
         </li>
 

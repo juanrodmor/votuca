@@ -5,9 +5,9 @@
 			parent::__construct ();
 			$this->load->database();
 			/*
-			$mysqli = mysqli_connect("localhost", "root", "", "votuca"); 
-			if($mysqli == false) { 
-			    die("ERROR: Could not connect. ".mysqli_connect_error()); 
+			$mysqli = mysqli_connect("localhost", "root", "", "votuca");
+			if($mysqli == false) {
+			    die("ERROR: Could not connect. ".mysqli_connect_error());
 			}
 			*/
 		}
@@ -17,16 +17,16 @@
 		{
 			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, voto.Nombre, votacion.FechaInicio, votacion.FechaFinal
 						from votacion, usuario_votacion, voto
-						where votacion.Id = usuario_votacion.Id_Votacion 
+						where votacion.Id = usuario_votacion.Id_Votacion
 							AND usuario_votacion.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Voto = voto.Id 
+							AND usuario_votacion.Id_Voto = voto.Id
 						order by votacion.FechaFinal ASC;";
-							
+
 			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
 			$query = $this -> db -> query($sql);
 			if ( $query->num_rows() == 0 )
 			{
-				return null; 
+				return null;
 			} else {
 				return $query->result();
 			}
@@ -53,10 +53,10 @@
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
 			$sql = "select Nombre from voto where id != '1';";		// habra que pasarle el id de la votacion para que muestre sus votos disponibles
 			$query = $this -> db -> query($sql);
-			if($query) {  
+			if($query) {
 			    return $query->result();
-			} else { 
-			    echo "ERROR: Could not able to execute $sql. "; 
+			} else {
+			    echo "ERROR: Could not able to execute $sql. ";
 			}
 		}
 
@@ -70,11 +70,11 @@
 
 			$sql = "insert into 'usuario_votacion' (Id_Usuario, Id_Votacion, Id_voto) values ('".$id_usuario."','".$id_votacion."','".$id_voto['Id']."');";
 			$query = $this -> db -> query($sql);
-			if($query) {  
-			    echo "Voto insertado correctamente."; 
-			} else { 
-			    echo "ERROR: Could not able to execute $sql. "; 
-			} 
+			if($query) {
+			    echo "Voto insertado correctamente.";
+			} else {
+			    echo "ERROR: Could not able to execute $sql. ";
+			}
 		}
 		*/
 
@@ -83,11 +83,11 @@
 		{
 			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."' and Id_Voto = 'No votado';";
 			$query = $this -> db -> query($sql);
-			if( $query->num_rows() == 0 ) {  
+			if( $query->num_rows() == 0 ) {
 			    return false;
-			} else { 
+			} else {
 			    return true;
-			} 
+			}
 		}
 
 		/********************************/
@@ -99,6 +99,14 @@
 			// return $query->num_rows();
 			return $query->result();
 		}
+
+		public function recuentoVotosElectoral($id_votacion)	//votos totales de la votacion $id_votacion
+		{
+			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+			return $query->num_rows();
+			//return $query->result();
+		}
+
 
 		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
 		{
@@ -142,7 +150,7 @@
 					'Id_Votacion' => $nuevoId,
 					'Id_Voto' => $sinVoto
 				);
-				$this->db->insert('usuario_votacion',$datos);				
+				$this->db->insert('usuario_votacion',$datos);
 			}
 		}
 
