@@ -48,11 +48,6 @@
 
 			$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 			$query = $this -> db -> query($sql);
-			if($query) {  
-			    echo "Voto actualizado correctamente."; 
-			} else { 
-			    echo "ERROR: Could not able to execute $sql. "; 
-			} 
 		}
 
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
@@ -98,11 +93,43 @@
 		/********************************/
 		/******* RECUENTO DE VOTOS ******/
 		/********************************/
-		public function recuentoVotos($idVotacion)
+		public function recuentoVotos($id_votacion)	//votos totales de la votacion $id_votacion
 		{
-			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$idVotacion';");
-			return $query->num_rows();
+			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+			// return $query->num_rows();
+			return $query->result();
 		}
+
+		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
+		{
+			$Si = 0;
+			$No = 0;
+			$Bl = 0;
+			//echo var_dump($datos);
+			//echo $datos[0]->Id_voto;
+			$sql = $this->db->get_where('voto', array('Id' => $datos[0]->Id_voto));
+			for($i = 0; $i < sizeof($datos); ++$i) {
+				switch($datos[$i]->Id_voto) {
+					case '2':
+						$Si++;
+						break;
+					case '3':
+						$No++;
+						break;
+					case '4':
+						$Bl++;
+						break;
+				}
+			}
+			$votos = array (
+				'Si' => $Si,
+				'No' => $No,
+				'Bl' => $Bl
+			);
+			return $votos;
+
+		}
+
 		/********************************************/
 		/******* INSERTAR UN USUARIO DEL CENSO ******/
 		/********************************************/
