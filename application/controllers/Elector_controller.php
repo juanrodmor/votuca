@@ -22,7 +22,7 @@ class Elector_controller extends CI_Controller {
 	        	'datos' => $datos
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
-			//$this->load->view('elementos/footer');
+			$this->load->view('elementos/footer');
 	    }
 
     }
