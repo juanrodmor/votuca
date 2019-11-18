@@ -37,6 +37,7 @@
 
 /***********************/
 /***********************/
+/***********************/
 .mensaje{
   margin-top: 100px;
 }
@@ -44,10 +45,23 @@
   width: 100%;
 }
 
+.imagenMenu{
+  height: 3.0em;
+}
+
 #tipografiaLogin{
   font-family: 'Lato', thin-italic;
   color: #fff;
-  font-size: 50px;
+  font-size: 1.5em;
+
+}
+
+@media (max-width: @screen-xs) {
+    body{font-size: 10px;}
+}
+
+@media (max-width: @screen-sm) {
+    body{font-size: 14px;}
 }
 /***********************/
 /***********************/
@@ -4172,6 +4186,7 @@ input[type="button"].btn-block {
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+
 }
 
 .navbar > .container,
@@ -6595,7 +6610,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+  background-color: #455a64 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,

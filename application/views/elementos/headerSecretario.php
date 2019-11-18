@@ -1,6 +1,10 @@
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">VotUCA</a>
+    <!-- Logo -->
+    <a class="navbar-brand">
+          <img src="<?php echo base_url('assets/img/logo.png')?>" class="imagenMenu" alt="">
+        </a>
+    <!--<a class="navbar-brand" href="#">VotUCA</a>-->
     <!-- Boton de diseño adaptable -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
