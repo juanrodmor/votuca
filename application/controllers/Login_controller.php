@@ -71,7 +71,7 @@ class Login_controller extends CI_Controller {
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
-
+					
 					$this->redireccionar();
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
