@@ -8,15 +8,14 @@
     <title>Panel de administración - Gestionar roles</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style> @import url(<?php echo base_url('assets/css/admin_css.css')?>); </style>
+    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
   </head>
 
   <body>
 
-<br><br><br><br>
+<br><br><br><br><br>
     <div class="container">
 
       <form action="<?= base_url().'administrador_controller/buscador'?>" method="post" id="search_form">

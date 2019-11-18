@@ -9,7 +9,7 @@
         </button>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
-        <li><a class="nav-link active" href="#">Gestionar roles</a><li>
+        <li><a class="nav-link active" href="<?= base_url().'administrador_controller/'?>">Inicio</a><li>
         <li><a class="nav-link" href="<?= base_url().'administrador_controller/monitoring'?>">Auditoría</a><li>
       </ul>
       <ul class="navbar-nav ">
