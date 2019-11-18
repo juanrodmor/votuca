@@ -70,7 +70,22 @@
         <td><?php echo $objeto->Descripcion;?></td>
         <td><?php echo $objeto->FechaInicio;?></td>
         <td><?php echo $objeto->FechaFinal;?></td>
-        <td><a class="btn btn-primary" href="<?= base_url().'MesaElectoral/recuentoVotos/'.$objeto->Id;?>">Recuento</a></td>
+        <?=form_open(base_url().'MesaElectoral/recuentoVotos');?>
+               <?php
+               $atributos = array(
+                  'recuento' => $objeto->Id
+
+              );
+               ?>
+         <?= form_hidden($atributos);?>
+         <?php $atributos = array(
+             'name' => 'boton_recuento',
+             'class' => 'btn btn-primary',
+             'type' => 'submit',
+             'value' => 'Recuento'
+         ); ?>
+         <td><?= form_submit($atributos);?></td>
+         <?= form_close(); ?>      
       </tr>
     <?php }?>
     <?php }?>

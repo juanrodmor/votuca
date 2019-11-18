@@ -44,14 +44,19 @@ class MesaElectoral extends CI_Controller{
 
   }
 
-  public function recuentoVotos($idVotacion){
-    $nVotos = $this->voto_model->recuentoVotos($idVotacion);
-    $datos = array(
-      'total' => $nVotos,
-      'votacion' => $idVotacion
-    );
+  public function recuentoVotos(){
+    if($this->input->post('boton_recuento')){
+      $idVotacion = $this->input->post('recuento');
+      $nVotos = $this->voto_model->recuentoVotos($idVotacion);
+      $datos = array(
+        'total' => $nVotos,
+        'votacion' => $idVotacion
+      );
 
-    //echo "Se han hecho: ". $nVotos. " en la votacion ".$idVotacion;
+      // Devolver numero de votos totales
+      $mensaje = "Se han hecho: ". $nVotos. " votos totales en la votacion ".$idVotacion;
+      $this->index($mensaje);
+    }
 
   }
 

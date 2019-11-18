@@ -26,6 +26,18 @@ class Usuario_model extends CI_Model {
 		return $consulta2->row()->Nombre;
 	}
 	
+	//Devuelve una lista con los roles existentes.
+	public function getRoles() {
+		$this->db->select('Nombre');
+		$consulta = $this->db->get('rol');
+		$result = $consulta->result_array();
+		$roles = array();
+		foreach ($result as &$rol) {
+			array_push($roles, $rol['Nombre']);
+		}
+		return $roles;
+	}
+	
 	//Modifica el rol de un usuario específico.
 	public function setRol($usuario, $rol) {
 		

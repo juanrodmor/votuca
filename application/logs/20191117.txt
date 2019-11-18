@@ -1,0 +1,9 @@
+[12:20:31] [LOGIN] El usuario a00000000 inició sesión exitosamente.
+[12:21:40] [LOGIN] El usuario a00000000 inició sesión exitosamente.
+[12:21:41] [LOGOUT] El usuario a00000000 cerró sesión.
+[12:39:04] [LOGIN] El usuario a00000000 inició sesión exitosamente.
+[12:40:31] [LOGOUT] El usuario a00000000 cerró sesión.
+[12:41:41] [LOGIN] El usuario s00000000 inició sesión exitosamente.
+[12:47:38] [LOGOUT] El usuario s00000000 cerró sesión.
+[12:47:46] [LOGIN] El usuario a00000000 inició sesión exitosamente.
+[12:47:48] [LOGOUT] El usuario a00000000 cerró sesión.
