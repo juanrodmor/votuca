@@ -9,7 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/listar_votaciones.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
   </head>
@@ -20,7 +20,7 @@
        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="navbar-brand" href="#">VotUCA</a>
+              <a class="navbar-brand" href="#">VotUCA > Elector</a>
             </li>
             <li>
               <a class="nav-link" href="<?= base_url().'Elector_controller/'?>">Home <span class="sr-only">(current)</span></a>
@@ -38,14 +38,9 @@
     </nav>
 
 <div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
-        <center><h1>Elector</h1></center>
-      </div>
-    </main>
 
   <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
+    <table id="votaciones_usuario" class="display table table-striped table-bordered">
        <thead>
          <tr>
            <th scope="col">Titulo</th>
@@ -84,7 +79,7 @@
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Votar</a></td>';
           }
           else {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/resultados/ role="button">Ver resultados</a></td>';
+            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Ver resultados</a></td>';
           }
         ?>
         </tr>
@@ -98,60 +93,9 @@
 
   <br>
   <footer class="footer">
-  <div class="container">
-      <div class="row">
-      <div class="col-sm-3">
-          <h4 class="title">Sumi</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin suscipit, libero a molestie consectetur, sapien elit lacinia mi.</p>
-          <ul class="social-icon">
-          <a href="#" class="social"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-google" aria-hidden="true"></i></a>
-          <a href="#" class="social"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-          </ul>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">My Account</h4>
-          <span class="acount-icon">
-          <a href="#"><i class="fa fa-heart" aria-hidden="true"></i> Wish List</a>
-          <a href="#"><i class="fa fa-cart-plus" aria-hidden="true"></i> Cart</a>
-          <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-          <a href="#"><i class="fa fa-globe" aria-hidden="true"></i> Language</a>
-        </span>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Category</h4>
-          <div class="category">
-          <a href="#">men</a>
-          <a href="#">women</a>
-          <a href="#">boy</a>
-          <a href="#">girl</a>
-          <a href="#">bag</a>
-          <a href="#">teshart</a>
-          <a href="#">top</a>
-          <a href="#">shos</a>
-          <a href="#">glass</a>
-          <a href="#">kit</a>
-          <a href="#">baby dress</a>
-          <a href="#">kurti</a>
-          </div>
-          </div>
-      <div class="col-sm-3">
-          <h4 class="title">Payment Methods</h4>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-          <ul class="payment">
-          <li><a href="#"><i class="fa fa-cc-amex" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-paypal" aria-hidden="true"></i></a></li>
-          <li><a href="#"><i class="fa fa-cc-visa" aria-hidden="true"></i></a></li>
-          </ul>
-          </div>
-      </div>
-      <hr>
+  <div class="footer-container">
 
-      <div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>
+      <div class="row text-center">&nbsp;&nbsp;&nbsp;&nbsp; © 2019. Hecho por grupo 5 pinf.</div>
       </div>
 
 
@@ -170,7 +114,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-   <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
+   <script src="<?php echo base_url()."assets/js/behaviour/votacion_elector.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
