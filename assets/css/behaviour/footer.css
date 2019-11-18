@@ -4,7 +4,7 @@
 .footer {
     padding: 50px 0 20px 0;
     background-color: #35404f;
-    color: #878c94;
+    color: #fff;
 }
 .footer .title{text-align: left;color:#fff;font-size:25px;}
 
@@ -28,7 +28,7 @@
 }
 
 .footer .payment{margin:0px;padding:0px;list-style-type:none}
-.footer .payment li{list-style-type:none}
+.footer .payment li{text-decoration: none;list-style-type:none}
 .footer .payment li a {
     text-decoration: none;
     display: inline-block;

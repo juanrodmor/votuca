@@ -15,48 +15,10 @@
   </head>
 
   <body>
-    <header>
-  		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  			<a class="navbar-brand" href="#">VotUCA</a>
-  			<!-- Boton de diseño adaptable -->
-  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-  				<span class="navbar-toggler-icon"></span>
-  			</button>
-  			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-  				<ul class="navbar-nav mr-auto">
-  					<li class="nav-item active">
-  							<a class="nav-link" href="<?= base_url().'secretario/delegado'?>">Inicio <span class="sr-only">(current)</span></a>
-  					</li>
-  					<li class="nav-item dropdown">
-  						<a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-  						<div class="dropdown-menu" aria-labelledby="dropdown01">
-  							<a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-  						</div>
-  					</li>
-
-  				</ul>
-  				<ul class="navbar-nav ">
-  					<li class="nav-item my-2 my-lg-0 mr-sm-2">
-  						<a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-  					</li>
-  				</ul>
-  			</div>
-  		</nav>
-  	</header>
 
 <div class="container">
-    <main role="main" class="container">
-      <div class="jumbotron">
-            <center><h1>Secretario</h1></center>
-      </div>
-    </main>
-
-    <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
-      <?php endif; ?>
-
-  <div class = "container">
-    <table class="display table table-striped table-bordered" id="votaciones_admin">
+    <br><br><br><br>
+    <table class="display table table-striped table-responsive"id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
@@ -109,19 +71,7 @@
 
     </tbody>
     </table>
-
 </div>
-</div>
-<footer class="footer">
-  <div class="container">
-      <div class="row">
-      <div class="col-sm-3">
-      <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
-      <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
-      </div>
-
-
-  </footer>
 
 
     <!-- Bootstrap core JavaScript

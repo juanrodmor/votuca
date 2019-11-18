@@ -17,6 +17,12 @@
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
+  <header>
+    <nav class="navbar">
+      <a class="navbar-brand" href="#">UNIVERSIDAD DE CÁDIZ</a>
+
+    </nav>
+  </header>
 
 
 
@@ -25,7 +31,7 @@
         <div class="container navbar-default">
 
         <div id=logo>
-            <a class="center" href="#"><img src="<?php echo base_url('assets/img/logo_uca.png')?>"></a>
+            <center><img src="<?php echo base_url('assets/img/logo.png')?>" class="img-fluid" alt="Responsive image"></center>
         </div>
             <br><br>
 

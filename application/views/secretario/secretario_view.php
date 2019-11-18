@@ -1,68 +1,13 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Secretario</title>
-    <!-- Bootstrap core CSS -->
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.css" rel="stylesheet">-->
-    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-
-  </head>
-
-  <body>
-  <header>
-    <!-- MINI MENU BOTONES -->
-
-
-
-    <!-- IMAGEN DEL LOGO -->
-  <!--  <div class="imagen">
-      <h1><img src="<?php echo base_url('assets/img/logo_uca_header.png')?>"class="img-fluid" alt="Responsive image"></h1>
-    </div>-->
-    <!-- MENU PRINCIPAL -->
-
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">VotUCA</a>
-      <!-- Boton de diseño adaptable -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-              <a class="nav-link" href="<?= base_url().'secretario/'?>">Inicio <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            </div>
-          </li>
-
-        </ul>
-        <ul class="navbar-nav ">
-          <li class="nav-item my-2 my-lg-0 mr-sm-2">
-            <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-  </header>
+<body>
 
 <div class="container">
-
   <div class ="mensaje">
     <?php if(isset($mensaje)): ?>
           <br/><h1><?= $mensaje ?></h1><br/>
       <?php endif; ?>
-    </div>
+  </div>
 
   <div class = "container">
     <table class="display table table-responsive" id="votaciones_admin">
@@ -165,18 +110,7 @@
   </div>
 </div>
 
-<br>
-<footer class="footer">
-  <div class="container">
-      <div class="row">
-      <div class="col-sm-3">
-      <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
-      <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
-      </div>
-      
 
-
-  </footer>
 
 
 
