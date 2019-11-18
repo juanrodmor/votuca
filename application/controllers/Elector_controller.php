@@ -34,12 +34,18 @@ class Elector_controller extends CI_Controller {
     }
 
     public function guardarVoto($id_votacion) {
-    	$voto = $_POST['voto']; 
-    	//$voto = $this->input->post('voto');
-    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+    	if($_POST['voto'] == NULL) {
+    		echo("selecciona una opcion valida");
+    		$this->index();
+    	}
+    	else {
+    		$voto = $_POST['voto'];
+	    	//$voto = $this->input->post('voto');
+	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
-    	$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
-    	$this->index();
+	    	$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
+	    	$this->index();
+    	}
     }
 
     public function verResultados($id_votacion, $titulo) {
