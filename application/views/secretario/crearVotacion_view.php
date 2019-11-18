@@ -112,6 +112,7 @@
               'class' => 'form-control',
               'placeholder' =>'Selecciona una fecha de finalizacion',
               'data-provide' => 'datepicker',
+              'data-date-format' => "dd-mm-yyyy",
               'data-date-start-date'=>"0d",
               'id' => 'fecha_final',
               'required' => true,
