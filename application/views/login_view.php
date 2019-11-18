@@ -18,30 +18,30 @@
 </head>
 <body>
 
-        
 
 
-        
+
+
         <div class="container navbar-default">
-                
+
         <div id=logo>
             <a class="center" href="#"><img src="<?php echo base_url('assets/img/logo_uca.png')?>"></a>
-        </div>       
+        </div>
             <br><br>
 
             <!--Display error messages-->
             <div id="container-data">
-                <?php 
+                <?php
 
                     echo form_error('usuario', '<div class="alert alert-danger" role="alert">', '</div>');
-                    echo form_error('pass', '<div class="alert alert-danger" role="alert">', '</div>');            
+                    echo form_error('pass', '<div class="alert alert-danger" role="alert">', '</div>');
 
-                    if(isset($mensaje)) 
+                    if(isset($mensaje))
                     {
-                        echo '<div class="alert alert-danger" role="alert">' . $mensaje . '</div>'; 
+                        echo '<div class="alert alert-danger" role="alert">' . $mensaje . '</div>';
                     }
                 ?>
-                
+
                 <!--Display form-->
                 <form id="login-form" class="form-horizontal" action="<?php echo base_url('login_controller/verificar')?>" method="post">
                     <label for="username">Nombre de usuario: </label>
@@ -51,7 +51,7 @@
                     </div>
                         <br>
                     <label for="pass">Contraseña: </label>
-                    <div class="input-group">    
+                    <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                         <input name="pass" type="password" class="form-control" id="passwd" placeholder ="Contraseña">
                     </div>
@@ -60,7 +60,7 @@
                 </form>
 
             </div>
-            
+
         </div>
 
 </body>

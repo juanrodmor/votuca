@@ -173,6 +173,7 @@
       <img src="<?php echo base_url('assets/img/footer.png')?>"class="img-fluid" alt="Responsive image">
       <!--<div class="row text-center"> © 2019. Hecho por grupo 5 pinf.</div>-->
       </div>
+      
 
 
   </footer>
