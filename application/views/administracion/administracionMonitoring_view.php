@@ -26,10 +26,11 @@
           <input class="form-check-input" type="checkbox" id="checkLogout" name="cLogout" value="true" checked>
           <label class="form-check-label" for="checkLogout">Logout</label>
         </div>
-        <div class="form-check form-check-inline">
+        <!--- DE MOMENTO VIOLARIA LA PRIVACIDAD -->
+        <!--<div class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" id="checkVotos" name="cVote" value="true" checked>
           <label class="form-check-label" for="checkVotos">Votos</label>
-        </div>
+        </div>-->
 
         <div class="form-check form-check-inline">
           <input class="btn btn-primary" type="submit" name="Filtrar" value="Consultar">

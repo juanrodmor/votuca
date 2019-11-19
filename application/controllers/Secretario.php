@@ -57,8 +57,9 @@ class Secretario extends CI_Controller{
   {
     $this->load->view('elementos/headerSecretario');
     $data['usuarios'] = $this->usuario_model->recuperarTodos();
+    //echo var_dump($data['usuarios']);
     $this->load->view('secretario/crearVotacion_view',$data);
-    $this->load->view('elementos/footer');
+    //$this->load->view('elementos/footer');
   }
   public function insertarVotacion()
   {
@@ -159,12 +160,12 @@ class Secretario extends CI_Controller{
 	{
     if($this->input->post('boton_modificar'))
     {
-    
-      $this->load->view('elementos/headerSecretario');
+
+      $this->load->view('elementos/headerDelegado');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
       $this->load->view('secretario/modificarVotacion_view', $data);
-      $this->load->view('elementos/footer');
+      //$this->load->view('elementos/footer');
 
     }
 	}

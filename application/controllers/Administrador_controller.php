@@ -14,7 +14,9 @@ class Administrador_controller extends CI_Controller {
 		switch ($this->session->userdata('rol')) {
 			case 'Administrador':
 			$this->load->view('elementos/headerAdmin');
-				$this->load->view('administracion/administracion_view');
+				$this->monitoring();
+				//$this->load->view('administracion/administracion_view');
+				//$this->load->view('administracion/administracionMonitoring_view');
 				//$this->load->view('elementos/footer');
 				break;
 			case 'Elector':
@@ -71,7 +73,7 @@ class Administrador_controller extends CI_Controller {
 			$this->load->view('elementos/headerAdmin');
 		$data = array('loginfo' => $logarray);
 		$this->load->view('administracion/administracionMonitoring_view', $data);
-		$this->load->view('elementos/footer');
+		//$this->load->view('elementos/footer');
 	}
 
 	public function buscador() {
@@ -108,6 +110,16 @@ class Administrador_controller extends CI_Controller {
 				$this->load->view('administracion/administracion_view', $data);
 			}
 		}
+	}
+
+	/*********************************/
+	/**********************************/
+	/**********************************/
+
+	public function gestionusuarios(){
+		$this->load->view('elementos/headerAdmin');
+		$this->load->view('administracion/administracion_view');
+		//$this->load->view('elementos/footer');
 	}
 }
 

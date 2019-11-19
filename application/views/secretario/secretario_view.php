@@ -35,7 +35,7 @@
            <th scope="col">Fecha Final</th>
            <th scope="col"></th>
            <th scope="col"></th>
-           <th scope="col"></th>
+           <!--<th scope="col"></th>-->
          </tr>
        </thead>
      <tbody>
@@ -79,7 +79,7 @@
 
          <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
            <!-- BOTON DE MODIFICAR -->
-           <?=form_open(base_url().'secretario/modificarVotacion',
+           <!--<?=form_open(base_url().'secretario/modificarVotacion',
                    array('name'=>'modificarVotacion'));?>
                   <?php
                   $atributos = array(
@@ -95,7 +95,7 @@
                 'value' => 'Modificar'
             ); ?>
             <td><?= form_submit($atributos);?></td>
-            <?= form_close(); ?>
+            <?= form_close(); ?>-->
 
             <!-- BOTON DE DELEGAR -->
             <?=form_open(base_url().'secretario/delegarVotacion',
