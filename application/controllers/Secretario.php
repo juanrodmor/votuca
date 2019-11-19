@@ -161,11 +161,11 @@ class Secretario extends CI_Controller{
     if($this->input->post('boton_modificar'))
     {
 
-      $this->load->view('elementos/headerSecretario');
+      $this->load->view('elementos/headerDelegado');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
       $this->load->view('secretario/modificarVotacion_view', $data);
-      $this->load->view('elementos/footer');
+      //$this->load->view('elementos/footer');
 
     }
 	}

@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li><a class="nav-link active" href="<?= base_url().'administrador_controller/'?>">Inicio</a><li>
-        <li><a class="nav-link" href="<?= base_url().'administrador_controller/monitoring'?>">Auditoría</a><li>
+        <li><a class="nav-link" href="<?= base_url().'administrador_controller/gestionusuarios'?>">Usuarios</a><li>
       </ul>
       <ul class="navbar-nav ">
         <li class="nav-item my-2 my-lg-0 mr-sm-2">

@@ -5,7 +5,7 @@
 <br><br><br><br><br>
 <div class="container">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-bordered" id="votaciones_admin" >
+    <table class="table table-responsive" id="votaciones_admin" >
        <thead>
          <tr>
            <th scope="col">Titulo</th>
@@ -43,7 +43,7 @@
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/ role="button">Votar</a></td>';
           }
           else {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Ver resultados</a></td>';
+            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Resultados</a></td>';
           }
         ?>
         </tr>

@@ -14,9 +14,9 @@
 
   </head>
 
-  <body> 
-    
-    
+  <body>
+
+
 <br><br><br><br><br>
 <div class="container">
     <?php if(isset($mensaje)): ?>
@@ -24,6 +24,7 @@
       <?php endif; ?>
 <br><br>
   <div class = "container">
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table table-striped table-bordered">
       <thead>
         <tr>
@@ -66,6 +67,7 @@
     <?php }?>
     </tbody>
     </table>
+  </div>
 
 </div>
 </div>
@@ -84,7 +86,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-   <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
+   <!--<script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>-->
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
