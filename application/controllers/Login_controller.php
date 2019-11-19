@@ -97,7 +97,7 @@ class Login_controller extends CI_Controller {
 
 	//Elección de rol por parte del usuario.
 	public function seleccionRol() {
-		if ($this->input->post('radio') == NULL) {
+		if ($this->input->post('radio') != NULL) {
 			$this->session->set_userdata('rol', $this->input->post('radio'));
 			$this->redireccionar();
 		} else $this->evaluaRol();
