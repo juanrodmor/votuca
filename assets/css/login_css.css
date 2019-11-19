@@ -39,10 +39,16 @@
     margin-left: auto;
 }
 
-div #container-data
+#container-data
 {
     width: 50% ;
     display: block ;
     align-content: center;
     margin-left: 25%;
+}
+
+.inputs
+{
+  padding-left: 20% !important;
+  padding-right: 20% !important;
 }

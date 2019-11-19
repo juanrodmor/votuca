@@ -16,14 +16,18 @@ class Usuario_model extends CI_Model {
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
-		return ($consulta->num_rows() == 1);
+		return ($consulta->num_rows() >= 1);
 	}
 
 	//Devuelve el rol de un usuario específico.
 	public function getRol($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
-		$consulta2 = $this->db->get_where('rol', array('Id' => $consulta->row()->Id_Rol));
-		return $consulta2->row()->Nombre;
+		$roles = array();
+		foreach ($consulta->result() as $usuarioRol) {
+			$consulta2 = $this->db->get_where('rol', array('Id' => $usuarioRol->Id_Rol));
+			array_push($roles, $consulta2->row()->Nombre);
+		}
+		return $roles;
 	}
 
 	//Devuelve una lista con los roles existentes.
