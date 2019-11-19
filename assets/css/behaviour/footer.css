@@ -1,14 +1,19 @@
 
-/*FOOTER START///////////////////*/
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+  display: block;
+  margin: 0 auto;
+}
 
 .footer {
   padding: 50px 0 20px 0;
   background-color: #35404f;
   color: #fff;
-  margin-top: 5.5em;
-
-
 }
+
 .footer .title{text-align: left;color:#fff;font-size:25px;}
 
 
@@ -37,6 +42,6 @@
     display: inline-block;
     color: #fff;
     float: left;
-    font-size: 25px;
+    font-size: 5px;
     padding: 10px 10px;
 }
