@@ -1,24 +1,19 @@
 <!doctype html>
 <html lang="en">
+
   <body>
 
-    <br><br><br><br><br>
-    <center><h2> Seleccione su voto </h2></center>
-    <br><br>
-    <form action="<?= base_url().'Elector_controller/guardarVoto/'.$id_votacion.'/'?>" method="post">
-      <center>
-        <h4><str><?php echo form_error('voto'); ?> </str></h4><br>
-        <div class="btn-group" data-toggle="buttons">
-          <?php foreach($votos as $voto) { ?>
-            <label class="btn btn-primary">
-              <input type="radio" name="voto" autocomplete="off" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
-            </label>
-          <?php } ?>
-        </div>
-        <br>
-        <input class="btn btn-primary" type="submit" value="Votar">
-      </center>
-    </form>
+<br><br><br><br>
+  <div class="container">
+
+    <div class = "container">
+      <h2><?php echo 'Resultados de la votación: '.$titulo; ?> </h2> <br>
+      <h4><i> Numero de votos asignados al censo: <?php echo $total; ?>. </i></h4><br>
+      Numero de votos "Si": <?php echo $votos['Si'] ?><br>
+      Numero de votos "No": <?php echo $votos['No'] ?><br>
+      Numero de votos "En blanco": <?php echo $votos['Bl'] ?><br>
+    </div>
+  </div>
 
 </body>
 
@@ -40,5 +35,4 @@
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
-
 </html>

@@ -5,56 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Crear Votacion</title>
+    <title>CREACION VOTACIONES</title>
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
   </head>
 
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <!-- PARTE IZQUIERDA DEL MENU -->
-       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="navbar-brand" href="#">VotUCA</a>
-            </li>
-            <li>
-              <a class="nav-link" href="<?= base_url().'inicio/'?>">Home <span class="sr-only">(current)</span></a>
-            </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-        <!-- PARTE DERECHA DEL MENU -->
-      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-          <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-
 <div class="container">
-
-
-  <!-- IMPRIME SI SE HA GUARDADO BIEN -->
-    <?php if(isset($mensaje)): ?>
-          <h2><?= $mensaje ?></h2>
-      <?php endif; ?>
-      <h3><?= validation_errors();?></h3>
-
-
-
+  <br><br><br><br>
   <!-- FORMULARIO DE VOTACION -->
-    <section>
     <?=form_open(base_url().'secretario/insertarVotacion',
     		    array('name'=>'crearVotacion'));?>
             <!-- ESPERAR A SABER CÓMO COMPROBAR QUE UNA VOTACION NO EXISTE YA -->
@@ -120,6 +83,8 @@
               'class' => 'form-control',
               'placeholder' =>'Selecciona una fecha de finalizacion',
               'data-provide' => 'datepicker',
+              'data-date-format' => "dd-mm-yyyy",
+              'data-date-start-date'=>"0d",
               'id' => 'fecha_final',
               'required' => true,
               'value' => set_value('fecha_final')
@@ -135,13 +100,13 @@
             <thead>
               <tr>
                 <th scope="col" class="no-sort">Usuario</th>
-                <th scope="col" class="no-sort">Censo</th>                
+                <th scope="col" class="no-sort">Censo</th>
               </tr>
             </thead>
           <tbody>
             <tr>
               <?php foreach($usuarios as $usuario){ ?>
-                <td><?php echo $usuario->NombreUsuario. $usuario->Id?></td>
+                <td><?php echo $usuario->NombreUsuario?></td>
                 <?php
                 echo '<div class="form-check">';
                  $atributos = array(
@@ -166,9 +131,8 @@
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
-        <?= form_submit($atributos);?>
+        <center><?= form_submit($atributos);?></center>
       <?= form_close(); ?>
-    </section>
 </div>
 
     <!-- Bootstrap core JavaScript
@@ -179,6 +143,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
 
     <!-- DATE PICKER -->
+    <script src="<?php echo base_url()."assets/js/behaviour/datepicker.js"?>"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
 
 

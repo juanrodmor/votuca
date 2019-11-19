@@ -13,7 +13,9 @@ class Administrador_controller extends CI_Controller {
 	public function index() {
 		switch ($this->session->userdata('rol')) {
 			case 'Administrador':
+			$this->load->view('elementos/headerAdmin');
 				$this->load->view('administracion/administracion_view');
+				//$this->load->view('elementos/footer');
 				break;
 			case 'Elector':
 				redirect('Elector_controller');
@@ -66,9 +68,10 @@ class Administrador_controller extends CI_Controller {
 				array_push($logarray, $line);
 			}
 		}
-
+			$this->load->view('elementos/headerAdmin');
 		$data = array('loginfo' => $logarray);
 		$this->load->view('administracion/administracionMonitoring_view', $data);
+		$this->load->view('elementos/footer');
 	}
 
 	public function buscador() {

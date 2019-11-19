@@ -29,7 +29,7 @@ class Usuario_model extends CI_Model {
 		}
 		return $roles;
 	}
-	
+
 	//Devuelve una lista con los roles existentes.
 	public function getRoles() {
 		$this->db->select('Nombre');
@@ -41,18 +41,18 @@ class Usuario_model extends CI_Model {
 		}
 		return $roles;
 	}
-	
+
 	//Modifica el rol de un usuario específico.
 	public function setRol($usuario, $rol) {
-		
+
 		$consultaId = $this->db->get_where('rol', array('Nombre' => $rol));
 		$rol_id = $consultaId->row()->Id;
-		
+
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		$this->db->where('Id', $consulta->row()->Id);
 		$this->db->update('usuario', array('Id_Rol' => $rol_id));
 	}
-	
+
 
 	/*****************************/
 	/******* FUNCIONES INMA ******/
@@ -69,6 +69,12 @@ class Usuario_model extends CI_Model {
   }
 	public function getUsuario($id) {
 		$query = $this->db->query("SELECT * from usuario WHERE Id = '$id';");
+		return $query->result();
+	}
+
+	public function getIdFromUserName($nombre)
+	{
+		$query = $this->db->query("SELECT Id from usuario WHERE NombreUsuario = '$nombre';");
 		return $query->result();
 	}
 
