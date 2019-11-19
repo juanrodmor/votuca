@@ -5,6 +5,8 @@ class Elector_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Voto_model');
+		$this->load->library('form_validation');
+		$this->load->helper(array('form', 'url'));
 	}
 
 	public function index() {
@@ -27,7 +29,7 @@ class Elector_controller extends CI_Controller {
 
     }
 
-    public function votar($id_votacion, $titulo) {
+    public function votar($id_votacion) {
 			$title['titulo'] = 'MIS VOTACIONES';
 			$inicio['inicio'] = 'Elector_controller/';
 			$this->load->view('elementos/head',$title);
@@ -35,7 +37,6 @@ class Elector_controller extends CI_Controller {
     	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
     	$votos = $this->Voto_model->_votosDisponibles();	// habrá que pasarle $id_votacion para mostrar los votos disponibles para esa votacion
     	$datos = array(
-    		'titulo' => $titulo,
     		'id_votacion' => $id_votacion,
     		'id_usuario' => $id_usuario,
     		'votos' => $votos
@@ -47,19 +48,31 @@ class Elector_controller extends CI_Controller {
 
     public function guardarVoto($id_votacion) {
 
-    	if($_POST['voto'] == NULL) {
-    		echo("selecciona una opcion valida");
-    		$this->index();
-    	}
-    	else {
-    		$voto = $_POST['voto'];
+    	$this->form_validation->set_rules('voto', 'Voto', 'required');
+    	$this->form_validation->set_message('required','Seleccione un voto valido');
+
+    	if($this->form_validation->run() == TRUE) {
+	        $voto = $_POST['voto'];
 	    	//$voto = $this->input->post('voto');
 	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
-
 	    	$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
 	    	$this->index();
-    	}
+	    } else {
+	    	$votos = $this->Voto_model->_votosDisponibles();
+	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+	    	$datos = array(
+    		'id_votacion' => $id_votacion,
+    		'id_usuario' => $id_usuario,
+    		'votos' => $votos
+    	);
+		    	$title['titulo'] = 'MIS VOTACIONES';
+				$inicio['inicio'] = 'Elector_controller/';
+				$this->load->view('elementos/head',$title);
+				$this->load->view('elementos/headerComun',$inicio);
+	        $this->load->view('Elector/voto_view', $datos);
+	        	$this->load->view('elementos/footer');
+	    }
     }
 
 
