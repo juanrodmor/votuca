@@ -40,7 +40,7 @@
                             echo
                             '   <div class="input-group"> 
                                 <span class="input-group-addon">
-                                    <input type="radio" name="radio'.$rol.'" value="'.$rol.'">
+                                    <input type="radio" name="radio" value="'.$rol.'">
                                 </span>
                                 <input type="text" class="form-control" value="' . $rol . '"disabled>
                                 </div><br>';
