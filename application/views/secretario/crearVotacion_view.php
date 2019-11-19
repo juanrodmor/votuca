@@ -96,6 +96,7 @@
 
         <!-- TABLA DE CENSO -->
         <div class = "container">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
             <thead>
               <tr>
@@ -124,7 +125,8 @@
           </tbody>
         </table>
       </div>
-
+      </div>
+      <br><br>
         <?php $atributos = array(
             'name' => 'submit_reg',
             'class' => 'btn btn-primary',

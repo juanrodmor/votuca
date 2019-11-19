@@ -1,6 +1,7 @@
 <?php
 
 class SecretariosDelegados_model extends CI_Model{
+
   public function restriccionDelegacion($idVotacion)
   {
     $query = $this->db->query("SELECT Id_Secretario from secretarios_delegados WHERE Id_votacion = '$idVotacion';");
