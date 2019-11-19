@@ -3,7 +3,7 @@ var base_url = window.location.origin+"/votuca/";
 $(document).ready(function(){
     $('#votaciones_admin').DataTable({
       serverSide: false,
-      paging: true,
+      paging: false,
       "scrollY": 300,
       ordering: false,
       "language": {

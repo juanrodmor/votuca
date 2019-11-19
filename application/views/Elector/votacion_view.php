@@ -1,46 +1,11 @@
 <!doctype html>
 <html lang="en">
-<title>Votaciones</title>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Bootstrap core CSS -->
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/listar_votaciones.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-
-  </head>
 
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <!-- PARTE IZQUIERDA DEL MENU -->
-       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="navbar-brand" href="#">VotUCA > Elector</a>
-            </li>
-            <li>
-              <a class="nav-link" href="<?= base_url().'Elector_controller/'?>">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </ul>
-      </div>
-        <!-- PARTE DERECHA DEL MENU -->
-      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-          <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
+<br><br><br><br><br>
 <div class="container">
-
-  <div class = "container">
-    <table id="votaciones_usuario" class="display table table-striped table-bordered">
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="display table table-bordered" id="votaciones_admin" >
        <thead>
          <tr>
            <th scope="col">Titulo</th>
@@ -51,7 +16,6 @@
          </tr>
        </thead>
       <tbody>
-
       <?php
         if($datos == NULL)
         {
@@ -87,20 +51,8 @@
         <?php }?>
       </tbody>
     </table>
-
+  </div>
 </div>
-</div>
-
-  <br>
-  <footer class="footer">
-  <div class="footer-container">
-
-      <div class="row text-center">&nbsp;&nbsp;&nbsp;&nbsp; © 2019. Hecho por grupo 5 pinf.</div>
-      </div>
-
-
-  </footer>
-
 
 
     <!-- Bootstrap core JavaScript
@@ -114,10 +66,9 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-   <script src="<?php echo base_url()."assets/js/behaviour/votacion_elector.js"?>"></script>
+   <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
 
-    <!-- DATE PICKER -->
-    <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+
 
   </body>
 </html>

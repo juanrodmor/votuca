@@ -1,6 +1,20 @@
 <!doctype html>
 <html lang="en">
 <body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SECRETARIO</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
+    <!-- GOOOGLE FONTS -->
+
+  </head>
 
 <div class="container">
   <div class ="mensaje">
@@ -10,7 +24,8 @@
   </div>
 
   <div class = "container">
-    <table class="display table table-responsive" id="votaciones_admin">
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="display table table-striped" id="votaciones_admin">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
@@ -107,6 +122,7 @@
      <?php }?>
      </tbody>
     </table>
+  </div>
   </div>
 </div>
 
