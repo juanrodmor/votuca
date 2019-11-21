@@ -35,11 +35,23 @@
        foreach($votaciones as $votacion){?>
         <tr>
         <?php
-          if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
+        if($votacion->FechaFinal < date('Y-m-d') )
+        {
+           echo "<th scope=row class=table-danger>";  // Ha finalizado
+        }
+        else {
+          if($votacion->FechaFinal == date('Y-m-d'))
+          {
+            echo "<th scope=row class=table-warning>";
+          }
+           else{echo "<th scope=row class=table-success>";}
+        }
+
+        /*  if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
-          else{echo "<th scope=row class=table-success>";}
+          else{echo "<th scope=row class=table-success>";}*/
         ?>
         <?php echo $votacion->Id;?>
         </th>
@@ -72,7 +84,7 @@
 
     </tbody>
     </table>
-  
+
 </div>
 
 

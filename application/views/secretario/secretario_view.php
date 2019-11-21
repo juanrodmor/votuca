@@ -44,11 +44,19 @@
           <?php foreach($votacion as $objeto){?>
          <tr>
          <?php
-           if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+
+           if($objeto->FechaFinal < date('Y-m-d') )
            {
               echo "<th scope=row class=table-danger>";  // Ha finalizado
            }
-           else{echo "<th scope=row class=table-success>";}
+           else {
+             if($objeto->FechaFinal == date('Y-m-d'))
+             {
+               echo "<th scope=row class=table-warning>";
+             }
+              else{echo "<th scope=row class=table-success>";}
+           }
+
          ?>
          <?php echo $objeto->Id;?>
          </th>
