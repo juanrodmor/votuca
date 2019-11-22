@@ -34,7 +34,7 @@ class Login_controller extends CI_Controller {
 				if (isset($loggeado)) {	//Si estaba loggeado...
 					session_destroy();
 					$data = array('mensaje' => 'Se produjo un error con la información de usuario. Si continua sucediendo, contacte con el administrador.');
-					$this->load->view('loginSeleccionRol_view', $data);
+					$this->load->view('login_view', $data);
 				} else {	//Si no...
 					redirect('/Login_controller');
 				}
@@ -71,7 +71,8 @@ class Login_controller extends CI_Controller {
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
-					$this->evaluaRol();
+					//$this->evaluaRol();	//Para multirol
+					$this->redireccionar();
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
@@ -83,6 +84,7 @@ class Login_controller extends CI_Controller {
 		} else $this->load->view('login_view');		//Si se accede de forma ilegal (no por envío de formulario)...
 	}
 	
+	/*	PARA MULTIROL
 	//Evalúa los permisos del usuario loggeado.
 	public function evaluaRol() {
 		$roles = $this->session->userdata('rol');
@@ -102,6 +104,7 @@ class Login_controller extends CI_Controller {
 			$this->redireccionar();
 		} else $this->evaluaRol();
 	}
+	*/
 
 	//Función para desconectarse de la web.
 	public function logout() {
