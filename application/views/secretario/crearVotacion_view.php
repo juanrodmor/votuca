@@ -20,10 +20,16 @@
 
   <body>
 
-  <br><br><br><br>
+  <br><br>
 <div class="container">
+  <div class ="mensaje">
+    <h3><?=   validation_errors();  ?></h3>
+    <?php if(isset($mensaje)): ?>
+          <br/><h1><?= $mensaje ?></h1><br/>
 
+      <?php endif; ?>
 
+  </div>
   <!-- FORMULARIO DE VOTACION -->
     <?=form_open(base_url().'secretario/insertarVotacion',
     		    array('name'=>'crearVotacion'));?>
@@ -105,7 +111,8 @@
           </div>
         </div>
 
-
+        <h2> Censo electoral </h2>
+        <p> Introduzca al menos tres miembros </p>
         <!-- TABLA DE CENSO -->
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">

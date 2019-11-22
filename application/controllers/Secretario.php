@@ -36,7 +36,7 @@ class Secretario extends CI_Controller{
        );
        //$this->load->view('datetime');
        $this->load->view('secretario/secretario_view',$datos);
-       $this->load->view('elementos/footer');
+       //$this->load->view('elementos/footer');
         break;
        case 'Secretario delegado':
         redirect('/secretario/delegado');
@@ -54,12 +54,17 @@ class Secretario extends CI_Controller{
   /************************************/
 
 
-  public function crearVotacion()
+  public function crearVotacion($mensaje = '')
   {
     $this->load->view('elementos/headerSecretario');
-    $data['usuarios'] = $this->usuario_model->recuperarTodos();
+    $data = $this->usuario_model->recuperarTodos();
+    $datos = array(
+      'usuarios' => $data,
+      'mensaje' => $mensaje
+    );
+    //echo var_dump($datos['usuarios']);
     //echo var_dump($data['usuarios']);
-    $this->load->view('secretario/crearVotacion_view',$data);
+    $this->load->view('secretario/crearVotacion_view',$datos);
     //$this->load->view('elementos/footer');
   }
   public function insertarVotacion()
@@ -81,6 +86,7 @@ class Secretario extends CI_Controller{
 
         if($this->form_validation->run() == FALSE) // Hay algun error
         {
+
           $this->crearVotacion(); // Mostrar mensajes de error en la vista
 
 				}
@@ -89,7 +95,7 @@ class Secretario extends CI_Controller{
           // Convierte la fecha en un formato valido para la BD
           $fechaInicio = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_final')));
-
+          //echo var_dump($fechaInicio);
           $votacion = new Votacion(
             //$this->input->post('id'),
             $this->input->post('titulo'),
@@ -98,8 +104,8 @@ class Secretario extends CI_Controller{
             $fechaFin,
             false
           );
-          //echo var_dump($votacion);
-          $this->guardarVotacion($votacion);
+          echo var_dump($votacion);
+          //$this->guardarVotacion($votacion);
         }
     }
   }
