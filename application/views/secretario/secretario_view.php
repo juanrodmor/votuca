@@ -31,8 +31,8 @@
            <th scope="col" class="no-sort">ID</th>
            <th scope="col">Titulo</th>
            <th scope="col">Descripcion</th>
-           <th scope="col">Fecha Inicio</th>
-           <th scope="col">Fecha Final</th>
+           <th scope="col">Inicio</th>
+           <th scope="col">Fin</th>
            <th scope="col"></th>
            <th scope="col"></th>
            <th scope="col"></th>

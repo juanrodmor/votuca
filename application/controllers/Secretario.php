@@ -62,8 +62,7 @@ class Secretario extends CI_Controller{
       'usuarios' => $data,
       'mensaje' => $mensaje
     );
-    //echo var_dump($datos['usuarios']);
-    //echo var_dump($data['usuarios']);
+
     $this->load->view('secretario/crearVotacion_view',$datos);
     //$this->load->view('elementos/footer');
   }
@@ -93,8 +92,8 @@ class Secretario extends CI_Controller{
         else
         {  // Correcta
           // Convierte la fecha en un formato valido para la BD
-          $fechaInicio = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_inicio')));
-          $fechaFin = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_final')));
+          $fechaInicio = date('Y-m-d H-i',strtotime($this->input->post('fecha_inicio')));
+          $fechaFin = date('Y-m-d H-i',strtotime($this->input->post('fecha_final')));
           //echo var_dump($fechaInicio);
           $votacion = new Votacion(
             //$this->input->post('id'),
@@ -104,8 +103,8 @@ class Secretario extends CI_Controller{
             $fechaFin,
             false
           );
-          echo var_dump($votacion);
-          //$this->guardarVotacion($votacion);
+          //echo var_dump($votacion);
+          $this->guardarVotacion($votacion);
         }
     }
   }
@@ -167,12 +166,18 @@ class Secretario extends CI_Controller{
 	{
     if($this->input->post('boton_modificar'))
     {
+      if($this->session->userdata('rol') == 'Secretario')
+      {
+        $this->load->view('elementos/headerSecretario');
+      }
+      if($this->session->userdata('rol') == 'SecretarioDelegado')
+      {
+      $this->load->view('elementos/headerDelegado');
+      }
 
-      $this->load->view('elementos/headerSecretario');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
       $this->load->view('secretario/modificarVotacion_view', $data);
-      //$this->load->view('elementos/footer');
 
     }
 	}
@@ -226,7 +231,7 @@ class Secretario extends CI_Controller{
         $this->index('Has delegado correctamente la votacion');
       }
       else{
-        $this->index('Esta votación ya tiene un máximo de dos delegados');
+        $this->index('Esta votación ya tiene un secretario delegado asignado');
       }
     }
 
@@ -237,7 +242,7 @@ class Secretario extends CI_Controller{
   /********* SECRETARIO DELEGADO *************/
   /*******************************************/
 
-  public function delegado($mensaje = 'Bienvenido a la pagina del secretario delegado'){
+  public function delegado($mensaje = ''){
     $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
     $idSecretario = $consulta[0]->Id;
     $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);

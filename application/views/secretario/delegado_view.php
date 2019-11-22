@@ -15,18 +15,22 @@
 
 </head>
 
-  <body>
+<body>
 
 <div class="container">
-    <br><br><br><br>
-    <table class="display table table-striped"id="votaciones_admin">
+  <div class ="mensaje">
+    <?php if(isset($mensaje)): ?>
+          <br/><h1><?= $mensaje ?></h1><br/>
+      <?php endif; ?>
+  </div>
+  <table class="display table table-striped"id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
           <th scope="col">Titulo</th>
           <th scope="col">Descripcion</th>
-          <th scope="col">Fecha Inicio</th>
-          <th scope="col">Fecha Final</th>
+          <th scope="col">Inicio</th>
+          <th scope="col">Final</th>
           <th scope="col"></th>
         </tr>
       </thead>
