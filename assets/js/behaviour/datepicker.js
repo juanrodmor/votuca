@@ -21,7 +21,8 @@ window.addEventListener("load", () => {
     $('#fecha_inicio').datetimepicker({
       todayBtn:  1,
       todayHighlight: true,
-      autoclose: true,    
+      autoclose: true,
+      startDate: '+0d', // Solo puede empezar a partir de hoy
     }).on('changeDate', function (selected) {
         var minDate = new Date(selected.date.valueOf());
         $('#fecha_final').datetimepicker('setStartDate', minDate);

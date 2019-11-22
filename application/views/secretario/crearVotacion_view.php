@@ -83,7 +83,7 @@
               'class' => 'form-control datetimepicker-input',
               'data-toggle' => 'datetimepicker',
               'placeholder' =>'Selecciona una fecha de inicio',
-              'setEndDate' => date('Y-m-d'),
+              'data-date-start-date'=>"0d",
               'required' => true,
               'value' => set_value('fecha_inicio')
           ); ?>
