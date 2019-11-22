@@ -34,6 +34,7 @@ class Secretario extends CI_Controller{
          'votaciones'=> $votaciones,
          'mensaje' => $mensaje
        );
+       //$this->load->view('datetime');
        $this->load->view('secretario/secretario_view',$datos);
        $this->load->view('elementos/footer');
         break;
@@ -86,8 +87,8 @@ class Secretario extends CI_Controller{
         else
         {  // Correcta
           // Convierte la fecha en un formato valido para la BD
-          $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
-          $fechaFin = date('Y-m-d',strtotime($this->input->post('fecha_final')));
+          $fechaInicio = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_inicio')));
+          $fechaFin = date('Y-m-d H-i-s',strtotime($this->input->post('fecha_final')));
 
           $votacion = new Votacion(
             //$this->input->post('id'),
@@ -97,7 +98,7 @@ class Secretario extends CI_Controller{
             $fechaFin,
             false
           );
-
+          //echo var_dump($votacion);
           $this->guardarVotacion($votacion);
         }
     }
@@ -161,7 +162,7 @@ class Secretario extends CI_Controller{
     if($this->input->post('boton_modificar'))
     {
 
-      $this->load->view('elementos/headerDelegado');
+      $this->load->view('elementos/headerSecretario');
       $id = $this->input->post('modificar');
       $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
       $this->load->view('secretario/modificarVotacion_view', $data);
@@ -256,6 +257,7 @@ class Secretario extends CI_Controller{
 
   public function validarFechaInicio(){
     $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
+
     $hoy = date('Y-m-d');
     if($fechaInicio < $hoy){
         $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');

@@ -35,7 +35,7 @@
            <th scope="col">Fecha Final</th>
            <th scope="col"></th>
            <th scope="col"></th>
-           <!--<th scope="col"></th>-->
+           <th scope="col"></th>
          </tr>
        </thead>
      <tbody>
@@ -86,25 +86,6 @@
           <?= form_close(); ?>
 
          <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
-           <!-- BOTON DE MODIFICAR -->
-           <!--<?=form_open(base_url().'secretario/modificarVotacion',
-                   array('name'=>'modificarVotacion'));?>
-                  <?php
-                  $atributos = array(
-                     'modificar' => $objeto->Id
-
-                 );
-                  ?>
-            <?= form_hidden($atributos);?>
-            <?php $atributos = array(
-                'name' => 'boton_modificar',
-                'class' => 'btn btn-primary',
-                'type' => 'submit',
-                'value' => 'Modificar'
-            ); ?>
-            <td><?= form_submit($atributos);?></td>
-            <?= form_close(); ?>-->
-
             <!-- BOTON DE DELEGAR -->
             <?=form_open(base_url().'secretario/delegarVotacion',
                     array('name'=>'delegarVotacion'));?>
@@ -124,7 +105,32 @@
              <td><?= form_submit($atributos);?></td>
              <?= form_close(); ?>
 
-          <?php } ?> <!-- FIN DEL IF DATE -->
+          <?php }?> <!-- FIN DEL IF DELEGAR-->
+        <?php
+          if($objeto->FechaInicio > date('Y-m-d') && // S aun no ha empezado
+             $objeto->FechaFinal >= date('Y-m-d') ){?>
+
+        <!-- BOTON DE MODIFICAR -->
+        <?=form_open(base_url().'secretario/modificarVotacion',
+                array('name'=>'modificarVotacion'));?>
+               <?php
+               $atributos = array(
+                  'modificar' => $objeto->Id
+
+              );
+               ?>
+         <?= form_hidden($atributos);?>
+         <?php $atributos = array(
+             'name' => 'boton_modificar',
+             'class' => 'btn btn-primary',
+             'type' => 'submit',
+             'value' => 'Modificar'
+         ); ?>
+         <td><?= form_submit($atributos);?></td>
+         <?= form_close(); ?>
+
+       <?php } // FIN IF MODIFICAR?>
+
          </tr>
      <?php }?>
      <?php }?>
@@ -133,10 +139,6 @@
   </div>
   </div>
 </div>
-
-
-
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
