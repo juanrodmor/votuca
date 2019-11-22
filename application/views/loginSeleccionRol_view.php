@@ -19,10 +19,10 @@
 <body>
 
         <div class="container navbar-default">
-                
+
         <div id=logo>
-            <a class="center" href="#"><img src="<?php echo base_url('assets/img/logo_uca.png')?>"></a>
-        </div>       
+              <center><img src="<?php echo base_url('assets/img/logo.png')?>" class="img-fluid" alt="Responsive image"></center>
+        </div>
             <br><br>
 
             <!--Display error messages-->
@@ -33,12 +33,12 @@
                 <div class="inputs">
                 <?php
                     if(isset($roles))
-                    {   
+                    {
                         echo '<form id="chooseRole" method="post" action="' . base_url().'login_controller/seleccionRol' . '">';
                         foreach($roles as $rol)
                         {
                             echo
-                            '   <div class="input-group"> 
+                            '   <div class="input-group">
                                 <span class="input-group-addon">
                                     <input type="radio" name="radio" value="'.$rol.'">
                                 </span>
@@ -50,7 +50,7 @@
                 ?>
                 </div>
             </div>
-            
+
         </div>
 
          <!-- Bootstrap core JavaScript
@@ -59,7 +59,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
+
     <script>
       $(document).ready(function(){
         $("#chooseRole").on("change", "input:radio", function()

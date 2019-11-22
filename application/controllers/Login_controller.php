@@ -83,7 +83,7 @@ class Login_controller extends CI_Controller {
 			}
 		} else $this->load->view('login_view');		//Si se accede de forma ilegal (no por envío de formulario)...
 	}
-	
+
 	/*	PARA MULTIROL
 	//Evalúa los permisos del usuario loggeado.
 	public function evaluaRol() {
@@ -118,6 +118,15 @@ class Login_controller extends CI_Controller {
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
+	}
+
+	/***********************************/
+	/***********************************/
+	/***********************************/
+
+	public function crearPassword($pass)
+	{
+		echo password_hash($pass, PASSWORD_DEFAULT);
 	}
 
 	//Funciones de registro

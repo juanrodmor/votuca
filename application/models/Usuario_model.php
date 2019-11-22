@@ -55,7 +55,7 @@ class Usuario_model extends CI_Model {
 	/*****************************/
 	public function recuperarTodos()
 	{
-		$query = $this->db->query("SELECT  * from usuario;");
+		$query = $this->db->query("SELECT * from usuario;");
     return $query->result();
 	}
 	public function recuperarUsuariosRol($rol)
