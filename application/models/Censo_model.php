@@ -14,6 +14,12 @@ class Censo_model extends CI_Model{
 
   }
 
+  public function getCensos()
+  {
+    $query = $this->db->query("SELECT * from ficheros_censo");
+    return $query->result();
+  }
+
 
 }
 

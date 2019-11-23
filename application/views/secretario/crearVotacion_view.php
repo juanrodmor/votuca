@@ -82,7 +82,7 @@
               'name' => 'fecha_inicio',
               'class' => 'form-control datetimepicker-input',
               'data-toggle' => 'datetimepicker',
-              'placeholder' =>'Selecciona una fecha de inicio',            
+              'placeholder' =>'Selecciona una fecha de inicio',
               'required' => true,
               'value' => set_value('fecha_inicio')
           ); ?>
@@ -111,21 +111,22 @@
         </div>
 
         <h2> Censo electoral </h2>
-        <p> Introduzca al menos tres miembros </p>
+        <p> Escoja el censo electoral que desee </p>
         <!-- TABLA DE CENSO -->
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
             <thead>
               <tr>
-                <th scope="col" class="no-sort">Usuario</th>
-                <th scope="col" class="no-sort">Censo</th>
+                <th>Censo</th>
+                <th></th>
               </tr>
             </thead>
           <tbody>
             <tr>
-              <?php foreach($usuarios as $usuario){ ?>
-                <td><?php echo $usuario->NombreUsuario?></td>
+              <?php foreach($censos as $censo){ ?>
+
+                <td><?php echo $censo->Nombre?></td>
                 <?php
                 echo '<div class="form-check">';
                  $atributos = array(
@@ -133,7 +134,7 @@
                     'class' => 'form-control',
                     'type' => 'checkbox',
                     'id' => 'censo',
-                    'value' => $usuario->Id
+                    'value' => $censo->Nombre
                 );
                 ?>
               <td><?= form_checkbox($atributos); ?></td>

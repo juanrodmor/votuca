@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<title>DELEGANDO</title>
+	<title>MODIFICAR</title>
 	<!-- Bootstrap core CSS -->
 	<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
@@ -58,7 +58,7 @@
 					'value' => $votaciones->Descripcion
 			); ?>
 			<?= form_label('Descripcion','descripcion'); ?>
-			<?= form_input($atributos) ?> <br/><br/>
+			<?= form_textarea($atributos) ?> <br/><br/>
 		</div>
 
 		 <div class="form-group">
@@ -99,13 +99,22 @@
 		  </div>
 		</div>
 
+				<?php $atributos = array(
+						'name' => 'boton_borrador',
+						'class' => 'btn btn-primary',
+						'type' => 'submit',
+						'value' => 'Guardar en borrador'
+				); ?>
+
+			<?= form_submit($atributos);?>
+
 		<?php $atributos = array(
-				'name' => 'submit_reg',
+				'name' => 'boton_publicar',
 				'class' => 'btn btn-primary',
 				'type' => 'submit',
-				'value' => 'Enviar'
+				'value' => 'Publicar'
 		); ?>
-		<center><?= form_submit($atributos);?></center>
+		<?= form_submit($atributos);?>
 	<?= form_close(); ?>
 </div>
 

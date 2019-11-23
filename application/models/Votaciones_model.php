@@ -21,8 +21,9 @@ class Votaciones_model extends CI_Model{
 
 	public function updateVotacion($votacion)
   {
-		$encontrado = $this->db->where('id', $votacion->getId());
+  	$encontrado = $this->db->where('id', $votacion->getId());
     $realizado = false;
+    //$query = $this->db->query("UPDATE votacion SET isDelected = '1' WHERE Id = '$id'");
     if($encontrado){$realizado = $this->db->update('votacion', $votacion);}
 		return $realizado;
 	}

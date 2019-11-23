@@ -25,7 +25,7 @@
 
   <div class = "container">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-striped" id="votaciones_admin">
+    <table class="display table table-striped" id="votaciones_secretario">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
@@ -64,9 +64,9 @@
          <td><?php echo $objeto->Descripcion;?></td>
          <td><?php echo $objeto->FechaInicio;?></td>
          <td><?php echo $objeto->FechaFinal;?></td>
-
-         <!-- BOTON DE ELIMINAR -->
-         <?=form_open(base_url().'secretario/eliminarVotacion',
+         
+          <!-- BOTON DE ELIMINAR -->
+          <?=form_open(base_url().'secretario/eliminarVotacion',
          		    array('name'=>'eliminarVotacion'));?>
                 <?php
                 $atributos = array(
@@ -131,7 +131,7 @@
 
        <?php } // FIN IF MODIFICAR?>
 
-         </tr>
+     </tr>
      <?php }?>
      <?php }?>
      </tbody>

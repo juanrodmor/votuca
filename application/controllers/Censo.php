@@ -14,6 +14,10 @@ class Censo extends CI_Controller{
 
   public function insertar(){echo 'VAMOS A INSERTAR EN EL CENSO';}
 
+  public function getCensos(){
+    $censos = $this->censo_model->getCensos();
+  }
+
 
 }
 

@@ -57,9 +57,14 @@ class Secretario extends CI_Controller{
   public function crearVotacion($mensaje = '')
   {
     $this->load->view('elementos/headerSecretario');
-    $data = $this->usuario_model->recuperarTodos();
+    // CENSO
+    //$data = $this->usuario_model->recuperarTodos();
+    $nombreCensos = $this->censo_model->getCensos();
+
+    // Extraer
+    //echo var_dump($nombreCensos);
     $datos = array(
-      'usuarios' => $data,
+      'censos' => $nombreCensos,
       'mensaje' => $mensaje
     );
 
@@ -78,7 +83,7 @@ class Secretario extends CI_Controller{
         $this->form_validation->set_rules('final','Fecha Final','required');
         $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
         $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-        $this->form_validation->set_rules('censo','Censo','callback_validarCenso');
+        //$this->form_validation->set_rules('censo','Censo','callback_validarCenso');
 
 				// MENSAJES DE ERROR.
 				$this->form_validation->set_message('required','El campo %s es obligatorio');
@@ -101,6 +106,7 @@ class Secretario extends CI_Controller{
             $this->input->post('descripcion'),
             $fechaInicio,
             $fechaFin,
+            false,
             false
           );
           //echo var_dump($votacion);
@@ -109,11 +115,35 @@ class Secretario extends CI_Controller{
     }
   }
 
+  public function extraerUsuariosCenso($censo)
+  {
+    $usuarios = array();
+    $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$censo.'.txt', "r") or exit("Unable to open file!");
+    while(!feof($fichero))
+      {
+        $usuarios[] = fgets($fichero,10);
+      }
+      fclose($fichero);
 
-  public function insertarCenso($usuarios)
+  return $usuarios;
+  }
+
+  public function extraerIdsUsuarios($usuarios)
+  {
+    $i = 0;
+    $ids = array();
+    while($usuarios[$i] != false && $i < sizeof($usuarios))
+    {
+      $encontrado = $this->usuario_model->getIdFromUserName($usuarios[$i]);
+      if($encontrado){$ids[] = $encontrado[0]->Id;}
+      ++$i;
+    }
+    return $ids;
+  }
+  public function insertarCenso($usuariosIds)
   {
     $ultimoId = $this->votaciones_model->getLastId();
-    $this->censo_model->insertar($usuarios,(int)$ultimoId[0]['Id']);
+    $this->censo_model->insertar($usuariosIds,(int)$ultimoId[0]['Id']);
   }
 
   public function insertarMesaElectoral($elegidos)
@@ -124,13 +154,32 @@ class Secretario extends CI_Controller{
 
   public function guardarVotacion($datos)
   {
-
+    $censos = $this->input->post('censo'); // Vector con nombres de censos
     $ultimoId = $this->votaciones_model->getLastId();
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-    $noGuardadoCenso = $this->insertarCenso($this->input->post('censo'));
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($this->input->post('censo'),(int)$ultimoId[0]['Id']+1,1);
+    $usuarios = array();
+    $usuariosIds = array();
+    for($i = 0; $i < sizeof($censos); $i++)
+    {
+      // SACAR USUARIOS DE TODOS LOS CENSOS
 
-    $elegidos = $this->usuariosAleatorios($this->input->post('censo'));
+      $usuarios = $this->extraerUsuariosCenso($censos[$i]);
+      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+
+    }
+
+    $noGuardadoCenso = $this->insertarCenso($usuariosIds);
+
+    // VOTO POR DEFECTO A USUARIOS DE ESE CENSO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($usuariosIds,(int)$ultimoId[0]['Id']+1,1);
+
+    // MESA ELECTORAL ALEATORIA
+    $elegidos = $this->usuariosAleatorios($usuariosIds);
+    for($i = 0; $i < sizeof($elegidos); $i++)
+    {
+      $elegidos[$i] = $usuariosIds[$elegidos[$i]];
+    }
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
@@ -184,19 +233,44 @@ class Secretario extends CI_Controller{
 
   public function updateVotacion()
 	{
-		$votacion = new Votacion(
-		                    $_POST['titulo'],
-		                    $_POST['descripcion'],
-			                  $_POST['fecha_inicio'],
-			                  $_POST['fecha_final'],
-			                  false
-		            );
-    $votacion->setId($_POST['id']);
+    if($this->input->post('boton_borrador'))
+    {
+      //echo 'HAS PULSADO EL BOTÓN DE BORRADOR';
+      $votacion = new Votacion(
+  		                    $_POST['titulo'],
+  		                    $_POST['descripcion'],
+  			                  $_POST['fecha_inicio'],
+  			                  $_POST['fecha_final'],
+  			                  false,
+                          true
+  		            );
+      $votacion->setId($_POST['id']);
 
-		$modificada = $this->votaciones_model->updateVotacion($votacion);
-    if($modificada){
-      $this->index('La modificacion se ha realizado correctamente');
+  		$modificada = $this->votaciones_model->updateVotacion($votacion);
+
+          if($modificada){
+            $this->index('La votación se ha guardado en borrador');
+          }
     }
+    if($this->input->post('boton_publicar'))
+    {
+      $votacion = new Votacion(
+  		                    $_POST['titulo'],
+  		                    $_POST['descripcion'],
+  			                  $_POST['fecha_inicio'],
+  			                  $_POST['fecha_final'],
+  			                  false,
+                          false
+  		            );
+      $votacion->setId($_POST['id']);
+
+  		$modificada = $this->votaciones_model->updateVotacion($votacion);
+
+          if($modificada){
+            $this->index('La modificacion se ha realizado correctamente');
+          }
+    }
+
 
 	}
   /************************************/
@@ -238,6 +312,10 @@ class Secretario extends CI_Controller{
 
   }
 
+  public function enviar()
+  {
+    echo "Has pulsado enviar";
+  }
   /*******************************************/
   /********* SECRETARIO DELEGADO *************/
   /*******************************************/
@@ -305,21 +383,9 @@ class Secretario extends CI_Controller{
 
   public function usuariosAleatorios($usuariosDisponibles)
   {
-    $finArray = sizeof($usuariosDisponibles)-1;
-    $elegidos = array();
-    $i = 1;
-    $lleno = false;
 
-    $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
-    $elegidos[] = $random;
-
-    while($i < 3){
-      $random = rand($usuariosDisponibles[0],$usuariosDisponibles[$finArray]);
-      $encontrado = array_search($random,$elegidos);
-      if($encontrado == false && is_bool($encontrado)){$elegidos[] = $random; ++$i;}
-
-    }
-  return $elegidos;
+    $elegidos = array_rand($usuariosDisponibles,3);
+    return $elegidos;
 
   }
 

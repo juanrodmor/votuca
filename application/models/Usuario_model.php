@@ -74,6 +74,7 @@ class Usuario_model extends CI_Model {
 
 	public function getIdFromUserName($nombre)
 	{
+	
 		$query = $this->db->query("SELECT Id from usuario WHERE NombreUsuario = '$nombre';");
 		return $query->result();
 	}
