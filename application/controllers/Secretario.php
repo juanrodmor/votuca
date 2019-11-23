@@ -159,14 +159,12 @@ class Secretario extends CI_Controller{
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $usuarios = array();
     $usuariosIds = array();
+
+    // SACAR USUARIOS DE TODOS LOS CENSOS
     for($i = 0; $i < sizeof($censos); $i++)
     {
-      // SACAR USUARIOS DE TODOS LOS CENSOS
-
       $usuarios = $this->extraerUsuariosCenso($censos[$i]);
       $usuariosIds = $this->extraerIdsUsuarios($usuarios);
-
-
     }
 
     $noGuardadoCenso = $this->insertarCenso($usuariosIds);
@@ -176,11 +174,16 @@ class Secretario extends CI_Controller{
 
     // MESA ELECTORAL ALEATORIA
     $elegidos = $this->usuariosAleatorios($usuariosIds);
+    echo 'USUARIOS TOTALES: '.sizeof($elegidos).'<br>';
     for($i = 0; $i < sizeof($elegidos); $i++)
     {
       $elegidos[$i] = $usuariosIds[$elegidos[$i]];
+      // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
+      $this->usuario_model->insertUserAs((int)$elegidos[$i],5);
     }
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
+
+    // FINAL DE ESTA MIERDA
 
     if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
     {
