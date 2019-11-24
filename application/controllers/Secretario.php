@@ -188,7 +188,7 @@ class Secretario extends CI_Controller{
 
     // FINAL DE ESTA MIERDA
 
-    /*if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
@@ -196,7 +196,7 @@ class Secretario extends CI_Controller{
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
       $this->index('La votación se ha guardado correctamente');
-    }*/
+    }
   }
 
   /************************************/
