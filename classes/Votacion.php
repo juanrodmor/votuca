@@ -31,6 +31,7 @@ class Votacion{
   public function setFechaInicio($fecha){$this->fechaInicio= $fecha;}
   public function setFechaFinal($fecha){$this->fechaFinal = $fecha;}
   public function setDelected($delected){$this->isDelected = $delected;}
+  public function setBorrador($borrador){$this->esBorrador = $borrador;}
 
 
 }

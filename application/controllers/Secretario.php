@@ -174,17 +174,20 @@ class Secretario extends CI_Controller{
 
     // MESA ELECTORAL ALEATORIA
     $elegidos = $this->usuariosAleatorios($usuariosIds);
-    echo 'USUARIOS TOTALES: '.sizeof($elegidos).'<br>';
     for($i = 0; $i < sizeof($elegidos); $i++)
     {
       $elegidos[$i] = $usuariosIds[$elegidos[$i]];
+
       // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
       $this->usuario_model->insertUserAs((int)$elegidos[$i],5);
     }
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
-    // FINAL DE ESTA MIERDA
+    // Enviar correo a cada elegido en la mesa electoral
+    $this->enviarCorreo($elegidos);
 
+    // FINAL DE ESTA MIERDA
+/*
     if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
@@ -193,7 +196,7 @@ class Secretario extends CI_Controller{
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
       $this->index('La votación se ha guardado correctamente');
-    }
+    }*/
   }
 
   /************************************/
@@ -248,10 +251,11 @@ class Secretario extends CI_Controller{
                           true
   		            );
       $votacion->setId($_POST['id']);
+      //echo var_dump($votacion);
 
-  		$modificada = $this->votaciones_model->updateVotacion($votacion);
+  $modificada = $this->votaciones_model->updateVotacion($votacion);
 
-          if($modificada){
+        if($modificada != NULL){
             $this->index('La votación se ha guardado en borrador');
           }
     }
@@ -386,10 +390,26 @@ class Secretario extends CI_Controller{
 
   public function usuariosAleatorios($usuariosDisponibles)
   {
-
     $elegidos = array_rand($usuariosDisponibles,3);
     return $elegidos;
+  }
 
+  public function enviarCorreo($elegidos)
+  {
+     $this->load->library('email');
+     $config = array(
+        'protocol'  => 'mail',
+        'mailpath' => '/usr/sbin/sendmail',
+        'charset'   => 'utf-8'
+    );
+    $this->email->initialize($config);
+    $this->email->from('email@example.com', 'Identification');
+    $this->email->to('ibsantamaria96@gmail.com');
+    $this->email->subject('Send Email Codeigniter');
+    $this->email->message('The email send using codeigniter library');
+    if($this->email->send(false)){
+      echo 'SE HA ENVIADO BIEN EL CORREO';
+    }else{$this->email->print_debugger();}
   }
 
 
