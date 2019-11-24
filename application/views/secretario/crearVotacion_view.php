@@ -144,8 +144,7 @@
           </tbody>
         </table>
       </div>
-      </div>
-      <br><br>
+      </div>      
         <?php $atributos = array(
             'name' => 'submit_reg',
             'class' => 'btn btn-primary',
