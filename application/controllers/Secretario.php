@@ -184,10 +184,10 @@ class Secretario extends CI_Controller{
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     // Enviar correo a cada elegido en la mesa electoral
-    $this->enviarCorreo($elegidos);
+    //$this->enviarCorreo($elegidos);  // FUNCIONA
 
     // FINAL DE ESTA MIERDA
-/*
+
     if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
@@ -196,7 +196,7 @@ class Secretario extends CI_Controller{
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
       $this->index('La votación se ha guardado correctamente');
-    }*/
+    }
   }
 
   /************************************/
@@ -394,23 +394,29 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  public function enviarCorreo($elegidos)
-  {
-     $this->load->library('email');
-     $config = array(
-        'protocol'  => 'mail',
-        'mailpath' => '/usr/sbin/sendmail',
-        'charset'   => 'utf-8'
+  /*public function enviarCorreo($elegidos)
+
+    $config = array(
+      'protocol' => 'smtp',
+      'smtp_host' => 'ssl://smtp.googlemail.com',
+      'smtp_port' => 465,
+      'smtp_user' => 'ibsantamaria96@gmail.com',
+      'smtp_pass' => '',
+      'mailtype' => 'html',
+      'charset' => 'iso-8859-1',
+      'wordwrap' => TRUE
+
     );
+
     $this->email->initialize($config);
-    $this->email->from('email@example.com', 'Identification');
+    $this->email->from('ibsantamaria96@gmail.com', 'admin');
     $this->email->to('ibsantamaria96@gmail.com');
-    $this->email->subject('Send Email Codeigniter');
-    $this->email->message('The email send using codeigniter library');
-    if($this->email->send(false)){
-      echo 'SE HA ENVIADO BIEN EL CORREO';
-    }else{$this->email->print_debugger();}
-  }
+    $this->email->subject('ERES MIEMBRO DE LA MESA ELECTORAL');
+    $this->email->message('ENHORABUENA ERES MIEMBRO DE LA MESA ELECTORAL');
+    $this->email->set_newline("\r\n");
+    if($this->email->send()){
+    }else{echo $this->email->print_debugger();}
+  }*/
 
 
 }

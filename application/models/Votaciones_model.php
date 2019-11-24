@@ -35,9 +35,7 @@ class Votaciones_model extends CI_Model{
       $query = $this->db->query("UPDATE votacion SET esBorrador = '0' WHERE Id = '$id'");
       $realizado = true;
     }
-    //$query = $this->db->query("UPDATE votacion SET isBorrador = '1' WHERE Id = '$id'");
-
-		return $realizado;
+  return $realizado;
 	}
 
   public function recuperarVotaciones()
