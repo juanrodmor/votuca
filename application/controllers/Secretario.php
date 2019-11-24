@@ -159,24 +159,30 @@ class Secretario extends CI_Controller{
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $usuarios = array();
     $usuariosIds = array();
-
+    $totales = array();
     // SACAR USUARIOS DE TODOS LOS CENSOS
     for($i = 0; $i < sizeof($censos); $i++)
     {
       $usuarios = $this->extraerUsuariosCenso($censos[$i]);
       $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+      for($j = 0; $j < sizeof($usuariosIds); $j++)
+      {
+        if(!in_array($usuariosIds[$j],$totales))
+        array_push($totales,$usuariosIds[$j]);
+      }
+
     }
 
-    $noGuardadoCenso = $this->insertarCenso($usuariosIds);
+    $noGuardadoCenso = $this->insertarCenso($totales);
 
     // VOTO POR DEFECTO A USUARIOS DE ESE CENSO
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($usuariosIds,(int)$ultimoId[0]['Id']+1,1);
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id']+1,1);
 
     // MESA ELECTORAL ALEATORIA
-    $elegidos = $this->usuariosAleatorios($usuariosIds);
+    $elegidos = $this->usuariosAleatorios($totales);
     for($i = 0; $i < sizeof($elegidos); $i++)
     {
-      $elegidos[$i] = $usuariosIds[$elegidos[$i]];
+      $elegidos[$i] = $totales[$elegidos[$i]];
 
       // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
       $this->usuario_model->insertUserAs((int)$elegidos[$i],5);
@@ -184,7 +190,7 @@ class Secretario extends CI_Controller{
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     // Enviar correo a cada elegido en la mesa electoral
-    $this->enviarCorreo($elegidos,$ultimoId);  // FUNCIONA
+    //$this->enviarCorreo($elegidos,$ultimoId);  // FUNCIONA
 
     // FINAL DE ESTA MIERDA
 
