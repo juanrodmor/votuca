@@ -33,6 +33,7 @@
            <th scope="col">Descripcion</th>
            <th scope="col">Inicio</th>
            <th scope="col">Fin</th>
+           <th scope="col">Borrador</th>
            <th scope="col"></th>
            <th scope="col"></th>
            <th scope="col"></th>
@@ -64,7 +65,14 @@
          <td><?php echo $objeto->Descripcion;?></td>
          <td><?php echo $objeto->FechaInicio;?></td>
          <td><?php echo $objeto->FechaFinal;?></td>
-         
+        <?php
+          if($objeto->esBorrador == 1){
+            echo '<td> En borrador </td>';
+          }
+          else{echo '<td> Publicada </td>';}
+        ?>
+
+
           <!-- BOTON DE ELIMINAR -->
           <?=form_open(base_url().'secretario/eliminarVotacion',
          		    array('name'=>'eliminarVotacion'));?>

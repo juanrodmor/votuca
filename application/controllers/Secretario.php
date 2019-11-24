@@ -29,6 +29,7 @@ class Secretario extends CI_Controller{
        case 'Secretario':
 
        $this->load->view('elementos/headerSecretario');
+       // VOTACIONES QUE NO ESTÁN ELIMINADAS
        $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
        $datos = array(
          'votaciones'=> $votaciones,
@@ -321,8 +322,6 @@ class Secretario extends CI_Controller{
         $this->index('Esta votación ya tiene un secretario delegado asignado');
       }
     }
-
-
   }
 
   public function enviar()
