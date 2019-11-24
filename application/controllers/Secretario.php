@@ -184,11 +184,11 @@ class Secretario extends CI_Controller{
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     // Enviar correo a cada elegido en la mesa electoral
-    //$this->enviarCorreo($elegidos);  // FUNCIONA
+    $this->enviarCorreo($elegidos,$ultimoId);  // FUNCIONA
 
     // FINAL DE ESTA MIERDA
 
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    /*if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
@@ -196,7 +196,7 @@ class Secretario extends CI_Controller{
     else{
       $datos = array('mensaje'=>'La votación se ha guardado correctamente');
       $this->index('La votación se ha guardado correctamente');
-    }
+    }*/
   }
 
   /************************************/
@@ -394,29 +394,34 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  /*public function enviarCorreo($elegidos)
-
+  public function enviarCorreo($elegidos,$idVotacion){
+    //echo var_dump($idVotacion);
     $config = array(
       'protocol' => 'smtp',
       'smtp_host' => 'ssl://smtp.googlemail.com',
       'smtp_port' => 465,
-      'smtp_user' => 'ibsantamaria96@gmail.com',
-      'smtp_pass' => '',
+      'smtp_user' => 'votvotuca@gmail.com',
+      'smtp_pass' => 'cadizvotuca19',
       'mailtype' => 'html',
-      'charset' => 'iso-8859-1',
+      'charset' => 'utf-8',
       'wordwrap' => TRUE
 
     );
 
     $this->email->initialize($config);
-    $this->email->from('ibsantamaria96@gmail.com', 'admin');
+    $this->email->from('votvotuca@gmail.com', 'votuca');
     $this->email->to('ibsantamaria96@gmail.com');
     $this->email->subject('ERES MIEMBRO DE LA MESA ELECTORAL');
-    $this->email->message('ENHORABUENA ERES MIEMBRO DE LA MESA ELECTORAL');
+    $this->email->message('
+        <h1> ¡Enhorabuena! </h1>
+        <p> Eres miembro de la mesa electoral para la votacion '.$idVotacion[0]['Id'].'</p>'
+
+    );
+
     $this->email->set_newline("\r\n");
     if($this->email->send()){
     }else{echo $this->email->print_debugger();}
-  }*/
+  }
 
 
 }
