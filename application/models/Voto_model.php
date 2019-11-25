@@ -20,6 +20,7 @@
 						where votacion.Id = usuario_votacion.Id_Votacion
 							AND usuario_votacion.Id_Usuario = ".$id_user."
 							AND usuario_votacion.Id_Voto = voto.Id
+							AND votacion.isDelected = 0
 						order by votacion.FechaFinal ASC;";
 
 			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
@@ -42,12 +43,22 @@
 		// Votar
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
-			$sql = $this->db->get_where('voto', array('Nombre' => $voto));
-			$id_voto = $sql->row()->Id;
-			//print_r($id_voto);
 
-			$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
-			$query = $this -> db -> query($sql);
+			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDelected' => FALSE));
+			//echo $sql->num_rows();
+			//echo var_dump($sql->row()->Id);
+
+
+			if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d')) and ($sql->row()->FechaFinal >= date('Y-m-d'))) {
+				$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+				$id_voto = $sql->row()->Id;
+
+				$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+				$query = $this -> db -> query($sql);
+			} 
+			
+			//echo var_dump($sql->result());
+			// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
 		}
 
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
@@ -110,6 +121,7 @@
 
 		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
 		{
+			$Abs = 0;
 			$Si = 0;
 			$No = 0;
 			$Bl = 0;
@@ -118,6 +130,9 @@
 			$sql = $this->db->get_where('voto', array('Id' => $datos[0]->Id_voto));
 			for($i = 0; $i < sizeof($datos); ++$i) {
 				switch($datos[$i]->Id_voto) {
+					case '1':
+						$Abs++;
+						break;
 					case '2':
 						$Si++;
 						break;
@@ -130,6 +145,7 @@
 				}
 			}
 			$votos = array (
+				'Abs' => $Abs,
 				'Si' => $Si,
 				'No' => $No,
 				'Bl' => $Bl
