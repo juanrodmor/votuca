@@ -21,10 +21,21 @@ class Votaciones_model extends CI_Model{
 
 	public function updateVotacion($votacion)
   {
-		$encontrado = $this->db->where('id', $votacion->getId());
+  	$encontrado = $this->db->where('id', $votacion->getId());
     $realizado = false;
-    if($encontrado){$realizado = $this->db->update('votacion', $votacion);}
-		return $realizado;
+    if($votacion->getBorrador() == true && $encontrado)
+    {
+        $id = $votacion->getId();
+        $query = $this->db->query("UPDATE votacion SET esBorrador = '1' WHERE Id = '$id'");
+        $realizado = true;
+    }
+    if($encontrado && $votacion->getBorrador() == false)
+    {
+      $id = $votacion->getId();
+      $query = $this->db->query("UPDATE votacion SET esBorrador = '0' WHERE Id = '$id'");
+      $realizado = true;
+    }
+  return $realizado;
 	}
 
   public function recuperarVotaciones()

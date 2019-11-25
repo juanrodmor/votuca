@@ -12,7 +12,7 @@ class SecretariosDelegados_model extends CI_Model{
   public function guardarSecretarioDelegado($idSecretario,$idVotacion)
   {
     $totales = $this->restriccionDelegacion($idVotacion);
-    if($totales >= 2){return false;}
+    if($totales >= 1){return false;}
     else
     {
       $datos = array(

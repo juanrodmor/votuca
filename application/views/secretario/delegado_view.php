@@ -15,18 +15,22 @@
 
 </head>
 
-  <body>
+<body>
 
 <div class="container">
-    <br><br><br><br>
-    <table class="display table table-striped"id="votaciones_admin">
+  <div class ="mensaje">
+    <?php if(isset($mensaje)): ?>
+          <br/><h1><?= $mensaje ?></h1><br/>
+      <?php endif; ?>
+  </div>
+  <table class="display table table-striped"id="votaciones_admin">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
           <th scope="col">Titulo</th>
           <th scope="col">Descripcion</th>
-          <th scope="col">Fecha Inicio</th>
-          <th scope="col">Fecha Final</th>
+          <th scope="col">Inicio</th>
+          <th scope="col">Final</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -35,11 +39,23 @@
        foreach($votaciones as $votacion){?>
         <tr>
         <?php
-          if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
+        if($votacion->FechaFinal < date('Y-m-d') )
+        {
+           echo "<th scope=row class=table-danger>";  // Ha finalizado
+        }
+        else {
+          if($votacion->FechaFinal == date('Y-m-d'))
+          {
+            echo "<th scope=row class=table-warning>";
+          }
+           else{echo "<th scope=row class=table-success>";}
+        }
+
+        /*  if($votacion->FechaFinal == date('Y-m-d') || $votacion->FechaFinal < date('Y-m-d') )
           {
              echo "<th scope=row class=table-danger>";  // Ha finalizado
           }
-          else{echo "<th scope=row class=table-success>";}
+          else{echo "<th scope=row class=table-success>";}*/
         ?>
         <?php echo $votacion->Id;?>
         </th>
@@ -72,7 +88,7 @@
 
     </tbody>
     </table>
-  
+
 </div>
 
 
