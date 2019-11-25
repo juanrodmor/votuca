@@ -9,14 +9,25 @@ class MesaElectoral extends CI_Controller{
     parent::__construct();
     $this->load->model('voto_model');
     $this->load->model('votaciones_model');
-
-
+	$this->load->model('Usuario_model');
+	$this->load->model('Mesa_model');
   }
+  
+	//Obtiene todas las votaciones de las que el usuario loggeado es miembro de mesa.
+	private function obtenerVotaciones() {
+		$votaciones = $this->Mesa_model->getVotaciones($this->Usuario_model->getId($this->session->userdata('usuario')));
+		$arrayVotaciones = array();
+		foreach($votaciones as $row) {	//$row es un objeto mesa_electoral
+			array_push($arrayVotaciones, $this->votaciones_model->getVotacion($row->Id_Votacion));	//$arrayVotaciones es un array de objetos votacion
+		}
+		return $arrayVotaciones;
+	}
 
   public function index($mensaje = '')
   {
     switch ($this->session->userdata('rol')) {
        case 'Administrador':
+		redirect('/Administrador_controller');
         break;
        case 'Elector':
         redirect('/Elector_controller');
@@ -27,8 +38,8 @@ class MesaElectoral extends CI_Controller{
         case 'MiembroElectoral':
         $inicio['inicio'] = '/MesaElectoral';
         $this->load->view('elementos/headerComun',$inicio);
-          $votaciones['votaciones'] = $this->votaciones_model->recuperarVotacionesAcabadas();
-          $datos = array(
+        $votaciones = $this->obtenerVotaciones();
+		$datos = array(
                     'votaciones'=> $votaciones,
                     'mensaje' => $mensaje
                   );
@@ -47,18 +58,44 @@ class MesaElectoral extends CI_Controller{
 
   }
 
+	private function abrirUrna($idVotacion) {
+		$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+		$peticionesApertura = $this->Mesa_model->getNApertura($idVotacion);
+		return ($peticionesApertura >= 3);
+	}
+
   public function recuentoVotos(){
     if($this->input->post('boton_recuento')){
       $idVotacion = $this->input->post('recuento');
-      $nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
-      $datos = array(
-        'total' => $nVotos,
-        'votacion' => $idVotacion
-      );
+		if ($this->abrirUrna($idVotacion)) {
+			$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
+			$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
+			$votos = $this->voto_model->recuentoVotos($idVotacion);
+			foreach($votos as $voto) {
+				switch ($voto->Id_Voto) {
+					case 2:
+						$votosSi++; break;
+					case 3:
+						$votosNo++; break;
+					case 4:
+						$votosBlanco++; break;
+				}
+			}
+			$datosVotacion = array(
+				'total' => $nVotos,
+				'si' => $votosSi,
+				'no' => $votosNo,
+				'blanco' => $votosBlanco,
+				'censo' => $maxVotantes,
+				'votacion' => $idVotacion
+			);
 
-      // Devolver numero de votos totales
-      $mensaje = "Se han hecho: ". $nVotos. " votos totales en la votacion ".$idVotacion;
-      $this->index($mensaje);
+			//$this->votosPerGroup($idVotacion);
+			$this->load->view('MesaElectoral_view', $datosVotacion);
+		} else {
+			$mensaje = 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.';
+			$this->index($mensaje);
+		}
     }
 
   }

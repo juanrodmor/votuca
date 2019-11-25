@@ -153,6 +153,7 @@
 				$this->db->insert('usuario_votacion',$datos);
 			}
 		}
+		
 
 	}
 ?>

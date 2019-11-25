@@ -38,8 +38,7 @@
       </thead>
     <tbody>
       <?php
-       foreach($votaciones as $votacion){?>
-         <?php foreach($votacion as $objeto){?>
+       foreach($votaciones as $objeto){?>
       <tr>
         <td scope="row" class="table-danger"><?php echo $objeto->Id;?></td>
         <td><?php echo $objeto->Titulo;?></td>
@@ -63,7 +62,6 @@
          <td><?= form_submit($atributos);?></td>
          <?= form_close(); ?>
       </tr>
-    <?php }?>
     <?php }?>
     </tbody>
     </table>
