@@ -47,8 +47,8 @@
       <h2>Porcentaje de voto</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p'.$total/100*$censo.' big center" style="float:left;">
-                <span>'.$total/100*$censo.'</span>
+            <div class="c100 p'.$total*100/$censo.' big center" style="float:left;">
+                <span>'.$total*100/$censo.'</span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
