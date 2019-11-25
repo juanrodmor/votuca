@@ -1,0 +1,47 @@
+.card
+{
+    margin-right: 5%;
+}
+
+#vote-card {
+    margin-left: 5%;
+    display: -webkit-inline-box;
+}
+
+#vote-info
+{
+    padding: 5%;
+    padding-bottom: 8%;
+    margin-bottom: 3%;
+    border: 1px solid #dee2e6;
+}
+
+#result-table
+{
+    margin-bottom: 5%;
+}
+
+.si
+{
+    color: green;
+}
+
+.no
+{
+    color: red;
+}
+
+.blanco
+{
+    color: gray
+}
+
+.card-body
+{
+    text-align: center;
+}
+
+.card-header
+{
+    font-weight: bold;
+}
