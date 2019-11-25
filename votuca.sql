@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 19-11-2019 a las 14:49:33
+-- Tiempo de generación: 25-11-2019 a las 21:36:33
 -- Versión del servidor: 5.7.26
 -- Versión de PHP: 7.2.18
 
@@ -70,20 +70,27 @@ CREATE TABLE IF NOT EXISTS `grupo` (
 DROP TABLE IF EXISTS `mesa_electoral`;
 CREATE TABLE IF NOT EXISTS `mesa_electoral` (
   `Id_Usuario` int(11) NOT NULL,
-  `Id_Votacion` int(11) NOT NULL
+  `Id_Votacion` int(11) NOT NULL,
+  `seAbre` tinyint(1) NOT NULL,
+  PRIMARY KEY (`Id_Usuario`,`Id_Votacion`),
+  KEY `Id_Usuario` (`Id_Usuario`),
+  KEY `Id_Votacion` (`Id_Votacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `mesa_electoral`
 --
 
-INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`) VALUES
-(2, 1),
-(4, 1),
-(3, 1),
-(4, 2),
-(3, 2),
-(1, 2);
+INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`, `seAbre`) VALUES
+(1, 2, 0),
+(2, 1, 0),
+(3, 1, 0),
+(3, 2, 0),
+(4, 1, 0),
+(4, 2, 0),
+(9, 2, 1),
+(9, 3, 1),
+(9, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -129,12 +136,13 @@ CREATE TABLE IF NOT EXISTS `secretarios_delegados` (
 
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `Id` int(32) NOT NULL AUTO_INCREMENT,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Id_Rol` int(32) NOT NULL,
   `NombreUsuario` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
   `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  PRIMARY KEY (`Id`),
+  KEY `Id_Rol` (`Id_Rol`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
@@ -144,13 +152,9 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
 (1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG'),
 (3, 3, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(4, 5, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(6, 1, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG'),
-(7, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (8, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(9, 1, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(10, 2, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG');
+(9, 5, 'm00000000', '$2y$12$.Q/7W.dVaKxCPep317Cul.VBpmbJrmP7UChBCUw4V/w.Y1VlHi9HS');
 
 -- --------------------------------------------------------
 
@@ -194,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `votacion` (
   `FechaFinal` date NOT NULL,
   `isDelected` tinyint(1) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `votacion`
@@ -202,7 +206,9 @@ CREATE TABLE IF NOT EXISTS `votacion` (
 
 INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDelected`) VALUES
 (1, 'Primera', 'Descripcion 1', '2019-11-18', '2019-11-21', 0),
-(2, 'Segunda', 'Descripcion 2', '2019-11-18', '2019-11-18', 0);
+(2, 'Segunda', 'Descripcion 2', '2019-11-18', '2019-11-18', 0),
+(3, 'Prueba Luismi', 'Probando miembro mesa', '2019-11-22', '2019-12-01', 0),
+(4, 'Prueba Luismi cerrada', 'Ver votacion cerrada', '2019-11-15', '2019-11-22', 0);
 
 -- --------------------------------------------------------
 
@@ -226,6 +232,22 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 (2, 'S'),
 (3, 'No'),
 (4, 'En blanco');
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `mesa_electoral`
+--
+ALTER TABLE `mesa_electoral`
+  ADD CONSTRAINT `mesa_electoral_ibfk_1` FOREIGN KEY (`Id_Votacion`) REFERENCES `votacion` (`Id`);
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`Id_Rol`) REFERENCES `rol` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
