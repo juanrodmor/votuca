@@ -11,11 +11,12 @@
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/admin_css.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>assets/css/behaviour/footer.css" rel="stylesheet">
   </head>
 
   <body>
 
-<br><br><br><br><br>
     <div class="container">
 
       <form action="<?= base_url().'administrador_controller/buscador'?>" method="post" id="search_form">
@@ -28,7 +29,7 @@
         <input type="submit" name="Buscar" for="search_form" value="Buscar" class="btn btn-primary" id="button-search">
       </form>
 
-
+      <br>
        <?php
         if(isset($mensaje))
         {
