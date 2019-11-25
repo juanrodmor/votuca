@@ -95,14 +95,14 @@
 		/********************************/
 		public function recuentoVotos($id_votacion)	//votos totales de la votacion $id_votacion
 		{
-			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+			$query = $this->db->query("SELECT Id_Voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
 			// return $query->num_rows();
 			return $query->result();
 		}
 
 		public function recuentoVotosElectoral($id_votacion)	//votos totales de la votacion $id_votacion
 		{
-			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+			$query = $this->db->query("SELECT Id_Voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
 			return $query->num_rows();
 			//return $query->result();
 		}

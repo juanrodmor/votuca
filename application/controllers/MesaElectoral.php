@@ -23,7 +23,7 @@ class MesaElectoral extends CI_Controller{
 		return $arrayVotaciones;
 	}
 
-  public function index($mensaje = '')
+  public function index($votos = array())
   {
     switch ($this->session->userdata('rol')) {
        case 'Administrador':
@@ -39,11 +39,8 @@ class MesaElectoral extends CI_Controller{
         $inicio['inicio'] = '/MesaElectoral';
         $this->load->view('elementos/headerComun',$inicio);
         $votaciones = $this->obtenerVotaciones();
-		$datos = array(
-                    'votaciones'=> $votaciones,
-                    'mensaje' => $mensaje
-                  );
-          $this->load->view('MesaElectoral/MesaElectoral_view',$datos);
+		$data = array_merge(array('votaciones'=> $votaciones), $votos);
+          $this->load->view('MesaElectoral/MesaElectoral_view',$data);
           $this->load->view('elementos/footer');
         break;
 
@@ -67,18 +64,21 @@ class MesaElectoral extends CI_Controller{
   public function recuentoVotos(){
     if($this->input->post('boton_recuento')){
       $idVotacion = $this->input->post('recuento');
-		if ($this->abrirUrna($idVotacion)) {
+		if (/*$this->abrirUrna($idVotacion)*/true) {
 			$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
 			$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
 			$votos = $this->voto_model->recuentoVotos($idVotacion);
-			foreach($votos as $voto) {
-				switch ($voto->Id_Voto) {
-					case 2:
-						$votosSi++; break;
-					case 3:
-						$votosNo++; break;
-					case 4:
-						$votosBlanco++; break;
+			$votosSi = 0; $votosNo = 0; $votosBlanco = 0;
+			if ($nVotos != 0) {
+				foreach($votos as $voto) {
+					switch ($voto->Id_Voto) {
+						case 2:
+							$votosSi++; break;
+						case 3:
+							$votosNo++; break;
+						case 4:
+							$votosBlanco++; break;
+					}
 				}
 			}
 			$datosVotacion = array(
@@ -91,10 +91,10 @@ class MesaElectoral extends CI_Controller{
 			);
 
 			//$this->votosPerGroup($idVotacion);
-			$this->load->view('MesaElectoral_view', $datosVotacion);
+			$this->index($datosVotacion);
 		} else {
-			$mensaje = 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.';
-			$this->index($mensaje);
+			$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
+			$this->index($mensajes);
 		}
     }
 
