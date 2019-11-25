@@ -12,6 +12,8 @@
       Numero de votos "Si": <?php echo $votos['Si'] ?><br>
       Numero de votos "No": <?php echo $votos['No'] ?><br>
       Numero de votos "En blanco": <?php echo $votos['Bl'] ?><br>
+      Numero de votos "Abstenidos": <?php echo $votos['Abs'] ?><br>
+
     </div>
   </div>
 
