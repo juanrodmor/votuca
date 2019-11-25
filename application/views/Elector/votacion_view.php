@@ -33,7 +33,7 @@
               ?>
               <?php echo $objeto->Titulo;?>
               </th>
-              <td><?php echo $objeto->Descripcion;?></td>
+              <td><?php echo $objeto->Descripcion;?> hola mamapinga </td>
               <td><?php echo $objeto->FechaInicio;?></td>
               <td><?php echo $objeto->FechaFinal;?></td>
               <td><?php echo $objeto->Nombre;?></td>
