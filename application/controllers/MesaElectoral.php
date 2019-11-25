@@ -64,7 +64,7 @@ class MesaElectoral extends CI_Controller{
   public function recuentoVotos(){
     if($this->input->post('boton_recuento')){
       $idVotacion = $this->input->post('recuento');
-		if (/*$this->abrirUrna($idVotacion)*/true) {
+		if ($this->abrirUrna($idVotacion)) {
 			$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
 			$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
 			$votos = $this->voto_model->recuentoVotos($idVotacion);
