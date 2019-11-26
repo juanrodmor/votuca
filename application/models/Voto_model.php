@@ -55,10 +55,12 @@
 
 				$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 				$query = $this -> db -> query($sql);
-			} 
+				return TRUE;	// has votado correctamente
+			} else {
+				return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
+			}
+				//echo var_dump($sql->result());
 			
-			//echo var_dump($sql->result());
-			// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
 		}
 
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
@@ -106,14 +108,18 @@
 		/********************************/
 		public function recuentoVotos($id_votacion)	//votos totales de la votacion $id_votacion
 		{
-			$query = $this->db->query("SELECT Id_Voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
-			// return $query->num_rows();
-			return $query->result();
+			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDelected' => FALSE));
+
+			if(($sql->num_rows() != 0) and ($sql->row()->FechaFinal < date('Y-m-d'))) {
+				$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+				// return $query->num_rows();
+				return $query->result();
+			} else return FALSE;
 		}
 
 		public function recuentoVotosElectoral($id_votacion)	//votos totales de la votacion $id_votacion
 		{
-			$query = $this->db->query("SELECT Id_Voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
+			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
 			return $query->num_rows();
 			//return $query->result();
 		}
@@ -121,6 +127,7 @@
 
 		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
 		{
+
 			$Abs = 0;
 			$Si = 0;
 			$No = 0;
@@ -169,7 +176,6 @@
 				$this->db->insert('usuario_votacion',$datos);
 			}
 		}
-		
 
 	}
 ?>
