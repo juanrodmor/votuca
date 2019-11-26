@@ -3,7 +3,11 @@
 
   <body>
 <br><br><br><br><br>
-<div class="container">
+  <div class="container">
+    <?php
+      if($mensaje != FALSE) 
+        echo '<div class="alert alert-primary" role="alert">' . $mensaje . '</div>';
+    ?>
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="table table-responsive" id="votaciones_admin" >
        <thead>
@@ -25,7 +29,7 @@
           foreach($datos as $objeto) { ?>
             <tr>
               <?php
-                if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+                if($objeto->FechaFinal < date('Y-m-d'))
                 {
                   echo "<th scope=row class=table-danger>";  // Ha finalizado
                 }
@@ -39,11 +43,12 @@
               <td><?php echo $objeto->Nombre;?></td>
 
         <?php
-          if($objeto->FechaFinal >= date('Y-m-d')) {
+          if($objeto->FechaInicio <= date('Y-m-d') AND $objeto->FechaFinal >= date('Y-m-d')) {
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/ role="button">Votar</a></td>';
           }
-          else {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Resultados</a></td>';
+          if($objeto->FechaFinal < date('Y-m-d')) {
+            $tit = str_replace(' ', '_', $objeto->Titulo);
+            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$tit.' role="button">Resultados</a></td>';
           }
         ?>
         </tr>
