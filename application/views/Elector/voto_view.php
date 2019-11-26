@@ -5,9 +5,13 @@
     <br><br><br><br><br>
     <center><h2> Seleccione su voto </h2></center>
     <br><br>
+
     <form action="<?= base_url().'Elector_controller/guardarVoto/'.$id_votacion.'/'?>" method="post">
       <center>
-        <h4><str><?php echo form_error('voto'); ?> </str></h4><br>
+        <?php
+          if(form_error('voto') != NULL)
+            echo '<div class="alert alert-primary" role="alert">' . form_error('voto') . '</div>'; 
+        ?>
         <div class="btn-group" data-toggle="buttons">
           <?php foreach($votos as $voto) { ?>
             <label class="btn btn-primary">
