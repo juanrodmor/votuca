@@ -13,6 +13,12 @@ class Usuario_model extends CI_Model {
 		return $consulta->row()->Password;
 	}
 
+	//Devuelve el Id de un usuario dado.
+	public function getId($usuario) {
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		return $consulta->row()->Id;
+	}
+
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
