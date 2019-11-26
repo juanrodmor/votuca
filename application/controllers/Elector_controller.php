@@ -108,5 +108,4 @@ class Elector_controller extends CI_Controller {
     		$this->index($mensaje);
     	}
     }
-
 }
