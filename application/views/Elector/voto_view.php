@@ -15,7 +15,7 @@
         <div class="btn-group" data-toggle="buttons">
           <?php foreach($votos as $voto) { ?>
             <label class="btn btn-primary">
-              <input type="radio" name="voto" autocomplete="off" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
+              <input type="radio" name="voto" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
             </label>
           <?php } ?>
         </div>
