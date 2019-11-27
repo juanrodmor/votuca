@@ -4,12 +4,25 @@
   <body>
 <br><br><br><br><br>
   <div class="container">
+    <?php 
+      // para encriptar la tabla usuario_votacion...  explicar a inma
+      $pass = password_hash('1', PASSWORD_DEFAULT); 
+      echo $pass; 
+
+      ?> <br> <?php
+      
+      if (password_verify('1', $pass)) 
+        echo "coincide";
+      else 
+        echo "no coincide";
+      
+    ?>
     <?php
       if($mensaje != FALSE) 
         echo '<div class="alert alert-primary" role="alert">' . $mensaje . '</div>';
     ?>
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="table table-responsive" id="votaciones_admin" >
+    <table class="display table table-striped" id="votaciones_admin" >
        <thead>
          <tr>
            <th scope="col">Titulo</th>

@@ -40,7 +40,7 @@ class Votaciones_model extends CI_Model{
 
   public function recuperarVotaciones()
   {
-    $query = $this->db->query("SELECT * from votacion WHERE isDelected = '0';");
+    $query = $this->db->query("SELECT * from votacion WHERE isDeleted = '0';");
     return $query->result();
 
   }
@@ -52,7 +52,7 @@ class Votaciones_model extends CI_Model{
   }
   public function eliminarVotacion($id)
   {
-    $query = $this->db->query("UPDATE votacion SET isDelected = '1' WHERE Id = '$id'");
+    $query = $this->db->query("UPDATE votacion SET isDeleted = '1' WHERE Id = '$id'");
     return $query;
 
   }
