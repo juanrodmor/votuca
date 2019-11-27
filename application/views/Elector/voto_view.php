@@ -3,10 +3,14 @@
   <body>
 
     <br><br><br><br><br>
-    <center><h2> Seleccione su voto </h2></center>
+    <center>
+      <h2> <?php echo $titulo; ?> </h2>
+      <p> <?php echo $descrip; ?> </p>
+    </center>
+
     <br><br>
 
-    <form action="<?= base_url().'Elector_controller/guardarVoto/'.$id_votacion.'/'?>" method="post">
+    <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post">
       <center>
         <?php
           if(form_error('voto') != NULL)
@@ -15,6 +19,7 @@
         <div class="btn-group" data-toggle="buttons">
           <?php foreach($votos as $voto) { ?>
             <label class="btn btn-primary">
+              <input type="hidden" name="id_votacion" value="<?php echo $id_votacion; ?>"/>
               <input type="radio" name="voto" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
             </label>
           <?php } ?>
