@@ -26,25 +26,20 @@
           echo '<h2> No tienes votaciones pendientes</h2>';
         }
         else {
-          $hoy = getdate(); //obtencion de fecha actual en el array $hoy
+          /*
+          $hoy = getdate();             //obtencion de fecha actual en el array $hoy y mostrada por pantalla para comprobaciones
+
           $d = $hoy['mday'];
           $m = $hoy['mon'];
           $y = $hoy['year'];
-
-          print_r('Fecha de hoy: '.$y.'-');
-          print_r($m.'-');
-          print_r($d); ?>
-
-          <br>
-
-          <?php 
           $hora = $hoy['hours'];
           $min = $hoy['minutes'];
           $seg = $hoy['seconds'];
 
-          print_r('Hora actual: '.$hora.':');
-          print_r($min.':');
-          print_r($seg);
+          print_r('Fecha de hoy: '.$y.'-'.$m.'-'.$d); 
+          ?> <br> <?php
+          print_r('Hora actual: '.$hora.':'.$min.':'.$seg);
+          */
 
           foreach($datos as $objeto) { ?>
             <tr>
@@ -63,8 +58,6 @@
               <td><?php echo $objeto->Nombre;?></td>
 
         <?php
-        //hacer pruebas para controlar fecha y hora
-
           if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/ role="button">Votar</a></td>';
           }
