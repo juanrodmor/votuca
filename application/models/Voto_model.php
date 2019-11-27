@@ -20,7 +20,7 @@
 						where votacion.Id = usuario_votacion.Id_Votacion
 							AND usuario_votacion.Id_Usuario = ".$id_user."
 							AND usuario_votacion.Id_Voto = voto.Id
-							AND votacion.isDelected = 0
+							AND votacion.isDeleted = 0
 						order by votacion.FechaFinal ASC;";
 
 			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
@@ -60,7 +60,7 @@
 				return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
 			}
 				//echo var_dump($sql->result());
-			
+
 		}
 
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
