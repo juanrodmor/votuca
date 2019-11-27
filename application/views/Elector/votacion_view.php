@@ -26,10 +26,30 @@
           echo '<h2> No tienes votaciones pendientes</h2>';
         }
         else {
+          $hoy = getdate(); //obtencion de fecha actual en el array $hoy
+          $d = $hoy['mday'];
+          $m = $hoy['mon'];
+          $y = $hoy['year'];
+
+          print_r('Fecha de hoy: '.$y.'-');
+          print_r($m.'-');
+          print_r($d); ?>
+
+          <br>
+
+          <?php 
+          $hora = $hoy['hours'];
+          $min = $hoy['minutes'];
+          $seg = $hoy['seconds'];
+
+          print_r('Hora actual: '.$hora.':');
+          print_r($min.':');
+          print_r($seg);
+
           foreach($datos as $objeto) { ?>
             <tr>
               <?php
-                if($objeto->FechaFinal < date('Y-m-d'))
+                if($objeto->FechaFinal < date('Y-m-d H:i:s'))
                 {
                   echo "<th scope=row class=table-danger>";  // Ha finalizado
                 }
@@ -43,10 +63,12 @@
               <td><?php echo $objeto->Nombre;?></td>
 
         <?php
-          if($objeto->FechaInicio <= date('Y-m-d') AND $objeto->FechaFinal >= date('Y-m-d')) {
+        //hacer pruebas para controlar fecha y hora
+
+          if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/ role="button">Votar</a></td>';
           }
-          if($objeto->FechaFinal < date('Y-m-d')) {
+          if($objeto->FechaFinal < date('Y-m-d H:i:s')) {
             $tit = str_replace(' ', '_', $objeto->Titulo);
             echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$tit.' role="button">Resultados</a></td>';
           }
