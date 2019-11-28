@@ -30,7 +30,6 @@
          <tr>
            <th scope="col" class="no-sort">ID</th>
            <th scope="col">Titulo</th>
-           <th scope="col">Descripcion</th>
            <th scope="col">Inicio</th>
            <th scope="col">Fin</th>
            <th scope="col">Borrador</th>
@@ -47,22 +46,17 @@
          <?php
 
            if($objeto->FechaFinal < date('Y-m-d') )
-           {
-              echo "<th scope=row class=table-danger>";  // Ha finalizado
-           }
-           else {
-             if($objeto->FechaFinal == date('Y-m-d'))
-             {
-               echo "<th scope=row class=table-warning>";
-             }
-              else{echo "<th scope=row class=table-success>";}
-           }
+           {echo "<th scope=row class=table-danger>";} // Ha finalizado        
+           if($objeto->FechaFinal == date('Y-m-d')) // Finaliza hoy
+           {echo "<th scope=row class=table-warning>";}
+            if($objeto->FechaFinal > date('Y-m-d')) // Está disponible
+            {echo "<th scope=row class=table-success>";}
+
 
          ?>
          <?php echo $objeto->Id;?>
          </th>
          <td><?php echo $objeto->Titulo;?></td>
-         <td><?php echo $objeto->Descripcion;?></td>
          <td><?php echo $objeto->FechaInicio;?></td>
          <td><?php echo $objeto->FechaFinal;?></td>
         <?php
@@ -115,8 +109,8 @@
 
           <?php }?> <!-- FIN DEL IF DELEGAR-->
         <?php
-          if($objeto->FechaInicio > date('Y-m-d') && // S aun no ha empezado
-             $objeto->FechaFinal >= date('Y-m-d') ){?>
+          if($objeto->FechaInicio > date('Y-m-d H:i:s') && // S aun no ha empezado
+             $objeto->FechaFinal >= date('Y-m-d H:i:s') ){?>
 
         <!-- BOTON DE MODIFICAR -->
         <?=form_open(base_url().'secretario/modificarVotacion',

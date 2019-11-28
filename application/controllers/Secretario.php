@@ -98,8 +98,8 @@ class Secretario extends CI_Controller{
         else
         {  // Correcta
           // Convierte la fecha en un formato valido para la BD
-          $fechaInicio = date('Y-m-d H-i',strtotime($this->input->post('fecha_inicio')));
-          $fechaFin = date('Y-m-d H-i',strtotime($this->input->post('fecha_final')));
+          $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
+          $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
           //echo var_dump($fechaInicio);
           $votacion = new Votacion(
             //$this->input->post('id'),
@@ -237,9 +237,16 @@ class Secretario extends CI_Controller{
       $this->load->view('elementos/headerDelegado');
       }
 
+      // ID DE LA VOTACION A MODIFICAR
       $id = $this->input->post('modificar');
-      $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
-      $this->load->view('secretario/modificarVotacion_view', $data);
+
+      // SACAR CENSOS
+      $nombreCensos = $this->censo_model->getCensos();
+      $datos = array(
+        'censos' => $nombreCensos,
+        'votaciones' => $this->votaciones_model->getVotacion($id)
+      );
+      $this->load->view('secretario/modificarVotacion_view', $datos);
 
     }
 	}
@@ -357,9 +364,9 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function validarFechaInicio(){
-    $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
 
-    $hoy = date('Y-m-d');
+    $hoy = date('Y-m-d H:i:s');
     if($fechaInicio < $hoy){
         $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');
         return FALSE;
@@ -371,8 +378,8 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFechaFinal(){
-    $fechaFinal = date('Y-m-d',strtotime($this->input->post('fecha_final')));
-    $hoy = date('Y-m-d');
+    $fechaFinal = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
+    $hoy = date('Y-m-d H:i:s');
     if($fechaFinal < $hoy){
         $this->form_validation->set_message('validarFechaFinal','Introduzca bien la fecha %s');
         return FALSE;
