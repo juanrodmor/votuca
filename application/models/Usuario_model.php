@@ -80,16 +80,18 @@ class Usuario_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function insertUserAs($idUser, $idRol)
+	public function insertUserAs($idUser, $idRol, $letraRol)
 	{
 		//echo '<br>ANALIZANDO USUARIO CON ID: '.$idUser.'<br>';
 		$usuario = $this->getUsuario($idUser);
-		$nuevo = array(
-			'Id_Rol' => 5,
-			'NombreUsuario' => $usuario[0]->NombreUsuario,
+		//echo var_dump(substr($usuario[0]->NombreUsuario,1));
+    $nuevo = array(
+			'Id_Rol' => $idRol,
+			'NombreUsuario' => $letraRol.substr($usuario[0]->NombreUsuario,1),
 			'Password' => $usuario[0]->Password
 
 		);
+
 		// ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL
 		$disponibles = $this->getIdFromUserName($usuario[0]->NombreUsuario);
 		$yaExiste = false;
@@ -97,12 +99,12 @@ class Usuario_model extends CI_Model {
 		{
 			//echo 'Este usuario tiene este id: '.$disponibles[$i]->Id.'<br>';
 			$datos = $this->getUsuario($disponibles[$i]->Id);
-			if($datos[0]->Id_Rol == 5){$yaExiste = true;}
+			if($datos[0]->Id_Rol == $idRol){$yaExiste = true;}
 		}
 
 		if(!$yaExiste){$this->db->insert('usuario',$nuevo);}
 		else{return false;}
-		
+
 	}
 
 	/*public function verify_login() {

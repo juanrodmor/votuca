@@ -18,8 +18,8 @@
 
 <div class="container">
   <div class ="mensaje">
-    <?php if(isset($mensaje)): ?>
-          <br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
+    <?php if(isset($mensaje) && $mensaje != ''): ?>
+          <br/><br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
 

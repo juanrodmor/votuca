@@ -186,7 +186,7 @@ class Secretario extends CI_Controller{
       $elegidos[$i] = $totales[$elegidos[$i]];
 
       // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-      //$this->usuario_model->insertUserAs((int)$elegidos[$i],5);
+      $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
     }
     $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
