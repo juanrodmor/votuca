@@ -67,12 +67,32 @@ class Login_controller extends CI_Controller {
 
 			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
 				$usuario = new Usuario($this->input->post('usuario'), $this->input->post('pass'));
+				
 				if ($this->Usuario_model->userExists($usuario->getId())	//Si existe el usuario y coincide la pass...
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
-					$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
-					$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
-					//$this->evaluaRol();	//Para multirol
-					$this->redireccionar();
+					
+					$estado = $this->expira($usuario);
+					switch($estado) {
+						case 'NO': 
+							$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
+							$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
+							//$this->evaluaRol();	//Para multirol
+							$this->redireccionar();
+							break;
+						case 'EXPIRA': 
+							
+							break;
+						case 'CADUCA': 
+							
+							break;
+					}
+						
+					} else {
+						$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
+						$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
+						//$this->evaluaRol();	//Para multirol
+						$this->redireccionar();
+					}
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
@@ -82,6 +102,22 @@ class Login_controller extends CI_Controller {
 				$this->load->view('login_view');
 			}
 		} else $this->load->view('login_view');		//Si se accede de forma ilegal (no por envío de formulario)...
+	}
+	
+	//Comprueba si el periodo del usuario ha expirado.
+	private function caduca($idUsuario) {
+		$fecha = $this->Usuario_model->getFecha($idUsuario);
+		if ($fecha <= date('Y-m-d H:i:s')) return true;
+		else return false;
+	}
+	
+	//Comprueba si el usuario está en periodo de expiración.
+	private function expira($usuario) {
+		$idUsuario = $this->Usuario_model->getId($usuario->getId());
+		if ($this->Usuario_model->checkExpira($idUsuario) == true) {
+			$caduca = $this->caduca($idUsuario);
+			return true;
+		} else return false;
 	}
 
 	/*	PARA MULTIROL

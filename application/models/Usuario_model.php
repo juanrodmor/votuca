@@ -54,6 +54,16 @@ class Usuario_model extends CI_Model {
 		$this->db->where('Id', $consulta->row()->Id);
 		$this->db->update('usuario', array('Id_Rol' => $rol_id));
 	}
+	
+	public function checkExpira($idUsuario) {
+		$consulta = $this->db->get_where('expiracion', array('Id_Usuario' => $idUsuario));
+		return ($consulta->num_rows() >= 1);
+	}
+	
+	public function getFecha($idUsuario) {
+		$consulta = $this->db->get_where('expiracion', array('Id_Usuario' => $idUsuario));
+		return $consulta->row()->Fecha;
+	}
 
 
 	/*****************************/
