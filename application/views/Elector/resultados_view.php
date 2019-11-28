@@ -5,13 +5,14 @@
 
 <br><br><br><br>
   <div class="container">
-
     <div class = "container">
-      <h2><?php echo 'Resultados de la votación: '.$titulo; ?> </h2> <br>
+      <h2><?php echo 'Resultados '.$titulo; ?> </h2> <br>
       <h4><i> Numero de votos asignados al censo: <?php echo $total; ?>. </i></h4><br>
       Numero de votos "Si": <?php echo $votos['Si'] ?><br>
       Numero de votos "No": <?php echo $votos['No'] ?><br>
       Numero de votos "En blanco": <?php echo $votos['Bl'] ?><br>
+      Numero de votos "Abstenidos": <?php echo $votos['Abs'] ?><br>
+
     </div>
   </div>
 

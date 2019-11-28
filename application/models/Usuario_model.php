@@ -80,6 +80,31 @@ class Usuario_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function insertUserAs($idUser, $idRol)
+	{
+		//echo '<br>ANALIZANDO USUARIO CON ID: '.$idUser.'<br>';
+		$usuario = $this->getUsuario($idUser);
+		$nuevo = array(
+			'Id_Rol' => 5,
+			'NombreUsuario' => $usuario[0]->NombreUsuario,
+			'Password' => $usuario[0]->Password
+
+		);
+		// ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL
+		$disponibles = $this->getIdFromUserName($usuario[0]->NombreUsuario);
+		$yaExiste = false;
+		for($i = 0; $i < sizeof($disponibles); $i++)
+		{
+			//echo 'Este usuario tiene este id: '.$disponibles[$i]->Id.'<br>';
+			$datos = $this->getUsuario($disponibles[$i]->Id);
+			if($datos[0]->Id_Rol == 5){$yaExiste = true;}
+		}
+
+		if(!$yaExiste){$this->db->insert('usuario',$nuevo);}
+		else{return false;}
+		
+	}
+
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)

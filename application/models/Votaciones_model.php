@@ -21,15 +21,26 @@ class Votaciones_model extends CI_Model{
 
 	public function updateVotacion($votacion)
   {
-		$encontrado = $this->db->where('id', $votacion->getId());
+  	$encontrado = $this->db->where('id', $votacion->getId());
     $realizado = false;
-    if($encontrado){$realizado = $this->db->update('votacion', $votacion);}
-		return $realizado;
+    if($votacion->getBorrador() == true && $encontrado)
+    {
+        $id = $votacion->getId();
+        $query = $this->db->query("UPDATE votacion SET esBorrador = '1' WHERE Id = '$id'");
+        $realizado = true;
+    }
+    if($encontrado && $votacion->getBorrador() == false)
+    {
+      $id = $votacion->getId();
+      $query = $this->db->query("UPDATE votacion SET esBorrador = '0' WHERE Id = '$id'");
+      $realizado = true;
+    }
+  return $realizado;
 	}
 
   public function recuperarVotaciones()
   {
-    $query = $this->db->query("SELECT * from votacion WHERE isDelected = '0';");
+    $query = $this->db->query("SELECT * from votacion WHERE isDeleted = '0';");
     return $query->result();
 
   }
@@ -41,7 +52,7 @@ class Votaciones_model extends CI_Model{
   }
   public function eliminarVotacion($id)
   {
-    $query = $this->db->query("UPDATE votacion SET isDelected = '1' WHERE Id = '$id'");
+    $query = $this->db->query("UPDATE votacion SET isDeleted = '1' WHERE Id = '$id'");
     return $query;
 
   }

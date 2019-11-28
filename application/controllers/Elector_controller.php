@@ -9,7 +9,7 @@ class Elector_controller extends CI_Controller {
 		$this->load->helper(array('form', 'url'));
 	}
 
-	public function index() {
+	public function index($mensaje = FALSE) {
 		if ($this->session->userdata('rol') != 'Elector') {
 			redirect('/Login_controller');
 	    }
@@ -20,8 +20,9 @@ class Elector_controller extends CI_Controller {
 				$this->load->view('elementos/headerComun',$inicio);
 	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
 	        $datos = $this->Voto_model->_listar($id_user);
-	        $votos = array(
-	        	'datos' => $datos
+        	$votos = array(
+	        	'datos' => $datos,
+	        	'mensaje' => $mensaje
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
 			$this->load->view('elementos/footer');
@@ -29,69 +30,109 @@ class Elector_controller extends CI_Controller {
 
     }
 
-    public function votar($id_votacion) {
-			$title['titulo'] = 'MIS VOTACIONES';
-			$inicio['inicio'] = 'Elector_controller/';
-			$this->load->view('elementos/head',$title);
-			$this->load->view('elementos/headerComun',$inicio);
-    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-    	$votos = $this->Voto_model->_votosDisponibles();	// habrá que pasarle $id_votacion para mostrar los votos disponibles para esa votacion
-    	$datos = array(
-    		'id_votacion' => $id_votacion,
-    		'id_usuario' => $id_usuario,
-    		'votos' => $votos
-    	);
-    	$this->load->view('Elector/voto_view', $datos);
-			$this->load->view('elementos/footer');
+    public function votar() {
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip'])){
+    		$mensaje = "Acceda debidamente a la opción de votar, por favor.";
+    		$this->index($mensaje);
+    	}
+    	else {
+			$id_votacion = $_POST['id_votacion'];
+			$titulo = $_POST['titulo'];
+			$descrip = $_POST['descrip'];
 
-    }
-
-    public function guardarVoto($id_votacion) {
-
-    	$this->form_validation->set_rules('voto', 'Voto', 'required');
-    	$this->form_validation->set_message('required','Seleccione un voto valido');
-
-    	if($this->form_validation->run() == TRUE) {
-	        $voto = $_POST['voto'];
-	    	//$voto = $this->input->post('voto');
-	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-
-	    	$this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
-	    	$this->index();
-	    } else {
-	    	$votos = $this->Voto_model->_votosDisponibles();
-	    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-	    	$datos = array(
-    		'id_votacion' => $id_votacion,
-    		'id_usuario' => $id_usuario,
-    		'votos' => $votos
-    	);
-		    	$title['titulo'] = 'MIS VOTACIONES';
+				$title['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$title);
 				$this->load->view('elementos/headerComun',$inicio);
-	        $this->load->view('Elector/voto_view', $datos);
-	        	$this->load->view('elementos/footer');
-	    }
+			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+			$votos = $this->Voto_model->_votosDisponibles();	// habrá que pasarle $id_votacion para mostrar los votos disponibles para esa votacion
+			$datos = array(
+				'id_votacion' => $id_votacion,
+				'id_usuario' => $id_usuario,
+				'descrip' => $descrip,
+				'titulo' => $titulo,
+				'votos' => $votos
+			);
+			$this->load->view('Elector/voto_view', $datos);
+				$this->load->view('elementos/footer');
+		}
+
+    }
+
+    public function guardarVoto() {
+    	if(!isset($_POST['id_votacion'])) {
+    		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
+    		$this->index($mensaje);
+    	}
+    	else {
+	    	$id_votacion = $_POST['id_votacion'];
+
+	    	$this->form_validation->set_rules('voto', 'Voto', 'required');
+	    	$this->form_validation->set_message('required','Seleccione un voto valido');
+
+	    	if($this->form_validation->run() == TRUE) {
+		        $voto = $_POST['voto'];
+		    	//$voto = $this->input->post('voto');
+		    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+
+		    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
+
+		    	if($votado == TRUE) 
+		    		$mensaje = 'Su voto ha sido registrado correctamente.';
+		    	if($votado == FALSE) 
+		    		$mensaje = 'No se puede votar en la votación seleccionada.';
+
+		    	$this->index($mensaje);
+		    	
+		    } else {
+		    	$votos = $this->Voto_model->_votosDisponibles();
+		    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+		    	$datos = array(
+	    		'id_votacion' => $id_votacion,
+	    		'id_usuario' => $id_usuario,
+	    		'votos' => $votos
+	    	);
+			    	$title['titulo'] = 'MIS VOTACIONES';
+					$inicio['inicio'] = 'Elector_controller/';
+					$this->load->view('elementos/head',$title);
+					$this->load->view('elementos/headerComun',$inicio);
+		        $this->load->view('Elector/voto_view', $datos);
+		        	$this->load->view('elementos/footer');
+		    }
+		}
     }
 
 
-    public function verResultados($id_votacion, $titulo) {
-			$title['titulo'] = 'MIS VOTACIONES';
-			$inicio['inicio'] = 'Elector_controller/';
-			$this->load->view('elementos/head',$title);
-			$this->load->view('elementos/headerComun',$inicio);
-    	$datos = $this->Voto_model->recuentoVotos($id_votacion);
-    	$total = sizeof($datos);
-    	$recVotos = $this->Voto_model->tiposVotos($datos);
+    public function verResultados() {
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])) {
+    		$mensaje = "Acceda debidamente a la opción de ver resultados, por favor.";
+    		$this->index($mensaje);
+    	}
+    	else {
+	    	$id_votacion = $_POST['id_votacion'];
+	    	$titulo = $_POST['titulo'];
 
-    	$datos = array(
-    		'total' => $total,
-    		'titulo' => $titulo,
-    		'votos' => $recVotos
-    	);
-    	$this->load->view('Elector/resultados_view', $datos);
-			$this->load->view('elementos/footer');
+	    	$datos = $this->Voto_model->recuentoVotos($id_votacion);
+
+	    	if($datos != FALSE) {
+		    		$title['titulo'] = 'MIS VOTACIONES';
+					$inicio['inicio'] = 'Elector_controller/';
+					$this->load->view('elementos/head',$title);
+					$this->load->view('elementos/headerComun',$inicio);
+				$total = sizeof($datos);
+	    		$recVotos = $this->Voto_model->tiposVotos($datos);
+	    		$datos = array(
+		    		'total' => $total,
+		    		'titulo' => $titulo,
+		    		'votos' => $recVotos
+		    	);
+				$this->load->view('Elector/resultados_view', $datos);
+					$this->load->view('elementos/footer');
+	    	}
+	    	else {
+	    		$mensaje = 'No se pueden mostrar resultados antes de la finalizacion de la votación.';
+	    		$this->index($mensaje);
+	    	}
+    	}
     }
-
 }

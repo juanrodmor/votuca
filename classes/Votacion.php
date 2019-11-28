@@ -3,17 +3,18 @@
 class Votacion{
 
   public $id, $titulo, $descripcion, $fechaInicio,$fechaFinal;
-  private $isDelected;
-  private $mesaElectoral;
+  private $isDelected, $esBorrador;
+  //private $mesaElectoral;
 
   public function __construct($titulo,$descripcion,$fechaInicio,$fechaFinal,
-                              $isDelected)
+                              $isDelected,$esBorrador)
   {
     $this->titulo = $titulo;
     $this->descripcion = $descripcion;
     $this->fechaInicio = $fechaInicio;
     $this->fechaFinal = $fechaFinal;
     $this->isDelected = $isDelected;
+    $this->esBorrador = $esBorrador;
   }
 
   public function getId(){return $this->id;}
@@ -22,6 +23,7 @@ class Votacion{
   public function getFechaInicio(){return $this->fechaInicio;}
   public function getFechaFinal(){return $this->fechaFinal;}
   public function getDelected(){return $this->isDelected;}
+  public function getBorrador(){return $this->esBorrador;}
 
   public function setId($id){$this->id = $id;}
   public function setTitulo($titulo){$this->titulo = $titulo;}
@@ -29,6 +31,7 @@ class Votacion{
   public function setFechaInicio($fecha){$this->fechaInicio= $fecha;}
   public function setFechaFinal($fecha){$this->fechaFinal = $fecha;}
   public function setDelected($delected){$this->isDelected = $delected;}
+  public function setBorrador($borrador){$this->esBorrador = $borrador;}
 
 
 }

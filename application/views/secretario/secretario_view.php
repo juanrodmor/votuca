@@ -25,17 +25,18 @@
 
   <div class = "container">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-striped" id="votaciones_admin">
+    <table class="display table table-striped" id="votaciones_secretario">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
            <th scope="col">Titulo</th>
            <th scope="col">Descripcion</th>
-           <th scope="col">Fecha Inicio</th>
-           <th scope="col">Fecha Final</th>
+           <th scope="col">Inicio</th>
+           <th scope="col">Fin</th>
+           <th scope="col">Borrador</th>
            <th scope="col"></th>
            <th scope="col"></th>
-           <!--<th scope="col"></th>-->
+           <th scope="col"></th>
          </tr>
        </thead>
      <tbody>
@@ -44,11 +45,19 @@
           <?php foreach($votacion as $objeto){?>
          <tr>
          <?php
-           if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
+
+           if($objeto->FechaFinal < date('Y-m-d') )
            {
               echo "<th scope=row class=table-danger>";  // Ha finalizado
            }
-           else{echo "<th scope=row class=table-success>";}
+           else {
+             if($objeto->FechaFinal == date('Y-m-d'))
+             {
+               echo "<th scope=row class=table-warning>";
+             }
+              else{echo "<th scope=row class=table-success>";}
+           }
+
          ?>
          <?php echo $objeto->Id;?>
          </th>
@@ -56,9 +65,16 @@
          <td><?php echo $objeto->Descripcion;?></td>
          <td><?php echo $objeto->FechaInicio;?></td>
          <td><?php echo $objeto->FechaFinal;?></td>
+        <?php
+          if($objeto->esBorrador == 1){
+            echo '<td> En borrador </td>';
+          }
+          else{echo '<td> Publicada </td>';}
+        ?>
 
-         <!-- BOTON DE ELIMINAR -->
-         <?=form_open(base_url().'secretario/eliminarVotacion',
+
+          <!-- BOTON DE ELIMINAR -->
+          <?=form_open(base_url().'secretario/eliminarVotacion',
          		    array('name'=>'eliminarVotacion'));?>
                 <?php
                 $atributos = array(
@@ -78,25 +94,6 @@
           <?= form_close(); ?>
 
          <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
-           <!-- BOTON DE MODIFICAR -->
-           <!--<?=form_open(base_url().'secretario/modificarVotacion',
-                   array('name'=>'modificarVotacion'));?>
-                  <?php
-                  $atributos = array(
-                     'modificar' => $objeto->Id
-
-                 );
-                  ?>
-            <?= form_hidden($atributos);?>
-            <?php $atributos = array(
-                'name' => 'boton_modificar',
-                'class' => 'btn btn-primary',
-                'type' => 'submit',
-                'value' => 'Modificar'
-            ); ?>
-            <td><?= form_submit($atributos);?></td>
-            <?= form_close(); ?>-->
-
             <!-- BOTON DE DELEGAR -->
             <?=form_open(base_url().'secretario/delegarVotacion',
                     array('name'=>'delegarVotacion'));?>
@@ -116,8 +113,33 @@
              <td><?= form_submit($atributos);?></td>
              <?= form_close(); ?>
 
-          <?php } ?> <!-- FIN DEL IF DATE -->
-         </tr>
+          <?php }?> <!-- FIN DEL IF DELEGAR-->
+        <?php
+          if($objeto->FechaInicio > date('Y-m-d') && // S aun no ha empezado
+             $objeto->FechaFinal >= date('Y-m-d') ){?>
+
+        <!-- BOTON DE MODIFICAR -->
+        <?=form_open(base_url().'secretario/modificarVotacion',
+                array('name'=>'modificarVotacion'));?>
+               <?php
+               $atributos = array(
+                  'modificar' => $objeto->Id
+
+              );
+               ?>
+         <?= form_hidden($atributos);?>
+         <?php $atributos = array(
+             'name' => 'boton_modificar',
+             'class' => 'btn btn-primary',
+             'type' => 'submit',
+             'value' => 'Modificar'
+         ); ?>
+         <td><?= form_submit($atributos);?></td>
+         <?= form_close(); ?>
+
+       <?php } // FIN IF MODIFICAR?>
+
+     </tr>
      <?php }?>
      <?php }?>
      </tbody>
@@ -125,10 +147,6 @@
   </div>
   </div>
 </div>
-
-
-
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

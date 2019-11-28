@@ -3,11 +3,15 @@
 
   <body>
 <br><br><br><br><br>
-<div class="container">
+  <div class="container">
+    <?php
+      if($mensaje != FALSE) 
+        echo '<div class="alert alert-primary" role="alert">' . $mensaje . '</div>';
+    ?>
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="table table-responsive" id="votaciones_admin" >
+    <table class="display table table-striped" id="votaciones_admin" >
        <thead>
-         <tr>
+         <tr align="center">
            <th scope="col">Titulo</th>
            <th scope="col">Descripcion</th>
            <th scope="col">Fecha Inicio</th>
@@ -18,32 +22,57 @@
       <tbody>
       <?php
         if($datos == NULL)
-        {
           echo '<h2> No tienes votaciones pendientes</h2>';
-        }
         else {
+
           foreach($datos as $objeto) { ?>
-            <tr>
+            <tr align="center">
               <?php
-                if($objeto->FechaFinal == date('Y-m-d') || $objeto->FechaFinal < date('Y-m-d') )
-                {
-                  echo "<th scope=row class=table-danger>";  // Ha finalizado
-                }
-                else{echo "<th scope=row class=table-success>";}
+                if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s'))
+                  echo "<th scope=row class=table-success>";
+                //if($objeto->FechaFinal == date('Y-m-d'))
+                  //echo "<th scope=row class=table-warning>";
+                if($objeto->FechaFinal < date('Y-m-d H:i:s'))
+                  echo "<th scope=row class=table-danger>";
+                if($objeto->FechaInicio > date('Y-m-d H:i:s'))
+                  echo "<th scope=row class=table-secondary>";
               ?>
               <?php echo $objeto->Titulo;?>
               </th>
-              <td><?php echo $objeto->Descripcion;?></td>
-              <td><?php echo $objeto->FechaInicio;?></td>
-              <td><?php echo $objeto->FechaFinal;?></td>
-              <td><?php echo $objeto->Nombre;?></td>
+              <td align="center"><?php echo $objeto->Descripcion;?></td>
+              <td align="center"><?php echo $objeto->FechaInicio;?></td>
+              <td align="center"><?php echo $objeto->FechaFinal;?></td>
+              <td align="center"><?php echo $objeto->Nombre;?></td>
 
         <?php
-          if($objeto->FechaFinal >= date('Y-m-d')) {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/'.$objeto->Id.'/ role="button">Votar</a></td>';
+          if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
+            ?>
+            <td>
+              <form action="<?= base_url().'Elector_controller/votar/'?>" method="post">
+                <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
+                <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
+                <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
+                <input class="btn btn-primary" type="submit" value="Votar">
+              </form>
+            </td>
+            <?php
+            //echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/votar/ role="button">Votar</a></td>';
           }
-          else {
-            echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/'.$objeto->Id.'/'.$objeto->Titulo.' role="button">Resultados</a></td>';
+          if($objeto->FechaFinal < date('Y-m-d H:i:s')) {
+            ?>
+            <td>
+              <form action="<?= base_url().'Elector_controller/verResultados/'?>" method="post">
+                <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
+                <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
+                <input class="btn btn-primary" type="submit" value="Resultados">
+              </form>
+            </td>
+            <?php
+            //echo '<td><a class="btn btn-primary" href='.base_url().'Elector_controller/verResultados/ role="button">Resultados</a></td>';
+          }
+          if($objeto->FechaInicio > date('Y-m-d H:i:s')) {
+            //echo '<td><div class="alert alert-info" role="alert"> Proximamente </div></td>';
+            echo '<td> Proximamente </td>';
           }
         ?>
         </tr>

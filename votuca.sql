@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 25-11-2019 a las 21:36:33
--- Versión del servidor: 5.7.26
--- Versión de PHP: 7.2.18
+-- Servidor: localhost
+-- Tiempo de generación: 27-11-2019 a las 10:45:17
+-- Versión del servidor: 10.4.8-MariaDB
+-- Versión de PHP: 7.2.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -28,8 +28,7 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `censo`
 --
 
-DROP TABLE IF EXISTS `censo`;
-CREATE TABLE IF NOT EXISTS `censo` (
+CREATE TABLE `censo` (
   `Id_Usuario` int(11) NOT NULL,
   `Id_Votacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -40,26 +39,44 @@ CREATE TABLE IF NOT EXISTS `censo` (
 
 INSERT INTO `censo` (`Id_Usuario`, `Id_Votacion`) VALUES
 (1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1),
 (1, 2),
-(2, 2),
-(4, 2);
+(1, 3),
+(1, 4),
+(3, 1),
+(3, 2),
+(3, 3),
+(4, 1),
+(4, 2),
+(4, 3),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(8, 2),
+(8, 3),
+(8, 4),
+(9, 2),
+(9, 3),
+(9, 4);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupo`
+-- Estructura de tabla para la tabla `ficheros_censo`
 --
 
-DROP TABLE IF EXISTS `grupo`;
-CREATE TABLE IF NOT EXISTS `grupo` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Nombre` int(11) NOT NULL,
-  PRIMARY KEY (`Id`)
+CREATE TABLE `ficheros_censo` (
+  `Id` int(11) NOT NULL,
+  `Nombre` varchar(200) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `ficheros_censo`
+--
+
+INSERT INTO `ficheros_censo` (`Id`, `Nombre`) VALUES
+(1, 'censo1'),
+(2, 'censo2');
 
 -- --------------------------------------------------------
 
@@ -67,30 +84,28 @@ CREATE TABLE IF NOT EXISTS `grupo` (
 -- Estructura de tabla para la tabla `mesa_electoral`
 --
 
-DROP TABLE IF EXISTS `mesa_electoral`;
-CREATE TABLE IF NOT EXISTS `mesa_electoral` (
+CREATE TABLE `mesa_electoral` (
   `Id_Usuario` int(11) NOT NULL,
-  `Id_Votacion` int(11) NOT NULL,
-  `seAbre` tinyint(1) NOT NULL,
-  PRIMARY KEY (`Id_Usuario`,`Id_Votacion`),
-  KEY `Id_Usuario` (`Id_Usuario`),
-  KEY `Id_Votacion` (`Id_Votacion`)
+  `Id_Votacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `mesa_electoral`
 --
 
-INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`, `seAbre`) VALUES
-(1, 2, 0),
-(2, 1, 0),
-(3, 1, 0),
-(3, 2, 0),
-(4, 1, 0),
-(4, 2, 0),
-(9, 2, 1),
-(9, 3, 1),
-(9, 4, 1);
+INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`) VALUES
+(1, 1),
+(1, 2),
+(3, 1),
+(3, 3),
+(4, 1),
+(4, 2),
+(4, 3),
+(6, 3),
+(6, 4),
+(8, 4),
+(9, 2),
+(9, 4);
 
 -- --------------------------------------------------------
 
@@ -98,23 +113,21 @@ INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`, `seAbre`) VALUES
 -- Estructura de tabla para la tabla `rol`
 --
 
-DROP TABLE IF EXISTS `rol`;
-CREATE TABLE IF NOT EXISTS `rol` (
-  `Id` int(32) NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+CREATE TABLE `rol` (
+  `Id` int(32) NOT NULL,
+  `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `rol`
 --
 
 INSERT INTO `rol` (`Id`, `Nombre`) VALUES
-(1, 'Elector'),
-(2, 'Secretario'),
-(3, 'SecretarioDelegado'),
 (4, 'Administrador'),
-(5, 'MiembroElectoral');
+(1, 'Elector'),
+(5, 'MiembroElectoral'),
+(2, 'Secretario'),
+(3, 'SecretarioDelegado');
 
 -- --------------------------------------------------------
 
@@ -122,11 +135,17 @@ INSERT INTO `rol` (`Id`, `Nombre`) VALUES
 -- Estructura de tabla para la tabla `secretarios_delegados`
 --
 
-DROP TABLE IF EXISTS `secretarios_delegados`;
-CREATE TABLE IF NOT EXISTS `secretarios_delegados` (
+CREATE TABLE `secretarios_delegados` (
   `Id_Secretario` int(11) NOT NULL,
   `Id_Votacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `secretarios_delegados`
+--
+
+INSERT INTO `secretarios_delegados` (`Id_Secretario`, `Id_Votacion`) VALUES
+(3, 3);
 
 -- --------------------------------------------------------
 
@@ -134,15 +153,12 @@ CREATE TABLE IF NOT EXISTS `secretarios_delegados` (
 -- Estructura de tabla para la tabla `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
-CREATE TABLE IF NOT EXISTS `usuario` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `usuario` (
+  `Id` int(32) NOT NULL,
   `Id_Rol` int(32) NOT NULL,
   `NombreUsuario` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
-  `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `Id_Rol` (`Id_Rol`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
@@ -152,9 +168,12 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
 (1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG'),
 (3, 3, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(4, 5, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
 (5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(8, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(9, 5, 'm00000000', '$2y$12$.Q/7W.dVaKxCPep317Cul.VBpmbJrmP7UChBCUw4V/w.Y1VlHi9HS');
+(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(8, 5, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
+(9, 5, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.');
 
 -- --------------------------------------------------------
 
@@ -162,8 +181,7 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
 -- Estructura de tabla para la tabla `usuario_votacion`
 --
 
-DROP TABLE IF EXISTS `usuario_votacion`;
-CREATE TABLE IF NOT EXISTS `usuario_votacion` (
+CREATE TABLE `usuario_votacion` (
   `Id_Usuario` int(32) NOT NULL,
   `Id_Votacion` int(32) NOT NULL,
   `Id_Voto` int(32) NOT NULL
@@ -174,14 +192,26 @@ CREATE TABLE IF NOT EXISTS `usuario_votacion` (
 --
 
 INSERT INTO `usuario_votacion` (`Id_Usuario`, `Id_Votacion`, `Id_Voto`) VALUES
-(1, 1, 0),
-(2, 1, 1),
-(3, 1, 1),
-(4, 1, 1),
-(5, 1, 1),
+(1, 1, 1),
 (1, 2, 1),
-(2, 2, 1),
-(4, 2, 1);
+(1, 3, 1),
+(1, 4, 1),
+(3, 1, 1),
+(3, 2, 1),
+(3, 3, 1),
+(4, 1, 1),
+(4, 2, 1),
+(4, 3, 1),
+(6, 1, 1),
+(6, 2, 1),
+(6, 3, 1),
+(6, 4, 1),
+(8, 2, 1),
+(8, 3, 1),
+(8, 4, 1),
+(9, 2, 1),
+(9, 3, 1),
+(9, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -189,26 +219,25 @@ INSERT INTO `usuario_votacion` (`Id_Usuario`, `Id_Votacion`, `Id_Voto`) VALUES
 -- Estructura de tabla para la tabla `votacion`
 --
 
-DROP TABLE IF EXISTS `votacion`;
-CREATE TABLE IF NOT EXISTS `votacion` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `votacion` (
+  `Id` int(11) NOT NULL,
   `Titulo` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `Descripcion` varchar(1024) COLLATE utf8_spanish_ci NOT NULL,
-  `FechaInicio` date NOT NULL,
-  `FechaFinal` date NOT NULL,
-  `isDelected` tinyint(1) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `FechaInicio` datetime NOT NULL,
+  `FechaFinal` datetime NOT NULL,
+  `isDeleted` tinyint(1) NOT NULL,
+  `esBorrador` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `votacion`
 --
 
-INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDelected`) VALUES
-(1, 'Primera', 'Descripcion 1', '2019-11-18', '2019-11-21', 0),
-(2, 'Segunda', 'Descripcion 2', '2019-11-18', '2019-11-18', 0),
-(3, 'Prueba Luismi', 'Probando miembro mesa', '2019-11-22', '2019-12-01', 0),
-(4, 'Prueba Luismi cerrada', 'Ver votacion cerrada', '2019-11-15', '2019-11-22', 0);
+INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDeleted`, `esBorrador`) VALUES
+(1, 'Votacion 1', 'Descripción 1', '2019-11-27 09:40:00', '2019-11-29 09:00:00', 0, 0),
+(2, 'Votacion 2', 'Descripción 2', '2019-12-01 09:00:00', '2019-12-04 09:00:00', 0, 0),
+(3, 'Votación 3', 'Descripción 3', '2019-11-28 10:00:00', '2019-11-29 14:00:00', 0, 0),
+(4, 'Votación 4', 'Descripción 4', '2019-12-03 09:00:00', '2019-12-05 09:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -216,12 +245,10 @@ INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFina
 -- Estructura de tabla para la tabla `voto`
 --
 
-DROP TABLE IF EXISTS `voto`;
-CREATE TABLE IF NOT EXISTS `voto` (
-  `Id` int(32) NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+CREATE TABLE `voto` (
+  `Id` int(32) NOT NULL,
+  `Nombre` varchar(128) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `voto`
@@ -229,25 +256,122 @@ CREATE TABLE IF NOT EXISTS `voto` (
 
 INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 (1, 'No votado'),
-(2, 'S'),
+(2, 'Sí'),
 (3, 'No'),
 (4, 'En blanco');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `censo`
+--
+ALTER TABLE `censo`
+  ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`);
+
+--
+-- Indices de la tabla `ficheros_censo`
+--
+ALTER TABLE `ficheros_censo`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Nombre` (`Nombre`);
+
+--
+-- Indices de la tabla `mesa_electoral`
+--
+ALTER TABLE `mesa_electoral`
+  ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`);
+
+--
+-- Indices de la tabla `rol`
+--
+ALTER TABLE `rol`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Nombre` (`Nombre`);
+
+--
+-- Indices de la tabla `secretarios_delegados`
+--
+ALTER TABLE `secretarios_delegados`
+  ADD PRIMARY KEY (`Id_Secretario`,`Id_Votacion`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `NombreUsuario` (`NombreUsuario`),
+  ADD KEY `Id_Rol` (`Id_Rol`);
+
+--
+-- Indices de la tabla `usuario_votacion`
+--
+ALTER TABLE `usuario_votacion`
+  ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`),
+  ADD KEY `Id_Voto` (`Id_Voto`);
+
+--
+-- Indices de la tabla `votacion`
+--
+ALTER TABLE `votacion`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indices de la tabla `voto`
+--
+ALTER TABLE `voto`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `ficheros_censo`
+--
+ALTER TABLE `ficheros_censo`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `rol`
+--
+ALTER TABLE `rol`
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `votacion`
+--
+ALTER TABLE `votacion`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `voto`
+--
+ALTER TABLE `voto`
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `mesa_electoral`
---
-ALTER TABLE `mesa_electoral`
-  ADD CONSTRAINT `mesa_electoral_ibfk_1` FOREIGN KEY (`Id_Votacion`) REFERENCES `votacion` (`Id`);
-
---
 -- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`Id_Rol`) REFERENCES `rol` (`Id`);
+  ADD CONSTRAINT `id_rol - con rol usario` FOREIGN KEY (`Id_Rol`) REFERENCES `rol` (`Id`);
+
+--
+-- Filtros para la tabla `usuario_votacion`
+--
+ALTER TABLE `usuario_votacion`
+  ADD CONSTRAINT `id voto con tabla voto id` FOREIGN KEY (`Id_Voto`) REFERENCES `voto` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
