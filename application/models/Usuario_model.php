@@ -92,19 +92,11 @@ class Usuario_model extends CI_Model {
 
 		);
 
-		// ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL
-		$disponibles = $this->getIdFromUserName($usuario[0]->NombreUsuario);
-		$yaExiste = false;
-		for($i = 0; $i < sizeof($disponibles); $i++)
-		{
-			//echo 'Este usuario tiene este id: '.$disponibles[$i]->Id.'<br>';
-			$datos = $this->getUsuario($disponibles[$i]->Id);
-			if($datos[0]->Id_Rol == $idRol){$yaExiste = true;}
-		}
-
-		if(!$yaExiste){$this->db->insert('usuario',$nuevo);}
-		else{return false;}
-
+	 // ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL (cuenta m+DNI)
+		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
+		$existe = $this->userExists($usuarioElectoral);
+		if(!$existe){$this->db->insert('usuario',$nuevo);}
+		
 	}
 
 	/*public function verify_login() {

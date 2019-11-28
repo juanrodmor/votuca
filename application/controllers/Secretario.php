@@ -153,14 +153,26 @@ class Secretario extends CI_Controller{
     return $this->mesa_model->insertar($elegidos,(int)$ultimoId[0]['Id']);
   }
 
+  public function obtenerNombreElectoral($idUsuario,$letra)
+  {
+    $usuario = $this->usuario_model->getUsuario($idUsuario);
+    $dni = substr($usuario[0]->NombreUsuario,1);
+    $nombre = $letra.$dni;
+    return $nombre;
+
+  }
+
   public function guardarVotacion($datos)
   {
     $censos = $this->input->post('censo'); // Vector con nombres de censos
     $ultimoId = $this->votaciones_model->getLastId();
-    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $usuarios = array();
     $usuariosIds = array();
     $totales = array();
+
+    // GUARDAR VOTACION
+    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+
     // SACAR USUARIOS DE TODOS LOS CENSOS
     for($i = 0; $i < sizeof($censos); $i++)
     {
@@ -173,11 +185,13 @@ class Secretario extends CI_Controller{
       }
 
     }
+    // Todos los miembros del censo
 
+    // USUARIOS EN EL CENSO
     $noGuardadoCenso = $this->insertarCenso($totales);
 
-    // VOTO POR DEFECTO A USUARIOS DE ESE CENSO
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id']+1,1);
+    // encriptar usuarios para la votacion
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
 
     // MESA ELECTORAL ALEATORIA
     $elegidos = $this->usuariosAleatorios($totales);
@@ -187,11 +201,21 @@ class Secretario extends CI_Controller{
 
       // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
       $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+
+      // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
+      $idUsuario = (int)$elegidos[$i];
+
+      // Crear el nuevo nombre de usuario
+      $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
+      $miembro = $this->usuario_model->getIdFromUserName($nombre);
+      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']);
+
+
     }
-    $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     // Enviar correo a cada elegido en la mesa electoral
-    //$this->enviarCorreo($elegidos,$ultimoId);  // FUNCIONA
+    //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+
 
     // FINAL DE ESTA MIERDA
 
