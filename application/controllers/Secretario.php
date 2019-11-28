@@ -147,11 +147,6 @@ class Secretario extends CI_Controller{
     $this->censo_model->insertar($usuariosIds,(int)$ultimoId[0]['Id']);
   }
 
-  public function insertarMesaElectoral($elegidos)
-  {
-    $ultimoId = $this->votaciones_model->getLastId();
-    return $this->mesa_model->insertar($elegidos,(int)$ultimoId[0]['Id']);
-  }
 
   public function obtenerNombreElectoral($idUsuario,$letra)
   {
@@ -185,12 +180,11 @@ class Secretario extends CI_Controller{
       }
 
     }
-    // Todos los miembros del censo
 
-    // USUARIOS EN EL CENSO
+    // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
     $noGuardadoCenso = $this->insertarCenso($totales);
 
-    // encriptar usuarios para la votacion
+    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
 
     // MESA ELECTORAL ALEATORIA
@@ -219,7 +213,7 @@ class Secretario extends CI_Controller{
 
     // FINAL DE ESTA MIERDA
 
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
