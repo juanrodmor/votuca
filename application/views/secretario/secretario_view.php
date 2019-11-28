@@ -19,7 +19,7 @@
 <div class="container">
   <div class ="mensaje">
     <?php if(isset($mensaje)): ?>
-          <br/><h1><?= $mensaje ?></h1><br/>
+          <br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
 
@@ -46,7 +46,7 @@
          <?php
 
            if($objeto->FechaFinal < date('Y-m-d') )
-           {echo "<th scope=row class=table-danger>";} // Ha finalizado        
+           {echo "<th scope=row class=table-danger>";} // Ha finalizado
            if($objeto->FechaFinal == date('Y-m-d')) // Finaliza hoy
            {echo "<th scope=row class=table-warning>";}
             if($objeto->FechaFinal > date('Y-m-d')) // Está disponible
