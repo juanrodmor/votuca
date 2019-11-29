@@ -99,22 +99,57 @@
 		  </div>
 		</div>
 
-				<?php $atributos = array(
-						'name' => 'boton_borrador',
-						'class' => 'btn btn-primary',
-						'type' => 'submit',
-						'value' => 'Guardar en borrador'
-				); ?>
+		<h2> Censo electoral </h2>
+		<p> Escoja el censo electoral que desee </p>
+		<!-- TABLA DE CENSO -->
+		<div class = "container">
+		  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+		 	  <table class="display table table-striped table-bordered" id="votaciones_admin">
+		      <thead>
+		        <tr>
+		          <th>Censo</th>
+		          <th></th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <tr>
+		          <?php foreach($censos as $censo){ ?>
+                <td><?php echo $censo->Nombre?></td>
+	              <?php
+	                echo '<div class="form-check">';
+	                $atributos = array(
+		                    'name' => 'censo[]',
+		                    'class' => 'form-control',
+		                    'type' => 'checkbox',
+		                    'id' => 'censo',
+		                    'value' => $censo->Nombre
+		                );
+		                ?>
+		            <td><?= form_checkbox($atributos); ?></td>
+		            </div>
+		            <?php echo '</tr>'; ?>
+		          <?php }?>
+		      </tbody>
+		    </table>
+		  </div>
+	 </div>
 
-			<?= form_submit($atributos);?>
+					 <?php $atributos = array(
+							 'name' => 'boton_borrador',
+							 'class' => 'btn btn-primary',
+							 'type' => 'submit',
+							 'value' => 'Guardar en borrador'
+					 ); ?>
 
-		<?php $atributos = array(
-				'name' => 'boton_publicar',
-				'class' => 'btn btn-primary',
-				'type' => 'submit',
-				'value' => 'Publicar'
-		); ?>
-		<?= form_submit($atributos);?>
+				 <?= form_submit($atributos);?>
+
+			 <?php $atributos = array(
+					 'name' => 'boton_publicar',
+					 'class' => 'btn btn-primary',
+					 'type' => 'submit',
+					 'value' => 'Publicar'
+			 ); ?>
+			  <?= form_submit($atributos);?>
 	<?= form_close(); ?>
 </div>
 

@@ -168,10 +168,11 @@ f<?php
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
 				$id = (int)$usuarios[$i];
+				$id = password_hash($id, PASSWORD_DEFAULT);
 				$datos = array(
 					'Id_Usuario' => $id,
-					'Id_Votacion' => $nuevoId,
-					'Id_Voto' => $sinVoto
+					'Id_Votacion' => password_hash($nuevoId, PASSWORD_DEFAULT),
+					'Id_Voto' => password_hash($sinVoto, PASSWORD_DEFAULT)
 				);
 				$this->db->insert('usuario_votacion',$datos);
 			}
