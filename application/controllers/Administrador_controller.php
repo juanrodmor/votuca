@@ -87,11 +87,13 @@ class Administrador_controller extends CI_Controller {
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}
+			$this->load->view('elementos/headerAdmin');
 			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
 
 	public function nuevoRol() {
+		$this->load->view('elementos/headerAdmin');
 		if ($this->input->post('checkBoxInput')) {
 			$usuario = $this->input->post('usuario');
 			$oldrol = $this->Usuario_model->getRol($usuario);

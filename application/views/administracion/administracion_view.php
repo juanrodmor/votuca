@@ -90,7 +90,7 @@
                               <label class="form-check-label" for="">Secretario</label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Secretario delegado"';if($rol == "Secretario delegado"){echo 'checked disabled';}echo'>
+                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="SecretarioDelegado"';if($rol == "SecretarioDelegado"){echo 'checked disabled';}echo'>
                               <label class="form-check-label" for="">Secretario delegado</label>
                             </div>
                             <div class="form-check">
