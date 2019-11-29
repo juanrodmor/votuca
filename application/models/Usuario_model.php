@@ -19,6 +19,13 @@ class Usuario_model extends CI_Model {
 		return $consulta->row()->Id;
 	}
 
+	//Elimina un usuario de la tabla Usuario y Expiracion.
+	public function deleteUsuario($usuario) {
+		$idUsuario = $this->getId($usuario);
+		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
+		$this->db->delete('usuario', array('Id' => $idUsuario));
+	}
+
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));

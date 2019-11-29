@@ -15,19 +15,22 @@ class Login_controller extends CI_Controller {
 		switch($this->session->userdata('rol'))
 		{
 			case 'Elector':
-				 redirect('/Elector_controller');
-				 break;
+				redirect('/Elector_controller');
+				break;
 			case 'Secretario':
-				 redirect('/Secretario');
-				 break;
+				redirect('/Secretario');
+				break;
 			case 'SecretarioDelegado':
-					redirect('/Secretario/delegado');
-					break;
+				redirect('/Secretario/delegado');
+				break;
 			case 'MiembroElectoral':
-					redirect('/MesaElectoral');
-					break;
+				redirect('/MesaElectoral');
+				break;
 			case 'Administrador':
 				redirect('/Administrador_controller');
+				break;
+			case 'Temporal':
+				$this->load->view('Contrasenia_view');
 				break;
 			default:
 				$loggeado = $this->session->userdata('usuario');
@@ -71,28 +74,8 @@ class Login_controller extends CI_Controller {
 				if ($this->Usuario_model->userExists($usuario->getId())	//Si existe el usuario y coincide la pass...
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					
-					$estado = $this->expira($usuario);
-					switch($estado) {
-						case 'NO': 
-							$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
-							$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
-							//$this->evaluaRol();	//Para multirol
-							$this->redireccionar();
-							break;
-						case 'EXPIRA': 
-							
-							break;
-						case 'CADUCA': 
-							
-							break;
-					}
-						
-					} else {
-						$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
-						$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
-						//$this->evaluaRol();	//Para multirol
-						$this->redireccionar();
-					}
+					$this->loginOK($usuario);
+					
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
@@ -107,17 +90,40 @@ class Login_controller extends CI_Controller {
 	//Comprueba si el periodo del usuario ha expirado.
 	private function caduca($idUsuario) {
 		$fecha = $this->Usuario_model->getFecha($idUsuario);
-		if ($fecha <= date('Y-m-d H:i:s')) return true;
-		else return false;
+		if ($fecha <= date('Y-m-d H:i:s')) return 'CADUCA';
+		else return 'EXPIRA';
 	}
 	
 	//Comprueba si el usuario está en periodo de expiración.
 	private function expira($usuario) {
 		$idUsuario = $this->Usuario_model->getId($usuario->getId());
-		if ($this->Usuario_model->checkExpira($idUsuario) == true) {
-			$caduca = $this->caduca($idUsuario);
-			return true;
-		} else return false;
+		if ($this->Usuario_model->checkExpira($idUsuario) == true) $this->caduca($idUsuario);
+		else return 'NO';
+	}
+	
+	//Gestiona un login exitoso.
+	private function loginOK($usuario) {
+		$estado = $this->expira($usuario);
+		switch($estado) {
+			case 'NO': 
+				$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
+				$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
+				//$this->evaluaRol();	//Para multirol
+				$this->redireccionar();
+				break;
+			case 'EXPIRA': 
+				$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => 'Temporal'));
+				$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');
+				$this->redireccionar();
+				break;
+			case 'CADUCA': 
+				$this->monitoring->register_action_login($usuario->getId(), 'blocked');
+				$this->Usuario_model->deleteUsuario($usuario->getId());
+				$this->monitoring->register_action_deleteUsuario($usuario->getId());
+				$data = array('mensaje' => 'El usuario con el que intenta acceder ya no tiene permisos en el sistema.');
+				$this->load->view('login_view', $data);
+				break;
+		}
 	}
 
 	/*	PARA MULTIROL
