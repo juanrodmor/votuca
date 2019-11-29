@@ -43,7 +43,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
             else
             {
-                $action_message .= " realizó un intento fallido.";
+                if($flag == 'blocked')
+                {
+                    $action_message .= " realizó un intento fallido.";
+                }
+                else
+                {
+                    $action_message .= " bloqueado o suspendido intentó acceder.";
+                }
             }
 
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
@@ -58,6 +65,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         public function register_action_vote($username)
         {
             $action_message = "[" . mdate($this->hour_format) . "] [VOTE]" . " El usuario " . $username . " ha realizado su voto.";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+        }
+
+        public function register_action_deleteUsuario($username)
+        {
+            $action_message = "[" . mdate($this->hour_format) . "] [DELETE USER]" . " El usuario " . $username . " ha sido dado de baja en la plataforma.";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+        }
+
+        public function register_action_mElectoralConfirmed($username, $votacionName)
+        {
+            $action_message = "[" . mdate($this->hour_format) . "] [ME CONFIRMATION]" . " El miembro de mesa " . $username . " confirma la apertura en la votación " . $votacionName . ".";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+        }
+
+        public function register_action_openBox($votacionName)
+        {
+            $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacionName . " procede a la apertura de urnas.";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
