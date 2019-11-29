@@ -202,7 +202,7 @@ class Secretario extends CI_Controller{
       // Crear el nuevo nombre de usuario
       $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
       $miembro = $this->usuario_model->getIdFromUserName($nombre);
-      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']);
+      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']+1);
 
 
     }
