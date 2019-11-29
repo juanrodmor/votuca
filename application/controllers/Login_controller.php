@@ -126,6 +126,33 @@ class Login_controller extends CI_Controller {
 		}
 	}
 
+	//Cambia la contraseña temporal concedida a un usuario dado.
+	public function setPass() {
+		if ($this->input->post('Enviar')) {
+			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
+			$this->form_validation->set_message('required', 'El campo \'%s\' es obligatorio.');
+			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
+				$newpass = $this->input->post('pass');
+				if (password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
+					$data = array('mensaje' => 'Ha introducido la misma contraseña. Debe introducir una contraseña distinta.');
+					$this->load->view('Contrasenia_view', $data);
+				} else {	//Si la contraseña es distinta a la anterior:
+					$this->formalizarUsuario($newpass);
+				}
+			} else $this->load->view('Contrasenia_view');
+		} else redirect('/Login_controller');
+	}
+
+	//Realiza los cambios pertinentes para que un usuario se haga oficial.
+	private function formalizarUsuario($pass) {
+		/* PENDIENTE
+		1- Cambiar contraseña.
+		2- Eliminar de expiracion.
+		3- Cambiar rol en la sesion.
+		4- Redirigir a la vista correspondiente.
+		*/
+	}
+
 	/*	PARA MULTIROL
 	//Evalúa los permisos del usuario loggeado.
 	public function evaluaRol() {
