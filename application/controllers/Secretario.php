@@ -160,13 +160,28 @@ class Secretario extends CI_Controller{
   public function guardarVotacion($datos)
   {
     $censos = $this->input->post('censo'); // Vector con nombres de censos
-    $ultimoId = $this->votaciones_model->getLastId();
     $usuarios = array();
     $usuariosIds = array();
     $totales = array();
 
+    //echo var_dump((int)$ultimoId[0]['Id']+1);
+
+    // Extraer IDS de los ficheros de esos censos seleccionados
+   $idCensos = array();
+    for($i = 0; $i < sizeof($censos); $i++)
+    {
+      $idCensos[] = $this->censo_model->getId($censos[$i]);
+    }
+
     // GUARDAR VOTACION
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+    $ultimoId = $this->votaciones_model->getLastId();
+
+    // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
+    for($i = 0; $i < sizeof($idCensos); $i++)
+    {
+      $this->censo_model->insertarVotacion($ultimoId[0]['Id'],$idCensos[$i][0]->Id);
+    }
 
     // SACAR USUARIOS DE TODOS LOS CENSOS
     for($i = 0; $i < sizeof($censos); $i++)

@@ -107,8 +107,9 @@
 		 	  <table class="display table table-striped table-bordered" id="votaciones_admin">
 		      <thead>
 		        <tr>
-		          <th>Censo</th>
-		          <th></th>
+		          <th><center>Censo<center></th>
+		          <th><center>Añadir<center></th>
+
 		        </tr>
 		      </thead>
 		      <tbody>
@@ -127,6 +128,7 @@
 		                ?>
 		            <td><?= form_checkbox($atributos); ?></td>
 		            </div>
+								
 		            <?php echo '</tr>'; ?>
 		          <?php }?>
 		      </tbody>

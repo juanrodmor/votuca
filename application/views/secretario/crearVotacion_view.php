@@ -127,7 +127,7 @@
               <?php foreach($censos as $censo){ ?>
 
                 <td><?php echo $censo->Nombre?></td>
-                <?php
+              <?php
                 echo '<div class="form-check">';
                  $atributos = array(
                     'name' => 'censo[]',
@@ -144,7 +144,7 @@
           </tbody>
         </table>
       </div>
-      </div>      
+      </div>
         <?php $atributos = array(
             'name' => 'submit_reg',
             'class' => 'btn btn-primary',

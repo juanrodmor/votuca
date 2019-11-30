@@ -34,8 +34,7 @@
            <th scope="col">Fin</th>
            <th scope="col">Borrador</th>
            <th scope="col"></th>
-           <th scope="col"></th>
-           <th scope="col"></th>
+
          </tr>
        </thead>
      <tbody>
