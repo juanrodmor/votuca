@@ -61,44 +61,43 @@ class MesaElectoral extends CI_Controller{
 		return ($peticionesApertura >= 3);
 	}
 
-  public function recuentoVotos(){
-    if($this->input->post('boton_recuento')){
-      $idVotacion = $this->input->post('recuento');
-		if ($this->abrirUrna($idVotacion)) {
-			$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
-			$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
-			$votos = $this->voto_model->recuentoVotos($idVotacion);
-			$votosSi = 0; $votosNo = 0; $votosBlanco = 0;
-			if ($nVotos != 0) {
-				foreach($votos as $voto) {
-					switch ($voto->Id_Voto) {
-						case 2:
-							$votosSi++; break;
-						case 3:
-							$votosNo++; break;
-						case 4:
-							$votosBlanco++; break;
+	public function recuentoVotos(){
+		if($this->input->post('boton_recuento')){
+			$idVotacion = $this->input->post('recuento');
+			if ($this->abrirUrna($idVotacion)) {
+				$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
+				$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
+				$votos = $this->voto_model->recuentoVotos($idVotacion);
+				$votosSi = 0; $votosNo = 0; $votosBlanco = 0;
+				if ($nVotos != 0) {
+					foreach($votos as $voto) {
+						switch ($voto->Id_Voto) {
+							case 2:
+								$votosSi++; break;
+							case 3:
+								$votosNo++; break;
+							case 4:
+								$votosBlanco++; break;
+						}
 					}
 				}
-			}
-			$datosVotacion = array(
+				$datosVotacion = array(
 				'total' => $nVotos,
 				'si' => $votosSi,
 				'no' => $votosNo,
 				'blanco' => $votosBlanco,
 				'censo' => $maxVotantes,
 				'votacion' => $idVotacion
-			);
+				);
 
-			//$this->votosPerGroup($idVotacion);
-			$this->index($datosVotacion);
-		} else {
-			$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
-			$this->index($mensajes);
+				//$this->votosPerGroup($idVotacion);
+				$this->index($datosVotacion);
+			} else {
+				$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
+				$this->index($mensajes);
+			}
 		}
-    }
-
-  }
+	}
 
 }
 
