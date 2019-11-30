@@ -64,6 +64,11 @@ class Votaciones_model extends CI_Model{
     else{return 1;}
   }
 
+  public function getBorradores()
+  {
+    $query = $this->db->query("SELECT * from votacion WHERE esBorrador = '1';");
+    return $query->result();
+  }
 
 
 

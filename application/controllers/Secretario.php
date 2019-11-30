@@ -349,6 +349,22 @@ class Secretario extends CI_Controller{
     }
   }
 
+  /**************************/
+  /******* BORRADORES *******/
+  /**************************/
+
+  public function obtenerBorradores()
+  {
+     $this->load->view('elementos/headerSecretario');
+     $votaciones['borradores'] = $this->votaciones_model->getBorradores();
+     $datos = array(
+       'votaciones'=> $votaciones,
+       'mensaje' => $mensaje = ''
+     );
+     //$this->load->view('datetime');
+     $this->load->view('secretario/secretario_view',$datos);
+  }
+
   public function enviar()
   {
     echo "Has pulsado enviar";
