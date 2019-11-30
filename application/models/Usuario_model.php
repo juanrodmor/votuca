@@ -19,6 +19,12 @@ class Usuario_model extends CI_Model {
 		return $consulta->row()->Id;
 	}
 
+	//Elimina un usuario de la tabla Expiracion.
+	public function deleteUser($usuario) {
+		$idUsuario = $this->getId($usuario);
+		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
+	}
+
 	//Elimina un usuario de la tabla Usuario y Expiracion.
 	public function deleteUsuario($usuario) {
 		$idUsuario = $this->getId($usuario);
@@ -70,6 +76,12 @@ class Usuario_model extends CI_Model {
 	public function getFecha($idUsuario) {
 		$consulta = $this->db->get_where('expiracion', array('Id_Usuario' => $idUsuario));
 		return $consulta->row()->Fecha;
+	}
+	
+	public function setPass($usuario, $pass) {
+		$idUsuario = $this->getId($usuario);
+		$this->db->where('Id', $idUsuario);
+		$this->db->update('usuario', array('Password' => $pass));
 	}
 
 

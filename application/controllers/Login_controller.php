@@ -75,7 +75,6 @@ class Login_controller extends CI_Controller {
 					&& password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
 					
 					$this->loginOK($usuario);
-					
 				} else {	//Si no existe el usuario o la pass no coincide...
 					$this->monitoring->register_action_login($this->input->post('usuario'));	//Almacena la info del login en un log.
 					$data = array('mensaje' => 'La combinación usuario/contraseña introducida no es válida.');
@@ -133,24 +132,37 @@ class Login_controller extends CI_Controller {
 			$this->form_validation->set_message('required', 'El campo \'%s\' es obligatorio.');
 			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
 				$newpass = $this->input->post('pass');
-				if (password_verify($usuario->getPass(), $this->Usuario_model->getPass($usuario->getId()))) {
+				if (password_verify($newpass, $this->Usuario_model->getPass($usuario->getId()))) {
 					$data = array('mensaje' => 'Ha introducido la misma contraseña. Debe introducir una contraseña distinta.');
 					$this->load->view('Contrasenia_view', $data);
 				} else {	//Si la contraseña es distinta a la anterior:
-					$this->formalizarUsuario($newpass);
+					if($this->validarPass($newpass)) $this->formalizarUsuario($newpass);
 				}
 			} else $this->load->view('Contrasenia_view');
 		} else redirect('/Login_controller');
 	}
 
+	//Comprueba que la contraseña introducida cumple todos los requisitos.
+	private function validarPass($pass) {
+		$nchar = (strlen($pass) >= 8);
+		$minuscula = preg_match('/[a-z]/', $pass);
+		$mayuscula = preg_match('/[A-Z]/', $pass);
+		$digito = preg_match('/\d/', $pass);
+		$simbolo = preg_match('/\W/', $pass);
+		
+		if(!($nchar && $minuscula && $mayuscula && $digito && $simbolo)) {
+			$data = array('mensaje' => 'La contraseña introducida no es válida. Debe tener una longitud mínima de 8 caracteres y debe contener al menos una mayúscula, una minúscula, un número y un símbolo.');
+			$this->load->view('Contrasenia_view', $data);
+			return false;
+		} else return true;
+	}
+
 	//Realiza los cambios pertinentes para que un usuario se haga oficial.
 	private function formalizarUsuario($pass) {
-		/* PENDIENTE
-		1- Cambiar contraseña.
-		2- Eliminar de expiracion.
-		3- Cambiar rol en la sesion.
-		4- Redirigir a la vista correspondiente.
-		*/
+		$this->Usuario_model->setPass($this->session->userdata('usuario'), password_hash($pass, PASSWORD_DEFAULT));
+		$this->Usuario_model->deleteUser($this->session->userdata('usuario'));
+		$this->session->set_userdata(array('rol' => $this->Usuario_model->getRol($this->session->userdata('usuario'))));
+		$this->redireccionar();
 	}
 
 	/*	PARA MULTIROL
