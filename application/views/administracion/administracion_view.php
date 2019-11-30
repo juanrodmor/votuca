@@ -42,13 +42,12 @@
           {
             echo '<div class="alert alert-success" role="alert" id="error_alert">' . $mensaje_success . '</div>';
           }
-          else
+
+          if(isset($mensaje_failure))
           {
-            if(isset($mensaje_failure))
-            {
-              echo '<div class="alert alert-danger" role="alert" id="error_alert">' . $mensaje_failure . '</div>'; 
-            }
+            echo '<div class="alert alert-danger" role="alert" id="error_alert">' . $mensaje_failure . '</div>'; 
           }
+          
 
           if(isset($usuario) and isset($rol))
           {

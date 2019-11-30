@@ -7,6 +7,25 @@ class Usuario_model extends CI_Model {
 		$this->load->database();
 	}
 
+	/**
+	*	Crea un nuevo usuario en la base de datos.
+	*	$username - Identificador del usuario. Ej: u00000000
+	*	$password - Contraseña cifrada
+	*	$id_rol - Id correspondiente al rol del usuario en el sistema.
+	*	$email - Dirección email.
+	*/
+	public function setUserObject($username, $password, $id_rol, $email)
+	{
+		$data = array(
+			'Id_Rol' => $id_rol,
+			'NombreUsuario' => $username,
+			'Password' => $password,
+			'Email' => $email
+		);
+		
+		$this->db->insert('usuario', $data);
+	}
+
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -44,6 +63,13 @@ class Usuario_model extends CI_Model {
 		$consulta2 = $this->db->get_where('rol', array('Id' => $consulta->row()->Id_Rol));
 		return $consulta2->row()->Nombre;
 	}
+	
+	//Devuelve el id del rol referenciado por su nombre en la tabla
+	public function getRolId($rolname)
+	{
+		$consulta = $this->db->get_where('rol', array('Nombre' => $rolname));
+		return $consulta->row()->Id;
+	}
 
 	//Devuelve una lista con los roles existentes.
 	public function getRoles() {
@@ -55,6 +81,13 @@ class Usuario_model extends CI_Model {
 			array_push($roles, $rol['Nombre']);
 		}
 		return $roles;
+	}
+	
+	//Devuelve el email asociado al usuario
+	public function getEmail($usuario)
+	{
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		return $consulta->row()->Email;
 	}
 
 	//Modifica el rol de un usuario específico.
