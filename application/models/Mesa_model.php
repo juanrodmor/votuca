@@ -37,6 +37,12 @@ class Mesa_model extends CI_Model {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seAbre' => 1));
 		return $consulta->num_rows();
 	}
+	
+	//Comprueba si existe algún recuento para la votación.
+	public function checkVotos($idVotacion) {
+		$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
+		return ($consulta->num_rows()>=1);
+	}
 }
 
 

@@ -64,7 +64,13 @@ class MesaElectoral extends CI_Controller{
 	public function recuentoVotos(){
 		if($this->input->post('boton_recuento')){
 			$idVotacion = $this->input->post('recuento');
-			if ($this->abrirUrna($idVotacion)) {
+			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
+				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
+					
+				} else {	//Si el recuento ya se hizo...
+					
+				}
+				/*
 				$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
 				$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
 				$votos = $this->voto_model->recuentoVotos($idVotacion);
@@ -92,7 +98,8 @@ class MesaElectoral extends CI_Controller{
 
 				//$this->votosPerGroup($idVotacion);
 				$this->index($datosVotacion);
-			} else {
+				*/
+			} else {	//Si no hay suficientes miembros dispuestos a abrir la urna...
 				$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
 				$this->index($mensajes);
 			}
