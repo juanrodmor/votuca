@@ -98,10 +98,10 @@ body {
 .input-group
 {
     padding-left: 30%;
-    margin-top: -3%;
+    margin-top: -2.5%;
 }
 
-#passwd, #u
+#passwd, #u, #repeatPasswd
 {
     border-radius: 0px;
     height: 28px;
@@ -121,6 +121,11 @@ label
 #labelPass
 {
     padding-left: 5%;
+}
+
+#labelRepeatPass
+{
+    padding-left: 6.5%;
 }
 
 #lock-image

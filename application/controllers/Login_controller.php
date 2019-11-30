@@ -97,7 +97,7 @@ class Login_controller extends CI_Controller {
 	//Comprueba si el usuario está en periodo de expiración.
 	private function expira($usuario) {
 		$idUsuario = $this->Usuario_model->getId($usuario->getId());
-		if ($this->Usuario_model->checkExpira($idUsuario) == true) $this->caduca($idUsuario);
+		if ($this->Usuario_model->checkExpira($idUsuario) == true) return $this->caduca($idUsuario);
 		else return 'NO';
 	}
 	
