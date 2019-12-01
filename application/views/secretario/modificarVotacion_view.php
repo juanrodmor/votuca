@@ -125,7 +125,7 @@
 										{$iguales[] = $censosVotacion[$i]->Id_Censo;}
 									}
 								}
-							?>						
+							?>
 							<!-- BUCLE CON NOMBRES DE CENSOS -->
 		        <?php foreach($censos as $censo){ ?>
                 <td><?php echo $censo->Nombre?></td>
@@ -143,7 +143,7 @@
 								{
 									echo '<div class="form-check">';
 								$atributos = array(
-											'name' => 'censo[]',
+											'name' => 'censoInsercion[]',
 											'class' => 'form-control',
 											'type' => 'checkbox',
 											'id' => 'censo',
@@ -156,7 +156,7 @@
 									echo '<td></td>';
 									echo '<div class="form-check">';
 								$atributos = array(
-											'name' => 'censo[]',
+											'name' => 'censoEliminacion[]',
 											'class' => 'form-control',
 											'type' => 'checkbox',
 											'id' => 'censo',
@@ -168,12 +168,10 @@
 							 </div>
 								<?php echo '</tr>'; ?>
 		        <?php }?>
-
 		      </tbody>
 		    </table>
 		  </div>
 	 </div>
-
 					 <?php $atributos = array(
 							 'name' => 'boton_borrador',
 							 'class' => 'btn btn-primary',
