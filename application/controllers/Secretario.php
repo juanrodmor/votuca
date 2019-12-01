@@ -274,12 +274,15 @@ class Secretario extends CI_Controller{
       $id = $this->input->post('modificar');
 
       // SACAR CENSOS
+      $censosVotacion = $this->censo_model->getCensosfromVotacion($id);
       $nombreCensos = $this->censo_model->getCensos();
       $datos = array(
         'censos' => $nombreCensos,
-        'votaciones' => $this->votaciones_model->getVotacion($id)
+        'votaciones' => $this->votaciones_model->getVotacion($id),
+        'censosVot' => $censosVotacion
       );
-      $this->load->view('secretario/modificarVotacion_view', $datos);
+      //echo var_dump($censosVotacion[0]->Id_Censo);
+      //$this->load->view('secretario/modificarVotacion_view', $datos);
 
     }
 	}

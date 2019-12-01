@@ -13,6 +13,12 @@ class Censo_model extends CI_Model{
     }
 
   }
+  
+  public function getCensosfromVotacion($idVotacion)
+  {
+      $query = $this->db->query("SELECT Id_Censo from votacion_censo WHERE Id_Votacion = '$idVotacion'");
+      return $query->result();
+  }
 
   public function insertarVotacion($idVotacion,$idCenso)
   {
