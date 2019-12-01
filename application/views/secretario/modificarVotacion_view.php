@@ -109,28 +109,66 @@
 		        <tr>
 		          <th><center>Censo<center></th>
 		          <th><center>Añadir<center></th>
-
+							<th><center>Eliminar<center></th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <tr>
-		          <?php foreach($censos as $censo){ ?>
+								<!-- COMRPROBAR CENSOS QUE YA EXISTEN-->
+							<?php $iguales = array(); ?>
+							<?php foreach($censos as $censo)
+							  {
+
+									for($i = 0; $i < sizeof($censosVotacion); $i++)
+									{
+										if($censo->Id == $censosVotacion[$i]->Id_Censo)
+										{$iguales[] = $censosVotacion[$i]->Id_Censo;}
+									}
+								}
+							?>						
+							<!-- BUCLE CON NOMBRES DE CENSOS -->
+		        <?php foreach($censos as $censo){ ?>
                 <td><?php echo $censo->Nombre?></td>
-	              <?php
-	                echo '<div class="form-check">';
-	                $atributos = array(
-		                    'name' => 'censo[]',
-		                    'class' => 'form-control',
-		                    'type' => 'checkbox',
-		                    'id' => 'censo',
-		                    'value' => $censo->Nombre
-		                );
-		                ?>
-		            <td><?= form_checkbox($atributos); ?></td>
-		            </div>
-								
-		            <?php echo '</tr>'; ?>
-		          <?php }?>
+								<!-- COMRPROBAR CENSOS QUE YA EXISTEN-->
+								<?php
+								$encontrado = false;
+								$i = 0;
+								while($i < sizeof($iguales) && !$encontrado)
+								{
+									if($censo->Id == $iguales[$i])
+									{$encontrado = true;}
+									$i = $i + 1;
+								}
+								if(!$encontrado)
+								{
+									echo '<div class="form-check">';
+								$atributos = array(
+											'name' => 'censo[]',
+											'class' => 'form-control',
+											'type' => 'checkbox',
+											'id' => 'censo',
+											'value' => $censo->Nombre
+									);
+									echo '<td>'.form_checkbox($atributos).'</td>';
+								}
+								else // Se puede eliminar el censo
+								{
+									echo '<td></td>';
+									echo '<div class="form-check">';
+								$atributos = array(
+											'name' => 'censo[]',
+											'class' => 'form-control',
+											'type' => 'checkbox',
+											'id' => 'censo',
+											'value' => $censo->Nombre
+									);
+									echo '<td>'.form_checkbox($atributos).'</td>';
+								}
+								?>
+							 </div>
+								<?php echo '</tr>'; ?>
+		        <?php }?>
+
 		      </tbody>
 		    </table>
 		  </div>
