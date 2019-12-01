@@ -17,7 +17,8 @@ class Elector_controller extends CI_Controller {
 				$titulo['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$titulo);
-				$this->load->view('elementos/headerComun',$inicio);
+				//$this->load->view('elementos/headerComun',$inicio);
+				$this->load->view('elementos/headerVotacion',$inicio);
 	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
 	        $datos = $this->Voto_model->_listar($id_user);
         	$votos = array(
@@ -42,8 +43,9 @@ class Elector_controller extends CI_Controller {
 
 				$title['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
-				$this->load->view('elementos/head',$title);
-				$this->load->view('elementos/headerComun',$inicio);
+				$this->load->view('elementos/head',$titulo);
+				//$this->load->view('elementos/headerComun',$inicio);
+				$this->load->view('elementos/headerVotacion',$inicio);
 			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 			$votos = $this->Voto_model->_votosDisponibles();	// habrá que pasarle $id_votacion para mostrar los votos disponibles para esa votacion
 			$datos = array(
@@ -54,14 +56,14 @@ class Elector_controller extends CI_Controller {
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);
-				$this->load->view('elementos/footer');
+
 		}
 
     }
 
     public function guardarVoto() {
     	if(!isset($_POST['id_votacion'])) {
-    		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
+    		$mensaje = "out";
     		$this->index($mensaje);
     	}
     	else {
@@ -78,9 +80,9 @@ class Elector_controller extends CI_Controller {
 		    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
 
 		    	if($votado == TRUE) 
-		    		$mensaje = 'Su voto ha sido registrado correctamente.';
+		    		$mensaje = 'correcto';
 		    	if($votado == FALSE) 
-		    		$mensaje = 'No se puede votar en la votación seleccionada.';
+		    		$mensaje = 'mal';
 
 		    	$this->index($mensaje);
 		    	
@@ -95,7 +97,7 @@ class Elector_controller extends CI_Controller {
 			    	$title['titulo'] = 'MIS VOTACIONES';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$title);
-					$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);
 		        $this->load->view('Elector/voto_view', $datos);
 		        	$this->load->view('elementos/footer');
 		    }
