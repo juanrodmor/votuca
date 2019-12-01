@@ -367,8 +367,11 @@ class Secretario extends CI_Controller{
       // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
       $noGuardadoCenso = $this->insertarCenso($totales);
 
-      // GENERAR MIEMBROS DE LA MESA ELECTORAL
+      // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+      $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$votacion->getId(),1);
 
+      // GENERAR MIEMBROS DE LA MESA ELECTORAL(si son necesarios)
+      
       // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
       for($i = 0; $i < sizeof($idCensos); $i++)
       {
