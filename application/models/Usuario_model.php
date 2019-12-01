@@ -116,6 +116,23 @@ class Usuario_model extends CI_Model {
 		$this->db->where('Id', $idUsuario);
 		$this->db->update('usuario', array('Password' => $pass));
 	}
+	
+	/**
+	*	Establece una caducidad de 24h para $usuario
+	*	$usuario - nombre de usuario
+	*/
+	public function setUserTimeLimit($usuario)
+	{
+		$timeLimit = date('Y-m-d H:m:s',strtotime('1 day'));
+		
+		$data = array(
+			'Id_Usuario' => $this->getId($usuario),
+			'Fecha' => $timeLimit
+		);
+		
+		$this->db->insert('expiracion', $data);
+		
+	}
 
 
 	/*****************************/

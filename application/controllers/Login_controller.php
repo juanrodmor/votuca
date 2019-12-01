@@ -132,7 +132,8 @@ class Login_controller extends CI_Controller {
 			$this->form_validation->set_message('required', 'El campo \'%s\' es obligatorio.');
 			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
 				$newpass = $this->input->post('pass');
-				if (password_verify($newpass, $this->Usuario_model->getPass($usuario->getId()))) {
+				$usuario = $this->session->userdata('usuario');
+				if (password_verify($newpass, $this->Usuario_model->getPass($usuario))) {
 					$data = array('mensaje' => 'Ha introducido la misma contraseña. Debe introducir una contraseña distinta.');
 					$this->load->view('Contrasenia_view', $data);
 				} else {	//Si la contraseña es distinta a la anterior:

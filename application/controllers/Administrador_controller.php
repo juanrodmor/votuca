@@ -125,12 +125,13 @@ class Administrador_controller extends CI_Controller {
 					else
 					{
 						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getEmail($usuario));
-						
+						$this->Usuario_model->setUserTimeLimit($newUsername);
+
 						$asunto = '[NOTIFICACIÓN VOTUCA] Nuevo rol.';
 						$mensaje = '<h1>Tienes un nuevo rol en VotUCA</h1>
 						
 						<p>Has sido designado como ' . $newrol . ' en la plataforma. Por ello, <b>dispondrás de una nueva cuenta únicamente para ejercer dicho rol.</b></p>
-						<p>El usuario generado para acceder a tu cuenta con privilegios es el siguiente: ' . $newUsername . '. <b>Tu contraseña ha sido generada aleatoriamente y tiene límite de caducidad. Para recibir tu contraseña, ponte en contacto con la secretaría de tu centro. Una vez accedas al sistema, deberás establecer tu propia contraseña.</b><p>
+						<p>El usuario generado para acceder a tu cuenta con privilegios es el siguiente: ' . $newUsername . '. <b>Podrás acceder usando tu contraseña actual. Una vez accedas al sistema, deberás establecer tu propia contraseña antes de 24 horas.</b><p>
 						<br><br><br>
 						
 						<p>Coordialmente, la administración de VotUCA.</p>
