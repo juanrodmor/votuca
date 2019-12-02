@@ -67,7 +67,7 @@ f<?php
 				return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
 			}
 				//echo var_dump($sql->result());
-			
+
 		}
 
 		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
@@ -175,10 +175,11 @@ f<?php
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
 				$id = (int)$usuarios[$i];
+				$id = password_hash($id, PASSWORD_DEFAULT);
 				$datos = array(
 					'Id_Usuario' => $id,
-					'Id_Votacion' => $nuevoId,
-					'Id_Voto' => $sinVoto
+					'Id_Votacion' => password_hash($nuevoId, PASSWORD_DEFAULT),
+					'Id_Voto' => password_hash($sinVoto, PASSWORD_DEFAULT)
 				);
 				$this->db->insert('usuario_votacion',$datos);
 			}

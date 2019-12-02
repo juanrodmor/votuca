@@ -98,8 +98,8 @@ class Secretario extends CI_Controller{
         else
         {  // Correcta
           // Convierte la fecha en un formato valido para la BD
-          $fechaInicio = date('Y-m-d H-i',strtotime($this->input->post('fecha_inicio')));
-          $fechaFin = date('Y-m-d H-i',strtotime($this->input->post('fecha_final')));
+          $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
+          $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
           //echo var_dump($fechaInicio);
           $votacion = new Votacion(
             //$this->input->post('id'),
@@ -147,20 +147,27 @@ class Secretario extends CI_Controller{
     $this->censo_model->insertar($usuariosIds,(int)$ultimoId[0]['Id']);
   }
 
-  public function insertarMesaElectoral($elegidos)
+
+  public function obtenerNombreElectoral($idUsuario,$letra)
   {
-    $ultimoId = $this->votaciones_model->getLastId();
-    return $this->mesa_model->insertar($elegidos,(int)$ultimoId[0]['Id']);
+    $usuario = $this->usuario_model->getUsuario($idUsuario);
+    $dni = substr($usuario[0]->NombreUsuario,1);
+    $nombre = $letra.$dni;
+    return $nombre;
+
   }
 
   public function guardarVotacion($datos)
   {
     $censos = $this->input->post('censo'); // Vector con nombres de censos
     $ultimoId = $this->votaciones_model->getLastId();
-    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
     $usuarios = array();
     $usuariosIds = array();
     $totales = array();
+
+    // GUARDAR VOTACION
+    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+
     // SACAR USUARIOS DE TODOS LOS CENSOS
     for($i = 0; $i < sizeof($censos); $i++)
     {
@@ -174,10 +181,11 @@ class Secretario extends CI_Controller{
 
     }
 
+    // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
     $noGuardadoCenso = $this->insertarCenso($totales);
 
-    // VOTO POR DEFECTO A USUARIOS DE ESE CENSO
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id']+1,1);
+    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
 
     // MESA ELECTORAL ALEATORIA
     $elegidos = $this->usuariosAleatorios($totales);
@@ -186,16 +194,26 @@ class Secretario extends CI_Controller{
       $elegidos[$i] = $totales[$elegidos[$i]];
 
       // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-      $this->usuario_model->insertUserAs((int)$elegidos[$i],5);
+      $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+
+      // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
+      $idUsuario = (int)$elegidos[$i];
+
+      // Crear el nuevo nombre de usuario
+      $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
+      $miembro = $this->usuario_model->getIdFromUserName($nombre);
+      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']+1);
+
+
     }
-    $noGuardadoMesa = $this->insertarMesaElectoral($elegidos);
 
     // Enviar correo a cada elegido en la mesa electoral
-    //$this->enviarCorreo($elegidos,$ultimoId);  // FUNCIONA
+    //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+
 
     // FINAL DE ESTA MIERDA
 
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $noGuardadoMesa )
+    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
     {
       $datos = array('mensaje'=>'La votación NO se ha guardado');
       $this->load->view('secretario/crearVotacion_view',$datos);
@@ -237,9 +255,16 @@ class Secretario extends CI_Controller{
       $this->load->view('elementos/headerDelegado');
       }
 
+      // ID DE LA VOTACION A MODIFICAR
       $id = $this->input->post('modificar');
-      $data['votaciones'] =  $this->votaciones_model->getVotacion($id);
-      $this->load->view('secretario/modificarVotacion_view', $data);
+
+      // SACAR CENSOS
+      $nombreCensos = $this->censo_model->getCensos();
+      $datos = array(
+        'censos' => $nombreCensos,
+        'votaciones' => $this->votaciones_model->getVotacion($id)
+      );
+      $this->load->view('secretario/modificarVotacion_view', $datos);
 
     }
 	}
@@ -357,9 +382,9 @@ class Secretario extends CI_Controller{
   /*******************************************/
 
   public function validarFechaInicio(){
-    $fechaInicio = date('Y-m-d',strtotime($this->input->post('fecha_inicio')));
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
 
-    $hoy = date('Y-m-d');
+    $hoy = date('Y-m-d H:i:s');
     if($fechaInicio < $hoy){
         $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');
         return FALSE;
@@ -371,8 +396,8 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFechaFinal(){
-    $fechaFinal = date('Y-m-d',strtotime($this->input->post('fecha_final')));
-    $hoy = date('Y-m-d');
+    $fechaFinal = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
+    $hoy = date('Y-m-d H:i:s');
     if($fechaFinal < $hoy){
         $this->form_validation->set_message('validarFechaFinal','Introduzca bien la fecha %s');
         return FALSE;
