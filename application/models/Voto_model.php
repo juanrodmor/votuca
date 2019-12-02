@@ -40,6 +40,13 @@ f<?php
 			return $sql->row()->Id;
 		}
 
+		public function _userName($id_usuario) {
+			//print_r($Nombre);
+			$sql = $this->db->get_where('usuario', array('Id' => $id_usuario));
+			//print_r($sql->row()->Id);
+			return $sql->row()->NombreUsuario;
+		}
+
 		// Votar
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
