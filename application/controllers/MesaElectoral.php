@@ -67,43 +67,9 @@ class MesaElectoral extends CI_Controller{
 			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
 				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
 					$idVotos = $this->Mesa_model->getOptions($idVotacion);
-					/*
-						- Obtener el ID de los votos disponibles
-						- Buscar registros con este ID y el idvotacion
-						- Sumar el voto al recuento y borrar el voto.
-						- Crear el registro en recuento.
-						- Valorar quorum.
-						- Enviar array de opciones, array de recuento, tamaño censo, idvotacion, quorum.
-					*/
-				} else {	//Si el recuento ya se hizo...
-					
+					$this->volcadoVotos($idVotacion, $idVotos);
+					$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
 				}
-				/*
-				$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
-				$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
-				$votos = $this->voto_model->recuentoVotos($idVotacion);
-				$votosSi = 0; $votosNo = 0; $votosBlanco = 0;
-				if ($nVotos != 0) {
-					foreach($votos as $voto) {
-						switch ($voto->Id_Voto) {
-							case 2:
-								$votosSi++; break;
-							case 3:
-								$votosNo++; break;
-							case 4:
-								$votosBlanco++; break;
-						}
-					}
-				}
-				$datosVotacion = array(
-				'total' => $nVotos,
-				'si' => $votosSi,
-				'no' => $votosNo,
-				'blanco' => $votosBlanco,
-				'censo' => $maxVotantes,
-				'votacion' => $idVotacion
-				);
-
 				//$this->votosPerGroup($idVotacion);
 				$this->index($datosVotacion);
 				*/
@@ -112,6 +78,20 @@ class MesaElectoral extends CI_Controller{
 				$this->index($mensajes);
 			}
 		}
+	}
+	
+	//Comprueba los votos existentes, elimina su registro y almacena el recuento.
+	private function volcadoVotos($idVotacion, $idVotos) {
+		array_push($idVotos, ('Num_Votos' => array()));
+		for($it=0; $it<count($idVotos['Id']); $it++) {
+			$idVotos['Num_Votos'][$it] = $this->Mesa_model->volcadoVotos($idVotacion, $idVotos['Id'][$it]);
+		}
+		$this->Mesa_model->insertVotos($idVotacion, $idVotos['Id'], $idVotos['Num_Votos']);
+	}
+	
+	//Finaliza la votación cuando suficientes miembros lo confirmen.
+	public function finalizaVotacion() {
+		
 	}
 
 }
