@@ -37,8 +37,13 @@ class Mesa_model extends CI_Model {
 
   public function eliminarMiembroFromVotacion($idMiembro,$idVotacion)
   {
-    //echo 'Vamos a eliminar al miembro: '.$idMiembro. ' de la votacion: '.$idVotacion.'<br>';
     $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion' AND Id_Usuario = '$idMiembro'");
+  }
+
+  public function getMesa($idVotacion)
+  {
+    $query = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion));
+    return $query->result();
   }
 }
 

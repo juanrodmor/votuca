@@ -9,9 +9,14 @@ class Censo_model extends CI_Model{
     for($i = 0; $i < sizeof($usuarios); $i++)
     {
       $censo = new Censos($usuarios[$i],$idVotacion);
-      $this->db->insert('censo',$censo);
+      $this->db->insert('censo',$censo);      
     }
 
+  }
+  public function getUsuariosfromVotacion($idVotacion)
+  {
+    $query = $this->db->query("SELECT Id_Usuario from censo WHERE Id_Votacion = '$idVotacion'");
+    return $query->result();
   }
 
   public function getCensosfromVotacion($idVotacion)
