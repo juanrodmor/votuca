@@ -62,12 +62,15 @@ class Elector_controller extends CI_Controller {
     }
 
     public function guardarVoto() {
-    	if(!isset($_POST['id_votacion'])) {
-    		$mensaje = "out";
+
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip'])){
+    		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
     		$this->index($mensaje);
     	}
     	else {
 	    	$id_votacion = $_POST['id_votacion'];
+	    	$titulo = $_POST['titulo'];
+			$descrip = $_POST['descrip'];
 
 	    	$this->form_validation->set_rules('voto', 'Voto', 'required');
 	    	$this->form_validation->set_message('required','Seleccione un voto valido');
@@ -87,11 +90,14 @@ class Elector_controller extends CI_Controller {
 		    	$this->index($mensaje);
 		    	
 		    } else {
+
 		    	$votos = $this->Voto_model->_votosDisponibles();
 		    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 		    	$datos = array(
 	    		'id_votacion' => $id_votacion,
 	    		'id_usuario' => $id_usuario,
+	    		'descrip' => $descrip,
+				'titulo' => $titulo,
 	    		'votos' => $votos
 	    	);
 			    	$title['titulo'] = 'MIS VOTACIONES';

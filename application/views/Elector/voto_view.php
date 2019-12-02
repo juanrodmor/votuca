@@ -52,6 +52,8 @@
           <?php foreach($votos as $voto) { ?>
             
               <input type="hidden" name="id_votacion" value="<?php echo $id_votacion; ?>"/>
+              <input type="hidden" name="titulo" value="<?php echo $titulo; ?>"/>
+              <input type="hidden" name="descrip" value="<?php echo $descrip; ?>"/>
               <input type="radio" name="voto" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
             
           <?php } ?>
