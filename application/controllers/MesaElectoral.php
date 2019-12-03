@@ -16,11 +16,7 @@ class MesaElectoral extends CI_Controller{
 	//Obtiene todas las votaciones de las que el usuario loggeado es miembro de mesa.
 	private function obtenerVotaciones() {
 		$votaciones = $this->Mesa_model->getVotaciones($this->Usuario_model->getId($this->session->userdata('usuario')));
-		$arrayVotaciones = array();
-		foreach($votaciones as $row) {	//$row es un objeto mesa_electoral
-			array_push($arrayVotaciones, $this->votaciones_model->getVotacion($row->Id_Votacion));	//$arrayVotaciones es un array de objetos votacion
-		}
-		return $arrayVotaciones;
+		return $votaciones;
 	}
 
   public function index($votos = array())

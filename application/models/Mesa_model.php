@@ -22,7 +22,18 @@ class Mesa_model extends CI_Model {
 	//Devuelve el listado de votaciones de las que se encarga un miembro de la mesa electoral.
 	public function getVotaciones($id) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Usuario' => $id));
-		return $consulta->result();
+		$votaciones = $this->noFinalizadas($consulta->result());
+		return $votaciones;
+	}
+	
+	//Devuelve un subarray de votaciones con aquellas que no están finalizadas.
+	private function noFinalizadas($votaciones) {
+		$votacionesOK = array();
+		foreach($votaciones as $votacion) {
+			$consulta = $this->db->get_where('votacion', array('Id' => $votacion->Id_Votacion, 'finalizada' => 0));
+			if ($consulta->num_rows() != 0) array_push($votacionesOK, $consulta->result()[0]);
+		}
+		return $votacionesOK;
 	}
 	
 	//Establece a true la decisión de abrir la urna de un usuario concreto para una votación concreta.
