@@ -153,17 +153,21 @@
 								}
 								else // Se puede eliminar el censo
 								{
-									echo '<td></td>';
-									echo '<div class="form-check">';
-								$atributos = array(
-											'name' => 'censoEliminacion[]',
-											'class' => 'form-control',
-											'type' => 'checkbox',
-											'id' => 'censo',
-											'value' => $censo->Nombre
-									);
-									echo '<td>'.form_checkbox($atributos).'</td>';
+									if(sizeof($censosVotacion) > 1)
+									{
+										echo '<td></td>';
+										echo '<div class="form-check">';
+									$atributos = array(
+												'name' => 'censoEliminacion[]',
+												'class' => 'form-control',
+												'type' => 'checkbox',
+												'id' => 'censo',
+												'value' => $censo->Nombre
+										);
+										echo '<td>'.form_checkbox($atributos).'</td>';
+									}
 								}
+
 								?>
 							 </div>
 								<?php echo '</tr>'; ?>
