@@ -45,6 +45,12 @@ class Mesa_model extends CI_Model {
     $query = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion));
     return $query->result();
   }
+
+  public function deleteMesa($idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion'");
+    //return $query->result();
+  }
 }
 
 
