@@ -81,10 +81,15 @@ class Administrador_controller extends CI_Controller {
 		if ($this->input->post('Buscar')) {
 			$usuario = $this->input->post('usuario');
 			if ($this->Usuario_model->userExists($usuario)) {
+				$roles = array();
+				foreach ($this->Usuario_model->getAllRoles($usuario) as $rol)
+					array_push($roles, $rol['Nombre']);
 				$data = array(
 					'usuario' => $usuario,
-					'rol' => $this->Usuario_model->getRol($usuario)
+					'rol' => $roles
 				);
+				print_r($data);
+				
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}

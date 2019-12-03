@@ -81,19 +81,19 @@
                             <form action="' . base_url().'administrador_controller/nuevoRol' . '" id="role_updating" method="post">
                             <input type="text" name="usuario" value="'. $usuario .'" hidden>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Elector"'; if($rol == "Elector"){echo 'checked disabled';} echo'>
+                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Elector"'; if(in_array("Elector", $rol)){echo 'checked disabled';} echo'>
                               <label class="form-check-label" for="checkLogin">Elector</label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Secretario"';if($rol == "Secretario"){echo 'checked disabled';} echo'>
+                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Secretario"';if(in_array("Secretario", $rol)){echo 'checked disabled';} echo'>
                               <label class="form-check-label" for="">Secretario</label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="SecretarioDelegado"';if($rol == "SecretarioDelegado"){echo 'checked disabled';}echo'>
+                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="SecretarioDelegado"';if(in_array("SecretarioDelegado", $rol)){echo 'checked disabled';}echo'>
                               <label class="form-check-label" for="">Secretario delegado</label>
                             </div>
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Administrador"';if($rol == "Administrador"){echo 'checked disabled';}echo'>
+                              <input class="form-check-input" type="checkbox" id="checkbox" name="checkBoxInput" value="Administrador"';if(in_array("Administrador",$rol)){echo 'checked disabled';}echo'>
                               <label class="form-check-label" for="">Administrador</label>
                             </div>
                             </form>

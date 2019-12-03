@@ -64,6 +64,23 @@ class Usuario_model extends CI_Model {
 		return $consulta2->row()->Nombre;
 	}
 	
+	//Devuelve todos los roles para un usuario; aunque disponga de distintos username.
+	public function getAllRoles($usuario)
+	{
+		$usr = substr($usuario, 1, -1);
+		$query = "SELECT Id_Rol FROM USUARIO WHERE NombreUsuario LIKE '%".$usr."';";
+		$roles = array();
+		foreach($this->db->query($query)->result_array() as $rol)
+		{
+			array_push($roles, $rol['Id_Rol']); 
+		}
+		$this->db->select('Nombre');
+		$this->db->from('rol');
+		$this->db->where_in('Id', $roles);
+		$resultado = $this->db->get();
+		return $resultado->result_array();
+	}
+	
 	//Devuelve el id del rol referenciado por su nombre en la tabla
 	public function getRolId($rolname)
 	{
