@@ -326,11 +326,14 @@ class Secretario extends CI_Controller{
 
       //echo var_dump($finales);
       // Eliminar esos usuarios de una votacion concreta
-      foreach($finales as $usuario)
-      {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
+      /*foreach($finales as $usuario)
+      {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}*/
+
+      // BORRAR MIEMBROS DE LA MESA ELECTORAL
+      echo var_dump($finales);
 
       // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
+      //$this->censo_model->eliminarCenso($idVotacion,$idCenso);
     }
     else
     {
@@ -357,8 +360,6 @@ class Secretario extends CI_Controller{
     $idsAñadir = array();
     foreach($usuariosAñadir as $suId)
     $idsAñadir[] = $suId->Id_Usuario;
-    echo 'USUARIOS QUE QUIERO AÑADIR<br>';
-    echo var_dump($idsAñadir).'<br>';
 
     // COMPROBAR QUE ESOS USUARIOS NO EXISTEN YA EN EL CENSO DE LA VOTACION
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -366,8 +367,6 @@ class Secretario extends CI_Controller{
     // OBTENER SOLO LOS IDS DE LOS TOTALES
     foreach($totales as $usuario)
     {$idsTotales[] = $usuario->Id_Usuario;}
-    echo 'USUARIOS ACTUALMENTE EN EL CENSO DE ESA VOTACION<br>';
-    echo var_dump($idsTotales).'<br>';
 
     // COGER USUARIOS DEL CENSO SELECCIONADO QUE NO ESTEN YA EN EL CENSO
     $finales = array();
