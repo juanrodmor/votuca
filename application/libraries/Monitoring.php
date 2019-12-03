@@ -45,11 +45,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             {
                 if($flag == 'blocked')
                 {
-                    $action_message .= " realizó un intento fallido.";
+                    $action_message .= " bloqueado o suspendido intentó acceder.";
                 }
                 else
                 {
-                    $action_message .= " bloqueado o suspendido intentó acceder.";
+                    $action_message .= " realizó un intento fallido.";
                 }
             }
 
@@ -85,5 +85,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacionName . " procede a la apertura de urnas.";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
-
+		
+		public function register_action_closeBox($votacionName)	//Muestra que una votación ha finalizado.
+		{
+			$action_message = "[" . mdate($this->hour_format) . "] [CLOSE BOX]" . " La votación " . $votacionName . " cierra sus urnas.";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+		}
+		
+		public function register_action_closeBoxInvalid($votacionName) //Muestra que una votación ha sido invalidada.
+		{
+			$action_message = "[" . mdate($this->hour_format) . "] [INVALID VOTATION]" . " La votación " . $votacionName . " no es válida y finaliza.";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+		}
+		
+		public function register_action_mElectoralConfirmedClose($username, $votacionName) //Muestra que un miembro quiere cerrar una votación.
+		{
+			$action_message = "[" . mdate($this->hour_format) . "] [ME CLOSING]" . " El miembro de mesa " . $username . " confirma el cierre de la votación " . $votacionName . ".";
+            file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
+		}
 }

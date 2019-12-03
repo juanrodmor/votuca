@@ -124,7 +124,8 @@ class Mesa_model extends CI_Model {
 	//Devuelve el tamaño del censo de la votacion indicada.
 	public function getCenso($idVotacion) {
 		$consulta = $this->db->get_where('censo', array('Id_Votacion' => $idVotacion));
-		return $consulta->num_rows();
+		if ($consulta->num_rows() == 0) return 200;
+		else return $consulta->num_rows();
 	}
 	
 	//Devuelve toda la información necesaria para que se muestre el recuento.
