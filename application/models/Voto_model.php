@@ -15,11 +15,12 @@ f<?php
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, voto.Nombre, votacion.FechaInicio, votacion.FechaFinal
-						from votacion, usuario_votacion, voto
-						where votacion.Id = usuario_votacion.Id_Votacion
+			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal
+						from votacion, censo, usuario_votacion
+						where votacion.Id = censo.Id_Votacion
+							AND censo.Id_Usuario = ".$id_user."
 							AND usuario_votacion.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Voto = voto.Id
+							AND usuario_votacion.Id_Votacion = votacion.Id
 							AND votacion.isDeleted = 0
 						order by votacion.FechaFinal ASC;";
 
@@ -60,7 +61,7 @@ f<?php
 				$sql = $this->db->get_where('voto', array('Nombre' => $voto));
 				$id_voto = $sql->row()->Id;
 
-				$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+				$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 				$query = $this -> db -> query($sql);
 				return TRUE;	// has votado correctamente
 			} else {
@@ -175,11 +176,10 @@ f<?php
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
 				$id = (int)$usuarios[$i];
-				$id = password_hash($id, PASSWORD_DEFAULT);
 				$datos = array(
 					'Id_Usuario' => $id,
-					'Id_Votacion' => password_hash($nuevoId, PASSWORD_DEFAULT),
-					'Id_Voto' => password_hash($sinVoto, PASSWORD_DEFAULT)
+					'Id_Votacion' => $nuevoId,
+					'Id_Voto' => '1'
 				);
 				$this->db->insert('usuario_votacion',$datos);
 			}
