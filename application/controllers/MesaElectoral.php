@@ -91,8 +91,12 @@ class MesaElectoral extends CI_Controller{
 			if($this->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
 				if($this->input->post('invalida') == true) {	//No se cumple el quorum
 					$this->Mesa_model->setInvalida($idVotacion);
+					$mensajes = array('mensaje' => 'Votación invalidada. No se cumple el Quorum.');
+					$this->index($mensajes);
 				} else {	//Se cumple el quorum
 					$this->Mesa_model->setFinalizada($idVotacion);
+					$mensajes = array('success' => '¡Votación finalizada con éxito!');
+					$this->index($mensajes);
 				}
 			} else {	//No hay votos suficientes para cerrarla.
 				$mensajes = array('mensaje' => 'Es necesaria la contribución de más miembros para cerrar la votación.');
