@@ -88,7 +88,7 @@ class MesaElectoral extends CI_Controller{
 	public function finalizaVotacion() {
 		if($this->input->post('boton_finalizar')) {	//Acceso correcto
 			$idVotacion = $this->input->post('idVotacion');
-			if($this->Mesa_model->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
+			if($this->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
 				if($this->input->post('invalida') == true) {	//No se cumple el quorum
 					$this->Mesa_model->setInvalida($idVotacion);
 				} else {	//Se cumple el quorum

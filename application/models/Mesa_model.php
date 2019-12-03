@@ -46,7 +46,7 @@ class Mesa_model extends CI_Model {
 	//Comprueba si una urna se puede cerrar.
 	public function cierraUrna($usuario, $idVotacion) {
 		$this->db->where('Id_Usuario', $usuario);
-		$this->db->where('Id_Votacion', $votacion);
+		$this->db->where('Id_Votacion', $idVotacion);
 		$this->db->update('mesa_electoral', array('seCierra' => 1));
 	}
 	
@@ -66,8 +66,11 @@ class Mesa_model extends CI_Model {
 	public function checkVotos($idVotacion) {
 		$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
 		$rows = $consulta->result();
-		$consulta2 = $this->db->get_where('recuento', array('Id_Voto' => $rows[0]->Id_Voto));
-		return ($consulta2->num_rows()>=1);
+		if(!empty($rows))
+		{
+			$consulta2 = $this->db->get_where('recuento', array('Id_Votacion' => $rows[0]->Id_Voto));
+			return ($consulta2->num_rows()>=1);
+		}
 	}
 	
 	//Devuelve las opciones de voto de una votacion.
@@ -126,11 +129,14 @@ class Mesa_model extends CI_Model {
 	public function getFullVotoData($idVotacion) {
 		$votos = $this->getOptions($idVotacion);
 		$contVotos = array();
+		$totalVotos = 0;
 		foreach($votos['Id'] as $idVoto) {
 			array_push($contVotos, $this->getNVotos($idVotacion, $idVoto));
+			$totalVotos = $totalVotos + $this->getNVotos($idVotacion, $idVoto);
 		}
 		$result = array('opciones' => $votos['Nombre'],
 						'cantidad' => $contVotos,
+						'totalVotos' => $totalVotos,
 						'quorum' => $this->getQuorum($idVotacion),
 						'censo' => $this->getCenso($idVotacion),
 						'votacion' => $idVotacion);
