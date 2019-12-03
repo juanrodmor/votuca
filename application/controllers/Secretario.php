@@ -143,6 +143,7 @@ class Secretario extends CI_Controller{
   }
   public function insertarCenso($usuariosIds)
   {
+    //echo var_dump($usuariosIds);
     $ultimoId = $this->votaciones_model->getLastId();
     $this->censo_model->insertar($usuariosIds,(int)$ultimoId[0]['Id']);
   }
@@ -323,13 +324,13 @@ class Secretario extends CI_Controller{
         }
       }
 
-      echo var_dump($finales);
-      /*// Eliminar esos usuarios de una votacion concreta
+      //echo var_dump($finales);
+      // Eliminar esos usuarios de una votacion concreta
       foreach($finales as $usuario)
       {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
 
       // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);*/
+      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
     }
     else
     {
@@ -346,6 +347,72 @@ class Secretario extends CI_Controller{
 
   }
 
+  public function addCenso($censo,$idVotacion)
+  {
+    // Extraer ID del censo que voy a añadir
+    $idCenso = $this->censo_model->getId($censo);
+
+    // Extraer usuarios de ese censo
+    $usuariosAñadir = $this->censo_model->getUsuariosFromCenso($idCenso);
+
+    // COMPROBAR QUE ESOS USUARIOS NO EXISTEN YA EN EL CENSO DE LA VOTACION
+    $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+    $idsTotales = array();
+    // OBTENER SOLO LOS IDS DE LOS TOTALES
+    foreach($totales as $usuario)
+    {$idsTotales[] = $usuario->Id_Usuario;}
+
+    // COGER USUARIOS DEL CENSO SELECCIONADO QUE NO ESTEN YA EN EL CENSO
+    $finales = array();
+    for($i = 0; $i < sizeof($usuariosAñadir);$i++)
+    {
+      if(!in_array($usuariosAñadir[$i],$idsTotales))
+      {
+        array_push($finales,$usuariosAñadir[$i]);
+      }
+    }
+    //echo 'USUARIOS A INSERTAR EN EL CENSO<br>';
+    $idsInsertar = array();
+    foreach($finales as $id)
+    {$idsInsertar[] = $id->Id_Usuario;}
+
+    // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
+    $noGuardadoCenso = $this->insertarCenso($idsInsertar);
+
+
+    /*// ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
+
+    // GENERAR MIEMBROS DE LA MESA ELECTORAL(si son necesarios)
+
+    // COMPROBAR SI LA MESA ELECTORAL DE ESTA VOTACION FALTA GENTE
+    /*$miMesa = $this->mesa_model->getMesa($votacion->getId());
+    if(sizeof($miMesa) < 3)
+    {
+      // Faltan miembros en la mesa
+      // GENERAR USUARIOS ALEATORIOS CON LOS MIEMBROS INSERTADOS EN EL CENSO
+       $elegidos = $this->usuariosAleatorios($finales);
+       for($i = 0; $i < 3-sizeof($miMesa); $i++)
+       {
+          $elegidos[$i] = $totales[$elegidos[$i]];
+
+          // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
+          $this->usuario_model->insertUserAs($elegidos[$i],5,'m');
+
+          // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
+          $idUsuario = (int)$elegidos[$i];
+
+          // Crear el nuevo nombre de usuario
+          $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
+          $miembro = $this->usuario_model->getIdFromUserName($nombre);
+          $this->mesa_model->insertar($miembro[0]->Id,$votacion->getId());
+
+        }
+    }*/
+    // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
+    $this->censo_model->insertarVotacion($idVotacion,$idCenso[0]->Id_Censo);
+
+  }
   public function updateVotacion()
 	{
     if($this->input->post('boton_borrador'))
@@ -367,14 +434,14 @@ class Secretario extends CI_Controller{
     $usuarios = array();
     $usuariosIds = array();
     $totales = array();
+    $numCensosVotacion = $this->censo_model->getCensosfromVotacion($votacion->getId());
 
     if($censosEliminar != NULL)
     {
-      $numEliminar = sizeof($censosEliminar);
       foreach($censosEliminar as $censo)
       {
-        $this->eliminarCenso($numEliminar,$censo,$votacion->getId());
-        --$numEliminar;
+        $this->eliminarCenso($numCensosVotacion,$censo,$votacion->getId());
+        --$numCensosVotacion;
       }
 
     }
@@ -382,72 +449,9 @@ class Secretario extends CI_Controller{
     // USUARIO A AÑADIR A UN CENSO
     if($censosAñadir != NULL)
     {
-      // Extraer IDS de los ficheros de esos censos seleccionados
-        $idCensos = array();
-       for($i = 0; $i < sizeof($censosAñadir); $i++)
-       { $idCensos[] = $this->censo_model->getId($censosAñadir[$i]); }
-
-      // Extraer usuarios de esos censos para añadirlos
-      for($i = 0; $i < sizeof($censosAñadir); $i++)
+      foreach($censosAñadir as $censo)
       {
-        $usuarios = $this->extraerUsuariosCenso($censosAñadir[$i]);
-        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
-
-      }
-      // COMPROBAR QUE ESOS USUARIOS NO EXISTEN YA EN EL CENSO ACTUAL
-      $totales = $this->censo_model->getUsuariosfromVotacion($votacion->getId());
-      $idsTotales = array();
-      // OBTENER SOLO LOS IDS DEL USUARIOS DE CENSO ACTUAL
-      foreach($totales as $usuario)
-      {$idsTotales[] = $usuario->Id_Usuario;}
-
-      // COGER USUARIOS DEL CENSO SELECCIONADO QUE NO ESTEN YA EN EL CENSO
-      $finales = array();
-      for($i = 0; $i < sizeof($usuariosIds);$i++)
-      {
-        if(!in_array($usuariosIds[$i],$idsTotales))
-        {
-          array_push($finales,$usuariosIds[$i]);
-        }
-      }
-      echo 'USUARIOS A INSERTAR EN EL CENSO<br>';
-      echo var_dump($finales);
-      // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
-      $noGuardadoCenso = $this->insertarCenso($finales);
-
-      // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
-      $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$votacion->getId(),1);
-
-      // GENERAR MIEMBROS DE LA MESA ELECTORAL(si son necesarios)
-
-      // COMPROBAR SI LA MESA ELECTORAL DE ESTA VOTACION FALTA GENTE
-      /*$miMesa = $this->mesa_model->getMesa($votacion->getId());
-      if(sizeof($miMesa) < 3)
-      {
-        // Faltan miembros en la mesa
-        // GENERAR USUARIOS ALEATORIOS CON LOS MIEMBROS INSERTADOS EN EL CENSO
-         $elegidos = $this->usuariosAleatorios($finales);
-         for($i = 0; $i < 3-sizeof($miMesa); $i++)
-         {
-            $elegidos[$i] = $totales[$elegidos[$i]];
-
-            // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-            $this->usuario_model->insertUserAs($elegidos[$i],5,'m');
-
-            // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
-            $idUsuario = (int)$elegidos[$i];
-
-            // Crear el nuevo nombre de usuario
-            $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
-            $miembro = $this->usuario_model->getIdFromUserName($nombre);
-            $this->mesa_model->insertar($miembro[0]->Id,$votacion->getId());
-
-          }
-      }*/
-      // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
-      for($i = 0; $i < sizeof($idCensos); $i++)
-      {
-        $this->censo_model->insertarVotacion($votacion->getId(),$idCensos[$i][0]->Id);
+        $this->addCenso($censo,$votacion->getId());
       }
 
     }
