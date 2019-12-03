@@ -103,7 +103,9 @@ class Mesa_model extends CI_Model {
 	//Inserta los resultados de una votación en la tabla recuento.
 	public function insertVotos($idVotacion, $arrayIdVoto, $arrayNumVotos) {
 		for($it=0; $it<count($arrayIdVoto); $it++) {
-			$this->db->insert('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
+			$sql = "INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES (" . $idVotacion . "," . $arrayIdVoto[$it] . "," . $arrayNumVotos[$it] . ") ON DUPLICATE KEY UPDATE Id_Votacion=Id_Votacion, Id_Voto=Id_Voto";
+			//$this->db->update('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
+			$this->db->query($sql);
 		}
 	}
 	
