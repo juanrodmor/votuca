@@ -64,15 +64,14 @@ class MesaElectoral extends CI_Controller{
 	public function recuentoVotos(){
 		if($this->input->post('boton_recuento')){
 			$idVotacion = $this->input->post('recuento');
-			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
+			if (true){//$this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
 				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
 					$idVotos = $this->Mesa_model->getOptions($idVotacion);
 					$this->volcadoVotos($idVotacion, $idVotos);
-					$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
 				}
-				//$this->votosPerGroup($idVotacion);
+				$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
 				$this->index($datosVotacion);
-				*/
+				//$this->votosPerGroup($idVotacion);
 			} else {	//Si no hay suficientes miembros dispuestos a abrir la urna...
 				$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
 				$this->index($mensajes);
@@ -82,7 +81,7 @@ class MesaElectoral extends CI_Controller{
 	
 	//Comprueba los votos existentes, elimina su registro y almacena el recuento.
 	private function volcadoVotos($idVotacion, $idVotos) {
-		array_push($idVotos, ('Num_Votos' => array()));
+		array_push($idVotos, array('Num_Votos' => array()));
 		for($it=0; $it<count($idVotos['Id']); $it++) {
 			$idVotos['Num_Votos'][$it] = $this->Mesa_model->volcadoVotos($idVotacion, $idVotos['Id'][$it]);
 		}
@@ -91,7 +90,28 @@ class MesaElectoral extends CI_Controller{
 	
 	//Finaliza la votación cuando suficientes miembros lo confirmen.
 	public function finalizaVotacion() {
-		
+		if($this->input->post('boton_finalizar')) {	//Acceso correcto
+			$idVotacion = $this->input->post('idVotacion');
+			if($this->Mesa_model->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
+				if($this->input->post('invalida') == true) {	//No se cumple el quorum
+					$this->Mesa_model->setInvalida($idVotacion);
+				} else {	//Se cumple el quorum
+					$this->Mesa_model->setFinalizada($idVotacion);
+				}
+			} else {	//No hay votos suficientes para cerrarla.
+				$mensajes = array('mensaje' => 'Es necesaria la contribución de más miembros para cerrar la votación.');
+				$this->index($mensajes);
+			}	
+		} else {	//Acceso ilegal
+			$this->index();
+		}
+	}
+	
+	//Añade confirmación de cierre de urna y hace recuento de confirmaciones.
+	private function cerrarUrna($idVotacion) {
+		$this->Mesa_model->cierraUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+		$peticionesCierre = $this->Mesa_model->getNCierre($idVotacion);
+		return ($peticionesCierre >= 3);
 	}
 
 }
