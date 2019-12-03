@@ -69,8 +69,12 @@ $(document).ready(function(){
     $("#alerta").modal('show');
 });
 
-$("#cerrar-ses-voto").click(function(){
+$("#cerrar-ses-voto").unbind().click(function(){
     window.location.replace(base_url+"login_controller/logout");
+});
+
+$("#logo-btn").click(function(){
+    window.location.replace(base_url+"Elector_controller/");
 });
 
 // $('#votaciones_usuario > tbody').on( 'click', 'tr' ,function () {
