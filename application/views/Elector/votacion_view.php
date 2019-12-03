@@ -4,7 +4,8 @@
   <body style="overflow:hidden;">
   <div class="container">
     <?php
-      if($mensaje == "correcto"){
+      echo "hola que tal";
+      if($mensaje == "correcto"){ //mensaje de exito al votar
         echo '<div id="alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
         echo '<div style="margin-top:10%;" class="modal-dialog modal-lg">';
         echo '<div style="background-color:#9BDF99;" class="modal-content">';
@@ -15,11 +16,22 @@
         echo '</div>';
         echo '</div>';
       }
-      else if($mensaje == "mal"){
+      if($mensaje == "mal"){  //mensaje de error al votar
         echo '<div id="alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
         echo '<div style="margin-top:10%;" class="modal-dialog modal-lg">';
         echo '<div style="background-color:#DF8566;" class="modal-content">';
         echo '<center>La votacion no se ha podido realizar.</center>';
+        echo '<br>';
+        echo '<center>Haz click para continuar.</center>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+      }
+      if($mensaje != NULL){ //imprime los mensajes de error de acceder mal por la URL
+        echo '<div id="alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
+        echo '<div style="margin-top:10%;" class="modal-dialog modal-lg">';
+        echo '<div style="background-color:#DF8566;" class="modal-content">';
+        echo '<center>'.$mensaje.'</center>';
         echo '<br>';
         echo '<center>Haz click para continuar.</center>';
         echo '</div>';
@@ -44,10 +56,9 @@
         if($datos == NULL)
           echo '<h2> No tienes votaciones pendientes</h2>';
         else {
-
           foreach($datos as $objeto) { ?>
             <tr align="center">
-              <?php echo "<td scope=row><h5 style='float:left;'><b>".$objeto->Titulo."</b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaFinal."</span></td>";?>
+              <?php echo "<td scope=row><h5 style='float:left;'><b>".$objeto->Titulo."</b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
 
         <?php
           if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
@@ -57,6 +68,7 @@
                 <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
                 <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
                 <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
+                <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
                 <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
               </form>
             </td>

@@ -40,6 +40,7 @@ class Elector_controller extends CI_Controller {
 			$id_votacion = $_POST['id_votacion'];
 			$titulo = $_POST['titulo'];
 			$descrip = $_POST['descrip'];
+			$fch = $_POST['fch'];
 
 				$title['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
@@ -53,6 +54,7 @@ class Elector_controller extends CI_Controller {
 				'id_usuario' => $id_usuario,
 				'descrip' => $descrip,
 				'titulo' => $titulo,
+				'fch' => $fch,
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);

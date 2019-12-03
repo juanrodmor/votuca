@@ -164,6 +164,7 @@ class Secretario extends CI_Controller{
     $usuarios = array();
     $usuariosIds = array();
     $totales = array();
+    $ultimoId = $this->votaciones_model->getLastId();
 
     // GUARDAR VOTACION
     $noGuardado = $this->votaciones_model->guardarVotacion($datos);
@@ -184,8 +185,8 @@ class Secretario extends CI_Controller{
     // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
     $noGuardadoCenso = $this->insertarCenso($totales);
 
-    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
+    // ENCRIPTAR VOTOS DE LOS USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$ultimoId,1);
 
     // MESA ELECTORAL ALEATORIA
     $elegidos = $this->usuariosAleatorios($totales);
@@ -202,7 +203,7 @@ class Secretario extends CI_Controller{
       // Crear el nuevo nombre de usuario
       $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
       $miembro = $this->usuario_model->getIdFromUserName($nombre);
-      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']+1);
+      $this->mesa_model->insertar($miembro[0]->Id,$ultimoId);
 
 
     }

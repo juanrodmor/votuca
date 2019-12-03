@@ -27,7 +27,7 @@
         </tr>
         <tr>
           <td>
-            <?php echo "<span style='padding-left:2%;'><b>Fecha de cierre: </b>".$descrip."</span>";?>
+            <?php echo "<span style='padding-left:2%;'><b>Fecha de cierre: </b>".$fch."</span>";?>
           </td>
         </tr>
         <tr>
