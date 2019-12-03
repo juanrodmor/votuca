@@ -354,6 +354,11 @@ class Secretario extends CI_Controller{
 
     // Extraer usuarios de ese censo
     $usuariosAñadir = $this->censo_model->getUsuariosFromCenso($idCenso);
+    $idsAñadir = array();
+    foreach($usuariosAñadir as $suId)
+    $idsAñadir[] = $suId->Id_Usuario;
+    echo 'USUARIOS QUE QUIERO AÑADIR<br>';
+    echo var_dump($idsAñadir).'<br>';
 
     // COMPROBAR QUE ESOS USUARIOS NO EXISTEN YA EN EL CENSO DE LA VOTACION
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -361,26 +366,24 @@ class Secretario extends CI_Controller{
     // OBTENER SOLO LOS IDS DE LOS TOTALES
     foreach($totales as $usuario)
     {$idsTotales[] = $usuario->Id_Usuario;}
+    echo 'USUARIOS ACTUALMENTE EN EL CENSO DE ESA VOTACION<br>';
+    echo var_dump($idsTotales).'<br>';
 
     // COGER USUARIOS DEL CENSO SELECCIONADO QUE NO ESTEN YA EN EL CENSO
     $finales = array();
-    for($i = 0; $i < sizeof($usuariosAñadir);$i++)
+    for($i = 0; $i < sizeof($idsAñadir);$i++)
     {
-      if(!in_array($usuariosAñadir[$i],$idsTotales))
+      if(!in_array($idsAñadir[$i],$idsTotales))
       {
-        array_push($finales,$usuariosAñadir[$i]);
+        array_push($finales,$idsAñadir[$i]);
       }
     }
-    //echo 'USUARIOS A INSERTAR EN EL CENSO<br>';
-    $idsInsertar = array();
-    foreach($finales as $id)
-    {$idsInsertar[] = $id->Id_Usuario;}
 
     // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
-    $noGuardadoCenso = $this->insertarCenso($idsInsertar);
+    $noGuardadoCenso = $this->insertarCenso($finales);
 
 
-    /*// ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
 
     // GENERAR MIEMBROS DE LA MESA ELECTORAL(si son necesarios)
@@ -410,7 +413,7 @@ class Secretario extends CI_Controller{
         }
     }*/
     // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
-    $this->censo_model->insertarVotacion($idVotacion,$idCenso[0]->Id_Censo);
+    $this->censo_model->insertarVotacion($idVotacion,$idCenso[0]->Id);
 
   }
   public function updateVotacion()
@@ -431,9 +434,6 @@ class Secretario extends CI_Controller{
     //SACAR MODIFICACION DE LOS CENSOS
     $censosEliminar = $this->input->post('censoEliminacion');
     $censosAñadir = $this->input->post('censoInsercion');
-    $usuarios = array();
-    $usuariosIds = array();
-    $totales = array();
     $numCensosVotacion = $this->censo_model->getCensosfromVotacion($votacion->getId());
 
     if($censosEliminar != NULL)
@@ -455,6 +455,7 @@ class Secretario extends CI_Controller{
       }
 
     }
+    // Modificar datos de la votacion
     /*$modificada = $this->votaciones_model->updateVotacion($votacion);
 
         if($modificada != NULL){
