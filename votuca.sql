@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 30-11-2019 a las 20:19:43
+-- Tiempo de generación: 03-12-2019 a las 11:52:36
 -- Versión del servidor: 5.7.26
 -- Versión de PHP: 7.2.18
 
@@ -112,7 +112,33 @@ INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`, `seAbre`, `seCierra`)
 (13, 1, 0, 0),
 (14, 1, 0, 0),
 (15, 2, 0, 0),
-(16, 2, 0, 0);
+(16, 2, 0, 0),
+(17, 3, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recuento`
+--
+
+DROP TABLE IF EXISTS `recuento`;
+CREATE TABLE IF NOT EXISTS `recuento` (
+  `Id_Votacion` int(11) NOT NULL,
+  `Id_Voto` int(11) NOT NULL,
+  `Num_Votos` int(11) NOT NULL,
+  PRIMARY KEY (`Id_Votacion`,`Id_Voto`),
+  KEY `Id_Votacion` (`Id_Votacion`,`Id_Voto`),
+  KEY `Id_Voto` (`Id_Voto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `recuento`
+--
+
+INSERT INTO `recuento` (`Id_Votacion`, `Id_Voto`, `Num_Votos`) VALUES
+(3, 2, 0),
+(3, 3, 0),
+(3, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -158,6 +184,19 @@ CREATE TABLE IF NOT EXISTS `secretarios_delegados` (
 
 INSERT INTO `secretarios_delegados` (`Id_Secretario`, `Id_Votacion`) VALUES
 (3, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipovotacion`
+--
+
+DROP TABLE IF EXISTS `tipovotacion`;
+CREATE TABLE IF NOT EXISTS `tipovotacion` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` int(11) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -241,18 +280,20 @@ CREATE TABLE IF NOT EXISTS `votacion` (
   `Descripcion` varchar(1024) COLLATE utf8_spanish_ci NOT NULL,
   `FechaInicio` datetime NOT NULL,
   `FechaFinal` datetime NOT NULL,
+  `Quorum` float NOT NULL,
   `isDeleted` tinyint(1) NOT NULL,
   `esBorrador` tinyint(1) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `votacion`
 --
 
-INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDeleted`, `esBorrador`) VALUES
-(1, 'Votacion 1', 'Descripcion 1', '2019-11-30 09:21:00', '2019-12-01 09:00:00', 0, 0),
-(2, 'Votacion 2', 'Descripcion 2', '2019-12-02 09:00:00', '2019-12-03 09:00:00', 0, 0);
+INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `Quorum`, `isDeleted`, `esBorrador`) VALUES
+(1, 'Votacion 1', 'Descripcion 1', '2019-11-30 09:21:00', '2019-12-01 09:00:00', 0, 0, 0),
+(2, 'Votacion 2', 'Descripcion 2', '2019-12-02 09:00:00', '2019-12-03 09:00:00', 0, 0, 0),
+(3, 'Votacion diciembre abierta', 'dasfseresr', '2019-12-02 15:00:00', '2019-12-31 15:00:00', 0.2, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -264,11 +305,19 @@ DROP TABLE IF EXISTS `votacion_voto`;
 CREATE TABLE IF NOT EXISTS `votacion_voto` (
   `Id_Votacion` int(11) NOT NULL,
   `Id_Voto` int(11) NOT NULL,
-  `Num_Votos` int(11) NOT NULL,
   PRIMARY KEY (`Id_Votacion`,`Id_Voto`),
   KEY `Id_Votacion` (`Id_Votacion`),
   KEY `Id_Voto` (`Id_Voto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `votacion_voto`
+--
+
+INSERT INTO `votacion_voto` (`Id_Votacion`, `Id_Voto`) VALUES
+(3, 2),
+(3, 3),
+(3, 4);
 
 -- --------------------------------------------------------
 
@@ -302,6 +351,13 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 --
 ALTER TABLE `expiracion`
   ADD CONSTRAINT `expiracion_ibfk_1` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id`);
+
+--
+-- Filtros para la tabla `recuento`
+--
+ALTER TABLE `recuento`
+  ADD CONSTRAINT `recuento_ibfk_1` FOREIGN KEY (`Id_Votacion`) REFERENCES `votacion` (`Id`),
+  ADD CONSTRAINT `recuento_ibfk_2` FOREIGN KEY (`Id_Voto`) REFERENCES `voto` (`Id`);
 
 --
 -- Filtros para la tabla `usuario`
