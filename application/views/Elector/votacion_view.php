@@ -4,7 +4,6 @@
   <body style="overflow:hidden;">
   <div class="container">
     <?php
-      echo "hola que tal";
       if($mensaje == "correcto"){ //mensaje de exito al votar
         echo '<div id="alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
         echo '<div style="margin-top:10%;" class="modal-dialog modal-lg">';

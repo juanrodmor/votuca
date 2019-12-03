@@ -32,7 +32,7 @@ class Elector_controller extends CI_Controller {
     }
 
     public function votar() {
-    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip'])){
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch'])){
     		$mensaje = "Acceda debidamente a la opción de votar, por favor.";
     		$this->index($mensaje);
     	}
@@ -65,7 +65,7 @@ class Elector_controller extends CI_Controller {
 
     public function guardarVoto() {
 
-    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip'])){
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch'])){
     		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
     		$this->index($mensaje);
     	}
@@ -73,6 +73,7 @@ class Elector_controller extends CI_Controller {
 	    	$id_votacion = $_POST['id_votacion'];
 	    	$titulo = $_POST['titulo'];
 			$descrip = $_POST['descrip'];
+			$fch = $_POST['fch'];
 
 	    	$this->form_validation->set_rules('voto', 'Voto', 'required');
 	    	$this->form_validation->set_message('required','Seleccione un voto valido');
@@ -100,6 +101,7 @@ class Elector_controller extends CI_Controller {
 	    		'id_usuario' => $id_usuario,
 	    		'descrip' => $descrip,
 				'titulo' => $titulo,
+				'fch' => $fch,
 	    		'votos' => $votos
 	    	);
 			    	$title['titulo'] = 'MIS VOTACIONES';
