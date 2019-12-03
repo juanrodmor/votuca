@@ -330,7 +330,29 @@ class Secretario extends CI_Controller{
       {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}*/
 
       // BORRAR MIEMBROS DE LA MESA ELECTORAL
-      echo var_dump($finales);
+      $miMesa = $this->mesa_model->getMesa($idVotacion);
+      $idsMesa = array();
+      foreach($miMesa as $dato)
+      $idsMesa[] = $dato->Id_Usuario;
+      echo var_dump($idsMesa).'<br>';
+
+      // Obtener miembros posible de la mesa electoral de ese censo
+      foreach($finales as $posibleMiembro)
+      {
+        $nombre = $this->obtenerNombreElectoral($posibleMiembro,'m');
+        $miembro = $this->usuario_model->getIdFromUserName($nombre);
+        $idMiembro = $miembro[0]->Id;
+
+        // ¿Está este posible miembro electoral en la mesa?
+        if(in_array($idMiembro,$idsMesa))
+        {
+          // ¿Qué pasa si los elimino?
+        }
+        else{echo 'NO ESTÁ<br>';}
+
+      }
+
+
 
       // Eliminar relacion con el fichero de censo
       //$this->censo_model->eliminarCenso($idVotacion,$idCenso);
