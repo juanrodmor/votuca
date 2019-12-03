@@ -188,8 +188,8 @@ class Secretario extends CI_Controller{
     {
       $usuarios = $this->extraerUsuariosCenso($censos[$i]);
       $usuariosIds = $this->extraerIdsUsuarios($usuarios);
-      
-    
+
+
       for($j = 0; $j < sizeof($usuariosIds); $j++)
       {
         // Relacionar este usuario con este censo
@@ -290,42 +290,43 @@ class Secretario extends CI_Controller{
 
     }
 	}
-  
+
   public function eliminarCenso($censo,$idVotacion)
   {
     // Extraer id de ese censo
-    $idCenso = $this->censo_model->getId($censo);
-    
-    // Extraer usuarios actuales de la votacion en el censo
+    $idCenso = $this->censo_model->getId($censo); /// Censo 2
+
+    // Extraer usuarios actuales del censo de esa votacion
     $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
-    
-    // Obtener censos de usuarios Actuales de la BD
+
+    // Obtener censos de usuarios Actuales del censo de mi votacion
     foreach($usuariosActuales as $actual)
       $censosUsuarios[]= $this->censo_model->getCensosFromUsuarios($actual->Id_Usuario);
-    
+
+
     // Extraer usuarios de ese censo concreto que quiero borrar
-    $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);   
-    echo 'CENSO A BORRAR: '.$idCenso[0]->Id.'<br>';
+    $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);
     $finales = array();
+
     foreach($borrarUsuarios as $aBorrar)
     {
-      // Comprobar que este usuario NO está en otro censo    
+      // Comprobar que este usuario NO está en otro censo
       $susCensos = $this->censo_model->getCensosFromUsuarios($aBorrar->Id_Usuario);
       if(sizeof($susCensos) == 1)
       {
-        // SOLO ESTÁ EN UN CENSO
+        // SOLO ESTÁ EN UN CENSO, ¿Es el mio?
         if($susCensos[0]->Id_Censo == $idCenso[0]->Id)
         {$finales[] = $susCensos[0]->Id_Usuario; }
       }
-    } 
-    
+    }
+
     // Eliminar esos usuarios de una votacion concreta
     foreach($finales as $usuario)
     {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
-    
+
     // Eliminar relacion con el fichero de censo
-    //$this->censo_model->eliminarCenso($idVotacion,$idCenso);
-    
+    $this->censo_model->eliminarCenso($idVotacion,$idCenso);
+
   }
 
   public function updateVotacion()
@@ -353,7 +354,7 @@ class Secretario extends CI_Controller{
     if($censosEliminar != NULL)
     {
       foreach($censosEliminar as $censo)
-      {$this->eliminarCenso($censo,$votacion->getId());}      
+      {$this->eliminarCenso($censo,$votacion->getId());}
 
     }
 
