@@ -81,28 +81,11 @@ f<?php
 			}
 		}
 
-		/*
-		// Realizar votacion desde 0 (insert)
-		public function _votar ( $id_usuario, $id_votacion, $voto )
-		{
-			$sql = "select Id from voto where Nombre = '".$voto."'";
-			$query = $this -> db -> query($sql);
-			$id_voto = mysql_fetch_array($query) or die(mysqli_error());
-
-			$sql = "insert into 'usuario_votacion' (Id_Usuario, Id_Votacion, Id_voto) values ('".$id_usuario."','".$id_votacion."','".$id_voto['Id']."');";
-			$query = $this -> db -> query($sql);
-			if($query) {
-			    echo "Voto insertado correctamente.";
-			} else {
-			    echo "ERROR: Could not able to execute $sql. ";
-			}
-		}
-		*/
-
 		// Indica si un usuario ya ha votado
-		public function _haVotado ( $id_usuario, $id_votacion )
+		public function _haVotado ( $id_votacion )
 		{
-			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."' and Id_Voto = 'No votado';";
+			$id_user = _userId($_SESSION['usuario']);
+			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_user."' and Id_Votacion = '".$id_votacion."' and Id_Voto = '1';";
 			$query = $this -> db -> query($sql);
 			if( $query->num_rows() == 0 ) {
 			    return false;
