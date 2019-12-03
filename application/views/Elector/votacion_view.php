@@ -57,7 +57,7 @@
         else {
           foreach($datos as $objeto) { ?>
             <tr align="center">
-              <?php echo "<td scope=row><h5 style='float:left;'><b>".$objeto->Titulo." hola que tal mamapinga </b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
+              <?php echo "<td scope=row><h5 style='float:left;'><b>".$objeto->Titulo."</b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
 
         <?php
           if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
