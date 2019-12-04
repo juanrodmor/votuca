@@ -347,7 +347,7 @@ class Secretario extends CI_Controller{
       $this->eliminarUsuariosVotacion($usuariosActuales,$idVotacion,$idCenso);
 
       // BORRAR MIEMBROS DE LA MESA ELECTORAL
-      /*$miMesa = $this->mesa_model->getMesa($idVotacion);
+      $miMesa = $this->mesa_model->getMesa($idVotacion);
       $usuariosMesa = array();
       foreach($miMesa as $dato)
       {$usuariosMesa[] = $dato->Id_Usuario;}
@@ -356,8 +356,7 @@ class Secretario extends CI_Controller{
 
       // Renovar la mesa electoral
       $miMesa = $this->mesa_model->getMesa($idVotacion);
-      echo 'MESA ACTUALIZADA<br>';
-      echo var_dump($miMesa);*/
+      
 
       // Notificar a los usuarios de la mesa que se va a la puta
 
