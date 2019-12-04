@@ -141,41 +141,52 @@ class Secretario extends CI_Controller{
     //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
   }
 
+  public function extraerIdsFicheros($nombreCensos)
+  {
+    $idCensos = array();
+    for($i = 0; $i < sizeof($nombreCensos); $i++)
+        $idCensos[] = $this->censo_model->getId($nombreCensos[$i]);
+    return $idCensos;
+  }
+
+  public function relacionVotacionFichero($idsFicheros,$idVotacion)
+  {
+    for($i = 0; $i < sizeof($idsFicheros); $i++)
+    {
+      $this->censo_model->insertarVotacion($idVotacion,$idsFicheros[$i][0]->Id);
+    }
+  }
+
   public function guardarVotacion($datos)
     {
-      $censos = $this->input->post('censo'); // Vector con nombres de censos
+      $nombreCensos = $this->input->post('censo'); // Vector con nombres de censos
       $usuarios = array();
       $usuariosIds = array();
       $totales = array();
 
       // Extraer IDS de los ficheros de esos censos seleccionados
-     $idCensos = array();
-      for($i = 0; $i < sizeof($censos); $i++)
-      {
-        $idCensos[] = $this->censo_model->getId($censos[$i]);
-      }
+     $idsFicheros = array();
+     $idsFicheros = $this->extraerIdsFicheros($nombreCensos);
 
       // GUARDAR VOTACION
       $noGuardado = $this->votaciones_model->guardarVotacion($datos);
       $ultimoId = $this->votaciones_model->getLastId();
+      $idVotacion = (int)$ultimoId[0]['Id'];
 
 
-      // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
-      for($i = 0; $i < sizeof($idCensos); $i++)
+      // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
+      $this->relacionVotacionFichero($idsFicheros,$idVotacion);
+
+      // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
+      for($i = 0; $i < sizeof($nombreCensos); $i++)
       {
-        $this->censo_model->insertarVotacion($ultimoId[0]['Id'],$idCensos[$i][0]->Id);
-      }
-
-      // SACAR USUARIOS DE TODOS LOS CENSOS
-      for($i = 0; $i < sizeof($censos); $i++)
-      {
-        $usuarios = $this->extraerUsuariosCenso($censos[$i]);
+        $usuarios = $this->extraerUsuariosCenso($nombreCensos[$i]);
         $usuariosIds = $this->extraerIdsUsuarios($usuarios);
 
         for($j = 0; $j < sizeof($usuariosIds); $j++)
         {
-          // Relacionar este usuario con este censo
-          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idCensos[$i]);
+          // Relacionar este usuario con este censo en la bd
+          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
           if(!in_array($usuariosIds[$j],$totales))
           array_push($totales,$usuariosIds[$j]);
         }
@@ -183,13 +194,13 @@ class Secretario extends CI_Controller{
       }
 
       // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
-      $noGuardadoCenso = $this->insertarCenso($totales);
+      $noGuardadoCenso = $this->insertarUsuariosCenso($totales,$idVotacion);
 
       // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
-      $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
+      $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$idVotacion,1);
 
       // MESA ELECTORAL
-      $this->generarMesaElectoral($totales,(int)$ultimoId[0]['Id']);
+      $this->generarMesaElectoral($totales,$idVotacion);
 
       // FINAL DE ESTA MIERDA
 
@@ -230,11 +241,10 @@ class Secretario extends CI_Controller{
     }
     return $ids;
   }
-  public function insertarCenso($usuariosIds)
+  public function insertarUsuariosCenso($usuariosIds,$idVotacion)
   {
     //echo var_dump($usuariosIds);
-    $ultimoId = $this->votaciones_model->getLastId();
-    $this->censo_model->insertar($usuariosIds,(int)$ultimoId[0]['Id']);
+    $this->censo_model->insertar($usuariosIds,$idVotacion);
   }
 
 
