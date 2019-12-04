@@ -118,11 +118,10 @@
 							<?php $iguales = array(); ?>
 							<?php foreach($censos as $censo)
 							  {
-
-									for($i = 0; $i < sizeof($censosVotacion); $i++)
+								  for($i = 0; $i < sizeof($censosVotacion); $i++)
 									{
-										if($censo->Id == $censosVotacion[$i]->Id_Censo)
-										{$iguales[] = $censosVotacion[$i]->Id_Censo;}
+										if($censo->Id == $censosVotacion[$i]->Id_Fichero)
+										{$iguales[] = $censosVotacion[$i]->Id_Fichero;}
 									}
 								}
 							?>
