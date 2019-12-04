@@ -167,12 +167,12 @@ f<?php
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
+				//password_hash($sinVoto, PASSWORD_DEFAULT)
 				$id = (int)$usuarios[$i];
-				$id = password_hash($id, PASSWORD_DEFAULT);
 				$datos = array(
 					'Id_Usuario' => $id,
-					'Id_Votacion' => password_hash($nuevoId, PASSWORD_DEFAULT),
-					'Id_Voto' => password_hash($sinVoto, PASSWORD_DEFAULT)
+					'Id_Votacion' => $nuevoId,
+					'Id_Voto' => $sinVoto
 				);
 				$this->db->insert('usuario_votacion',$datos);
 			}
