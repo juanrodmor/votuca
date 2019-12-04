@@ -14,16 +14,6 @@ class Censo_model extends CI_Model{
 
   }
 
-  public function getCensosFromUsuarios($usuario)
-  {
-    $this->db->select('Id_Fichero');
-    $this->db->from('usuario_censo');
-    $this->db->where('Id_Usuario',$usuario);
-    $query = $this->db->get();
-    return $query->result();
-
-  }
-
   public function getUsuariosfromVotacion($idVotacion)
   {
     $query = $this->db->query("SELECT Id_Usuario from censo WHERE Id_Votacion = '$idVotacion'");
@@ -82,7 +72,7 @@ class Censo_model extends CI_Model{
     $idsCensos = array();
     foreach ($censosUsuario as $censo)
     $idsCensos[] = $censo->Id_Fichero;
-    
+
     echo var_dump($idsCensos);
     if(!in_array($idCenso[0]->Id,$idsCensos))
     {
@@ -93,6 +83,28 @@ class Censo_model extends CI_Model{
       $this->db->insert('usuario_censo',$datos);
     }
   }
+/********************************/
+/********** USUARIO_CENSO *******/
+/********************************/
+
+public function getWhereUsuario($usuario)
+{
+  $this->db->get('usuario_censo');
+  $this->db->where('Id_Usuario',$usuario);
+  $this->db->from('usuario_censo');
+  $query = $this->db->get();
+  return $query->result();
+}
+
+public function getCensosFromUsuarios($usuario)
+{
+  $this->db->select('Id_Fichero');
+  $this->db->from('usuario_censo');
+  $this->db->where('Id_Usuario',$usuario);
+  $query = $this->db->get();
+  return $query->result();
+
+}
 
   public function getUsuariosFromCenso($idCenso)
   {
