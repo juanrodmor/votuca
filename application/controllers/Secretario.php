@@ -306,7 +306,7 @@ class Secretario extends CI_Controller{
     }
 	}
 
-  public function extraerUsuariosCensos($censos)
+  private function extraerUsuariosCensos($censos)
   {
     $usuariosRestantes = array();
     foreach($censos as $censo)
@@ -322,7 +322,7 @@ class Secretario extends CI_Controller{
     return $usuariosFinales;
   }
 
-  public function eliminarUsuariosVotacion($usuariosActuales,$idVotacion,$idCenso)
+  private function getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso)
   {
     // Obtener censos de usuarios Actuales del censo de mi votacion
     foreach($usuariosActuales as $actual)
@@ -343,11 +343,11 @@ class Secretario extends CI_Controller{
           {$finales[] = $susCensos[0]->Id_Usuario; }
       }
     }
-
-    // Eliminar esos usuarios de una votacion concreta
-    foreach($finales as $usuario)
-    {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
+    return $finales;
   }
+
+  private function eliminarVotoUsuarios($usuarios,$idVotacion)
+  {$this->voto_model->borrarVoto($usuarios,$idVotacion);}
 
   public function eliminarCenso($censosVotacion,$censo,$idVotacion)
   {
@@ -360,7 +360,13 @@ class Secretario extends CI_Controller{
     {
       // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
       $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
-      $this->eliminarUsuariosVotacion($usuariosActuales,$idVotacion,$idCenso);
+      $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+      // Eliminar esos usuarios de una votacion concreta
+      foreach($usuariosEliminar as $usuario)
+      {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
+      // Eliminar voto de esos usuarios
+      $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+
 
       // BORRAR MIEMBROS DE LA MESA ELECTORAL
       $miMesa = $this->mesa_model->getMesa($idVotacion);

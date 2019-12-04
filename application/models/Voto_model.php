@@ -178,5 +178,14 @@ f<?php
 			}
 		}
 
+		public function borrarVoto($usuarios,$idVotacion)
+		{
+			foreach($usuarios as $usuario)
+			$this->db->delete('usuario_votacion',
+												 array(
+													 'Id_Votacion' => $idVotacion,
+													 'Id_Usuario' => $usuario
+												 ));
+		}
 	}
 ?>
