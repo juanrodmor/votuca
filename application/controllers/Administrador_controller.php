@@ -7,6 +7,7 @@ class Administrador_controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Usuario_model');
+		$this->load->model('Votaciones_model');
 		$this->load->helper('date');
 		$this->load->library('mailing');
 	}
@@ -131,6 +132,7 @@ class Administrador_controller extends CI_Controller {
 					{
 						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getEmail($usuario));
 						$this->Usuario_model->setUserTimeLimit($newUsername);
+						//$newIdUser = $this->Usuario_model->getId($newUsername);
 
 						$asunto = '[NOTIFICACIÓN VOTUCA] Nuevo rol.';
 						$mensaje = '<h1>Tienes un nuevo rol en VotUCA</h1>
@@ -147,6 +149,18 @@ class Administrador_controller extends CI_Controller {
 						if($result == 'success')
 						{
 							$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '. Dicho usuario ha sido notificado por correo.');
+							if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
+								$votaciones = $this->Votaciones_model->recuperarVotaciones();
+								$idVotaciones = array();
+								$tituloVotaciones = array();
+								foreach($votaciones as $votacion) {
+									array_push($idVotaciones, $votacion->Id);
+									array_push($tituloVotaciones, $votacion->Titulo);
+								}
+								array_push($data, ('Id_Votacion' => $idVotaciones));
+								array_push($data, ('Titulo' => $tituloVotaciones));
+								array_push($data, ('Id_Usuario' => $this->Usuario_model->getId($newUsername)));
+							}
 							$this->load->view('administracion/administracion_view', $data);
 						}
 						else
@@ -170,6 +184,19 @@ class Administrador_controller extends CI_Controller {
 				$this->load->view('administracion/administracion_view', $data);				
 			}
 
+		}
+	}
+	
+	//Asigna al nuevo rol las votaciones indicadas.
+	public function asignaVotaciones() {
+		if($this->input->post('Enviar')) {
+			$idUsuario = $this->input->post('usuario');
+			//¿Que recibo? ¿Como recorro las opciones?
+			//Insertar en la tabla correspondiente dichas votaciones.
+			$data = array('mensaje' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
+			$this->load->view('administracion/administracion_view', $data);
+		} else {
+			$this->index();
 		}
 	}
 

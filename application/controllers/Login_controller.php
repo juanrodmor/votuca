@@ -117,6 +117,7 @@ class Login_controller extends CI_Controller {
 				break;
 			case 'CADUCA': 
 				$this->monitoring->register_action_login($usuario->getId(), 'blocked');
+				$idUsuario = $this->Usuario_model->getId($usuario->getId());
 				$this->Usuario_model->deleteUsuario($usuario->getId());
 				$this->monitoring->register_action_deleteUsuario($usuario->getId());
 				$data = array('mensaje' => 'El usuario con el que intenta acceder ya no tiene permisos en el sistema.');
@@ -161,7 +162,7 @@ class Login_controller extends CI_Controller {
 	//Realiza los cambios pertinentes para que un usuario se haga oficial.
 	private function formalizarUsuario($pass) {
 		$this->Usuario_model->setPass($this->session->userdata('usuario'), password_hash($pass, PASSWORD_DEFAULT));
-		$this->Usuario_model->deleteUser($this->session->userdata('usuario'));
+		$this->Usuario_model->deleteExpiracion($this->session->userdata('usuario'));
 		$this->session->set_userdata(array('rol' => $this->Usuario_model->getRol($this->session->userdata('usuario'))));
 		$this->redireccionar();
 	}
