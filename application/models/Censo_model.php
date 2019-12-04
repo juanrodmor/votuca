@@ -16,7 +16,7 @@ class Censo_model extends CI_Model{
 
   public function getCensosFromUsuarios($usuario)
   {
-    $this->db->get('usuario_censo');
+    $this->db->select('Id_Fichero');
     $this->db->from('usuario_censo');
     $this->db->where('Id_Usuario',$usuario);
     $query = $this->db->get();
@@ -78,11 +78,20 @@ class Censo_model extends CI_Model{
 
   public function setUsuarioCenso($idUsuario,$idCenso)
   {
-    $datos = array(
-      'Id_Usuario' => $idUsuario,
-      'Id_Fichero' => $idCenso[0]->Id
-    );
-    $this->db->insert('usuario_censo',$datos);
+    $censosUsuario = $this->getCensosFromUsuarios($idUsuario);
+    $idsCensos = array();
+    foreach ($censosUsuario as $censo)
+    $idsCensos[] = $censo->Id_Fichero;
+    
+    echo var_dump($idsCensos);
+    if(!in_array($idCenso[0]->Id,$idsCensos))
+    {
+      $datos = array(
+        'Id_Usuario' => $idUsuario,
+        'Id_Fichero' => $idCenso[0]->Id
+      );
+      $this->db->insert('usuario_censo',$datos);
+    }
   }
 
   public function getUsuariosFromCenso($idCenso)

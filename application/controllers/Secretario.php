@@ -58,12 +58,11 @@ class Secretario extends CI_Controller{
   public function crearVotacion($mensaje = '')
   {
     $this->load->view('elementos/headerSecretario');
+
     // CENSO
-    //$data = $this->usuario_model->recuperarTodos();
     $nombreCensos = $this->censo_model->getCensos();
 
     // Extraer
-    //echo var_dump($nombreCensos);
     $datos = array(
       'censos' => $nombreCensos,
       'mensaje' => $mensaje
@@ -119,6 +118,93 @@ class Secretario extends CI_Controller{
     }
   }
 
+  public function generarMesaElectoral($usuarios,$idVotacion)
+  {
+    $elegidos = $this->usuariosAleatorios($usuarios);
+    for($i = 0; $i < sizeof($elegidos); $i++)
+    {
+      $elegidos[$i] = $usuarios[$elegidos[$i]];
+
+      // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
+      $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+
+      // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
+      $idUsuario = (int)$elegidos[$i];
+
+      // Crear el nuevo nombre de usuario
+      $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
+      $miembro = $this->usuario_model->getIdFromUserName($nombre);
+      $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
+
+    }
+    // Enviar correo a cada elegido en la mesa electoral
+    //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+  }
+
+  public function guardarVotacion($datos)
+    {
+      $censos = $this->input->post('censo'); // Vector con nombres de censos
+      $usuarios = array();
+      $usuariosIds = array();
+      $totales = array();
+
+      // Extraer IDS de los ficheros de esos censos seleccionados
+     $idCensos = array();
+      for($i = 0; $i < sizeof($censos); $i++)
+      {
+        $idCensos[] = $this->censo_model->getId($censos[$i]);
+      }
+
+      // GUARDAR VOTACION
+      $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+      $ultimoId = $this->votaciones_model->getLastId();
+
+
+      // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
+      for($i = 0; $i < sizeof($idCensos); $i++)
+      {
+        $this->censo_model->insertarVotacion($ultimoId[0]['Id'],$idCensos[$i][0]->Id);
+      }
+
+      // SACAR USUARIOS DE TODOS LOS CENSOS
+      for($i = 0; $i < sizeof($censos); $i++)
+      {
+        $usuarios = $this->extraerUsuariosCenso($censos[$i]);
+        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+        for($j = 0; $j < sizeof($usuariosIds); $j++)
+        {
+          // Relacionar este usuario con este censo
+          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idCensos[$i]);
+          if(!in_array($usuariosIds[$j],$totales))
+          array_push($totales,$usuariosIds[$j]);
+        }
+
+      }
+
+      // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
+      $noGuardadoCenso = $this->insertarCenso($totales);
+
+      // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+      $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
+
+      // MESA ELECTORAL
+      $this->generarMesaElectoral($totales,(int)$ultimoId[0]['Id']);
+
+      // FINAL DE ESTA MIERDA
+
+      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
+      {
+        $datos = array('mensaje'=>'La votación NO se ha guardado');
+        $this->load->view('secretario/crearVotacion_view',$datos);
+      }
+      else{
+        $datos = array('mensaje'=>'La votación se ha guardado correctamente');
+        $this->index('La votación se ha guardado correctamente');
+      }
+    }
+
+
   public function extraerUsuariosCenso($censo)
   {
     $usuarios = array();
@@ -159,92 +245,6 @@ class Secretario extends CI_Controller{
     $nombre = $letra.$dni;
     return $nombre;
 
-  }
-
-  public function guardarVotacion($datos)
-  {
-    $censos = $this->input->post('censo'); // Vector con nombres de censos
-    $usuarios = array();
-    $usuariosIds = array();
-    $totales = array();
-
-    //echo var_dump((int)$ultimoId[0]['Id']+1);
-
-    // Extraer IDS de los ficheros de esos censos seleccionados
-   $idCensos = array();
-    for($i = 0; $i < sizeof($censos); $i++)
-    {
-      $idCensos[] = $this->censo_model->getId($censos[$i]);
-    }
-
-    // GUARDAR VOTACION
-    $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-    $ultimoId = $this->votaciones_model->getLastId();
-
-    // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
-    for($i = 0; $i < sizeof($idCensos); $i++)
-    {
-      $this->censo_model->insertarVotacion($ultimoId[0]['Id'],$idCensos[$i][0]->Id);
-    }
-
-    // SACAR USUARIOS DE TODOS LOS CENSOS
-    for($i = 0; $i < sizeof($censos); $i++)
-    {
-      $usuarios = $this->extraerUsuariosCenso($censos[$i]);
-      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
-
-
-      for($j = 0; $j < sizeof($usuariosIds); $j++)
-      {
-        // Relacionar este usuario con este censo
-        $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idCensos[$i]);
-        if(!in_array($usuariosIds[$j],$totales))
-        array_push($totales,$usuariosIds[$j]);
-      }
-
-    }
-
-    // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
-    $noGuardadoCenso = $this->insertarCenso($totales);
-
-    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
-    $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,(int)$ultimoId[0]['Id'],1);
-
-    // MESA ELECTORAL ALEATORIA
-    $elegidos = $this->usuariosAleatorios($totales);
-    for($i = 0; $i < sizeof($elegidos); $i++)
-    {
-      $elegidos[$i] = $totales[$elegidos[$i]];
-
-      // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-      $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
-
-      // INTRODUCIR ESOS USUARIOS EN LA MESA ELECTORAL
-      $idUsuario = (int)$elegidos[$i];
-
-      // Crear el nuevo nombre de usuario
-      $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
-      $miembro = $this->usuario_model->getIdFromUserName($nombre);
-      $this->mesa_model->insertar($miembro[0]->Id,(int)$ultimoId[0]['Id']);
-
-
-    }
-
-    // Enviar correo a cada elegido en la mesa electoral
-    //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
-
-
-    // FINAL DE ESTA MIERDA
-
-    if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
-    {
-      $datos = array('mensaje'=>'La votación NO se ha guardado');
-      $this->load->view('secretario/crearVotacion_view',$datos);
-    }
-    else{
-      $datos = array('mensaje'=>'La votación se ha guardado correctamente');
-      $this->index('La votación se ha guardado correctamente');
-    }
   }
 
   /************************************/
@@ -385,10 +385,7 @@ class Secretario extends CI_Controller{
         }*/
       }
       //echo var_dump($usuariosTotales);
-}
-
-
-
+    }
       if(sizeof($miMesa) < 3) // Hay que renovar la mesa electoral
       {
         $faltan = 3 - sizeof($miMesa);
