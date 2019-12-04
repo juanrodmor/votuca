@@ -164,7 +164,7 @@ class Secretario extends CI_Controller{
     }
   }
 
-  public function extraerUsuariosCenso($censo)
+  public function extraerUsuariosFichero($censo)
   {
     $usuarios = array();
     $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$censo.'.txt', "r") or exit("Unable to open file!");
@@ -220,7 +220,7 @@ class Secretario extends CI_Controller{
       // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
       for($i = 0; $i < sizeof($nombreCensos); $i++)
       {
-        $usuarios = $this->extraerUsuariosCenso($nombreCensos[$i]);
+        $usuarios = $this->extraerUsuariosFichero($nombreCensos[$i]);
         $usuariosIds = $this->extraerIdsUsuarios($usuarios);
 
         for($j = 0; $j < sizeof($usuariosIds); $j++)
@@ -306,6 +306,22 @@ class Secretario extends CI_Controller{
     }
 	}
 
+  public function extraerUsuariosCensos($censos)
+  {
+    $usuariosRestantes = array();
+    foreach($censos as $censo)
+    {
+      $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
+    }
+
+    $usuariosFinales = array();
+    foreach($usuariosRestantes as $conjunto)
+      foreach($conjunto as $usuario)
+      $usuariosFinales[] = $usuario->Id_Usuario;
+
+    return $usuariosFinales;
+  }
+
   public function eliminarUsuariosVotacion($usuariosActuales,$idVotacion,$idCenso)
   {
     // Obtener censos de usuarios Actuales del censo de mi votacion
@@ -323,7 +339,7 @@ class Secretario extends CI_Controller{
       if(sizeof($susCensos) == 1)
       {
         // SOLO ESTÁ EN UN CENSO, ¿Es el mio?
-        if($susCensos[0]->Id_Fichero == $idCenso[0]->Id)
+        if($susCensos[0]->Id_Fichero == $idCenso)
           {$finales[] = $susCensos[0]->Id_Usuario; }
       }
     }
@@ -335,9 +351,9 @@ class Secretario extends CI_Controller{
 
   public function eliminarCenso($censosVotacion,$censo,$idVotacion)
   {
-    echo 'VAMOS A ELIMINAR EL CENSO DE ESTA VOTACION<br>';
     // Extraer id de ese censo que quiero eliminar
     $idCenso = $this->censo_model->getId($censo);
+    $idCenso = $idCenso[0]->Id;
     $numCensos = sizeof($censosVotacion);
 
     if($numCensos > 1) // Si una votación tiene más de un censo asignado...
@@ -351,14 +367,28 @@ class Secretario extends CI_Controller{
       $usuariosMesa = array();
       foreach($miMesa as $dato)
       {$usuariosMesa[] = $dato->Id_Usuario;}
+      // Notificar a los usuariosMesa de la mesa que se va a la puta
+
+      // Borrar la mesa electoral
       $this->mesa_model->deleteMesa($idVotacion);
 
-
-      // Renovar la mesa electoral
+      // RENOVAR LA MESA ELECTORAL
       $miMesa = $this->mesa_model->getMesa($idVotacion);
-      
 
-      // Notificar a los usuarios de la mesa que se va a la puta
+      // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
+      $censosRestantes = array();
+      foreach($censosVotacion as $censo)
+      {
+        if($censo != $idCenso) $censosRestantes[] = $censo;
+      }
+
+      // OBTENER USUARIOS DE ESE CENSO
+      $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
+
+      $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
+
+      // Eliminar relacion con el fichero de censo
+      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
 
     } // Fin hay varios censos
 
@@ -490,11 +520,11 @@ class Secretario extends CI_Controller{
 
     }
     // Modificar datos de la votacion
-    /*$modificada = $this->votaciones_model->updateVotacion($votacion);
+    $modificada = $this->votaciones_model->updateVotacion($votacion);
 
         if($modificada != NULL){
             $this->index('La votación se ha guardado en borrador');
-          }*/
+          }
     }
 
     /*if($this->input->post('boton_publicar'))
