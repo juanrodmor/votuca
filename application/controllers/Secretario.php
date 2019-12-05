@@ -470,77 +470,65 @@ class Secretario extends CI_Controller{
     $this->censo_model->insertarVotacion($idVotacion,$idCenso);
 
   }
-  public function updateVotacion()
-	{
-    if($this->input->post('boton_borrador'))
+
+  private function actualizarVotacionFromBoton($boton,$publicar)
+  {
+    if($this->input->post($boton))
     {
       //CREAR LA NUEVA VOTACION CON LOS NUEVOS DATOS;
       $votacion = new Votacion(
-  		                    $_POST['titulo'],
-  		                    $_POST['descripcion'],
-  			                  $_POST['fecha_inicio'],
-  			                  $_POST['fecha_final'],
-  			                  false,
-                          true, // Es borrador
+                          $_POST['titulo'],
+                          $_POST['descripcion'],
+                          $_POST['fecha_inicio'],
+                          $_POST['fecha_final'],
+                          false,
+                          $publicar, // Es borrador
                           false,
                           false,
                           0.2
-  		            );
-    $votacion->setId($_POST['id']);
-    $idVotacion = $votacion->getId();
+                  );
+      $votacion->setId($_POST['id']);
+      $idVotacion = $votacion->getId();
 
-    //SACAR MODIFICACION DE LOS CENSOS
-    $censosEliminar = $this->input->post('censoEliminacion');
-    $censosAñadir = $this->input->post('censoInsercion');
-    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
-    $idsCensos = array();
-    foreach($censosVotacion as $censo)
-    {$idsCensos[] = $censo->Id_Fichero;}
+      //SACAR MODIFICACION DE LOS CENSOS
+      $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+      $censosEliminar = $this->input->post('censoEliminacion');
+      $censosAñadir = $this->input->post('censoInsercion');
+      $idsCensos = array();
+      foreach($censosVotacion as $censo)
+      {$idsCensos[] = $censo->Id_Fichero;}
 
-    if($censosEliminar != NULL)
-    {  // Hay censos a eliminar
-      foreach($censosEliminar as $censo)
-      {
-        $this->eliminarCenso($idsCensos,$censo,$idVotacion);
-        --$idsCensos;
-      }
-    }
-
-    // AÑADIR CENSOS
-    if($censosAñadir != NULL)
-    {
-      foreach($censosAñadir as $censo)
-      {
-        $this->addCenso($idsCensos,$censo,$idVotacion);
+      if($censosEliminar != NULL)
+      {  // Hay censos a eliminar
+        foreach($censosEliminar as $censo)
+        {
+          $this->eliminarCenso($idsCensos,$censo,$idVotacion);
+          --$idsCensos;
+        }
       }
 
-    }
-    // Modificar datos de la votacion
-    $modificada = $this->votaciones_model->updateVotacion($votacion);
+      // AÑADIR CENSOS
+      if($censosAñadir != NULL)
+      {
+        foreach($censosAñadir as $censo)
+        {
+          $this->addCenso($idsCensos,$censo,$idVotacion);
+        }
+
+      }
+      // Modificar datos de la votacion
+      $modificada = $this->votaciones_model->updateVotacion($votacion);
 
         if($modificada != NULL){
             $this->index('La votación se ha guardado en borrador');
           }
     }
+  }
 
-    /*if($this->input->post('boton_publicar'))
-    {
-      $votacion = new Votacion(
-  		                    $_POST['titulo'],
-  		                    $_POST['descripcion'],
-  			                  $_POST['fecha_inicio'],
-  			                  $_POST['fecha_final'],
-  			                  false,
-                          false
-  		            );
-      $votacion->setId($_POST['id']);
-
-  		$modificada = $this->votaciones_model->updateVotacion($votacion);
-
-          if($modificada){
-            $this->index('La modificacion se ha realizado correctamente');
-          }
-    }*/
+  public function updateVotacion()
+	{
+    $this->actualizarVotacionFromBoton($this->input->post('boton_borrador'),false);
+    $this->actualizarVotacionFromBoton($this->input->post('boton_publicar'),true);
   }
 
 
