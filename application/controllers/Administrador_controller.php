@@ -15,7 +15,6 @@ class Administrador_controller extends CI_Controller {
 	public function index() {
 		switch ($this->session->userdata('rol')) {
 			case 'Administrador':
-			$this->load->view('elementos/headerAdmin');
 				$this->monitoring();
 				//$this->load->view('administracion/administracion_view');
 				//$this->load->view('administracion/administracionMonitoring_view');
@@ -72,10 +71,8 @@ class Administrador_controller extends CI_Controller {
 				array_push($logarray, $line);
 			}
 		}
-			$this->load->view('elementos/headerAdmin');
 		$data = array('loginfo' => $logarray);
 		$this->load->view('administracion/administracionMonitoring_view', $data);
-		//$this->load->view('elementos/footer');
 	}
 
 	public function buscador() {
@@ -89,12 +86,10 @@ class Administrador_controller extends CI_Controller {
 					'usuario' => $usuario,
 					'rol' => $roles
 				);
-				print_r($data);
 				
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}
-			$this->load->view('elementos/headerAdmin');
 			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
@@ -102,7 +97,6 @@ class Administrador_controller extends CI_Controller {
 
 	public function nuevoRol()
 	{
-		$this->load->view('elementos/headerAdmin');
 		if($this->input->post('checkBoxInput'))
 		{
 			$roles = $this->Usuario_model->getRoles();
@@ -145,30 +139,35 @@ class Administrador_controller extends CI_Controller {
 						';
 						
 						$result = $this->mailing->sendEmail($newUsername, $asunto, $mensaje);
-
+						$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');						
+						
 						if($result == 'success')
 						{
-							$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '. Dicho usuario ha sido notificado por correo.');
-							if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
-								$votaciones = $this->Votaciones_model->recuperarVotaciones();
-								$idVotaciones = array();
-								$tituloVotaciones = array();
-								foreach($votaciones as $votacion) {
-									array_push($idVotaciones, $votacion->Id);
-									array_push($tituloVotaciones, $votacion->Titulo);
-								}
-								array_push($data, ('Id_Votacion' => $idVotaciones));
-								array_push($data, ('Titulo' => $tituloVotaciones));
-								array_push($data, ('Id_Usuario' => $this->Usuario_model->getId($newUsername)));
-							}
-							$this->load->view('administracion/administracion_view', $data);
+							$data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
 						}
 						else
 						{
-							$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.', 
-											'mensaje_failure' => 'La notificación por correo ha fallado.');
+							$data['mensaje_failure'] = 'La notificación por correo ha fallado.';						
+						}
+						
+						if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
+							$votaciones = $this->Votaciones_model->recuperarVotaciones();
+							$idVotaciones = array();
+							$tituloVotaciones = array();
+							foreach($votaciones as $votacion) {
+								array_push($idVotaciones, $votacion->Id);
+								array_push($tituloVotaciones, $votacion->Titulo);
+							}
+							$data['Id_Votacion'] = $idVotaciones;
+							$data['Titulo'] = $tituloVotaciones;
+							$data['Id_Usuario'] = $this->Usuario_model->getId($newUsername);
+							$this->load->view('administracion/administracion_assignRol_view', $data);
+						}
+						else
+						{
 							$this->load->view('administracion/administracion_view', $data);	
 						}
+
 					}
 
 				}
@@ -228,7 +227,6 @@ class Administrador_controller extends CI_Controller {
 	/**********************************/
 
 	public function gestionusuarios(){
-		$this->load->view('elementos/headerAdmin');
 		$this->load->view('administracion/administracion_view');
 		//$this->load->view('elementos/footer');
 	}
