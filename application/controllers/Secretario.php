@@ -90,11 +90,7 @@ class Secretario extends CI_Controller{
 				$this->form_validation->set_message('required','El campo %s es obligatorio');
 
         if($this->form_validation->run() == FALSE) // Hay algun error
-        {
-
-          $this->crearVotacion(); // Mostrar mensajes de error en la vista
-
-				}
+        {$this->crearVotacion();} // Mostrar mensajes de error en la vista
         else
         {  // Correcta
           // Convierte la fecha en un formato valido para la BD
@@ -160,14 +156,14 @@ class Secretario extends CI_Controller{
   {
     for($i = 0; $i < sizeof($idsFicheros); $i++)
     {
-      $this->censo_model->insertarVotacion($idVotacion,$idsFicheros[$i][0]->Id);
+      $this->censo_model->insertarVotacion($idVotacion,$idsFicheros[$i]);
     }
   }
 
-  private function extraerUsuariosFichero($censo)
+  private function extraerUsuariosFichero($nombreCenso)
   {
     $usuarios = array();
-    $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$censo.'.txt', "r") or exit("Unable to open file!");
+    $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$nombreCenso.'.txt', "r") or exit("Unable to open file!");
     while(!feof($fichero))
       {
         $usuarios[] = fgets($fichero,10);
@@ -210,9 +206,7 @@ class Secretario extends CI_Controller{
 
       // GUARDAR VOTACION
       $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-      $ultimoId = $this->votaciones_model->getLastId();
-      $idVotacion = (int)$ultimoId[0]['Id'];
-
+      $idVotacion = $this->votaciones_model->getLastId();
 
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
@@ -351,7 +345,6 @@ class Secretario extends CI_Controller{
   {
     // Extraer id de ese censo que quiero eliminar
     $idCenso = $this->censo_model->getId($censo);
-    $idCenso = $idCenso[0]->Id;
     $numCensos = sizeof($censosVotacion);
 
     if($numCensos > 1) // Si una votación tiene más de un censo asignado...
@@ -414,9 +407,8 @@ class Secretario extends CI_Controller{
   {
     // Extraer ID del censo que voy a añadir
     $idCenso = $this->censo_model->getId($censo);
-    $censoExtraer[] = $idCenso[0]->Id;
-    $idCenso = $idCenso[0]->Id;
-
+    $censoExtraer[] = $idCenso;
+    
     // Extraer usuarios de ese censo a añadir
     $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
 
