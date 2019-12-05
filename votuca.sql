@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 27-11-2019 a las 10:45:17
+-- Tiempo de generación: 03-12-2019 a las 19:16:32
 -- Versión del servidor: 10.4.8-MariaDB
 -- Versión de PHP: 7.2.23
 
@@ -33,31 +33,16 @@ CREATE TABLE `censo` (
   `Id_Votacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `censo`
+-- Estructura de tabla para la tabla `expiracion`
 --
 
-INSERT INTO `censo` (`Id_Usuario`, `Id_Votacion`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(3, 1),
-(3, 2),
-(3, 3),
-(4, 1),
-(4, 2),
-(4, 3),
-(6, 1),
-(6, 2),
-(6, 3),
-(6, 4),
-(8, 2),
-(8, 3),
-(8, 4),
-(9, 2),
-(9, 3),
-(9, 4);
+CREATE TABLE `expiracion` (
+  `Id_Usuario` int(11) NOT NULL,
+  `Fecha` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -86,26 +71,22 @@ INSERT INTO `ficheros_censo` (`Id`, `Nombre`) VALUES
 
 CREATE TABLE `mesa_electoral` (
   `Id_Usuario` int(11) NOT NULL,
-  `Id_Votacion` int(11) NOT NULL
+  `Id_Votacion` int(11) NOT NULL,
+  `seAbre` tinyint(1) NOT NULL,
+  `seCierra` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `mesa_electoral`
+-- Estructura de tabla para la tabla `recuento`
 --
 
-INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`) VALUES
-(1, 1),
-(1, 2),
-(3, 1),
-(3, 3),
-(4, 1),
-(4, 2),
-(4, 3),
-(6, 3),
-(6, 4),
-(8, 4),
-(9, 2),
-(9, 4);
+CREATE TABLE `recuento` (
+  `Id_Votacion` int(11) NOT NULL,
+  `Id_Voto` int(11) NOT NULL,
+  `Num_Votos` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -157,23 +138,42 @@ CREATE TABLE `usuario` (
   `Id` int(32) NOT NULL,
   `Id_Rol` int(32) NOT NULL,
   `NombreUsuario` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
-  `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL
+  `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
+  `Email` varchar(128) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
-(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG'),
-(3, 3, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(4, 5, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(8, 5, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.'),
-(9, 5, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.');
+INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`, `Email`) VALUES
+(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', ''),
+(3, 3, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(8, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(9, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(10, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(11, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(12, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(13, 5, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(14, 5, 'm12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(15, 5, 'm14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(16, 5, 'm15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
+(17, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_censo`
+--
+
+CREATE TABLE `usuario_censo` (
+  `Id_Usuario` int(11) NOT NULL,
+  `Id_Fichero` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -182,36 +182,10 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`) VALUES
 --
 
 CREATE TABLE `usuario_votacion` (
-  `Id_Usuario` int(32) NOT NULL,
-  `Id_Votacion` int(32) NOT NULL,
-  `Id_Voto` int(32) NOT NULL
+  `Id_Usuario` int(11) NOT NULL,
+  `Id_Votacion` int(11) NOT NULL,
+  `Id_Voto` varchar(1024) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `usuario_votacion`
---
-
-INSERT INTO `usuario_votacion` (`Id_Usuario`, `Id_Votacion`, `Id_Voto`) VALUES
-(1, 1, 1),
-(1, 2, 1),
-(1, 3, 1),
-(1, 4, 1),
-(3, 1, 1),
-(3, 2, 1),
-(3, 3, 1),
-(4, 1, 1),
-(4, 2, 1),
-(4, 3, 1),
-(6, 1, 1),
-(6, 2, 1),
-(6, 3, 1),
-(6, 4, 1),
-(8, 2, 1),
-(8, 3, 1),
-(8, 4, 1),
-(9, 2, 1),
-(9, 3, 1),
-(9, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -226,18 +200,33 @@ CREATE TABLE `votacion` (
   `FechaInicio` datetime NOT NULL,
   `FechaFinal` datetime NOT NULL,
   `isDeleted` tinyint(1) NOT NULL,
-  `esBorrador` tinyint(1) NOT NULL
+  `esBorrador` tinyint(1) NOT NULL,
+  `Finalizada` tinyint(1) NOT NULL,
+  `Quorum` float NOT NULL,
+  `Invalida` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `votacion`
+-- Estructura de tabla para la tabla `votacion_censo`
 --
 
-INSERT INTO `votacion` (`Id`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDeleted`, `esBorrador`) VALUES
-(1, 'Votacion 1', 'Descripción 1', '2019-11-27 09:40:00', '2019-11-29 09:00:00', 0, 0),
-(2, 'Votacion 2', 'Descripción 2', '2019-12-01 09:00:00', '2019-12-04 09:00:00', 0, 0),
-(3, 'Votación 3', 'Descripción 3', '2019-11-28 10:00:00', '2019-11-29 14:00:00', 0, 0),
-(4, 'Votación 4', 'Descripción 4', '2019-12-03 09:00:00', '2019-12-05 09:00:00', 0, 0);
+CREATE TABLE `votacion_censo` (
+  `Id_Votacion` int(11) NOT NULL,
+  `Id_Fichero` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `votacion_voto`
+--
+
+CREATE TABLE `votacion_voto` (
+  `Id_Votacion` int(11) NOT NULL,
+  `Id_Voto` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -271,6 +260,12 @@ ALTER TABLE `censo`
   ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`);
 
 --
+-- Indices de la tabla `expiracion`
+--
+ALTER TABLE `expiracion`
+  ADD PRIMARY KEY (`Id_Usuario`);
+
+--
 -- Indices de la tabla `ficheros_censo`
 --
 ALTER TABLE `ficheros_censo`
@@ -282,6 +277,12 @@ ALTER TABLE `ficheros_censo`
 --
 ALTER TABLE `mesa_electoral`
   ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`);
+
+--
+-- Indices de la tabla `recuento`
+--
+ALTER TABLE `recuento`
+  ADD PRIMARY KEY (`Id_Votacion`,`Id_Voto`);
 
 --
 -- Indices de la tabla `rol`
@@ -305,17 +306,34 @@ ALTER TABLE `usuario`
   ADD KEY `Id_Rol` (`Id_Rol`);
 
 --
+-- Indices de la tabla `usuario_censo`
+--
+ALTER TABLE `usuario_censo`
+  ADD PRIMARY KEY (`Id_Usuario`,`Id_Fichero`);
+
+--
 -- Indices de la tabla `usuario_votacion`
 --
 ALTER TABLE `usuario_votacion`
-  ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`),
-  ADD KEY `Id_Voto` (`Id_Voto`);
+  ADD PRIMARY KEY (`Id_Usuario`,`Id_Votacion`);
 
 --
 -- Indices de la tabla `votacion`
 --
 ALTER TABLE `votacion`
   ADD PRIMARY KEY (`Id`);
+
+--
+-- Indices de la tabla `votacion_censo`
+--
+ALTER TABLE `votacion_censo`
+  ADD PRIMARY KEY (`Id_Votacion`,`Id_Fichero`);
+
+--
+-- Indices de la tabla `votacion_voto`
+--
+ALTER TABLE `votacion_voto`
+  ADD PRIMARY KEY (`Id_Votacion`,`Id_Voto`);
 
 --
 -- Indices de la tabla `voto`
@@ -343,13 +361,13 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `votacion`
 --
 ALTER TABLE `votacion`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `voto`
@@ -366,12 +384,6 @@ ALTER TABLE `voto`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `id_rol - con rol usario` FOREIGN KEY (`Id_Rol`) REFERENCES `rol` (`Id`);
-
---
--- Filtros para la tabla `usuario_votacion`
---
-ALTER TABLE `usuario_votacion`
-  ADD CONSTRAINT `id voto con tabla voto id` FOREIGN KEY (`Id_Voto`) REFERENCES `voto` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

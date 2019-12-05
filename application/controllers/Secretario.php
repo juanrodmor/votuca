@@ -195,6 +195,7 @@ class Secretario extends CI_Controller{
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
   public function guardarVotacion($datos)
   {
+
       $nombreCensos = $this->input->post('censo'); // Vector con nombres de censos
       $usuarios = array();
       $usuariosIds = array();
@@ -211,6 +212,7 @@ class Secretario extends CI_Controller{
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
+
       // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
       for($i = 0; $i < sizeof($nombreCensos); $i++)
       {
@@ -224,7 +226,6 @@ class Secretario extends CI_Controller{
           if(!in_array($usuariosIds[$j],$totales))
           array_push($totales,$usuariosIds[$j]);
         }
-
       }
 
       // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
