@@ -255,8 +255,6 @@ class Secretario extends CI_Controller{
       }
     }
 
-
-
   /************************************/
   /*********** ELIMINAR VOTACION ******/
   /************************************/
@@ -425,11 +423,10 @@ class Secretario extends CI_Controller{
     // Extraer usuarios que están actualmente en el censo de esa votacion
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
     $idsTotales = array();
-    // OBTENER SOLO LOS IDS DE LOS TOTALES
     foreach($totales as $usuario)
     {$idsTotales[] = $usuario->Id_Usuario;}
 
-    // AÑADIR SOLO AQUELLOS USUARIOS QUE NO EXISTAN YA
+    // Obtener solo usuarios sin repetir
     $finales = array();
     for($i = 0; $i < sizeof($usuariosAñadir);$i++)
     {
