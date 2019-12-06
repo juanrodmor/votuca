@@ -57,7 +57,6 @@
                                     <p style="margin: 0;">Fecha de inicio:</p>
                                     <p style="margin: 0;">Fecha de fin:</p>
                                     <input type="hidden" id="votacionId" name="votacionId" value="'.$votation.'">
-                                    <input type="hidden" name="userId" value="'.$Id_Usuario.'">
                                 </div>
                                 <div>
                                     <input type="submit" class="btn-custom-for-options" name="Asignar" value="Asignar">

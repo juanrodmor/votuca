@@ -127,6 +127,7 @@ class Administrador_controller extends CI_Controller {
 					{
 						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getEmail($usuario));
 						$this->Usuario_model->setUserTimeLimit($newUsername);
+						$this->session->set_userdata(array('userSearched' => $newUsername));
 						//$newIdUser = $this->Usuario_model->getId($newUsername);
 
 						$asunto = '[NOTIFICACIÓN VOTUCA] Nuevo rol.';
@@ -190,10 +191,10 @@ class Administrador_controller extends CI_Controller {
 	//Asigna al nuevo rol las votaciones indicadas.
 	public function asignaVotaciones() {
 		if($this->input->post('Asignar')) {
-			$idUsuario = $this->input->post('userId');
+			$usuario = $this->session->userdata('userSearched');
 			$idVotacion = $this->input->post('votacionId');
 					
-			$this->SecretariosDelegados_model->setVotacion($idUsuario, $idVotacion);
+			$this->SecretariosDelegados_model->setVotacion($this->Usuario_model->getId($usuario), $idVotacion);
 			
 			$data = array('mensaje_success' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
 			$this->load->view('administracion/administracion_view', $data);
