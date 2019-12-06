@@ -8,6 +8,7 @@ class Administrador_controller extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Usuario_model');
 		$this->load->model('Votaciones_model');
+		$this->load->model('SecretariosDelegados_model');
 		$this->load->helper('date');
 		$this->load->library('mailing');
 	}
@@ -188,11 +189,13 @@ class Administrador_controller extends CI_Controller {
 	
 	//Asigna al nuevo rol las votaciones indicadas.
 	public function asignaVotaciones() {
-		if($this->input->post('Enviar')) {
-			$idUsuario = $this->input->post('usuario');
-			//¿Que recibo? ¿Como recorro las opciones?
-			//Insertar en la tabla correspondiente dichas votaciones.
-			$data = array('mensaje' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
+		if($this->input->post('Asignar')) {
+			$idUsuario = $this->input->post('userId');
+			$idVotacion = $this->input->post('votacionId');
+					
+			$this->SecretariosDelegados_model->setVotacion($idUsuario, $idVotacion);
+			
+			$data = array('mensaje_success' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
 			$this->load->view('administracion/administracion_view', $data);
 		} else {
 			$this->index();
