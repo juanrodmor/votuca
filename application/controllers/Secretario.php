@@ -79,7 +79,7 @@ class Secretario extends CI_Controller{
     //$this->load->view('elementos/footer');*/
   }
 
-  public function insertarVotacion()
+  public function insertarVotacion($tipo)
   {
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
@@ -109,24 +109,51 @@ class Secretario extends CI_Controller{
           if($this->input->post('esModificable') != NULL)
             $esModificable = true;
 
-          $votacion = new Votacion(
-            //$this->input->post('id'),
-            1,
-            $this->input->post('titulo'),
-            $this->input->post('descripcion'),
-            $fechaInicio,
-            $fechaFin,
-            false,
-            false,
-            false,
-            false,
-            $this->input->post('quorum'),
-            $esModificable,
-            false,
-            false,
-            1
+          switch($tipo)
+          {
+            case 'simple':
+            $votacion = new Votacion(
+              //$this->input->post('id'),
+              1,
+              $this->input->post('titulo'),
+              $this->input->post('descripcion'),
+              $fechaInicio,
+              $fechaFin,
+              false,
+              false,
+              false,
+              false,
+              $this->input->post('quorum'),
+              $esModificable,
+              false,
+              false,
+              1
 
-          );
+            );
+            break;
+
+            case 'compleja':
+            $votacion = new Votacion(
+              //$this->input->post('id'),
+              2,
+              $this->input->post('titulo'),
+              $this->input->post('descripcion'),
+              $fechaInicio,
+              $fechaFin,
+              false, // Deleted
+              false, // EsBorrador
+              false, // Finalizada
+              false, //Invalida
+              $this->input->post('quorum'),
+              $esModificable,
+              false, // SoloAsistentes
+              false, // Recuento Paralelo
+              $this->input->post('nOpciones')// NumOpciones
+
+            );
+            break;
+          }
+
           //echo var_dump($votacion);
           $this->guardarVotacion($votacion);
         }
@@ -214,6 +241,17 @@ class Secretario extends CI_Controller{
     $this->censo_model->insertar($usuariosIds,$idVotacion);
   }
 
+  private function guardarSusOpciones($idVotacion,$tipo)
+  {
+    if($tipo == 1 || $tipo == 3)
+    {
+      $misVotos = array(1,2,3);
+      $this->voto_model->insertarOpciones($idVotacion,$misVotos);
+    }
+    else{
+      echo 'OTRO TIPO';
+    }
+  }
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
   public function guardarVotacion($datos)
   {
@@ -234,6 +272,8 @@ class Secretario extends CI_Controller{
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
+      // RELACION LA VOTACION CON SUS POSIBLES OPCIONES -> (?)
+      $this->guardarSusOpciones($idVotacion,$datos.getTipo());
 
       // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
       for($i = 0; $i < sizeof($nombreCensos); $i++)

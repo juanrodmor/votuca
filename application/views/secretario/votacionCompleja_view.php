@@ -31,7 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/finalizarVotacion');?>
+    <?=form_open(base_url().'secretario/insertarVotacion/compleja');?>
 
             <!--<div class="form-group">
               <?php $atributos = array(
@@ -179,14 +179,17 @@
 <!-- PARTE DEL CENSO -->
     <?php
       if($soloAsistentes == true){?>
-        <div class="form-group">
+          <!--<div class="form-group">
+        <a class="btn btn-primary" id="mi" onclick="hacerAlgo()" role="button">Link</a>
+        </div>
+      <div class="form-group">
           <div class="form-check">
           <input class="form-check-input" type="checkbox" name="exampleRadios" id="soloAsistentes" value="soloAsistentes" onclick = "">
             <label class="form-check-label" for="exampleRadios1">
               Solo asistentes
             </label>
         </div>
-      </div>
+      </div>-->
     <?php }?>
 
         <h2> Censo electoral </h2>
@@ -245,7 +248,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
-
+    <!--<script src="<?php echo base_url(); ?>/assets/js/behaviour/crearVotacion.min.js"></script>-->
 
     <!-- DATETIME PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/behaviour/datepicker.js"></script>

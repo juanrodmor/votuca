@@ -195,5 +195,17 @@ f<?php
 													 'Id_Usuario' => $usuario
 												 ));
 		}
-	}
+
+		public function insertarOpciones($idVotacion,$opciones)
+		{
+			foreach($opciones as $opcion)
+			{
+				$datos = array(
+					'Id_Votacion' => $idVotacion,
+					'Id_Voto' => $opcion
+				);
+				$this->db->insert('votacion_voto',$datos);
+			}
+		}
+}
 ?>
