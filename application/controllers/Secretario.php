@@ -255,7 +255,7 @@ class Secretario extends CI_Controller{
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
   public function guardarVotacion($datos)
   {
-
+      //echo var_dump($datos);
       $nombreCensos = $this->input->post('censo'); // Vector con nombres de censos
       $usuarios = array();
       $usuariosIds = array();
@@ -273,7 +273,7 @@ class Secretario extends CI_Controller{
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
       // RELACION LA VOTACION CON SUS POSIBLES OPCIONES -> (?)
-      $this->guardarSusOpciones($idVotacion,$datos.getTipo());
+      $this->guardarSusOpciones($idVotacion,$datos->getTipo());
 
       // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
       for($i = 0; $i < sizeof($nombreCensos); $i++)
