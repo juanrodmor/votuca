@@ -32,7 +32,7 @@ class Elector_controller extends CI_Controller {
     }
 
     public function votar() {
-    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch'])){
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch']) OR !isset($_POST['modif']) ){
     		$mensaje = "Acceda debidamente a la opción de votar, por favor.";
     		$this->index($mensaje);
     	}
@@ -41,6 +41,7 @@ class Elector_controller extends CI_Controller {
 			$titulo = $_POST['titulo'];
 			$descrip = $_POST['descrip'];
 			$fch = $_POST['fch'];
+			$modif = $_POST['modif'];
 
 				$title['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
@@ -55,6 +56,7 @@ class Elector_controller extends CI_Controller {
 				'descrip' => $descrip,
 				'titulo' => $titulo,
 				'fch' => $fch,
+				'modif' => $modif,
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);
@@ -65,7 +67,7 @@ class Elector_controller extends CI_Controller {
 
     public function guardarVoto() {
 
-    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch'])){
+    	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch']) OR !isset($_POST['modif']) ){
     		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
     		$this->index($mensaje);
     	}
@@ -74,6 +76,7 @@ class Elector_controller extends CI_Controller {
 	    	$titulo = $_POST['titulo'];
 			$descrip = $_POST['descrip'];
 			$fch = $_POST['fch'];
+			$modif = $_POST['modif'];
 
 	    	$this->form_validation->set_rules('voto', 'Voto', 'required');
 	    	$this->form_validation->set_message('required','Seleccione un voto valido');
@@ -102,6 +105,7 @@ class Elector_controller extends CI_Controller {
 	    		'descrip' => $descrip,
 				'titulo' => $titulo,
 				'fch' => $fch,
+				'modif' => $modif,
 	    		'votos' => $votos
 	    		);
 			    	$title['titulo'] = 'MIS VOTACIONES';

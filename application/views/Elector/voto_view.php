@@ -37,7 +37,12 @@
         </tr>
         <tr>
           <td>
-            <?php echo "<span style='padding-left:2%;'>Puede marcar un maximo de 1</span>";?>
+            <?php 
+              if($modif == 1)
+                echo "<span style='padding-left:2%;'> El voto es rectificable </span>";
+              if($modif != 1)
+                echo "<span style='padding-left:2%;'> El voto NO es rectificable </span>";
+            ?>
           </td>
         </tr>
         <tr>

@@ -15,7 +15,7 @@ f<?php
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal
+			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable
 						from votacion, censo, usuario_votacion
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
@@ -96,7 +96,7 @@ f<?php
 		// Indica si un usuario ya ha votado
 		public function _haVotado ( $id_votacion )
 		{
-			$id_user = _userId($_SESSION['usuario']);
+			$id_user = $this->_userId($_SESSION['usuario']);
 			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_user."' and Id_Votacion = '".$id_votacion."' and Id_Voto = '1';";
 			$query = $this -> db -> query($sql);
 			if( $query->num_rows() == 0 ) 
