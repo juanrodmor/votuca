@@ -58,7 +58,7 @@ class Elector_controller extends CI_Controller {
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);
-
+			$this->load->view('elementos/footer');	// arreglar footer
 		}
 
     }
@@ -103,13 +103,13 @@ class Elector_controller extends CI_Controller {
 				'titulo' => $titulo,
 				'fch' => $fch,
 	    		'votos' => $votos
-	    	);
+	    		);
 			    	$title['titulo'] = 'MIS VOTACIONES';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$title);
 					$this->load->view('elementos/headerVotacion',$inicio);
 		        $this->load->view('Elector/voto_view', $datos);
-		        	$this->load->view('elementos/footer');
+		        	$this->load->view('elementos/footer');		//arreglar footer
 		    }
 		}
     }
