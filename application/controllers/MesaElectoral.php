@@ -52,9 +52,15 @@ class MesaElectoral extends CI_Controller{
   }
 
 	private function abrirUrna($idVotacion) {
-		$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+		if (!($this->Mesa_model->getQuiereAbrir($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion)))
+			$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);		
 		$peticionesApertura = $this->Mesa_model->getNApertura($idVotacion);
-		return ($peticionesApertura >= 3);
+		if ($peticionesApertura == 3) {
+			$apertores = $this->Mesa_model->getNamesApertura();
+			$this->monitoring->blablabla;
+			return true;
+		} else if ($peticionesApertura > 3) return true;
+		else return false;
 	}
 
 	public function recuentoVotos(){
@@ -86,15 +92,17 @@ class MesaElectoral extends CI_Controller{
 	
 	//Finaliza la votación cuando suficientes miembros lo confirmen.
 	public function finalizaVotacion() {
-		if($this->input->post('boton_finalizar')) {	//Acceso correcto
+		if($this->input->post('boton_finalizar') && !($this->Mesa_model->isFinished($this->input->post('idVotacion')))) {	//Acceso correcto
 			$idVotacion = $this->input->post('idVotacion');
 			if($this->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
 				if($this->input->post('invalida') == true) {	//No se cumple el quorum
 					$this->Mesa_model->setInvalida($idVotacion);
+					$this->monitoring->register_action_closeBoxInvalid($this->votaciones_model->getVotacion($idVotacion));
 					$mensajes = array('mensaje' => 'Votación invalidada. No se cumple el Quorum.');
 					$this->index($mensajes);
 				} else {	//Se cumple el quorum
 					$this->Mesa_model->setFinalizada($idVotacion);
+					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion));
 					$mensajes = array('success' => '¡Votación finalizada con éxito!');
 					$this->index($mensajes);
 				}

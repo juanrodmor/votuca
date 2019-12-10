@@ -56,6 +56,12 @@ class Mesa_model extends CI_Model {
 		return $consulta->num_rows();
 	}
 	
+	//Comprueba si un miembro electoral quiere abrir una votación concreta.
+	public function getQuiereAbrir($username, $votacion) {
+		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'Id_Usuario' => $username, 'seAbre' => 1));
+		return ($consulta->num_rows() == 1);
+	}
+	
 	//Devuelve el número de decisiones de cierre para una votación concreta.
 	public function getNCierre($votacion) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seCierra' => 1));
@@ -156,6 +162,12 @@ class Mesa_model extends CI_Model {
 	public function setInvalida($idVotacion) {
 		$this->db->where('Id', $idVotacion);
 		$this->db->update('votacion', array('finalizada' => 1, 'invalida' => 1));
+	}
+	
+	//Comprueba si una votación está finalizada.
+	public function isFinished($idVotacion) {
+		$consulta = $this->db->get_where('votacion', array('Id' => $idVotacion));
+		return ($consulta->result()[0]->Finalizada == 1);
 	}
 }
 

@@ -74,33 +74,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
-        public function register_action_mElectoralConfirmed($username, $votacionName)
+        public function register_action_mElectoralConfirmed($username, $votacion)
         {
-            $action_message = "[" . mdate($this->hour_format) . "] [ME CONFIRMATION]" . " El miembro de mesa " . $username . " confirma la apertura en la votación " . $votacionName . ".";
+            $action_message = "[" . mdate($this->hour_format) . "] [ME CONFIRMATION]" . " El miembro de mesa " . $username . " confirma la apertura en la votación " . $votacion->Titulo . " [" . $votacion->Id . "].";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
-        public function register_action_openBox($votacionName)
+        public function register_action_openBox($votacion)
         {
-            $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacionName . " procede a la apertura de urnas.";
+            $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] procede a la apertura de urnas.";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 		
-		public function register_action_closeBox($votacionName)	//Muestra que una votación ha finalizado.
+		public function register_action_closeBox($votacion)	//Muestra que una votación ha finalizado.
 		{
-			$action_message = "[" . mdate($this->hour_format) . "] [CLOSE BOX]" . " La votación " . $votacionName . " cierra sus urnas.";
+			$action_message = "[" . mdate($this->hour_format) . "] [CLOSE BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] cierra sus urnas.";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
 		}
 		
-		public function register_action_closeBoxInvalid($votacionName) //Muestra que una votación ha sido invalidada.
+		public function register_action_closeBoxInvalid($votacion) //Muestra que una votación ha sido invalidada.
 		{
-			$action_message = "[" . mdate($this->hour_format) . "] [INVALID VOTATION]" . " La votación " . $votacionName . " no es válida y finaliza.";
+			$action_message = "[" . mdate($this->hour_format) . "] [INVALID VOTATION]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] no es válida y finaliza.";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
 		}
 		
-		public function register_action_mElectoralConfirmedClose($username, $votacionName) //Muestra que un miembro quiere cerrar una votación.
+		public function register_action_mElectoralConfirmedClose($username, $votacion) //Muestra que un miembro quiere cerrar una votación.
 		{
-			$action_message = "[" . mdate($this->hour_format) . "] [ME CLOSING]" . " El miembro de mesa " . $username . " confirma el cierre de la votación " . $votacionName . ".";
+			$action_message = "[" . mdate($this->hour_format) . "] [ME CLOSING]" . " El miembro de mesa " . $username . " confirma el cierre de la votación " . $votacion->Titulo . " [" . $votacion->Id . "].";
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
 		}
 }
