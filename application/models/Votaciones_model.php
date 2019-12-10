@@ -60,10 +60,15 @@ class Votaciones_model extends CI_Model{
   public function getLastId()
   {
     $query = $this->db->query("SELECT Id FROM votacion ORDER BY Id DESC LIMIT 1");
-    if($query->num_rows() > 0) {return $query->result_array();}
+    if($query->num_rows() > 0) {return $query->first_row()->Id;}
     else{return 1;}
   }
 
+  public function getBorradores()
+  {
+    $query = $this->db->query("SELECT * from votacion WHERE esBorrador = '1';");
+    return $query->result();
+  }
 
 
 

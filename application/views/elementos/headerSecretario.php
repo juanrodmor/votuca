@@ -18,6 +18,7 @@
           <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
             <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/obtenerBorradores'?>">Borradores</a>
           </div>
         </li>
 

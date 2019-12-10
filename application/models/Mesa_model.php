@@ -11,7 +11,7 @@ class Mesa_model extends CI_Model {
       );
       $noGuardado = $this->db->insert('mesa_electoral',$datos);
       if($noGuardado){$sinProblemas = false;}
-    
+
     if($sinProblemas){return true;}
     else{return false;}
   }
@@ -34,6 +34,23 @@ class Mesa_model extends CI_Model {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seAbre' => 1));
 		return $consulta->num_rows();
 	}
+
+  public function eliminarMiembroFromVotacion($idMiembro,$idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion' AND Id_Usuario = '$idMiembro'");
+  }
+
+  public function getMesa($idVotacion)
+  {
+    $query = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion));
+    return $query->result();
+  }
+
+  public function deleteMesa($idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion'");
+    //return $query->result();
+  }
 }
 
 

@@ -158,15 +158,25 @@ f<?php
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
+				//password_hash($sinVoto, PASSWORD_DEFAULT)
 				$id = (int)$usuarios[$i];
 				$datos = array(
 					'Id_Usuario' => $id,
 					'Id_Votacion' => $nuevoId,
-					'Id_Voto' => '1'
+					'Id_Voto' => $sinVoto
 				);
 				$this->db->insert('usuario_votacion',$datos);
 			}
 		}
 
+		public function borrarVoto($usuarios,$idVotacion)
+		{
+			foreach($usuarios as $usuario)
+			$this->db->delete('usuario_votacion',
+												 array(
+													 'Id_Votacion' => $idVotacion,
+													 'Id_Usuario' => $usuario
+												 ));
+		}
 	}
 ?>
