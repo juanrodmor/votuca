@@ -46,7 +46,7 @@ class Elector_controller extends CI_Controller {
 
 				$title['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
-				$this->load->view('elementos/head',$titulo);
+				$this->load->view('elementos/head',$title);
 				//$this->load->view('elementos/headerComun',$inicio);
 				$this->load->view('elementos/headerVotacion',$inicio);
 			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
