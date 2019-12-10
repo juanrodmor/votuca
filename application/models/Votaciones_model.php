@@ -3,7 +3,11 @@
 class Votaciones_model extends CI_Model{
 
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
-  public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
+  public function guardarVotacion($datos)
+  {
+    //echo var_dump($datos);
+    $this->db->insert('votacion',$datos);
+  }//$this->db->insert('votacion',$datos);
 
   public function totalVotaciones()
   {

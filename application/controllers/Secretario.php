@@ -55,21 +55,28 @@ class Secretario extends CI_Controller{
   /************************************/
 
 
-  public function crearVotacion($mensaje = '')
+  public function crearVotacion($tipo = '')
   {
+    $adicionales = array();
     $this->load->view('elementos/headerSecretario');
 
     // CENSO
     $nombreCensos = $this->censo_model->getCensos();
-
-    // Extraer
     $datos = array(
-      'censos' => $nombreCensos,
-      'mensaje' => $mensaje
+      'censos' => $nombreCensos
     );
-
-    $this->load->view('secretario/crearVotacion_view',$datos);
-    //$this->load->view('elementos/footer');
+    switch($tipo)
+    {
+      case 'simple':
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/votacionSimple_view',$datos);
+        break;
+      case 'compleja':
+      $datos += array('soloAsistentes' => true);
+      $this->load->view('secretario/votacionCompleja_view',$datos);
+      break;
+    }
+    //$this->load->view('elementos/footer');*/
   }
 
   public function insertarVotacion()
@@ -96,7 +103,12 @@ class Secretario extends CI_Controller{
           // Convierte la fecha en un formato valido para la BD
           $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
+
           //echo var_dump($fechaInicio);
+          $esModificable = false;
+          if($this->input->post('esModificable') != NULL)
+            $esModificable = true;
+          
           $votacion = new Votacion(
             //$this->input->post('id'),
             $this->input->post('titulo'),
@@ -107,7 +119,13 @@ class Secretario extends CI_Controller{
             false,
             false,
             false,
-            0.2
+            $this->input->post('quorum'),
+            1,
+            $esModificable,
+            false,
+            false,
+            1
+
           );
           //echo var_dump($votacion);
           $this->guardarVotacion($votacion);
@@ -207,7 +225,7 @@ class Secretario extends CI_Controller{
 
       // GUARDAR VOTACION
       $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-      $idVotacion = $this->votaciones_model->getLastId();
+      /*$idVotacion = $this->votaciones_model->getLastId();
 
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
@@ -247,7 +265,7 @@ class Secretario extends CI_Controller{
       else{
         $datos = array('mensaje'=>'La votación se ha guardado correctamente');
         $this->index('La votación se ha guardado correctamente');
-      }
+      }*/
     }
 
   /************************************/
@@ -409,7 +427,7 @@ class Secretario extends CI_Controller{
     // Extraer ID del censo que voy a añadir
     $idCenso = $this->censo_model->getId($censo);
     $censoExtraer[] = $idCenso;
-    
+
     // Extraer usuarios de ese censo a añadir
     $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
 

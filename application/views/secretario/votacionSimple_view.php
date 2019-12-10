@@ -31,9 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion',
-    		    array('name'=>'crearVotacion'));?>
-            <!-- ESPERAR A SABER CÓMO COMPROBAR QUE UNA VOTACION NO EXISTE YA -->
+    <?=form_open(base_url().'secretario/insertarVotacion');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -110,9 +108,52 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <?php
+           $atributos = array(
+              'name' => 'quorum',
+              'class' => 'form-control',
+              'id' => 'quorum',
+              'placeholder' =>'Introduzca el quorum de esta votación',
+              'required' => true,
+              'value' => set_value('quorum') // Mantiene el valor en el form
+          ); ?>
+          <?= form_label('Quorum','quorum'); ?>
+          <!-- Igual a: <label for="titulo">Titulo</label> -->
+          <?= form_input($atributos) ?> <br/><br/>
+        </div>
+
+        <!-- RADIO BUTTONS -->
+        <div class="form-group">
+        <?php
+        $atributos = array(
+          'class' => 'form-check-input',
+          'type' => 'checkbox',
+          'id' => 'esModificable'
+        );
+        ?>
+        <?= form_checkbox($atributos); ?>
+        <?= form_label('Voto Modificable','esModificable'); ?>
+      </div>
+
+
+    <?php
+      if($soloAsistentes == true){?>
+        <div class="form-group">
+        <?php
+        $atributos = array(
+          'class' => 'form-check-input',
+          'type' => 'checkbox',
+          'id' => 'soloAsistentes'
+        );
+        ?>
+        <?= form_checkbox($atributos); ?>
+        <?= form_label('Solo asistentes','soloAsistentes'); ?>
+      </div>
+    <?php }?>
+
         <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
-        <!-- TABLA DE CENSO -->
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
@@ -145,6 +186,9 @@
         </table>
       </div>
       </div>
+
+
+      <!-- BOTÓN ENVIAR -->
         <?php $atributos = array(
             'name' => 'submit_reg',
             'class' => 'btn btn-primary',
