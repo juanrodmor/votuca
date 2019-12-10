@@ -108,7 +108,7 @@ class Secretario extends CI_Controller{
           $esModificable = false;
           if($this->input->post('esModificable') != NULL)
             $esModificable = true;
-          
+
           $votacion = new Votacion(
             //$this->input->post('id'),
             $this->input->post('titulo'),
@@ -225,7 +225,7 @@ class Secretario extends CI_Controller{
 
       // GUARDAR VOTACION
       $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-      /*$idVotacion = $this->votaciones_model->getLastId();
+      $idVotacion = $this->votaciones_model->getLastId();
 
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
@@ -265,7 +265,7 @@ class Secretario extends CI_Controller{
       else{
         $datos = array('mensaje'=>'La votación se ha guardado correctamente');
         $this->index('La votación se ha guardado correctamente');
-      }*/
+      }
     }
 
   /************************************/
