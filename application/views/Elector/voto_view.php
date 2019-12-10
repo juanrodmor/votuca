@@ -51,7 +51,7 @@
       <center>
         <?php
           if(form_error('voto') != NULL)
-            echo '<div class="alert alert-primary" role="alert">' . form_error('voto') . '</div>'; 
+            echo '<div class="alert alert-danger" role="alert">' . form_error('voto') . '</div>'; 
         ?>
         
           <?php foreach($votos as $voto) { ?>
