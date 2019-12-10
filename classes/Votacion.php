@@ -7,9 +7,9 @@ class Votacion{
   public $Id_TipoVotacion, $VotoModificable, $SoloAsistentes, $RecuentoParalelo, $NumOpciones;
   //private $mesaElectoral;
 
-  public function __construct($titulo,$descripcion,$fechaInicio,$fechaFinal,
+  public function __construct($tipo,$titulo,$descripcion,$fechaInicio,$fechaFinal,
                               $isDeleted,$esBorrador,$finalizada,$invalida,$quorum,
-                              $tipo, $modificable,$asistentes,$paralelo,$nOpc)
+                              $modificable,$asistentes,$paralelo,$nOpc)
   {
     $this->titulo = $titulo;
     $this->descripcion = $descripcion;

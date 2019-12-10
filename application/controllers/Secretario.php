@@ -111,6 +111,7 @@ class Secretario extends CI_Controller{
 
           $votacion = new Votacion(
             //$this->input->post('id'),
+            1,
             $this->input->post('titulo'),
             $this->input->post('descripcion'),
             $fechaInicio,
@@ -120,7 +121,6 @@ class Secretario extends CI_Controller{
             false,
             false,
             $this->input->post('quorum'),
-            1,
             $esModificable,
             false,
             false,
@@ -133,6 +133,10 @@ class Secretario extends CI_Controller{
     }
   }
 
+  public function finalizarVotacion()
+  {
+    //$hasCensoAsistente =
+  }
   private function obtenerNombreElectoral($idUsuario,$letra)
   {
     $usuario = $this->usuario_model->getUsuario($idUsuario);
