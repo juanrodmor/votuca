@@ -1,53 +1,160 @@
+ #title-container
+{
+    background-color: #306056;
+    padding: 2%;
+    padding-bottom: 0.8%;
+    position: relative;
+    margin-top: -3%;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.divider
+{
+    width: 100%;
+    border-color: white !important;
+    margin-bottom: 0.9%;
+    margin-top: 0;
+}
+
+.marked
+{
+    background-color: #1f3d37;
+}
+
+.unmarked:hover
+{
+    background-color: #284f46;
+}
+
 .container
 {
-    margin-top: 10%;
+    margin-left: 8%;
+   margin-right: 8%;
+   padding-right: 5%;
+}
+
+div > a
+{
+    margin-top: -2%;
+    margin-left: -1%;
+    padding: 2%;
+    color: white;
+}
+
+div > a:hover
+{
+    color:white;
+    text-decoration: none;
+}
+
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: 1.1;
+    color: white;
+}
+
+body {
+    position: relative !important;
+    background-color: #ffffff !important;
+    font-size: 16px !important;
+    font-family: 'Lato', Arial, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+    color: #808080 !important;
+    -webkit-font-smoothing: antialiased !important;
+    background-size: 50% !important;
+}
+
+#cerrar-ses
+{
+    margin-top: 1%;
+}
+
+.btn-custom
+{
+    display: block;
+    margin-left: 50%;
+    color: #fff;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
 }
 
 #monitoring_search
 {
-    display: inline-block;
+    margin-top: 4%;
+    margin-right: 5%;
 }
 
-body
+#options_dropdown
 {
-    text-align: center;
+    padding: 2%;
 }
 
-#user_searcher
+#dropdownMenuButton
 {
-    text-align: left;
-    float: left;
+    background-color: #306056;
 }
 
-#button-search
+#header > nav
 {
-    float: left;
-    margin-left: 3%;
+    padding-top: 10px;
+    padding-bottom:30px;
 }
 
-#button_update
+#header > nav > a
 {
-    float:right;
+    padding-left:7%;
 }
 
-#error_alert
+#header > nav > span
 {
-    margin-top: 10%;
-    margin-bottom: -9%;
-}
-
-#search_results
-{
-    margin-top: 10%;
-    margin-bottom: 10%;
-}
-
-#roles_dropdown
-{
-    padding: 3%;
+    color:white;
+    position:absolute;
+    right:8%;
+    cursor:pointer;
 }
 
 #card_monitoringView
 {
-    margin-top: 3%;
+    margin-top: 2%;
+    margin-right: 20%;
+}
+
+.bold
+{
+    font-weight: bold;
+}
+
+#search_form
+{
+    margin-top: 2%;
+}
+
+#input-search
+{
+    width: 300px;
+    border-radius: 20px;
+}
+
+#button-search
+{
+    display: block;
+    color: #fff;
+    margin-left: 5%;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
 }

@@ -8,6 +8,7 @@ class Administrador_controller extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Usuario_model');
 		$this->load->model('Votaciones_model');
+		$this->load->model('SecretariosDelegados_model');
 		$this->load->helper('date');
 		$this->load->library('mailing');
 	}
@@ -15,7 +16,6 @@ class Administrador_controller extends CI_Controller {
 	public function index() {
 		switch ($this->session->userdata('rol')) {
 			case 'Administrador':
-			$this->load->view('elementos/headerAdmin');
 				$this->monitoring();
 				//$this->load->view('administracion/administracion_view');
 				//$this->load->view('administracion/administracionMonitoring_view');
@@ -72,10 +72,8 @@ class Administrador_controller extends CI_Controller {
 				array_push($logarray, $line);
 			}
 		}
-			$this->load->view('elementos/headerAdmin');
 		$data = array('loginfo' => $logarray);
 		$this->load->view('administracion/administracionMonitoring_view', $data);
-		//$this->load->view('elementos/footer');
 	}
 
 	public function buscador() {
@@ -89,12 +87,10 @@ class Administrador_controller extends CI_Controller {
 					'usuario' => $usuario,
 					'rol' => $roles
 				);
-				print_r($data);
 				
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}
-			$this->load->view('elementos/headerAdmin');
 			$this->load->view('administracion/administracion_view', $data);
 		}
 	}
@@ -102,7 +98,6 @@ class Administrador_controller extends CI_Controller {
 
 	public function nuevoRol()
 	{
-		$this->load->view('elementos/headerAdmin');
 		if($this->input->post('checkBoxInput'))
 		{
 			$roles = $this->Usuario_model->getRoles();
@@ -132,6 +127,7 @@ class Administrador_controller extends CI_Controller {
 					{
 						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getEmail($usuario));
 						$this->Usuario_model->setUserTimeLimit($newUsername);
+						$this->session->set_userdata(array('userSearched' => $newUsername));
 						//$newIdUser = $this->Usuario_model->getId($newUsername);
 
 						$asunto = '[NOTIFICACIÓN VOTUCA] Nuevo rol.';
@@ -145,30 +141,35 @@ class Administrador_controller extends CI_Controller {
 						';
 						
 						$result = $this->mailing->sendEmail($newUsername, $asunto, $mensaje);
-
+						$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');						
+						
 						if($result == 'success')
 						{
-							$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '. Dicho usuario ha sido notificado por correo.');
-							if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
-								$votaciones = $this->Votaciones_model->recuperarVotaciones();
-								$idVotaciones = array();
-								$tituloVotaciones = array();
-								foreach($votaciones as $votacion) {
-									array_push($idVotaciones, $votacion->Id);
-									array_push($tituloVotaciones, $votacion->Titulo);
-								}
-								array_push($data, ('Id_Votacion' => $idVotaciones));
-								array_push($data, ('Titulo' => $tituloVotaciones));
-								array_push($data, ('Id_Usuario' => $this->Usuario_model->getId($newUsername)));
-							}
-							$this->load->view('administracion/administracion_view', $data);
+							$data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
 						}
 						else
 						{
-							$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.', 
-											'mensaje_failure' => 'La notificación por correo ha fallado.');
+							$data['mensaje_failure'] = 'La notificación por correo ha fallado.';						
+						}
+						
+						if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
+							$votaciones = $this->Votaciones_model->recuperarVotaciones();
+							$idVotaciones = array();
+							$tituloVotaciones = array();
+							foreach($votaciones as $votacion) {
+								array_push($idVotaciones, $votacion->Id);
+								array_push($tituloVotaciones, $votacion->Titulo);
+							}
+							$data['Id_Votacion'] = $idVotaciones;
+							$data['Titulo'] = $tituloVotaciones;
+							$data['Id_Usuario'] = $this->Usuario_model->getId($newUsername);
+							$this->load->view('administracion/administracion_assignRol_view', $data);
+						}
+						else
+						{
 							$this->load->view('administracion/administracion_view', $data);	
 						}
+
 					}
 
 				}
@@ -189,11 +190,13 @@ class Administrador_controller extends CI_Controller {
 	
 	//Asigna al nuevo rol las votaciones indicadas.
 	public function asignaVotaciones() {
-		if($this->input->post('Enviar')) {
-			$idUsuario = $this->input->post('usuario');
-			//¿Que recibo? ¿Como recorro las opciones?
-			//Insertar en la tabla correspondiente dichas votaciones.
-			$data = array('mensaje' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
+		if($this->input->post('Asignar')) {
+			$usuario = $this->session->userdata('userSearched');
+			$idVotacion = $this->input->post('votacionId');
+					
+			$this->SecretariosDelegados_model->setVotacion($this->Usuario_model->getId($usuario), $idVotacion);
+			
+			$data = array('mensaje_success' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
 			$this->load->view('administracion/administracion_view', $data);
 		} else {
 			$this->index();
@@ -228,7 +231,6 @@ class Administrador_controller extends CI_Controller {
 	/**********************************/
 
 	public function gestionusuarios(){
-		$this->load->view('elementos/headerAdmin');
 		$this->load->view('administracion/administracion_view');
 		//$this->load->view('elementos/footer');
 	}
