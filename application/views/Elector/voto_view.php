@@ -60,6 +60,7 @@
               <input type="hidden" name="titulo" value="<?php echo $titulo; ?>"/>
               <input type="hidden" name="descrip" value="<?php echo $descrip; ?>"/>
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
+              <input type="hidden" name="modif" value="<?php echo $modif; ?>"/>
               <div style="">
                 <input type="radio" name="voto" value="<?php echo $voto?>"> <?php echo $voto ?>
               </div>
