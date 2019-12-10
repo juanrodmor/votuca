@@ -70,6 +70,7 @@
                   <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
                   <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
                   <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
+                  <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
                   <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
                 </form>
               </td>
@@ -87,6 +88,7 @@
                     <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
                     <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
                     <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
+                    <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
                     <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
                   </form>
                 </td>

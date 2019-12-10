@@ -32,16 +32,23 @@
         </tr>
         <tr>
           <td>
-            <?php echo "<h4 style='padding-left:2%;'>Opciones: </h4>";?>
+            <?php echo "<h4 style='padding-left:2%;'> Información: </h4>";?>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span>";
+                  else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span>"; 
+            ?>
           </td>
         </tr>
         <tr>
           <td>
             <?php 
               if($modif == 1)
-                echo "<span style='padding-left:2%;'> El voto es rectificable </span>";
+                echo "<span class='alert alert-info' role='alert' style='padding-left:2%;'> El voto es rectificable </span>";
               if($modif != 1)
-                echo "<span style='padding-left:2%;'> El voto NO es rectificable </span>";
+                echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;'> El voto NO es rectificable </span>";
             ?>
           </td>
         </tr>
@@ -53,7 +60,6 @@
           if(form_error('voto') != NULL)
             echo '<div class="alert alert-danger" role="alert">' . form_error('voto') . '</div>'; 
         ?>
-        
           <?php foreach($votos as $voto) { ?>
             
               <input type="hidden" name="id_votacion" value="<?php echo $id_votacion; ?>"/>
@@ -61,9 +67,15 @@
               <input type="hidden" name="descrip" value="<?php echo $descrip; ?>"/>
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
               <input type="hidden" name="modif" value="<?php echo $modif; ?>"/>
-              <div style="">
-                <input type="radio" name="voto" value="<?php echo $voto?>"> <?php echo $voto ?>
-              </div>
+               <input type="hidden" name="opc" value="<?php echo $opc; ?>"/>
+              <!-- <div style=""> -->
+                <?php 
+                  if($opc > 1) 
+                    echo '<input class="single-checkbox" type="checkbox" name="voto" value="'.$voto.'">'.$voto;
+                  else echo '<input type="radio" name="voto" value="'.$voto.'">'.$voto;
+                ?>
+              <!-- </div> -->
+
               
             
           <?php } ?>
@@ -99,5 +111,6 @@
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+    <script src="<?php echo base_url()."assets/js/behaviour/limiteOpciones.js"?>"></script>
 
 </html>

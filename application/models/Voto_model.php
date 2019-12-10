@@ -15,7 +15,7 @@ f<?php
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable
+			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable, votacion.NumOpciones
 						from votacion, censo, usuario_votacion
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
