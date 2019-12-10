@@ -56,7 +56,7 @@
               <input type="hidden" name="descrip" value="<?php echo $descrip; ?>"/>
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
               <div style="">
-                <input type="radio" name="voto" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
+                <input type="radio" name="voto" value="<?php echo $voto?>"> <?php echo $voto ?>
               </div>
               
             

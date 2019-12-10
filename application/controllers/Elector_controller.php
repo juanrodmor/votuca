@@ -48,7 +48,7 @@ class Elector_controller extends CI_Controller {
 				//$this->load->view('elementos/headerComun',$inicio);
 				$this->load->view('elementos/headerVotacion',$inicio);
 			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-			$votos = $this->Voto_model->_votosDisponibles();	// habrá que pasarle $id_votacion para mostrar los votos disponibles para esa votacion
+			$votos = $this->Voto_model->_votosDisponibles($id_votacion);
 			$datos = array(
 				'id_votacion' => $id_votacion,
 				'id_usuario' => $id_usuario,
@@ -94,7 +94,7 @@ class Elector_controller extends CI_Controller {
 		    	
 		    } else {
 
-		    	$votos = $this->Voto_model->_votosDisponibles();
+		    	$votos = $this->Voto_model->_votosDisponibles($id_votacion);
 		    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 		    	$datos = array(
 	    		'id_votacion' => $id_votacion,

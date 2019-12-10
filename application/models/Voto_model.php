@@ -22,6 +22,7 @@ f<?php
 							AND usuario_votacion.Id_Usuario = ".$id_user."
 							AND usuario_votacion.Id_Votacion = votacion.Id
 							AND votacion.isDeleted = 0
+							AND votacion.esBorrador = 0
 						order by votacion.FechaFinal ASC;";
 
 			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
@@ -71,14 +72,25 @@ f<?php
 
 		}
 
-		public function _votosDisponibles () {	// habra que cambiarla, esta muestra TODOS los votos disponibles, no solo los de una votacion especifica
-			$sql = "select Nombre from voto where id != '1';";		// habra que pasarle el id de la votacion para que muestre sus votos disponibles
+		public function _votosDisponibles ($id_votacion) {
+			//1 -> obtener los votos de la votacion
+			//2 -> obtener los nombres de esos votos
+			// resumen -> 2 llamadas SQL
+
+			$sql = "select Id_Voto from votacion_voto where Id_Votacion = '".$id_votacion."';";
 			$query = $this -> db -> query($sql);
-			if($query) {
-			    return $query->result();
-			} else {
-			    echo "ERROR: Could not able to execute $sql. ";
+			$query = $query->result();
+			// echo var_dump($query[$i]->Id_Voto);	
+
+			$votos = array();
+			foreach($query as $voto) {
+				$sql = "select Nombre from voto where Id = '".$voto->Id_Voto."';";
+				$query = $this -> db -> query($sql);
+				//echo $query->row()->Nombre;
+				array_push($votos, $query->row()->Nombre);
 			}
+			//print_r($votos);
+			return $votos;
 		}
 
 		// Indica si un usuario ya ha votado
@@ -87,17 +99,16 @@ f<?php
 			$id_user = _userId($_SESSION['usuario']);
 			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_user."' and Id_Votacion = '".$id_votacion."' and Id_Voto = '1';";
 			$query = $this -> db -> query($sql);
-			if( $query->num_rows() == 0 ) {
-			    return false;
-			} else {
-			    return true;
-			}
+			if( $query->num_rows() == 0 ) 
+				return true;
+			else 
+				return false;
 		}
 
 		/********************************/
 		/******* RECUENTO DE VOTOS ******/
 		/********************************/
-		public function recuentoVotos($id_votacion)	//votos totales de la votacion $id_votacion
+		public function recuentoVotos($id_votacion)
 		{
 			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE));
 
@@ -118,7 +129,7 @@ f<?php
 
 		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
 		{
-
+/*
 			$Abs = 0;
 			$Si = 0;
 			$No = 0;
@@ -149,6 +160,7 @@ f<?php
 				'Bl' => $Bl
 			);
 			return $votos;
+			*/
 
 		}
 
@@ -157,7 +169,7 @@ f<?php
 		/********************************************/
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
-	    {
+	    	{
 				//password_hash($sinVoto, PASSWORD_DEFAULT)
 				$id = (int)$usuarios[$i];
 				$datos = array(
@@ -172,11 +184,10 @@ f<?php
 		public function borrarVoto($usuarios,$idVotacion)
 		{
 			foreach($usuarios as $usuario)
-			$this->db->delete('usuario_votacion',
-												 array(
-													 'Id_Votacion' => $idVotacion,
-													 'Id_Usuario' => $usuario
-												 ));
+				$this->db->delete('usuario_votacion', array(
+														'Id_Votacion' => $idVotacion,
+														'Id_Usuario' => $usuario
+														));
 		}
 	}
 ?>
