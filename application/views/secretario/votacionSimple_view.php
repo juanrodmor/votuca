@@ -31,7 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion/simple');?>
+    <?=form_open(base_url().'secretario/finalizarVotacion/simple');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -123,13 +123,15 @@
           <?= form_input($atributos) ?> <br/><br/>
         </div>
 
-        <!-- RADIO BUTTONS -->
-        <div class="form-group">
+        <!-- CHECK BUTTONS -->
+        <div class="form-check">
         <?php
         $atributos = array(
+          'name' => 'esModificable',
           'class' => 'form-check-input',
           'type' => 'checkbox',
-          'id' => 'esModificable'
+          'id' => 'esModificable',
+          'value' => 1
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -139,12 +141,14 @@
 
     <?php
       if($soloAsistentes == true){?>
-        <div class="form-group">
+        <div class="form-check">
         <?php
         $atributos = array(
+          'name' => 'soloAsistentes',
           'class' => 'form-check-input',
           'type' => 'checkbox',
-          'id' => 'soloAsistentes'
+          'id' => 'soloAsistentes',
+          'value' => 1
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -186,6 +190,47 @@
         </table>
       </div>
       </div>
+
+      <?php
+    if(isset($asistentes))
+    {
+      if($asistentes != NULL){?>
+      <h2> Censo asistente </h2>
+        <div class = "container">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+          <table class="display table table-striped table-bordered" id="votaciones_admin">
+            <thead>
+              <tr>
+                <th>Asistentes</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <?php
+                foreach($asistentes as $asistente)
+                {?>
+                <td><?php echo $asistente[0]->NombreUsuario?></td>
+                <?php
+                  echo '<div class="form-check">';
+                   $atributos = array(
+                      'name' => 'asistentes[]',
+                      'class' => 'form-control',
+                      'type' => 'checkbox',
+                      'id' => 'censo',
+                      'value' => $asistente[0]->Id
+                  );
+                  ?>
+                <td><?= form_checkbox($atributos); ?></td>
+              </div>
+              <?php echo '</tr>'; ?>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  <?php } ?>
+<?php } ?>
 
 
       <!-- BOTÓN ENVIAR -->

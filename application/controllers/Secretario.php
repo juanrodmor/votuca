@@ -55,6 +55,7 @@ class Secretario extends CI_Controller{
   /************************************/
 
 
+  // FUNCION QUE LLAMA A LAS VISTAS
   public function crearVotacion($tipo = '')
   {
     $adicionales = array();
@@ -79,6 +80,62 @@ class Secretario extends CI_Controller{
     //$this->load->view('elementos/footer');*/
   }
 
+  public function finalizarVotacion($tipo)
+  {
+    if($this->input->post('submit_reg'))
+    {
+      if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+      {
+        $usuarios = array();
+        $usuariosIds = array();
+        $totales = array();
+        $censosSeleccionados = $this->input->post('censo');
+        // Extraer IDS de los ficheros de esos censos seleccionados
+        $idsFicheros = array();
+        $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
+        // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
+        for($i = 0; $i < sizeof($censosSeleccionados); $i++)
+        {
+          $usuarios = $this->extraerUsuariosFichero($censosSeleccionados[$i]);
+          $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+          for($j = 0; $j < sizeof($usuariosIds); $j++)
+          {
+            // Relacionar este usuario con este censo en la bd
+            $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
+            if(!in_array($usuariosIds[$j],$totales))
+            array_push($totales,$usuariosIds[$j]);
+          }
+        }
+        // OBTENER NOMBRES DE ESOS USUARIOS
+        $nombresUsuarios = array();
+        foreach($totales as $idUser)
+        {
+          $aux = $this->usuario_model->getUsuario($idUser);
+          $nombresUsuarios[] = $aux;
+        }
+        $nombreCensos = $this->censo_model->getCensos();
+        $datos = array(
+          'censos' => $nombreCensos,
+          'asistentes' => $nombresUsuarios
+        );
+        switch($tipo)
+        {
+          case 'simple':
+            $datos += array('soloAsistentes' => true);
+            $this->load->view('elementos/headerSecretario');
+            $this->load->view('secretario/votacionSimple_view',$datos);
+            break;
+          case 'compleja':
+          $datos += array('soloAsistentes' => true);
+          $this->load->view('secretario/votacionCompleja_view',$datos);
+          break;
+        }
+      }
+
+    }
+
+  }
   public function insertarVotacion($tipo)
   {
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
@@ -160,10 +217,6 @@ class Secretario extends CI_Controller{
     }
   }
 
-  public function finalizarVotacion()
-  {
-    //$hasCensoAsistente =
-  }
   private function obtenerNombreElectoral($idUsuario,$letra)
   {
     $usuario = $this->usuario_model->getUsuario($idUsuario);
@@ -272,7 +325,7 @@ class Secretario extends CI_Controller{
       // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
       $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
-      // RELACION LA VOTACION CON SUS POSIBLES OPCIONES -> (?)
+      // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
       $this->guardarSusOpciones($idVotacion,$datos->getTipo());
 
       // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
