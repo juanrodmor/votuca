@@ -80,80 +80,80 @@ class Secretario extends CI_Controller{
     //$this->load->view('elementos/footer');*/
   }
 
-  public function finalizarVotacion($tipo)
+  private function mostrarAsistentes($tipo)
   {
-    if($this->input->post('submit_reg'))
-    {
-      if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+      $usuarios = array();
+      $usuariosIds = array();
+      $totales = array();
+      $censosSeleccionados = $this->input->post('censo');
+      // Extraer IDS de los ficheros de esos censos seleccionados
+      $idsFicheros = array();
+      $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
+      // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
+      for($i = 0; $i < sizeof($censosSeleccionados); $i++)
       {
-        $usuarios = array();
-        $usuariosIds = array();
-        $totales = array();
-        $censosSeleccionados = $this->input->post('censo');
-        // Extraer IDS de los ficheros de esos censos seleccionados
-        $idsFicheros = array();
-        $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
-        // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
-        for($i = 0; $i < sizeof($censosSeleccionados); $i++)
-        {
-          $usuarios = $this->extraerUsuariosFichero($censosSeleccionados[$i]);
-          $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+        $usuarios = $this->extraerUsuariosFichero($censosSeleccionados[$i]);
+        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
 
-          for($j = 0; $j < sizeof($usuariosIds); $j++)
-          {
-            // Relacionar este usuario con este censo en la bd
-            $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
-            if(!in_array($usuariosIds[$j],$totales))
-            array_push($totales,$usuariosIds[$j]);
-          }
-        }
-        // OBTENER NOMBRES DE ESOS USUARIOS
-        $nombresUsuarios = array();
-        foreach($totales as $idUser)
+        for($j = 0; $j < sizeof($usuariosIds); $j++)
         {
-          $aux = $this->usuario_model->getUsuario($idUser);
-          $nombresUsuarios[] = $aux;
+          // Relacionar este usuario con este censo en la bd
+          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
+          if(!in_array($usuariosIds[$j],$totales))
+          array_push($totales,$usuariosIds[$j]);
         }
-        $nombreCensos = $this->censo_model->getCensos();
-        $datos = array(
+      }
+      // OBTENER NOMBRES DE ESOS USUARIOS
+      $nombresUsuarios = array();
+      foreach($totales as $idUser)
+      {
+        $aux = $this->usuario_model->getUsuario($idUser);
+        $nombresUsuarios[] = $aux;
+      }
+      $nombreCensos = $this->censo_model->getCensos();
+      $datos = array(
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios
-        );
-        switch($tipo)
-        {
-          case 'simple':
-            $datos += array('soloAsistentes' => true);
-            $this->load->view('elementos/headerSecretario');
-            $this->load->view('secretario/votacionSimple_view',$datos);
-            break;
-          case 'compleja':
+          );
+      switch($tipo)
+      {
+        case 'simple':
+          $datos += array('soloAsistentes' => true);
+          $this->load->view('elementos/headerSecretario');
+          $this->load->view('secretario/votacionSimple_view',$datos);
+          break;
+        case 'compleja':
           $datos += array('soloAsistentes' => true);
           $this->load->view('secretario/votacionCompleja_view',$datos);
           break;
-        }
       }
 
-    }
-
   }
+
+  private function validaciones()
+  {
+    $this->form_validation->set_rules('titulo','Titulo','required');
+    $this->form_validation->set_rules('descripcion','Descripcion','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','required');
+    $this->form_validation->set_rules('final','Fecha Final','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
+    $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+    // MENSAJES DE ERROR.
+    $this->form_validation->set_message('required','El campo %s es obligatorio');
+    return $this->form_validation->run();
+  }
+
   public function insertarVotacion($tipo)
   {
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
-        // VALIDACIONES
-        //$this->form_validation->set_rules('id','ID','required');
-				$this->form_validation->set_rules('titulo','Titulo','required');
-				$this->form_validation->set_rules('descripcion','Descripcion','required');
-				$this->form_validation->set_rules('inicio','Fecha Inicio','required');
-        $this->form_validation->set_rules('final','Fecha Final','required');
-        $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
-        $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-        //$this->form_validation->set_rules('censo','Censo','callback_validarCenso');
-
-				// MENSAJES DE ERROR.
-				$this->form_validation->set_message('required','El campo %s es obligatorio');
-
-        if($this->form_validation->run() == FALSE) // Hay algun error
+      if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+      {
+        $this->mostrarAsistentes($tipo);
+      }
+      else
+      {
+        if($this->validaciones() == FALSE) // Hay algun error
         {$this->crearVotacion();} // Mostrar mensajes de error en la vista
         else
         {  // Correcta
@@ -161,11 +161,11 @@ class Secretario extends CI_Controller{
           $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
           $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
 
-          //echo var_dump($fechaInicio);
           $esModificable = false;
           if($this->input->post('esModificable') != NULL)
             $esModificable = true;
 
+          // CREAR VOTACION EN BASE A SU TIPO
           switch($tipo)
           {
             case 'simple':
@@ -210,10 +210,9 @@ class Secretario extends CI_Controller{
             );
             break;
           }
-
-          //echo var_dump($votacion);
           $this->guardarVotacion($votacion);
         }
+      }
     }
   }
 

@@ -31,7 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/finalizarVotacion/simple');?>
+    <?=form_open(base_url().'secretario/insertarVotacion/simple');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -131,7 +131,7 @@
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'esModificable',
-          'value' => 1
+          'value' => true
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -148,7 +148,7 @@
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'soloAsistentes',
-          'value' => 1
+          'value' => true
         );
         ?>
         <?= form_checkbox($atributos); ?>
