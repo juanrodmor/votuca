@@ -25,6 +25,7 @@ class Votacion{
     $this->SoloAsistentes = $asistentes;
     $this->RecuentoParalelo = $paralelo;
     $this->NumOpciones = $nOpc;
+
   }
 
   public function getId(){return $this->id;}
@@ -43,6 +44,7 @@ class Votacion{
   public function getRecuentoParalelo(){return $this->RecuentoParalelo;}
   public function getOpciones(){return $this->NumOpciones;}
 
+
   public function setId($id){$this->id = $id;}
   public function setTitulo($titulo){$this->titulo = $titulo;}
   public function setDescripcion($descripcion){$this->descripcion = $descripcion;}
@@ -58,6 +60,7 @@ class Votacion{
   public function setAsistentes($asistentes){$this->SoloAsistentes = $asistentes;}
   public function setRecuentoParalelo($paralelo){$this->RecuentoParalelo = $paralelo;}
   public function setOpciones($opciones){$this->NumOpciones = $opciones;}
+
 
 
 }
