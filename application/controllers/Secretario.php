@@ -138,7 +138,7 @@ class Secretario extends CI_Controller{
     $this->form_validation->set_rules('final','Fecha Final','required');
     $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
     $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-    if($validarAsistentes == TRUE)
+    if($validarAsistentes == true)
     {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
 
     // MENSAJES DE ERROR.
@@ -148,6 +148,13 @@ class Secretario extends CI_Controller{
 
   private function prepararVotacion($tipo)
   {
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
+    $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
+
+    $esModificable = false;
+    if($this->input->post('esModificable') != NULL)
+        $esModificable = true;
+
     switch($tipo)
     {
       case 'simple':
@@ -199,15 +206,6 @@ class Secretario extends CI_Controller{
 
   private function aceptarInsercion($tipo)
   {
-    // Correcta
-    // Convierte la fecha en un formato valido para la BD
-    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
-    $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
-
-    $esModificable = false;
-    if($this->input->post('esModificable') != NULL)
-        $esModificable = true;
-
     // CREAR VOTACION EN BASE A SU TIPO
     $votacion = $this->prepararVotacion($tipo);
     $this->guardarVotacion($votacion);
