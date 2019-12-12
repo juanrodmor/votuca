@@ -219,13 +219,13 @@ class Secretario extends CI_Controller{
       {$this->mostrarAsistentes($tipo);}
       else // NO SE HAN INTRODUCIDO ASISTENTES O LOS ACABAS DE INTRODUCIR
       {
-        if($this->input->post('soloAsistentes') != NULL) // SI HAS ELEGIDO ASISTENTES
+        if($this->input->post('asistentes') != NULL) // SI HAS ELEGIDO ASISTENTES
         {
           if($this->validaciones(true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
           {{$this->crearVotacion($tipo);}}
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
         }
-        if($this->input->post('soloAsistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+        if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
         {
           if($this->validaciones(false) == FALSE) // Hay algun error
           {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
