@@ -799,7 +799,7 @@ class Secretario extends CI_Controller{
     $elegidos = $this->input->post('asistentes');
     if($elegidos == NULL || sizeof($elegidos) < 3)
     {
-      $this->form_validation->set_message('validarAsistentes','Introduzca al menos tres usuarios en el censo');
+      $this->form_validation->set_message('validarAsistentes','Introduzca al menos tres usuarios asistentes');
       return FALSE;
     }
     else{return TRUE;}
