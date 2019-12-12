@@ -241,12 +241,12 @@
       $atributos = array(
         'name' => 'recuentoParalelo',
         'class' => 'form-check-input',
-        'type' => 'radio',
+        'type' => 'checkbox',
         'id' => 'recuentoParalelo',
         'value' => true
       );
       ?>
-      <?= form_radio($atributos); ?>
+      <?= form_checkbox($atributos); ?>
       <?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
     </div>
 

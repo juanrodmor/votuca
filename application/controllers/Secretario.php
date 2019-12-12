@@ -166,6 +166,10 @@ class Secretario extends CI_Controller{
     if($this->input->post('esModificable') != NULL)
         $esModificable = true;
 
+    $recuentoParalelo = false;
+    if($this->input->post('recuentoParalelo') != NULL)
+        $esModificable = true;
+
     switch($tipo)
     {
       case 'simple':
@@ -225,7 +229,7 @@ class Secretario extends CI_Controller{
           $this->input->post('quorum'),
           $esModificable,
           false, // SoloAsistentes
-          $this->input->post('recuentoParalelo'), // Recuento Paralelo
+          $recuentoParalelo, // Recuento Paralelo
           1// NumOpciones
         );
         break;
@@ -245,7 +249,7 @@ class Secretario extends CI_Controller{
           $this->input->post('quorum'),
           $esModificable,
           false, // SoloAsistentes
-          $this->input->post('recuentoParalelo'), // Recuento Paralelo
+          $recuentoParalelo, // Recuento Paralelo
           $this->input->post('nOpciones')// NumOpciones
         );
         break;
