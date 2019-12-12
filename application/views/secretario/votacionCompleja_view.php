@@ -124,15 +124,38 @@
           <?= form_input($atributos) ?> <br/><br/>
         </div>
 
-        <!-- RADIO BUTTONS -->
-      <div class="form-group">
+        <!-- CHECK BUTTONS -->
         <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="exampleRadios" id="esModificable" value="modificable">
-          <label class="form-check-label" for="exampleRadios1">
-            Voto modificable
-          </label>
+        <?php
+        $atributos = array(
+          'name' => 'esModificable',
+          'class' => 'form-check-input',
+          'type' => 'checkbox',
+          'id' => 'esModificable',
+          'value' => true
+        );
+        ?>
+        <?= form_checkbox($atributos); ?>
+        <?= form_label('Voto Modificable','esModificable'); ?>
       </div>
-    </div>
+
+
+    <?php
+      if($soloAsistentes == true){?>
+        <div class="form-check">
+        <?php
+        $atributos = array(
+          'name' => 'soloAsistentes',
+          'class' => 'form-check-input',
+          'type' => 'checkbox',
+          'id' => 'soloAsistentes',
+          'value' => true
+        );
+        ?>
+        <?= form_checkbox($atributos); ?>
+        <?= form_label('Solo asistentes','soloAsistentes'); ?>
+      </div>
+    <?php }?>
 
     <h2> Opciones </h2>
     <div class="form-group">
@@ -142,11 +165,11 @@
           'id' => 'nOpciones',
           'name' => 'nOpciones',
           'class' => 'form-control',
-          'placeholder' =>'Introduzca un número de opciones',
+          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
           'required' => true,
           'value' => set_value('opciones')
       ); ?>
-      <?= form_label('Número de opciones','nOpciones'); ?>
+      <?= form_label('Total de opciones a votar','nOpciones'); ?>
       <?= form_input($atributos) ?> <br/><br/>
         </div>
       </div>
@@ -165,7 +188,8 @@
           'required' => true,
           'value' => set_value('opciones')
         ); ?>
-      <?= form_label('Opciones disponibles','opciones'); ?>
+      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
+      <p> Separe cada opción por una coma </p>
       <?= form_input($atributos) ?> <br/><br/>
       </div>
       </div>
@@ -176,23 +200,7 @@
         'type' => 'submit',
         'value' => 'Guardar opción'
     ); ?>
-<!-- PARTE DEL CENSO -->
-    <?php
-      if($soloAsistentes == true){?>
-          <!--<div class="form-group">
-        <a class="btn btn-primary" id="mi" onclick="hacerAlgo()" role="button">Link</a>
-        </div>
-      <div class="form-group">
-          <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="exampleRadios" id="soloAsistentes" value="soloAsistentes" onclick = "">
-            <label class="form-check-label" for="exampleRadios1">
-              Solo asistentes
-            </label>
-        </div>
-      </div>-->
-    <?php }?>
-
-        <h2> Censo electoral </h2>
+    <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -226,6 +234,47 @@
         </table>
       </div>
       </div>
+
+      <?php
+    if(isset($asistentes))
+    {
+      if($asistentes != NULL){?>
+      <h2> Censo asistente </h2>
+        <div class = "container">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+          <table class="display table table-striped table-bordered" id="votaciones_admin">
+            <thead>
+              <tr>
+                <th>Asistentes</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <?php
+                foreach($asistentes as $asistente)
+                {?>
+                <td><?php echo $asistente[0]->NombreUsuario?></td>
+                <?php
+                  echo '<div class="form-check">';
+                   $atributos = array(
+                      'name' => 'asistentes[]',
+                      'class' => 'form-control',
+                      'type' => 'checkbox',
+                      'id' => 'censo',
+                      'value' => $asistente[0]->Id
+                  );
+                  ?>
+                <td><?= form_checkbox($atributos); ?></td>
+              </div>
+              <?php echo '</tr>'; ?>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  <?php } ?>
+<?php } ?>
 
 
       <!-- BOTÓN ENVIAR -->

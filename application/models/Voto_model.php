@@ -170,8 +170,9 @@ f<?php
 		}
 
 		/********************************************/
-		/******* INSERTAR UN USUARIO DEL CENSO ******/
+		/******* FUNCIONES INMA *********************/
 		/********************************************/
+
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
@@ -196,9 +197,27 @@ f<?php
 												 ));
 		}
 
-		public function insertarOpciones($idVotacion,$opciones)
+		public function votoExists($nombreVoto)
 		{
-			foreach($opciones as $opcion)
+			$consulta = $this->db->get_where('voto', array('Nombre' => $nombreVoto));
+			return ($consulta->num_rows() == 1);
+		}
+
+		public function nuevoTipoVoto($nombreVoto)
+		{
+			// COMPROBAR QUE NO EXISTE YA
+			if(!$this->votoExists($nombreVoto))
+			{
+				$nuevoTipo =array(
+					'Nombre' => $nombreVoto
+				);
+				$this->db->insert('voto',$nuevoTipo);
+			}
+		}
+
+		public function insertarOpciones($idVotacion,$idsOpciones)
+		{
+			foreach($idsOpciones as $opcion)
 			{
 				$datos = array(
 					'Id_Votacion' => $idVotacion,
@@ -206,6 +225,12 @@ f<?php
 				);
 				$this->db->insert('votacion_voto',$datos);
 			}
+		}
+
+		public function getIdFromNombreVoto($nombreVoto)
+		{
+			$consulta = $this->db->get_where('voto', array('Nombre' => $nombreVoto));
+			return $consulta->row()->Id;
 		}
 }
 ?>

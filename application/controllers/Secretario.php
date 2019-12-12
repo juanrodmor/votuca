@@ -196,9 +196,8 @@ class Secretario extends CI_Controller{
           false, // SoloAsistentes
           false, // Recuento Paralelo
           $this->input->post('nOpciones')// NumOpciones
-
-
         );
+
         break;
       }
       return $votacion;
@@ -315,13 +314,32 @@ class Secretario extends CI_Controller{
 
   private function guardarSusOpciones($idVotacion,$tipo)
   {
-    if($tipo == 1 || $tipo == 3)
+    if($tipo == 1 || $tipo == 3)  // VOTACION COMPLEJA && CONSULTA SIMPLE
     {
       $misVotos = array(1,2,3);
       $this->voto_model->insertarOpciones($idVotacion,$misVotos);
     }
     else{
-      echo 'OTRO TIPO';
+      switch($tipo)
+      {
+        case 2: // VOTACION COMPLEJA
+          $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+          // Crear cada opcion para que esté disponible
+          $idsOpciones = array();
+          foreach($extraccionOpciones as $opcion)
+          {
+             $this->voto_model->nuevoTipoVoto($opcion);
+             $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+           }
+
+          // Extraer ids de esos nuevos tipos de votos
+          $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+
+
+        break;
+
+      }
     }
   }
 
