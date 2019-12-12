@@ -124,6 +124,7 @@ class Secretario extends CI_Controller{
           break;
         case 'compleja':
           $datos += array('soloAsistentes' => true);
+          $this->load->view('elementos/headerSecretario');
           $this->load->view('secretario/votacionCompleja_view',$datos);
           break;
       }
@@ -221,7 +222,7 @@ class Secretario extends CI_Controller{
         if($this->input->post('asistentes') != NULL) // SI HAS ELEGIDO ASISTENTES
         {
           if($this->validaciones(true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
-          {{$this->crearVotacion($tipo);}}
+          {{$this->crearVotacion($tipo);}} // Hay que arreglarla para los asistntes
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
         }
         if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
