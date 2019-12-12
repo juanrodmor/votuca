@@ -12,6 +12,7 @@ class Secretario extends CI_Controller{
     $this->load->model('mesa_model');
     $this->load->model('voto_model');
     $this->load->model('censo_model');
+    $this->load->model('ponderaciones_model');
     $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
 
@@ -76,6 +77,11 @@ class Secretario extends CI_Controller{
       $datos += array('soloAsistentes' => true);
       $this->load->view('secretario/votacionCompleja_view',$datos);
       break;
+
+      case 'consultasimple':
+      $this->load->view('secretario/consultaSimple_view',$datos);
+      break;
+
     }
     //$this->load->view('elementos/footer');*/
   }
@@ -198,7 +204,26 @@ class Secretario extends CI_Controller{
           false, // Recuento Paralelo
           $this->input->post('nOpciones')// NumOpciones
         );
+        break;
 
+        case 'consultasimple':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          3,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          $this->input->post('recuentoParalelo'), // Recuento Paralelo
+          1// NumOpciones
+        );
         break;
       }
       return $votacion;
@@ -344,6 +369,29 @@ class Secretario extends CI_Controller{
     }
   }
 
+  private function generarPonderaciones($idVotacion,$tipo)
+  {
+    switch($tipo)
+    {
+      case 1:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
+      break;
+
+      case 2:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
+      break;
+
+      case 3:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
+      break;
+    }
+  }
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
   public function guardarVotacion($datos)
   {
@@ -371,6 +419,9 @@ class Secretario extends CI_Controller{
         // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
         $this->guardarSusOpciones($idVotacion,$datos->getTipo());
 
+        // GENERAR PONDERACIONES
+        $this->generarPonderaciones($idVotacion,$datos->getTipo());
+
         // SACAR USUARIOS DE TODOS LOS FICHEROS DE CENSOS
         for($i = 0; $i < sizeof($nombreCensos); $i++)
         {
@@ -395,7 +446,7 @@ class Secretario extends CI_Controller{
         // MESA ELECTORAL
         $this->generarMesaElectoral($totales,$idVotacion);
       }
-      else
+     else
       {  // GUARDAR ASISTENTES
         // GUARDAR VOTACION
         $noGuardado = $this->votaciones_model->guardarVotacion($datos);
@@ -403,6 +454,9 @@ class Secretario extends CI_Controller{
 
         // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
         $this->guardarSusOpciones($idVotacion,$datos->getTipo());
+
+        // GENERAR PONDERACIONES
+        $this->generarPonderaciones($idVotacion,$datos->getTipo());
 
         // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO ASISTENTES
         $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
