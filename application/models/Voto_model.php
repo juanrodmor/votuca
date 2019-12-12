@@ -4,28 +4,19 @@ f<?php
 		{
 			parent::__construct ();
 			$this->load->database();
-			/*
-			$mysqli = mysqli_connect("localhost", "root", "", "votuca");
-			if($mysqli == false) {
-			    die("ERROR: Could not connect. ".mysqli_connect_error());
-			}
-			*/
 		}
 
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable, votacion.NumOpciones
-						from votacion, censo, usuario_votacion
+			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable, votacion.NumOpciones
+						from votacion, censo
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Votacion = votacion.Id
 							AND votacion.isDeleted = 0
 							AND votacion.esBorrador = 0
 						order by votacion.FechaFinal ASC;";
 
-			//$sql = "select Titulo, Descripcion, FechaInicio, FechaFinal from votacion;";
 			$query = $this -> db -> query($sql);
 			if ( $query->num_rows() == 0 )
 			{
@@ -52,23 +43,45 @@ f<?php
 		// Votar
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
+			if(gettype($voto) == "string") { 			//votacion simple
 
-			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE));
-			//echo $sql->num_rows();
-			//echo var_dump($sql->row()->Id);
+				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE, 'Invalida' => FALSE));
+				//echo $sql->num_rows();
+				//echo var_dump($sql->row()->Id);
 
-
-			if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
-				$sql = $this->db->get_where('voto', array('Nombre' => $voto));
-				$id_voto = $sql->row()->Id;
-
-				$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
-				$query = $this -> db -> query($sql);
-				return TRUE;	// has votado correctamente
-			} else {
-				return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
+				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {	//comprobar votacion valida
+					$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+					$id_voto = $sql->row()->Id;
+					$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+					$query = $this -> db -> query($sql);
+					return TRUE;	// has votado correctamente
+				} else
+					return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
+					//echo var_dump($sql->result());
 			}
-				//echo var_dump($sql->result());
+
+			if(gettype($voto) == "array") {				//votacion compleja
+				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE, 'Invalida' => FALSE));
+
+				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
+					$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
+					//echo var_dump($voto);
+
+					foreach($voto as $nuevoVoto) {
+						//echo $nuevoVoto->Id_Voto;
+						$sql = $this->db->get_where('voto', array('Nombre' => $nuevoVoto));
+						$id_voto = $sql->row()->Id;
+						//echo $id_voto;
+
+						$sql = "INSERT INTO usuario_votacion (Id_Usuario, Id_Votacion, Id_Voto) VALUES (".$id_usuario.", ".$id_votacion.", '".password_hash($id_voto, PASSWORD_DEFAULT)."');";
+						$query = $this -> db -> query($sql);
+					}
+					return TRUE;	// has votado correctamente
+				} else 
+					return FALSE;
+			}
+
+			else return FALSE;
 
 		}
 
