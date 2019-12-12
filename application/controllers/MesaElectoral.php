@@ -52,12 +52,16 @@ class MesaElectoral extends CI_Controller{
   }
 
 	private function abrirUrna($idVotacion) {
-		if (!($this->Mesa_model->getQuiereAbrir($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion)))
-			$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);		
+		$nuevaConfirmacion = false;
+		if (!($this->Mesa_model->getQuiereAbrir($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion))) {
+			$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+			$this->monitoring->register_action_mElectoralConfirmed($this->session->userdata('usuario'), $this->votaciones_model->getVotacion($idVotacion));
+			$nuevaConfirmacion = true;
+		}			
 		$peticionesApertura = $this->Mesa_model->getNApertura($idVotacion);
-		if ($peticionesApertura == 3) {
-			$apertores = $this->Mesa_model->getNamesApertura();
-			$this->monitoring->blablabla;
+		if ($nuevaConfirmacion && $peticionesApertura == 3) {
+			$apertores = $this->Mesa_model->getNamesApertura($idVotacion);
+			$this->monitoring->register_action_openBox($this->votaciones_model->getVotacion($idVotacion), $apertores);
 			return true;
 		} else if ($peticionesApertura > 3) return true;
 		else return false;
@@ -102,7 +106,8 @@ class MesaElectoral extends CI_Controller{
 					$this->index($mensajes);
 				} else {	//Se cumple el quorum
 					$this->Mesa_model->setFinalizada($idVotacion);
-					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion));
+					$cierran = $this->Mesa_model->getNamesCierre($idVotacion);
+					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion), $cierran);
 					$mensajes = array('success' => '¡Votación finalizada con éxito!');
 					$this->index($mensajes);
 				}
@@ -117,9 +122,14 @@ class MesaElectoral extends CI_Controller{
 	
 	//Añade confirmación de cierre de urna y hace recuento de confirmaciones.
 	private function cerrarUrna($idVotacion) {
-		$this->Mesa_model->cierraUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+		$nuevaConfirmacion = false;
+		if (!($this->Mesa_model->getQuiereCerrar($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion))) {
+			$this->Mesa_model->cierraUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+			$this->monitoring->register_action_mElectoralConfirmedClose($this->session->userdata('usuario'), $this->votaciones_model->getVotacion($idVotacion));
+			$nuevaConfirmacion = true;
+		}
 		$peticionesCierre = $this->Mesa_model->getNCierre($idVotacion);
-		return ($peticionesCierre >= 3);
+		return ($nuevaConfirmacion && $peticionesCierre == 3);
 	}
 
 }

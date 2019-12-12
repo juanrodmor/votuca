@@ -56,6 +56,28 @@ class Mesa_model extends CI_Model {
 		return $consulta->num_rows();
 	}
 	
+	//Devuelve un array con los nombres de usuario que quieren abrir una urna.
+	public function getNamesApertura($idVotacion) {
+		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion, 'seAbre' => 1));
+		$arrayNames = array();
+		foreach($consulta->result() as $result) {
+			$consulta2 = $this->db->get_where('usuario', array('Id' => $result->Id_Usuario));
+			array_push($arrayNames, $consulta2->result()[0]->NombreUsuario);
+		}
+		return $arrayNames;
+	}
+	
+	//Devuelve un array con los nombres de usuario que quieren cerrar una urna.
+	public function getNamesCierre($idVotacion) {
+		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion, 'seCierra' => 1));
+		$arrayNames = array();
+		foreach($consulta->result() as $result) {
+			$consulta2 = $this->db->get_where('usuario', array('Id' => $result->Id_Usuario));
+			array_push($arrayNames, $consulta2->result()[0]->NombreUsuario);
+		}
+		return $arrayNames;
+	}
+	
 	//Comprueba si un miembro electoral quiere abrir una votación concreta.
 	public function getQuiereAbrir($username, $votacion) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'Id_Usuario' => $username, 'seAbre' => 1));

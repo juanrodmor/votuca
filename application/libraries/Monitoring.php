@@ -80,15 +80,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 
-        public function register_action_openBox($votacion)
+        public function register_action_openBox($votacion, $apertores)
         {
-            $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] procede a la apertura de urnas.";
+            $action_message = "[" . mdate($this->hour_format) . "] [OPEN BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] procede a la apertura de urnas con la confirmación de ";
+			for ($it=0; $it<count($apertores); $it++) {
+				$action_message = $action_message . $apertores[$it];
+				if ($it == count($apertores)-1)
+					$action_message = $action_message . ".";
+				else
+					$action_message = $action_message . " / ";
+			}
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
         }
 		
-		public function register_action_closeBox($votacion)	//Muestra que una votación ha finalizado.
+		public function register_action_closeBox($votacion, $cierran)	//Muestra que una votación ha finalizado.
 		{
-			$action_message = "[" . mdate($this->hour_format) . "] [CLOSE BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] cierra sus urnas.";
+			$action_message = "[" . mdate($this->hour_format) . "] [CLOSE BOX]" . " La votación " . $votacion->Titulo . " [" . $votacion->Id . "] cierra sus urnas con la supervisión de ";
+			for ($it=0; $it<count($cierran); $it++) {
+				$action_message = $action_message . $cierran[$it];
+				if ($it == count($cierran)-1)
+					$action_message = $action_message . ".";
+				else
+					$action_message = $action_message . " / ";
+			}
             file_put_contents($this->logs_basepath . $this->file_name, $action_message . "\r\n", FILE_APPEND);
 		}
 		
