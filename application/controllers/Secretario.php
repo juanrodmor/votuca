@@ -82,6 +82,10 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/consultaSimple_view',$datos);
       break;
 
+      case 'consultacompleja':
+      $this->load->view('secretario/consultaCompleja_view',$datos);
+      break;
+
     }
     //$this->load->view('elementos/footer');*/
   }
@@ -225,6 +229,26 @@ class Secretario extends CI_Controller{
           1// NumOpciones
         );
         break;
+
+        case 'consultacompleja':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          3,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          $this->input->post('recuentoParalelo'), // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
       }
       return $votacion;
   }
@@ -365,6 +389,22 @@ class Secretario extends CI_Controller{
 
         break;
 
+        case 4:
+        $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+        // Crear cada opcion para que esté disponible
+        $idsOpciones = array();
+        foreach($extraccionOpciones as $opcion)
+        {
+           $this->voto_model->nuevoTipoVoto($opcion);
+           $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+         }
+
+        // Extraer ids de esos nuevos tipos de votos
+        $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+        break;
+
+
       }
     }
   }
@@ -390,6 +430,13 @@ class Secretario extends CI_Controller{
       $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
       $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
       break;
+
+      case 4:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
+      break;
+
     }
   }
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
