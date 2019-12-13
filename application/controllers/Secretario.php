@@ -285,7 +285,7 @@ class Secretario extends CI_Controller{
       $usuarios = array();
       $usuariosIds = array();
       $totales = array();
-      echo var_dump($this->input->post('esModificable'));
+      //echo var_dump($this->input->post('esModificable'));
       // GUARDAR VOTACION SIN ASISTENTES SELECCIONADOS
       if($asistentes == NULL)
       {
@@ -295,10 +295,10 @@ class Secretario extends CI_Controller{
        $idsFicheros = $this->extraerIdsFicheros($nombreCensos);
 
         // GUARDAR VOTACION
-      //  $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-        //$idVotacion = $this->votaciones_model->getLastId();
+        $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+        $idVotacion = $this->votaciones_model->getLastId();
 
-        /*// RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
+        // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
         $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
         // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
@@ -330,8 +330,12 @@ class Secretario extends CI_Controller{
 
         // MESA ELECTORAL
         $this->generarMesaElectoral($totales,$idVotacion);
-      */}
-     /*else
+
+        // GUARDAR NUM_VOTOS EN RECUENTO
+        $this->generarNumeroVotos($idVotacion,$datos->getTipo());
+
+      }
+     else
       {  // GUARDAR ASISTENTES
         // GUARDAR VOTACION
         $noGuardado = $this->votaciones_model->guardarVotacion($datos);
@@ -363,7 +367,7 @@ class Secretario extends CI_Controller{
       else{
         $datos = array('mensaje'=>'La votación se ha guardado correctamente');
         $this->index('La votación se ha guardado correctamente');
-      }*/
+      }
     }
 
 
@@ -419,6 +423,7 @@ class Secretario extends CI_Controller{
           'pulsadoModificar' => $esModificable,
           'pulsadoParalelo' => $recuentoParalelo,
           'pulsadoAsistentes' => $soloAsistentes,
+          'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios
       );
       switch($tipo)
@@ -518,7 +523,7 @@ class Secretario extends CI_Controller{
     {
       if($tipo == 1 || $tipo == 3)  // VOTACION COMPLEJA && CONSULTA SIMPLE
       {
-        $misVotos = array(1,2,3);
+        $misVotos = array(1,2,3,4);
         $this->voto_model->insertarOpciones($idVotacion,$misVotos);
       }
       else{
@@ -600,7 +605,7 @@ class Secretario extends CI_Controller{
       if($validarAsistentes == true)
       {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
       if($validarCenso == true)
-      {$this->form_validation->set_rules('censo','Censo','callback_validarFicherosCenso');}
+      {$this->form_validation->set_rules('censos','Censo','callback_validarFicherosCenso');}
       // MENSAJES DE ERROR.
       $this->form_validation->set_message('required','El campo %s es obligatorio');
       return $this->form_validation->run();
@@ -648,6 +653,26 @@ class Secretario extends CI_Controller{
       }
     }
 
+    private function generarNumeroVotos($idVotacion,$tipo)
+    {
+      $numeroUsuarios = 0;
+      // EXTRAER OPCIONES
+      $opciones = $this->voto_model->getVotosFromVotacion($idVotacion);
+      //echo var_dump($opciones).'<br>';
+
+      // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO
+      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
+      //echo var_dump($hasAsistentes);
+      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
+      {$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+
+      // INTRODUCIR DATOS EN RECUENTO
+      $this->voto_model->recuentoPorDefecto($idVotacion,$opciones,$numeroUsuarios);
+      //echo var_dump($numeroUsuarios).'<br>';
+
+
+    }
   /************************************/
   /*********** ELIMINAR VOTACION ******/
   /************************************/

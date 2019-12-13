@@ -227,10 +227,35 @@ f<?php
 			}
 		}
 
+		public function getVotosFromVotacion($idVotacion)
+		{
+			$query = $this->db->query("SELECT Id_voto from votacion_voto WHERE Id_Votacion = '$idVotacion';");
+			return $query->result();
+		}
+
 		public function getIdFromNombreVoto($nombreVoto)
 		{
 			$consulta = $this->db->get_where('voto', array('Nombre' => $nombreVoto));
 			return $consulta->row()->Id;
+		}
+
+		public function recuentoPorDefecto($idVotacion,$opciones,$totalUsuarios)
+		{
+			$valor = 0;
+			$usuariosTotales = $totalUsuarios[0]->total;
+			foreach($opciones as $opcion)
+			{
+
+				if($opcion->Id_voto == 1){$valor = $usuariosTotales; }
+				else
+				{$valor = 0;}
+				$datos = array(
+					'Id_Votacion' => $idVotacion,
+					'Id_Voto' => $opcion->Id_voto,
+					'Num_Votos' => $valor
+				);
+				$this->db->insert('recuento',$datos);
+			}
 		}
 }
 ?>

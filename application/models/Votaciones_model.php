@@ -61,6 +61,18 @@ class Votaciones_model extends CI_Model{
 
   }
 
+  public function hasSoloAsistentes($idVotacion)
+  {
+    $query = $this->db->query("SELECT soloAsistentes from votacion WHERE id = '$idVotacion'");
+    return $query->result();
+  }
+
+  public function contarUsuarios($nombreTabla, $idVotacion)
+  {
+    $query = $this->db->query("SELECT COUNT(Id_Usuario) as total FROM $nombreTabla WHERE Id_Votacion = '$idVotacion'");
+    return $query->result();
+  }
+
   public function getLastId()
   {
     $query = $this->db->query("SELECT Id FROM votacion ORDER BY Id DESC LIMIT 1");
