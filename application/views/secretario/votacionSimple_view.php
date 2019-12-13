@@ -181,9 +181,6 @@
 
                 <td><?php echo $censo->Nombre?></td>
                 <?php
-                /*if(isset($_POST['censo']))
-                {echo var_dump($_POST['censo']);}*/
-
                  if(isset($_POST['censo']) && in_array($censo->Nombre, $_POST['censo'])) $checkCenso = 'checked';
                  else{$checkCenso = false;}
                 ?>

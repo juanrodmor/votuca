@@ -105,22 +105,30 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
-      if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
-      {$this->mostrarAsistentes($tipo);}
-      else // NO SE HAN INTRODUCIDO ASISTENTES O LOS ACABAS DE INTRODUCIR
+      if($this->input->post('soloAsistentes') != NULL
+         && $this->input->post('asistentes') != NULL
+         && $this->input->post('censo') != NULL
+         ) // SI HAS ELEGIDO ASISTENTES
       {
-        if($this->input->post('asistentes') != NULL) // SI HAS ELEGIDO ASISTENTES
-        {
-          if($this->validaciones(true,false) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
-          {{$this->crearVotacion($tipo);}} // Hay que arreglarla para los asistentes
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
-        }
-        if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+      }
+      else
+      {
+        if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
         {
-          if($this->validaciones(false,true) == FALSE) // Hay algun error
-          {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
-          else{$this->aceptarInsercion($tipo);}
+          $this->mostrarAsistentes($tipo);
+        }
+        else
+        {
+          if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+          {
+            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
+            else{$this->aceptarInsercion($tipo);}
 
+          }
         }
       }
     }
@@ -167,7 +175,7 @@ class Secretario extends CI_Controller{
           false,
           $this->input->post('quorum'),
           $esModificable,
-          false,
+          $soloAsistentes,
           false,
           1
         );
@@ -543,7 +551,7 @@ class Secretario extends CI_Controller{
     {
       if($tipo == 1 || $tipo == 3)  // VOTACION COMPLEJA && CONSULTA SIMPLE
       {
-        $misVotos = array(1,2,3,4);
+        $misVotos = array(2,3,4);
         $this->voto_model->insertarOpciones($idVotacion,$misVotos);
       }
       else{
@@ -559,7 +567,6 @@ class Secretario extends CI_Controller{
                $this->voto_model->nuevoTipoVoto($opcion);
                $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
              }
-             $idsOpciones[] = 1;
 
             // Extraer ids de esos nuevos tipos de votos
             $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
@@ -578,7 +585,6 @@ class Secretario extends CI_Controller{
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
 
-          $idsOpciones[] = 1;
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
@@ -594,7 +600,6 @@ class Secretario extends CI_Controller{
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
 
-          $idsOpciones[] = 1;
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
@@ -609,7 +614,7 @@ class Secretario extends CI_Controller{
              $this->voto_model->nuevoTipoVoto($opcion);
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
-          $idsOpciones[] = 1;
+
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
@@ -681,6 +686,7 @@ class Secretario extends CI_Controller{
       $numeroUsuarios = 0;
       // EXTRAER OPCIONES
       $opciones = $this->voto_model->getVotosFromVotacion($idVotacion);
+      //$opciones[] = 1;
       //echo var_dump($opciones).'<br>';
 
       // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO

@@ -229,7 +229,7 @@ f<?php
 
 		public function getVotosFromVotacion($idVotacion)
 		{
-			$query = $this->db->query("SELECT Id_voto from votacion_voto WHERE Id_Votacion = '$idVotacion';");
+			$query = $this->db->query("SELECT Id_Voto from votacion_voto WHERE Id_Votacion = '$idVotacion';");
 			return $query->result();
 		}
 
@@ -244,18 +244,16 @@ f<?php
 			$valor = 0;
 			$usuariosTotales = $totalUsuarios[0]->total;
 			foreach($opciones as $opcion)
-			{
-
-				if($opcion->Id_voto == 1){$valor = $usuariosTotales; }
-				else
-				{$valor = 0;}
+			{			
+				$valor = 0;
 				$datos = array(
 					'Id_Votacion' => $idVotacion,
-					'Id_Voto' => $opcion->Id_voto,
+					'Id_Voto' => $opcion->Id_Voto,
 					'Num_Votos' => $valor
 				);
 				$this->db->insert('recuento',$datos);
 			}
-		}
+			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES ('.$idVotacion.',1,'.$usuariosTotales.')");
+			}
 }
 ?>

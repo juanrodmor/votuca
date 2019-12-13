@@ -227,6 +227,10 @@
               <?php foreach($censos as $censo){ ?>
 
                 <td><?php echo $censo->Nombre?></td>
+                <?php
+                 if(isset($_POST['censo']) && in_array($censo->Nombre, $_POST['censo'])) $checkCenso = 'checked';
+                 else{$checkCenso = false;}
+                ?>
               <?php
                 echo '<div class="form-check">';
                  $atributos = array(
@@ -234,7 +238,8 @@
                     'class' => 'form-control',
                     'type' => 'checkbox',
                     'id' => 'censo',
-                    'value' => $censo->Nombre
+                    'value' => $censo->Nombre,
+                    'checked' => $checkCenso
                 );
                 ?>
               <td><?= form_checkbox($atributos); ?></td>
@@ -272,7 +277,7 @@
                       'name' => 'asistentes[]',
                       'class' => 'form-control',
                       'type' => 'checkbox',
-                      'id' => 'censo',
+                      'id' => 'asistentes',
                       'value' => $asistente[0]->Id
                   );
                   ?>
