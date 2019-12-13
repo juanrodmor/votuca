@@ -167,7 +167,7 @@
           'class' => 'form-control',
           'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
           'required' => true,
-          'value' => set_value('opciones')
+          'value' => set_value('nOpciones')
       ); ?>
       <?= form_label('Total de opciones a votar','nOpciones'); ?>
       <?= form_input($atributos) ?> <br/><br/>
