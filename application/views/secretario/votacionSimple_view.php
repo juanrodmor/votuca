@@ -124,14 +124,20 @@
         </div>
 
         <!-- CHECK BUTTONS -->
+
         <div class="form-check">
+          <?php
+           if(isset($_POST['esModificable'])) $check = 'checked';
+           else{$check = false;}
+          ?>
         <?php
         $atributos = array(
           'name' => 'esModificable',
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'esModificable',
-          'value' => true
+          'value' => true,
+          'checked' => $check
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -139,9 +145,7 @@
       </div>
 
 
-    <?php
-      if($soloAsistentes == true){?>
-        <div class="form-check">
+      <div class="form-check">
         <?php
         $atributos = array(
           'name' => 'soloAsistentes',
@@ -154,8 +158,7 @@
         <?= form_checkbox($atributos); ?>
         <?= form_label('Solo asistentes','soloAsistentes'); ?>
       </div>
-    <?php }?>
-
+    <?php if(isset($censos)){?>
         <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
         <div class = "container">
@@ -191,7 +194,8 @@
       </div>
       </div>
 
-      <?php
+    <?php }?>
+    <?php
     if(isset($asistentes))
     {
       if($asistentes != NULL){?>

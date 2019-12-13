@@ -64,6 +64,9 @@ class Secretario extends CI_Controller{
     // CENSO
     $nombreCensos = $this->censo_model->getCensos();
     $datos = array(
+      'pulsadoModificar' => true,
+      'pulsadoParalelo' => true,
+      'pulsadoAsistentes' => true,
       'censos' => $nombreCensos
     );
     switch($tipo)
@@ -109,7 +112,7 @@ class Secretario extends CI_Controller{
         if($this->input->post('asistentes') != NULL) // SI HAS ELEGIDO ASISTENTES
         {
           if($this->validaciones(true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
-          {{$this->crearVotacion($tipo);}} // Hay que arreglarla para los asistntes
+          {{$this->crearVotacion($tipo);}} // Hay que arreglarla para los asistentes
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
         }
         if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
@@ -282,6 +285,7 @@ class Secretario extends CI_Controller{
       $usuarios = array();
       $usuariosIds = array();
       $totales = array();
+      echo var_dump($this->input->post('esModificable'));
       // GUARDAR VOTACION SIN ASISTENTES SELECCIONADOS
       if($asistentes == NULL)
       {
@@ -291,10 +295,10 @@ class Secretario extends CI_Controller{
        $idsFicheros = $this->extraerIdsFicheros($nombreCensos);
 
         // GUARDAR VOTACION
-        $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-        $idVotacion = $this->votaciones_model->getLastId();
+      //  $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+        //$idVotacion = $this->votaciones_model->getLastId();
 
-        // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
+        /*// RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
         $this->relacionVotacionFichero($idsFicheros,$idVotacion);
 
         // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
@@ -326,8 +330,8 @@ class Secretario extends CI_Controller{
 
         // MESA ELECTORAL
         $this->generarMesaElectoral($totales,$idVotacion);
-      }
-     else
+      */}
+     /*else
       {  // GUARDAR ASISTENTES
         // GUARDAR VOTACION
         $noGuardado = $this->votaciones_model->guardarVotacion($datos);
@@ -349,8 +353,6 @@ class Secretario extends CI_Controller{
         $this->generarMesaElectoral($asistentes,$idVotacion);
       }
 
-
-
       // FINAL DE ESTA MIERDA
 
       if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
@@ -361,7 +363,7 @@ class Secretario extends CI_Controller{
       else{
         $datos = array('mensaje'=>'La votación se ha guardado correctamente');
         $this->index('La votación se ha guardado correctamente');
-      }
+      }*/
     }
 
 
@@ -369,9 +371,21 @@ class Secretario extends CI_Controller{
   /********* FUNCIONES AUXILIARES *********/
   /****************************************/
 
-  // LLAMA A LA VISTA MOSTRANDO ASISTENTES
+    // LLAMA A LA VISTA MOSTRANDO ASISTENTES
     private function mostrarAsistentes($tipo)
     {
+      $esModificable = false;
+      if($this->input->post('esModificable') != NULL)
+          $esModificable = true;
+
+      $recuentoParalelo = false;
+      if($this->input->post('recuentoParalelo') != NULL)
+          $esModificable = true;
+
+      $soloAsistentes = false;
+      if($this->input->post('soloAsistentes') != NULL)
+          $soloAsistentes = true;
+
       $usuarios = array();
       $usuariosIds = array();
       $totales = array();
@@ -402,9 +416,11 @@ class Secretario extends CI_Controller{
       }
       $nombreCensos = $this->censo_model->getCensos();
       $datos = array(
-          'censos' => $nombreCensos,
+          'pulsadoModificar' => $esModificable,
+          'pulsadoParalelo' => $recuentoParalelo,
+          'pulsadoAsistentes' => $soloAsistentes,
           'asistentes' => $nombresUsuarios
-          );
+      );
       switch($tipo)
       {
         case 'simple':
@@ -581,6 +597,7 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('final','Fecha Final','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+      $this->form_validation->set_rules('censo','Censo','callback_validarFicherosCenso');
       if($validarAsistentes == true)
       {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
 
@@ -1015,7 +1032,15 @@ class Secretario extends CI_Controller{
       return TRUE;
     }
   }
-
+  public function validarFicherosCenso(){
+    $elegidos = $this->input->post('censo');
+    if($elegidos == NULL || sizeof($elegidos) < 1)
+    {
+      $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+      return FALSE;
+    }
+    else{return TRUE;}
+  }
   public function validarAsistentes(){
     $elegidos = $this->input->post('asistentes');
     if($elegidos == NULL || sizeof($elegidos) < 3)
