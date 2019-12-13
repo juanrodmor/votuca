@@ -17,7 +17,7 @@ class Elector_controller extends CI_Controller {
 				$titulo['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$titulo);
-				//$this->load->view('elementos/headerComun',$inicio);
+					//$this->load->view('elementos/headerComun',$inicio);
 				$this->load->view('elementos/headerVotacion',$inicio);
 	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
 	        $datos = $this->Voto_model->_listar($id_user);
@@ -27,6 +27,11 @@ class Elector_controller extends CI_Controller {
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
 			$this->load->view('elementos/footer');
+
+			//$this->Voto_model->_actualizarFechasVotaciones();
+			
+				//funcion que introduce los votos de la votacion X de la tabla usuario_votacion en la tabla recuento
+			//$this->Voto_model->_usuarioVotacionToRecuento($datos[0]->Id);	
 	    }
 
     }

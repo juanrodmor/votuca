@@ -54,6 +54,17 @@ f<?php
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {	//comprobar votacion valida
 					if($modif == TRUE) {
 
+						// Decrementar el numero de abstenidos de recuento si aun no se había votado
+						if(!$this->_haVotado($id_votacion)) {
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
+						}
+
 						$sql = $this->db->get_where('voto', array('Nombre' => $voto));
 						$id_voto = $sql->row()->Id;
 
@@ -102,6 +113,17 @@ f<?php
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
 					if($modif == TRUE) {
 
+						// Decrementar el numero de abstenidos de recuento si aun no se había votado
+						if(!$this->_haVotado($id_votacion)) {
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
+						}
+
 						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
 						foreach($voto as $nuevoVoto) {
 							//echo $nuevoVoto->Id_Voto;
@@ -115,6 +137,7 @@ f<?php
 							);
 							$sql = $this->db->insert('usuario_votacion', $datos);
 						}
+
 						return TRUE;	// has votado correctamente
 					}
 					else {
@@ -189,6 +212,37 @@ f<?php
 				return true;
 			else 
 				return false;
+		}
+
+		public function _usuarioVotacionToRecuento( $id_votacion ) {	// pasar tabla de usuario_votacion a recuento (controlar con fecha afuera)
+			// pasar los votos de usario_votacion a recuento
+
+			// obtengo todos los campos de usuario_votacion que no esten abstenidos en un array
+			$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Voto !=' => '1') );
+			//echo var_dump($sql->result());
+			$sql = $sql->result();
+
+			// Por cada Id_Voto, tengo que compararlo con los votos asignados en recuento, y cuando coincida, sumarlos en num_votos
+			foreach ($sql as $voto_E) {
+
+				$rec = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Voto !=' => '1'));
+				$rec = $rec->result();
+
+				foreach($rec as $voto) {
+					if(password_verify($voto->Id_Voto, $voto_E->Id_Voto)) {
+					//if($voto->Id_Voto == $voto_E->Id_Voto) {	// comprobaciones con votos no encriptados
+
+						$numVotos = $voto->Num_Votos;
+						$numVotos++;
+						$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' and Id_Voto = '".$voto->Id_Voto."';";
+						$query = $this -> db -> query($sql);
+					}
+				}
+
+			}
+
+			// Borramos los votos de usuario_votacion que haya en la cesta de la votacion $id_votacion
+			$sql = $this->db->delete('usuario_votacion', array('Id_Votacion' => $id_votacion));
 		}
 
 
