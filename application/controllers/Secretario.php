@@ -86,6 +86,15 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/consultaCompleja_view',$datos);
       break;
 
+      case 'representantes':
+      $datos += array('soloAsistentes' => true);
+      $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+      break;
+
+      case 'uniponderados':
+      echo 'Estás en uniponderados';
+      break;
+
     }
     //$this->load->view('elementos/footer');*/
   }
@@ -170,6 +179,11 @@ class Secretario extends CI_Controller{
     if($this->input->post('recuentoParalelo') != NULL)
         $esModificable = true;
 
+    $soloAsistentes = false;
+    if($this->input->post('soloAsistentes') != NULL)
+        $soloAsistentes = true;
+
+
     switch($tipo)
     {
       case 'simple':
@@ -189,8 +203,6 @@ class Secretario extends CI_Controller{
           false,
           false,
           1
-
-
         );
         break;
 
@@ -208,7 +220,7 @@ class Secretario extends CI_Controller{
           false, //Invalida
           $this->input->post('quorum'),
           $esModificable,
-          false, // SoloAsistentes
+          $soloAsistentes, // SoloAsistentes
           false, // Recuento Paralelo
           $this->input->post('nOpciones')// NumOpciones
         );
@@ -237,7 +249,7 @@ class Secretario extends CI_Controller{
         case 'consultacompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          3,
+          4,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -250,6 +262,26 @@ class Secretario extends CI_Controller{
           $esModificable,
           false, // SoloAsistentes
           $recuentoParalelo, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
+
+        case 'representantes':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          5,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          $soloAsistentes, // SoloAsistentes
+          false, // Recuento Paralelo
           $this->input->post('nOpciones')// NumOpciones
         );
         break;
@@ -393,7 +425,7 @@ class Secretario extends CI_Controller{
 
         break;
 
-        case 4:
+        case 4: // CONSULTA COMPLEJA
         $extraccionOpciones = explode(",",$this->input->post('opciones'));
 
         // Crear cada opcion para que esté disponible
@@ -440,6 +472,14 @@ class Secretario extends CI_Controller{
       $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
       $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
       break;
+
+      case 5:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
+      break;
+
+
 
     }
   }
