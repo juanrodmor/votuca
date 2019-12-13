@@ -355,6 +355,9 @@ class Secretario extends CI_Controller{
 
         // MESA ELECTORAL
         $this->generarMesaElectoral($asistentes,$idVotacion);
+
+        // GUARDAR NUM_VOTOS EN RECUENTO
+        $this->generarNumeroVotos($idVotacion,$datos->getTipo());
       }
 
       // FINAL DE ESTA MIERDA
@@ -539,6 +542,7 @@ class Secretario extends CI_Controller{
                $this->voto_model->nuevoTipoVoto($opcion);
                $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
              }
+             $idsOpciones[] = 1;
 
             // Extraer ids de esos nuevos tipos de votos
             $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
@@ -557,6 +561,7 @@ class Secretario extends CI_Controller{
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
 
+          $idsOpciones[] = 1;
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
@@ -572,6 +577,7 @@ class Secretario extends CI_Controller{
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
 
+          $idsOpciones[] = 1;
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
@@ -586,7 +592,7 @@ class Secretario extends CI_Controller{
              $this->voto_model->nuevoTipoVoto($opcion);
              $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
            }
-
+          $idsOpciones[] = 1;
           // Extraer ids de esos nuevos tipos de votos
           $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
           break;
