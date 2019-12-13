@@ -72,6 +72,8 @@ f<?php
 						$sql = $this->db->get_where('voto', array('Nombre' => $nuevoVoto));
 						$id_voto = $sql->row()->Id;
 						//echo $id_voto;
+						//algunas llamadas para poder incrementar el num_votos (tengo que hacer password_verify para ponerlo en su sitio)
+
 
 						$sql = "INSERT INTO usuario_votacion (Id_Usuario, Id_Votacion, Id_Voto) VALUES (".$id_usuario.", ".$id_votacion.", '".password_hash($id_voto, PASSWORD_DEFAULT)."');";
 						$query = $this -> db -> query($sql);
