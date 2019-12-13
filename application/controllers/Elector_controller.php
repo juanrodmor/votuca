@@ -30,7 +30,7 @@ class Elector_controller extends CI_Controller {
 	    }
 
     }
-    
+
 
 // -----------------------------------------------------------------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ class Elector_controller extends CI_Controller {
 			    	//$voto = $this->input->post('voto');
 			    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
-			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
+			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
 			    	if($votado == TRUE) 
 			    		$mensaje = 'correcto';
@@ -133,7 +133,7 @@ class Elector_controller extends CI_Controller {
     				$voto = $_POST['voto'];
 			    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
 
-			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto);
+			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
 			    	if($votado == TRUE) 
 			    		$mensaje = 'correcto';

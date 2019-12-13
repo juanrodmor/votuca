@@ -9,7 +9,9 @@ f<?php
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal, votacion.VotoModificable, votacion.NumOpciones
+			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, 
+							votacion.FechaInicio, votacion.FechaFinal, 
+							votacion.VotoModificable, votacion.NumOpciones
 						from votacion, censo
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
@@ -41,7 +43,7 @@ f<?php
 		}
 
 		// Votar
-		public function _votar ( $id_usuario, $id_votacion, $voto )
+		public function _votar ( $id_usuario, $id_votacion, $voto, $modif )
 		{
 			if(gettype($voto) == "string") { 			//votacion simple
 
@@ -50,11 +52,45 @@ f<?php
 				//echo var_dump($sql->row()->Id);
 
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {	//comprobar votacion valida
-					$sql = $this->db->get_where('voto', array('Nombre' => $voto));
-					$id_voto = $sql->row()->Id;
-					$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
-					$query = $this -> db -> query($sql);
-					return TRUE;	// has votado correctamente
+					if($modif == TRUE) {
+
+						$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+						$id_voto = $sql->row()->Id;
+
+						$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+						$query = $this -> db -> query($sql);
+
+						return TRUE;	// has votado/rectificado correctamente
+					}
+					else {
+						// Eliminamos el registro de usuario_votacion
+						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));	//quitar de la cesta
+
+
+						// Sumamos el voto del elector
+							$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+							$id_voto = $sql->row()->Id;
+
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => $id_voto));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos++;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '".$id_voto."';";
+							$query = $this -> db -> query($sql);
+
+
+						// Decrementar el numero de abstenidos 
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
+
+						return TRUE;
+					}
 				} else
 					return FALSE;	// else -> no se guarda el voto porque o bien 1. se ha eliminado, 2. no existe tal votacion
 					//echo var_dump($sql->result());
@@ -64,21 +100,56 @@ f<?php
 				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE, 'Invalida' => FALSE));
 
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
-					$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
-					//echo var_dump($voto);
+					if($modif == TRUE) {
 
-					foreach($voto as $nuevoVoto) {
-						//echo $nuevoVoto->Id_Voto;
-						$sql = $this->db->get_where('voto', array('Nombre' => $nuevoVoto));
-						$id_voto = $sql->row()->Id;
-						//echo $id_voto;
-						//algunas llamadas para poder incrementar el num_votos (tengo que hacer password_verify para ponerlo en su sitio)
+						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
+						foreach($voto as $nuevoVoto) {
+							//echo $nuevoVoto->Id_Voto;
+							$sql = $this->db->get_where('voto', array('Nombre' => $nuevoVoto));
+							$id_voto = $sql->row()->Id;
 
-
-						$sql = "INSERT INTO usuario_votacion (Id_Usuario, Id_Votacion, Id_Voto) VALUES (".$id_usuario.", ".$id_votacion.", '".password_hash($id_voto, PASSWORD_DEFAULT)."');";
-						$query = $this -> db -> query($sql);
+							$datos = array(
+								'Id_Usuario' => $id_usuario,
+								'Id_Votacion' => $id_votacion,
+								'Id_Voto' => password_hash($id_voto, PASSWORD_DEFAULT)
+							);
+							$sql = $this->db->insert('usuario_votacion', $datos);
+						}
+						return TRUE;	// has votado correctamente
 					}
-					return TRUE;	// has votado correctamente
+					else {
+						// Eliminamos el registro de usuario_votacion
+						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));	//quitar de la cesta
+
+
+						// Sumamos el voto del elector
+						foreach($voto as $unico) {
+
+							$sql = $this->db->get_where('voto', array('Nombre' => $unico));
+							$id_voto = $sql->row()->Id;
+
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => $id_voto));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos++;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '".$id_voto."';";
+							$query = $this -> db -> query($sql);
+
+						}
+
+
+						// Decrementar el numero de abstenidos 
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
+							//$sql = $sql->result();
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
+
+						return TRUE;
+					}
 				} else 
 					return FALSE;
 			}
@@ -119,6 +190,9 @@ f<?php
 			else 
 				return false;
 		}
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		/********************************/
 		/******* RECUENTO DE VOTOS ******/
