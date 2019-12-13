@@ -10,7 +10,6 @@ class Login_controller extends CI_Controller {
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
-
 	public function redireccionar(){
 		switch($this->session->userdata('rol'))
 		{
