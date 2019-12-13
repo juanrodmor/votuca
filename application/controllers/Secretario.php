@@ -144,7 +144,7 @@ class Secretario extends CI_Controller{
 
     $recuentoParalelo = false;
     if($this->input->post('recuentoParalelo') != NULL)
-        $esModificable = true;
+        $recuentoParalelo = true;
 
     $soloAsistentes = false;
     if($this->input->post('soloAsistentes') != NULL)
