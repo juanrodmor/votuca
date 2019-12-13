@@ -147,12 +147,17 @@
 
       <div class="form-check">
         <?php
+         if(isset($_POST['soloAsistentes'])) $checkAsis = 'checked';
+         else{$checkAsis = false;}
+        ?>
+        <?php
         $atributos = array(
           'name' => 'soloAsistentes',
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'soloAsistentes',
-          'value' => true
+          'value' => true,
+          'checked' => $checkAsis
         );
         ?>
         <?= form_checkbox($atributos); ?>
