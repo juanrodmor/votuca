@@ -92,7 +92,7 @@ class Secretario extends CI_Controller{
       break;
 
       case 'uniponderados':
-      echo 'Estás en uniponderados';
+      $this->load->view('secretario/cargosUniponderados_view',$datos);
       break;
 
     }
@@ -285,6 +285,26 @@ class Secretario extends CI_Controller{
           $this->input->post('nOpciones')// NumOpciones
         );
         break;
+
+        case 'uniponderados':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          6,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          false, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
       }
       return $votacion;
   }
@@ -440,7 +460,35 @@ class Secretario extends CI_Controller{
         $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
         break;
 
+        case 5:
+        $extraccionOpciones = explode(",",$this->input->post('opciones'));
 
+        // Crear cada opcion para que esté disponible
+        $idsOpciones = array();
+        foreach($extraccionOpciones as $opcion)
+        {
+           $this->voto_model->nuevoTipoVoto($opcion);
+           $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+         }
+
+        // Extraer ids de esos nuevos tipos de votos
+        $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+        break;
+
+        case 6:
+        $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+        // Crear cada opcion para que esté disponible
+        $idsOpciones = array();
+        foreach($extraccionOpciones as $opcion)
+        {
+           $this->voto_model->nuevoTipoVoto($opcion);
+           $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+         }
+
+        // Extraer ids de esos nuevos tipos de votos
+        $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+        break;
       }
     }
   }
@@ -479,8 +527,11 @@ class Secretario extends CI_Controller{
       $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
       break;
 
-
-
+      case 6:
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+      $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
+      break;
     }
   }
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
