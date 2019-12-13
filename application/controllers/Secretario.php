@@ -429,18 +429,35 @@ class Secretario extends CI_Controller{
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios
       );
+      $this->load->view('elementos/headerSecretario');
       switch($tipo)
       {
         case 'simple':
           $datos += array('soloAsistentes' => true);
-          $this->load->view('elementos/headerSecretario');
           $this->load->view('secretario/votacionSimple_view',$datos);
           break;
         case 'compleja':
-          $datos += array('soloAsistentes' => true);
-          $this->load->view('elementos/headerSecretario');
-          $this->load->view('secretario/votacionCompleja_view',$datos);
-          break;
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/votacionCompleja_view',$datos);
+        break;
+
+        case 'consultasimple':
+        $this->load->view('secretario/consultaSimple_view',$datos);
+        break;
+
+        case 'consultacompleja':
+        $this->load->view('secretario/consultaCompleja_view',$datos);
+        break;
+
+        case 'representantes':
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+        break;
+
+        case 'uniponderados':
+        $this->load->view('secretario/cargosUniponderados_view',$datos);
+        break;
+
       }
 
     }
