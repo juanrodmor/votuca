@@ -125,7 +125,7 @@ class Administrador_controller extends CI_Controller {
 					}
 					else
 					{
-						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getEmail($usuario));
+						$this->Usuario_model->setUserObject($newUsername, $this->Usuario_model->getPass($usuario), $this->Usuario_model->getRolId($newrol), $this->Usuario_model->getGrupo($usuario) ,$this->Usuario_model->getEmail($usuario));
 						$this->Usuario_model->setUserTimeLimit($newUsername);
 						$this->session->set_userdata(array('userSearched' => $newUsername));
 						//$newIdUser = $this->Usuario_model->getId($newUsername);

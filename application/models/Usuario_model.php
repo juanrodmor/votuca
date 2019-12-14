@@ -14,10 +14,11 @@ class Usuario_model extends CI_Model {
 	*	$id_rol - Id correspondiente al rol del usuario en el sistema.
 	*	$email - Dirección email.
 	*/
-	public function setUserObject($username, $password, $id_rol, $email)
+	public function setUserObject($username, $password, $id_rol, $id_grupo, $email)
 	{
 		$data = array(
 			'Id_Rol' => $id_rol,
+			'Id_Grupo' => $id_grupo,
 			'NombreUsuario' => $username,
 			'Password' => $password,
 			'Email' => $email
@@ -78,7 +79,7 @@ class Usuario_model extends CI_Model {
 	//Devuelve todos los roles para un usuario; aunque disponga de distintos username.
 	public function getAllRoles($usuario)
 	{
-		$usr = substr($usuario, 1, -1);
+		$usr = substr($usuario, 1);
 		$query = "SELECT Id_Rol FROM USUARIO WHERE NombreUsuario LIKE '%".$usr."';";
 		$roles = array();
 		foreach($this->db->query($query)->result_array() as $rol)
@@ -143,6 +144,12 @@ class Usuario_model extends CI_Model {
 		$idUsuario = $this->getId($usuario);
 		$this->db->where('Id', $idUsuario);
 		$this->db->update('usuario', array('Password' => $pass));
+	}
+	
+	public function getGrupo($usuario)
+	{		
+		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		return $consulta->row()->Id_Grupo;
 	}
 	
 	/**

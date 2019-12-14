@@ -22,7 +22,7 @@
       <a class="navbar-brand">
             <img id="logo-btn" src="<?php echo base_url('assets/img/logo_menus.png')?>" style="height:5em;" alt="">
           </a>
-          <span id="cerrar-ses" class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</span>
+          <span id="cerrar-ses" class="nav-link" onclick="location='<?= base_url().'login_controller/logout'?>'">Cerrar sesión</span>
       </nav>
       <div class="row is-flex see-overflow fixed" id="title-container"> 
             <div class="col-xs-12 col-sm-8">
@@ -41,7 +41,7 @@
     <div class="container">
         <?php
         
-        if(isset($Id_Votacion))
+        if(isset($Id_Votacion) && !empty($Id_Votacion))
         {
             echo '
             <div class="card" id="card-options">
