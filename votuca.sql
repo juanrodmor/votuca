@@ -61,6 +61,17 @@ CREATE TABLE `censo_asistente` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `censo_asistente`
+--
+
+CREATE TABLE `censo_asistente` (
+  `Id_Usuario` int(32) NOT NULL,
+  `Id_Votacion` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `expiracion`
 --
 
@@ -260,6 +271,7 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `Id_Grupo`, `NombreUsuario`, `Password`, 
 (15, 5, 2, 'm14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
 (16, 5, 2, 'm15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
 (17, 5, 2, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '');
+
 
 -- --------------------------------------------------------
 
@@ -464,6 +476,13 @@ ALTER TABLE `tipo_votacion`
   ADD UNIQUE KEY `Nombre` (`Nombre`);
 
 --
+-- Indices de la tabla `tipo_votacion`
+--
+ALTER TABLE `tipo_votacion`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Nombre` (`Nombre`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -479,7 +498,9 @@ ALTER TABLE `usuario_censo`
 -- Indices de la tabla `votacion`
 --
 ALTER TABLE `votacion`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Id_TipoVotacion` (`Id_TipoVotacion`),
+  ADD KEY `Id_TipoVotacion_2` (`Id_TipoVotacion`);
 
 --
 -- Indices de la tabla `votacion_censo`
@@ -514,6 +535,12 @@ ALTER TABLE `ficheros_censo`
 --
 ALTER TABLE `grupo`
   MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`

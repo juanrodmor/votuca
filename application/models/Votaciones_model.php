@@ -3,7 +3,11 @@
 class Votaciones_model extends CI_Model{
 
 // COMO COMPROBAR QUE UNA VOTACION NO EXISTE YA
-  public function guardarVotacion($datos){$this->db->insert('votacion',$datos);}
+  public function guardarVotacion($datos)
+  {
+    //echo var_dump($datos);
+    $this->db->insert('votacion',$datos);
+  }//$this->db->insert('votacion',$datos);
 
   public function totalVotaciones()
   {
@@ -55,6 +59,18 @@ class Votaciones_model extends CI_Model{
     $query = $this->db->query("UPDATE votacion SET isDeleted = '1' WHERE Id = '$id'");
     return $query;
 
+  }
+
+  public function hasSoloAsistentes($idVotacion)
+  {
+    $query = $this->db->query("SELECT soloAsistentes from votacion WHERE id = '$idVotacion'");
+    return $query->result();
+  }
+
+  public function contarUsuarios($nombreTabla, $idVotacion)
+  {
+    $query = $this->db->query("SELECT COUNT(Id_Usuario) as total FROM $nombreTabla WHERE Id_Votacion = '$idVotacion'");
+    return $query->result();
   }
 
   public function getLastId()

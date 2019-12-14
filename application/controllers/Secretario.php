@@ -12,6 +12,7 @@ class Secretario extends CI_Controller{
     $this->load->model('mesa_model');
     $this->load->model('voto_model');
     $this->load->model('censo_model');
+    $this->load->model('ponderaciones_model');
     $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
 
@@ -54,188 +55,318 @@ class Secretario extends CI_Controller{
   /*********** CREAR VOTACION *********/
   /************************************/
 
-
-  public function crearVotacion($mensaje = '')
+  // FUNCION QUE LLAMA A LAS VISTAS
+  public function crearVotacion($tipo = '')
   {
+    $adicionales = array();
     $this->load->view('elementos/headerSecretario');
 
     // CENSO
     $nombreCensos = $this->censo_model->getCensos();
-
-    // Extraer
     $datos = array(
-      'censos' => $nombreCensos,
-      'mensaje' => $mensaje
+      'pulsadoModificar' => true,
+      'pulsadoParalelo' => true,
+      'pulsadoAsistentes' => true,
+      'censos' => $nombreCensos
     );
+    switch($tipo)
+    {
+      case 'simple':
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/votacionSimple_view',$datos);
+        break;
+      case 'compleja':
+      $datos += array('soloAsistentes' => true);
+      $this->load->view('secretario/votacionCompleja_view',$datos);
+      break;
 
-    $this->load->view('secretario/crearVotacion_view',$datos);
-    //$this->load->view('elementos/footer');
+      case 'consultasimple':
+      $this->load->view('secretario/consultaSimple_view',$datos);
+      break;
+
+      case 'consultacompleja':
+      $this->load->view('secretario/consultaCompleja_view',$datos);
+      break;
+
+      case 'representantes':
+      $datos += array('soloAsistentes' => true);
+      $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+      break;
+
+      case 'uniponderados':
+      $this->load->view('secretario/cargosUniponderados_view',$datos);
+      break;
+
+    }
+    //$this->load->view('elementos/footer');*/
   }
 
-  public function insertarVotacion()
+  public function insertarVotacion($tipo)
   {
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
-        // VALIDACIONES
-        //$this->form_validation->set_rules('id','ID','required');
-				$this->form_validation->set_rules('titulo','Titulo','required');
-				$this->form_validation->set_rules('descripcion','Descripcion','required');
-				$this->form_validation->set_rules('inicio','Fecha Inicio','required');
-        $this->form_validation->set_rules('final','Fecha Final','required');
-        $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
-        $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-        //$this->form_validation->set_rules('censo','Censo','callback_validarCenso');
-
-				// MENSAJES DE ERROR.
-				$this->form_validation->set_message('required','El campo %s es obligatorio');
-
-        if($this->form_validation->run() == FALSE) // Hay algun error
-        {$this->crearVotacion();} // Mostrar mensajes de error en la vista
-        else
-        {  // Correcta
-          // Convierte la fecha en un formato valido para la BD
-          $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
-          $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
-          //echo var_dump($fechaInicio);
-          $votacion = new Votacion(
-            //$this->input->post('id'),
-            $this->input->post('titulo'),
-            $this->input->post('descripcion'),
-            $fechaInicio,
-            $fechaFin,
-            false,
-            false,
-            false,
-            false,
-            0.2
-          );
-          //echo var_dump($votacion);
-          $this->guardarVotacion($votacion);
-        }
-    }
-  }
-
-  private function obtenerNombreElectoral($idUsuario,$letra)
-  {
-    $usuario = $this->usuario_model->getUsuario($idUsuario);
-    $dni = substr($usuario[0]->NombreUsuario,1);
-    $nombre = $letra.$dni;
-    return $nombre;
-  }
-
-  private function generarMesaElectoral($usuarios,$idVotacion)
-  {
-    $elegidos = $this->usuariosAleatorios($usuarios);
-    for($i = 0; $i < sizeof($elegidos); $i++)
-    {
-      $elegidos[$i] = $usuarios[$elegidos[$i]];
-
-      // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-      $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
-
-      // Crear el nuevo nombre de usuario
-      $idUsuario = (int)$elegidos[$i];
-      $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
-      $miembro = $this->usuario_model->getIdFromUserName($nombre);
-      $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
-
-    }
-    // Enviar correo a cada elegido en la mesa electoral
-    //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
-  }
-
-  private function extraerIdsFicheros($nombreCensos)
-  {
-    $idCensos = array();
-    for($i = 0; $i < sizeof($nombreCensos); $i++)
-        $idCensos[] = $this->censo_model->getId($nombreCensos[$i]);
-    return $idCensos;
-  }
-
-  private function relacionVotacionFichero($idsFicheros,$idVotacion)
-  {
-    for($i = 0; $i < sizeof($idsFicheros); $i++)
-    {
-      $this->censo_model->insertarVotacion($idVotacion,$idsFicheros[$i]);
-    }
-  }
-
-  private function extraerUsuariosFichero($nombreCenso)
-  {
-    $usuarios = array();
-    $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$nombreCenso.'.txt', "r") or exit("Unable to open file!");
-    while(!feof($fichero))
+      if($this->input->post('soloAsistentes') != NULL
+         && $this->input->post('asistentes') != NULL
+         && $this->input->post('censo') != NULL
+         ) // SI HAS ELEGIDO ASISTENTES
       {
-        $usuarios[] = fgets($fichero,10);
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
+          else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
       }
-      fclose($fichero);
+      else
+      {
+        if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+        {
+          $this->mostrarAsistentes($tipo);
+        }
+        else
+        {
+          if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+          {
+            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
+            else{$this->aceptarInsercion($tipo);}
 
-    return $usuarios;
-  }
-
-  private function extraerIdsUsuarios($usuarios)
-  {
-    $i = 0;
-    $ids = array();
-    while($usuarios[$i] != false && $i < sizeof($usuarios))
-    {
-      $encontrado = $this->usuario_model->getIdFromUserName($usuarios[$i]);
-      if($encontrado){$ids[] = $encontrado[0]->Id;}
-      ++$i;
+          }
+        }
+      }
     }
-    return $ids;
   }
 
-  private function insertarUsuariosCenso($usuariosIds,$idVotacion)
+  private function aceptarInsercion($tipo)
   {
-    //echo var_dump($usuariosIds);
-    $this->censo_model->insertar($usuariosIds,$idVotacion);
+    // CREAR VOTACION EN BASE A SU TIPO
+    $votacion = $this->prepararVotacion($tipo);
+    $this->guardarVotacion($votacion);
+  }
+
+  private function prepararVotacion($tipo)
+  {
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
+    $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
+
+    $esModificable = false;
+    if($this->input->post('esModificable') != NULL)
+        $esModificable = true;
+
+    $recuentoParalelo = false;
+    if($this->input->post('recuentoParalelo') != NULL)
+        $recuentoParalelo = true;
+
+    $soloAsistentes = false;
+    if($this->input->post('soloAsistentes') != NULL)
+        $soloAsistentes = true;
+
+
+    switch($tipo)
+    {
+      case 'simple':
+      $votacion = new Votacion(
+      //$this->input->post('id'),
+          1,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false,
+          false,
+          false,
+          false,
+          $this->input->post('quorum'),
+          $esModificable,
+          $soloAsistentes,
+          false,
+          1
+        );
+        break;
+
+        case 'compleja':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          2,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          $soloAsistentes, // SoloAsistentes
+          false, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
+
+        case 'consultasimple':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          3,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          $recuentoParalelo, // Recuento Paralelo
+          1// NumOpciones
+        );
+        break;
+
+        case 'consultacompleja':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          4,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          $recuentoParalelo, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
+
+        case 'representantes':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          5,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          $soloAsistentes, // SoloAsistentes
+          false, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
+
+        case 'uniponderados':
+        $votacion = new Votacion(
+          //$this->input->post('id'),
+          6,
+          $this->input->post('titulo'),
+          $this->input->post('descripcion'),
+          $fechaInicio,
+          $fechaFin,
+          false, // Deleted
+          false, // EsBorrador
+          false, // Finalizada
+          false, //Invalida
+          $this->input->post('quorum'),
+          $esModificable,
+          false, // SoloAsistentes
+          false, // Recuento Paralelo
+          $this->input->post('nOpciones')// NumOpciones
+        );
+        break;
+      }
+      return $votacion;
   }
 
   // FUNCIÓN QUE GUARDA UNA VOTACION EN LA BD
   public function guardarVotacion($datos)
   {
-
+    //echo var_dump($datos);
+      $asistentes = $this->input->post('asistentes');
       $nombreCensos = $this->input->post('censo'); // Vector con nombres de censos
       $usuarios = array();
       $usuariosIds = array();
       $totales = array();
-
-      // Extraer IDS de los ficheros de esos censos seleccionados
-     $idsFicheros = array();
-     $idsFicheros = $this->extraerIdsFicheros($nombreCensos);
-
-      // GUARDAR VOTACION
-      $noGuardado = $this->votaciones_model->guardarVotacion($datos);
-      $idVotacion = $this->votaciones_model->getLastId();
-
-      // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
-      $this->relacionVotacionFichero($idsFicheros,$idVotacion);
-
-
-      // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
-      for($i = 0; $i < sizeof($nombreCensos); $i++)
+      //echo var_dump($this->input->post('esModificable'));
+      // GUARDAR VOTACION SIN ASISTENTES SELECCIONADOS
+      if($asistentes == NULL)
       {
-        $usuarios = $this->extraerUsuariosFichero($nombreCensos[$i]);
-        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+        //echo 'GUARDAMOS VOTACION NORMAL';
+        // Extraer IDS de los ficheros de esos censos seleccionados
+       $idsFicheros = array();
+       $idsFicheros = $this->extraerIdsFicheros($nombreCensos);
 
-        for($j = 0; $j < sizeof($usuariosIds); $j++)
+        // GUARDAR VOTACION
+        $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+        $idVotacion = $this->votaciones_model->getLastId();
+
+        // RELACIONAR LA NUEVA VOTACION CON EL FICHERO DE CADA CENSO
+        $this->relacionVotacionFichero($idsFicheros,$idVotacion);
+
+        // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
+        $this->guardarSusOpciones($idVotacion,$datos->getTipo());
+
+        // GENERAR PONDERACIONES
+        $this->generarPonderaciones($idVotacion,$datos->getTipo());
+
+        // SACAR USUARIOS DE TODOS LOS FICHEROS DE CENSOS
+        for($i = 0; $i < sizeof($nombreCensos); $i++)
         {
-          // Relacionar este usuario con este censo en la bd
-          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
-          if(!in_array($usuariosIds[$j],$totales))
-          array_push($totales,$usuariosIds[$j]);
+          $usuarios = $this->extraerUsuariosFichero($nombreCensos[$i]);
+          $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+          for($j = 0; $j < sizeof($usuariosIds); $j++)
+          {
+            // Relacionar este usuario con este censo en la bd
+            $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
+            if(!in_array($usuariosIds[$j],$totales))
+            array_push($totales,$usuariosIds[$j]);
+          }
         }
+
+        // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
+        $noGuardadoCenso = $this->insertarUsuariosCenso($totales,$idVotacion);
+
+        // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+        $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$idVotacion,1);
+
+        // MESA ELECTORAL
+        $this->generarMesaElectoral($totales,$idVotacion);
+
+        // GUARDAR NUM_VOTOS EN RECUENTO
+        $this->generarNumeroVotos($idVotacion,$datos->getTipo());
+
       }
+     else
+      {  // GUARDAR ASISTENTES
+        // GUARDAR VOTACION
+        $noGuardado = $this->votaciones_model->guardarVotacion($datos);
+        $idVotacion = $this->votaciones_model->getLastId();
 
-      // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO
-      $noGuardadoCenso = $this->insertarUsuariosCenso($totales,$idVotacion);
+        // RELACION LA VOTACION CON SUS POSIBLES OPCIONES
+        $this->guardarSusOpciones($idVotacion,$datos->getTipo());
 
-      // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
-      $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$idVotacion,1);
+        // GENERAR PONDERACIONES
+        $this->generarPonderaciones($idVotacion,$datos->getTipo());
 
-      // MESA ELECTORAL
-      $this->generarMesaElectoral($totales,$idVotacion);
+        // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO ASISTENTES
+        $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+        $this->censo_model->insertar($asistentes,$idVotacion);
+        // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+        $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
+
+        // MESA ELECTORAL
+        $this->generarMesaElectoral($asistentes,$idVotacion);
+
+        // GUARDAR NUM_VOTOS EN RECUENTO
+        $this->generarNumeroVotos($idVotacion,$datos->getTipo());
+      }
 
       // FINAL DE ESTA MIERDA
 
@@ -250,6 +381,327 @@ class Secretario extends CI_Controller{
       }
     }
 
+
+  /****************************************/
+  /********* FUNCIONES AUXILIARES *********/
+  /****************************************/
+
+    // LLAMA A LA VISTA MOSTRANDO ASISTENTES
+    private function mostrarAsistentes($tipo)
+    {
+      $esModificable = false;
+      if($this->input->post('esModificable') != NULL)
+          $esModificable = true;
+
+      $recuentoParalelo = false;
+      if($this->input->post('recuentoParalelo') != NULL)
+          $esModificable = true;
+
+      $soloAsistentes = false;
+      if($this->input->post('soloAsistentes') != NULL)
+          $soloAsistentes = true;
+
+      $usuarios = array();
+      $usuariosIds = array();
+      $totales = array();
+      $censosSeleccionados = $this->input->post('censo');
+      // Extraer IDS de los ficheros de esos censos seleccionados
+      $idsFicheros = array();
+      $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
+      // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
+      for($i = 0; $i < sizeof($censosSeleccionados); $i++)
+      {
+        $usuarios = $this->extraerUsuariosFichero($censosSeleccionados[$i]);
+        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+        for($j = 0; $j < sizeof($usuariosIds); $j++)
+        {
+          // Relacionar este usuario con este censo en la bd
+          $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
+          if(!in_array($usuariosIds[$j],$totales))
+          array_push($totales,$usuariosIds[$j]);
+        }
+      }
+      // OBTENER NOMBRES DE ESOS USUARIOS
+      $nombresUsuarios = array();
+      foreach($totales as $idUser)
+      {
+        $aux = $this->usuario_model->getUsuario($idUser);
+        $nombresUsuarios[] = $aux;
+      }
+      $nombreCensos = $this->censo_model->getCensos();
+      $datos = array(
+          'pulsadoModificar' => $esModificable,
+          'pulsadoParalelo' => $recuentoParalelo,
+          'pulsadoAsistentes' => $soloAsistentes,
+          'censos' => $nombreCensos,
+          'asistentes' => $nombresUsuarios
+      );
+      $this->load->view('elementos/headerSecretario');
+      switch($tipo)
+      {
+        case 'simple':
+          $datos += array('soloAsistentes' => true);
+          $this->load->view('secretario/votacionSimple_view',$datos);
+          break;
+        case 'compleja':
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/votacionCompleja_view',$datos);
+        break;
+
+        case 'consultasimple':
+        $this->load->view('secretario/consultaSimple_view',$datos);
+        break;
+
+        case 'consultacompleja':
+        $this->load->view('secretario/consultaCompleja_view',$datos);
+        break;
+
+        case 'representantes':
+        $datos += array('soloAsistentes' => true);
+        $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+        break;
+
+        case 'uniponderados':
+        $this->load->view('secretario/cargosUniponderados_view',$datos);
+        break;
+
+      }
+
+    }
+
+    private function obtenerNombreElectoral($idUsuario,$letra)
+    {
+      $usuario = $this->usuario_model->getUsuario($idUsuario);
+      $dni = substr($usuario[0]->NombreUsuario,1);
+      $nombre = $letra.$dni;
+      return $nombre;
+    }
+
+    private function generarMesaElectoral($usuarios,$idVotacion)
+    {
+      $elegidos = $this->usuariosAleatorios($usuarios);
+      for($i = 0; $i < sizeof($elegidos); $i++)
+      {
+        $elegidos[$i] = $usuarios[$elegidos[$i]];
+
+        // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
+        $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+
+        // Crear el nuevo nombre de usuario
+        $idUsuario = (int)$elegidos[$i];
+        $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
+        $miembro = $this->usuario_model->getIdFromUserName($nombre);
+        $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
+
+      }
+      // Enviar correo a cada elegido en la mesa electoral
+      //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+    }
+
+    private function extraerIdsFicheros($nombreCensos)
+    {
+      $idCensos = array();
+      for($i = 0; $i < sizeof($nombreCensos); $i++)
+          $idCensos[] = $this->censo_model->getId($nombreCensos[$i]);
+      return $idCensos;
+    }
+
+    private function relacionVotacionFichero($idsFicheros,$idVotacion)
+    {
+      for($i = 0; $i < sizeof($idsFicheros); $i++)
+      {
+        $this->censo_model->insertarVotacion($idVotacion,$idsFicheros[$i]);
+      }
+    }
+
+    private function extraerUsuariosFichero($nombreCenso)
+    {
+      $usuarios = array();
+      $fichero = fopen($_SERVER['DOCUMENT_ROOT'] . '/votuca/application/logs/censos/'.$nombreCenso.'.txt', "r") or exit("Unable to open file!");
+      while(!feof($fichero))
+        {
+          $usuarios[] = fgets($fichero,10);
+        }
+        fclose($fichero);
+
+      return $usuarios;
+    }
+
+    private function extraerIdsUsuarios($usuarios)
+    {
+      $i = 0;
+      $ids = array();
+      while($usuarios[$i] != false && $i < sizeof($usuarios))
+      {
+        $encontrado = $this->usuario_model->getIdFromUserName($usuarios[$i]);
+        if($encontrado){$ids[] = $encontrado[0]->Id;}
+        ++$i;
+      }
+      return $ids;
+    }
+
+    private function insertarUsuariosCenso($usuariosIds,$idVotacion)
+    {
+      //echo var_dump($usuariosIds);
+      $this->censo_model->insertar($usuariosIds,$idVotacion);
+    }
+
+    private function guardarSusOpciones($idVotacion,$tipo)
+    {
+      if($tipo == 1 || $tipo == 3)  // VOTACION COMPLEJA && CONSULTA SIMPLE
+      {
+        $misVotos = array(2,3,4);
+        $this->voto_model->insertarOpciones($idVotacion,$misVotos);
+      }
+      else{
+        switch($tipo)
+        {
+          case 2: // VOTACION COMPLEJA
+            $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+            // Crear cada opcion para que esté disponible
+            $idsOpciones = array();
+            foreach($extraccionOpciones as $opcion)
+            {
+               $this->voto_model->nuevoTipoVoto($opcion);
+               $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+             }
+
+            // Extraer ids de esos nuevos tipos de votos
+            $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+
+
+          break;
+
+          case 4: // CONSULTA COMPLEJA
+          $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+          // Crear cada opcion para que esté disponible
+          $idsOpciones = array();
+          foreach($extraccionOpciones as $opcion)
+          {
+             $this->voto_model->nuevoTipoVoto($opcion);
+             $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+           }
+
+          // Extraer ids de esos nuevos tipos de votos
+          $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+          break;
+
+          case 5:
+          $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+          // Crear cada opcion para que esté disponible
+          $idsOpciones = array();
+          foreach($extraccionOpciones as $opcion)
+          {
+             $this->voto_model->nuevoTipoVoto($opcion);
+             $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+           }
+
+          // Extraer ids de esos nuevos tipos de votos
+          $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+          break;
+
+          case 6:
+          $extraccionOpciones = explode(",",$this->input->post('opciones'));
+
+          // Crear cada opcion para que esté disponible
+          $idsOpciones = array();
+          foreach($extraccionOpciones as $opcion)
+          {
+             $this->voto_model->nuevoTipoVoto($opcion);
+             $idsOpciones[] = $this->voto_model->getIdFromNombreVoto($opcion);
+           }
+
+          // Extraer ids de esos nuevos tipos de votos
+          $this->voto_model->insertarOpciones($idVotacion,$idsOpciones);
+          break;
+        }
+      }
+    }
+
+    private function validaciones($validarAsistentes,$validarCenso)
+    {
+      $this->form_validation->set_rules('titulo','Titulo','required');
+      $this->form_validation->set_rules('descripcion','Descripcion','required');
+      $this->form_validation->set_rules('inicio','Fecha Inicio','required');
+      $this->form_validation->set_rules('final','Fecha Final','required');
+      $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
+      $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+      if($validarAsistentes == true)
+      {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
+      if($validarCenso == true)
+      {$this->form_validation->set_rules('censos','Censo','callback_validarFicherosCenso');}
+      // MENSAJES DE ERROR.
+      $this->form_validation->set_message('required','El campo %s es obligatorio');
+      return $this->form_validation->run();
+    }
+
+    private function generarPonderaciones($idVotacion,$tipo)
+    {
+      switch($tipo)
+      {
+        case 1:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+        break;
+
+        case 2:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+        break;
+
+        case 3:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
+        break;
+
+        case 4:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
+        break;
+
+        case 5:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
+        break;
+
+        case 6:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
+        break;
+      }
+    }
+
+    private function generarNumeroVotos($idVotacion,$tipo)
+    {
+      $numeroUsuarios = 0;
+      // EXTRAER OPCIONES
+      $opciones = $this->voto_model->getVotosFromVotacion($idVotacion);
+      //$opciones[] = 1;
+      //echo var_dump($opciones).'<br>';
+
+      // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO
+      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
+      //echo var_dump($hasAsistentes);
+      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
+      {$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+
+      // INTRODUCIR DATOS EN RECUENTO
+      $this->voto_model->recuentoPorDefecto($idVotacion,$opciones,$numeroUsuarios);
+      //echo var_dump($numeroUsuarios).'<br>';
+
+
+    }
   /************************************/
   /*********** ELIMINAR VOTACION ******/
   /************************************/
@@ -409,7 +861,7 @@ class Secretario extends CI_Controller{
     // Extraer ID del censo que voy a añadir
     $idCenso = $this->censo_model->getId($censo);
     $censoExtraer[] = $idCenso;
-    
+
     // Extraer usuarios de ese censo a añadir
     $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
 
@@ -634,12 +1086,20 @@ class Secretario extends CI_Controller{
       return TRUE;
     }
   }
-
-  public function validarCenso(){
+  public function validarFicherosCenso(){
     $elegidos = $this->input->post('censo');
+    if($elegidos == NULL || sizeof($elegidos) < 1)
+    {
+      $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+      return FALSE;
+    }
+    else{return TRUE;}
+  }
+  public function validarAsistentes(){
+    $elegidos = $this->input->post('asistentes');
     if($elegidos == NULL || sizeof($elegidos) < 3)
     {
-      $this->form_validation->set_message('validarCenso','Introduzca al menos tres usuarios en el censo');
+      $this->form_validation->set_message('validarAsistentes','Introduzca al menos tres usuarios asistentes');
       return FALSE;
     }
     else{return TRUE;}
