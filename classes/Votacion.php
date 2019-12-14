@@ -3,11 +3,11 @@
 class Votacion{
 
   public $id, $titulo, $descripcion, $fechaInicio,$fechaFinal;
-  private $isDelected, $esBorrador;
+  private $isDelected, $esBorrador,$finalizada,$invalida,$quorum;
   //private $mesaElectoral;
 
   public function __construct($titulo,$descripcion,$fechaInicio,$fechaFinal,
-                              $isDelected,$esBorrador)
+                              $isDelected,$esBorrador,$finalizada,$invalida,$quorum)
   {
     $this->titulo = $titulo;
     $this->descripcion = $descripcion;
@@ -15,6 +15,9 @@ class Votacion{
     $this->fechaFinal = $fechaFinal;
     $this->isDelected = $isDelected;
     $this->esBorrador = $esBorrador;
+    $this->finalizada = $finalizada;
+    $this->invalida = $invalida;
+    $this->quorum = $quorum;
   }
 
   public function getId(){return $this->id;}

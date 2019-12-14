@@ -99,22 +99,98 @@
 		  </div>
 		</div>
 
-				<?php $atributos = array(
-						'name' => 'boton_borrador',
-						'class' => 'btn btn-primary',
-						'type' => 'submit',
-						'value' => 'Guardar en borrador'
-				); ?>
+		<h2> Censo electoral </h2>
+		<p> Escoja el censo electoral que desee </p>
+		<!-- TABLA DE CENSO -->
+		<div class = "container">
+		  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+		 	  <table class="display table table-striped table-bordered" id="votaciones_admin">
+		      <thead>
+		        <tr>
+		          <th><center>Censo<center></th>
+		          <th><center>Añadir<center></th>
+							<th><center>Eliminar<center></th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <tr>
+								<!-- COMRPROBAR CENSOS QUE YA EXISTEN-->
+							<?php $iguales = array(); ?>
+							<?php foreach($censos as $censo)
+							  {
+								  for($i = 0; $i < sizeof($censosVotacion); $i++)
+									{
+										if($censo->Id == $censosVotacion[$i]->Id_Fichero)
+										{$iguales[] = $censosVotacion[$i]->Id_Fichero;}
+									}
+								}
+							?>
+							<!-- BUCLE CON NOMBRES DE CENSOS -->
+		        <?php foreach($censos as $censo){ ?>
+                <td><?php echo $censo->Nombre?></td>
+								<!-- COMRPROBAR CENSOS QUE YA EXISTEN-->
+								<?php
+								$encontrado = false;
+								$i = 0;
+								while($i < sizeof($iguales) && !$encontrado)
+								{
+									if($censo->Id == $iguales[$i])
+									{$encontrado = true;}
+									$i = $i + 1;
+								}
+								if(!$encontrado)
+								{
+									echo '<div class="form-check">';
+								$atributos = array(
+											'name' => 'censoInsercion[]',
+											'class' => 'form-control',
+											'type' => 'checkbox',
+											'id' => 'censo',
+											'value' => $censo->Nombre
+									);
+									echo '<td>'.form_checkbox($atributos).'</td>';
+								}
+								else // Se puede eliminar el censo
+								{
+									if(sizeof($censosVotacion) > 1)
+									{
+										echo '<td></td>';
+										echo '<div class="form-check">';
+									$atributos = array(
+												'name' => 'censoEliminacion[]',
+												'class' => 'form-control',
+												'type' => 'checkbox',
+												'id' => 'censo',
+												'value' => $censo->Nombre
+										);
+										echo '<td>'.form_checkbox($atributos).'</td>';
+									}
+								}
 
-			<?= form_submit($atributos);?>
+								?>
+							 </div>
+								<?php echo '</tr>'; ?>
+		        <?php }?>
+		      </tbody>
+		    </table>
+		  </div>
+	 </div>
+					 <?php $atributos = array(
+							 'name' => 'boton_borrador',
+							 'class' => 'btn btn-primary',
+							 'type' => 'submit',
+							 'value' => 'Guardar en borrador'
+					 ); ?>
 
-		<?php $atributos = array(
-				'name' => 'boton_publicar',
-				'class' => 'btn btn-primary',
-				'type' => 'submit',
-				'value' => 'Publicar'
-		); ?>
-		<?= form_submit($atributos);?>
+				 <?= form_submit($atributos);?>
+
+			 <?php $atributos = array(
+					 'name' => 'boton_publicar',
+					 'class' => 'btn btn-primary',
+					 'type' => 'submit',
+					 'value' => 'Publicar'
+			 ); ?>
+			  <?= form_submit($atributos);?>
 	<?= form_close(); ?>
 </div>
 

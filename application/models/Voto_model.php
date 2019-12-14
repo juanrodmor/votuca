@@ -15,11 +15,12 @@ f<?php
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, voto.Nombre, votacion.FechaInicio, votacion.FechaFinal
-						from votacion, usuario_votacion, voto
-						where votacion.Id = usuario_votacion.Id_Votacion
+			$sql = "select usuario_votacion.Id_Voto, votacion.Id, votacion.Titulo, votacion.Descripcion, votacion.FechaInicio, votacion.FechaFinal
+						from votacion, censo, usuario_votacion
+						where votacion.Id = censo.Id_Votacion
+							AND censo.Id_Usuario = ".$id_user."
 							AND usuario_votacion.Id_Usuario = ".$id_user."
-							AND usuario_votacion.Id_Voto = voto.Id
+							AND usuario_votacion.Id_Votacion = votacion.Id
 							AND votacion.isDeleted = 0
 						order by votacion.FechaFinal ASC;";
 
@@ -40,6 +41,13 @@ f<?php
 			return $sql->row()->Id;
 		}
 
+		public function _userName($id_usuario) {
+			//print_r($Nombre);
+			$sql = $this->db->get_where('usuario', array('Id' => $id_usuario));
+			//print_r($sql->row()->Id);
+			return $sql->row()->NombreUsuario;
+		}
+
 		// Votar
 		public function _votar ( $id_usuario, $id_votacion, $voto )
 		{
@@ -53,7 +61,7 @@ f<?php
 				$sql = $this->db->get_where('voto', array('Nombre' => $voto));
 				$id_voto = $sql->row()->Id;
 
-				$sql = "update usuario_votacion set Id_voto = '".$id_voto."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
+				$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
 				$query = $this -> db -> query($sql);
 				return TRUE;	// has votado correctamente
 			} else {
@@ -167,6 +175,7 @@ f<?php
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
+				//password_hash($sinVoto, PASSWORD_DEFAULT)
 				$id = (int)$usuarios[$i];
 				$datos = array(
 					'Id_Usuario' => $id,
@@ -177,5 +186,14 @@ f<?php
 			}
 		}
 
+		public function borrarVoto($usuarios,$idVotacion)
+		{
+			foreach($usuarios as $usuario)
+			$this->db->delete('usuario_votacion',
+												 array(
+													 'Id_Votacion' => $idVotacion,
+													 'Id_Usuario' => $usuario
+												 ));
+		}
 	}
 ?>

@@ -2,23 +2,20 @@
 class Mesa_model extends CI_Model {
 
 
-  public function insertar($usuarios,$idVotacion)
+  public function insertar($idUsuario,$idVotacion)
   {
     $sinProblemas = true;
-    echo var_dump($usuarios);
-    for($i = 0; $i < sizeof($usuarios);$i++)
-    {
-      $datos = array(
-        'Id_Usuario' => $usuarios[$i],
+    $datos = array(
+        'Id_Usuario' => $idUsuario,
         'Id_Votacion' => $idVotacion
       );
       $noGuardado = $this->db->insert('mesa_electoral',$datos);
       if($noGuardado){$sinProblemas = false;}
-    }
+
     if($sinProblemas){return true;}
     else{return false;}
   }
-  
+
 	//Devuelve el listado de votaciones de las que se encarga un miembro de la mesa electoral.
 	public function getVotaciones($id) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Usuario' => $id));
@@ -35,14 +32,14 @@ class Mesa_model extends CI_Model {
 		}
 		return $votacionesOK;
 	}
-	
+
 	//Establece a true la decisión de abrir la urna de un usuario concreto para una votación concreta.
 	public function abreUrna($usuario, $votacion) {
 		$this->db->where('Id_Usuario', $usuario);
 		$this->db->where('Id_Votacion', $votacion);
 		$this->db->update('mesa_electoral', array('seAbre' => 1));
 	}
-	
+
 	//Comprueba si una urna se puede cerrar.
 	public function cierraUrna($usuario, $idVotacion) {
 		$this->db->where('Id_Usuario', $usuario);
@@ -55,8 +52,8 @@ class Mesa_model extends CI_Model {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seAbre' => 1));
 		return $consulta->num_rows();
 	}
-	
-	//Devuelve un array con los nombres de usuario que quieren abrir una urna.
+
+  //Devuelve un array con los nombres de usuario que quieren abrir una urna.
 	public function getNamesApertura($idVotacion) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion, 'seAbre' => 1));
 		$arrayNames = array();
@@ -191,6 +188,24 @@ class Mesa_model extends CI_Model {
 		$consulta = $this->db->get_where('votacion', array('Id' => $idVotacion));
 		return ($consulta->result()[0]->Finalizada == 1);
 	}
+
+  public function eliminarMiembroFromVotacion($idMiembro,$idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion' AND Id_Usuario = '$idMiembro'");
+  }
+
+  public function getMesa($idVotacion)
+  {
+    $query = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $idVotacion));
+    return $query->result();
+  }
+
+  public function deleteMesa($idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM mesa_electoral WHERE Id_Votacion = '$idVotacion'");
+    //return $query->result();
+  }
+  
 }
 
 
