@@ -136,7 +136,7 @@
                   'required' => true,
                   'value' => set_value('pondPas') // Mantiene el valor en el form
               ); ?>
-              <?= form_label('Ponderacion PAS','ponderacionPAS'); ?>          
+              <?= form_label('Ponderacion PAS','ponderacionPAS'); ?>
               <?= form_input($atributos) ?> <br/><br/>
             </div>
           </div>
@@ -197,12 +197,12 @@
       $atributos = array(
         'name' => 'recuentoParalelo',
         'class' => 'form-check-input',
-        'type' => 'radio',
+        'type' => 'checkbox',
         'id' => 'recuentoParalelo',
         'value' => true
       );
       ?>
-      <?= form_radio($atributos); ?>
+      <?= form_checkbox($atributos); ?>
       <?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
     </div>
 

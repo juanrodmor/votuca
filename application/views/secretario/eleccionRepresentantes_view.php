@@ -126,13 +126,18 @@
 
         <!-- CHECK BUTTONS -->
         <div class="form-check">
+          <?php
+           if(isset($_POST['esModificable'])) $check = 'checked';
+           else{$check = false;}
+          ?>
         <?php
         $atributos = array(
           'name' => 'esModificable',
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'esModificable',
-          'value' => true
+          'value' => true,
+          'checked' => $check
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -143,13 +148,18 @@
     <?php
       if($soloAsistentes == true){?>
         <div class="form-check">
+          <?php
+           if(isset($_POST['soloAsistentes'])) $checkAsis = 'checked';
+           else{$checkAsis = false;}
+          ?>
         <?php
         $atributos = array(
           'name' => 'soloAsistentes',
           'class' => 'form-check-input',
           'type' => 'checkbox',
           'id' => 'soloAsistentes',
-          'value' => true
+          'value' => true,
+          'checked' => $checkAsis
         );
         ?>
         <?= form_checkbox($atributos); ?>
@@ -200,6 +210,7 @@
         'type' => 'submit',
         'value' => 'Guardar opción'
     ); ?>
+
     <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
         <div class = "container">
@@ -216,6 +227,10 @@
               <?php foreach($censos as $censo){ ?>
 
                 <td><?php echo $censo->Nombre?></td>
+                <?php
+                 if(isset($_POST['censo']) && in_array($censo->Nombre, $_POST['censo'])) $checkCenso = 'checked';
+                 else{$checkCenso = false;}
+                ?>
               <?php
                 echo '<div class="form-check">';
                  $atributos = array(
@@ -223,7 +238,8 @@
                     'class' => 'form-control',
                     'type' => 'checkbox',
                     'id' => 'censo',
-                    'value' => $censo->Nombre
+                    'value' => $censo->Nombre,
+                    'checked' => $checkCenso
                 );
                 ?>
               <td><?= form_checkbox($atributos); ?></td>
@@ -261,7 +277,7 @@
                       'name' => 'asistentes[]',
                       'class' => 'form-control',
                       'type' => 'checkbox',
-                      'id' => 'censo',
+                      'id' => 'asistentes',
                       'value' => $asistente[0]->Id
                   );
                   ?>

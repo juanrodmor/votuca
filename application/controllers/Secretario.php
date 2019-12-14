@@ -644,39 +644,39 @@ class Secretario extends CI_Controller{
       switch($tipo)
       {
         case 1:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
         break;
 
         case 2:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
         break;
 
         case 3:
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
         break;
 
         case 4:
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
         break;
 
         case 5:
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
         $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
         break;
 
         case 6:
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,1,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionProfesores'));
         break;
       }
     }
