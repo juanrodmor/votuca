@@ -14,6 +14,7 @@ class Elector_controller extends CI_Controller {
 			redirect('/Login_controller');
 	    }
 	    else {
+	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto debe hacerlo el sistema automaticamente, o en cada acceso a nueva vista
 				$titulo['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$titulo);
@@ -27,11 +28,6 @@ class Elector_controller extends CI_Controller {
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
 			$this->load->view('elementos/footer');
-
-			//$this->Voto_model->_actualizarFechasVotaciones();
-			
-				//funcion que introduce los votos de la votacion X de la tabla usuario_votacion en la tabla recuento
-			//$this->Voto_model->_usuarioVotacionToRecuento($datos[0]->Id);	
 	    }
 
     }

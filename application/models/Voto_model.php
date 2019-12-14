@@ -245,6 +245,16 @@ f<?php
 			$sql = $this->db->delete('usuario_votacion', array('Id_Votacion' => $id_votacion));
 		}
 
+		public function _actualizarFechasVotaciones() {			
+			$sql = $this->db->get_where('votacion', array());
+			$sql = $sql->result();
+			foreach($sql as $votacion) {
+				if($votacion->FechaFinal < date('Y-m-d H:i:s')) {
+					$this->_usuarioVotacionToRecuento($votacion->Id);
+				}
+			}
+		}
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
