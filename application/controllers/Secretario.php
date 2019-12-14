@@ -949,52 +949,40 @@ class Secretario extends CI_Controller{
 
   }
 
+  private function actualizarVotacionDatos($publicar)
+  {
+    $soloAsistentes = false;
+    if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+
+    $esModificable = false;
+    if(isset($_POST['esModificable']) && $_POST['esModificable'] == 1){$esModificable = true;}
+
+    $recuentoParalelo = false;
+    if(isset($_POST['recuentoParalelo']) && $_POST['recuentoParalelo'] == 1){$recuentoParalelo = true;}
+    $datos = array(
+      'Titulo' => $_POST['titulo'],
+      'Descripcion' => $_POST['descripcion'],
+      'FechaInicio' => $_POST['fecha_inicio'],
+      'FechaFinal' => $_POST['fecha_final'],
+      'isDeleted' => false,
+      'esBorrador' => $publicar,
+      'Finalizada' => false,
+      'Quorum' => $_POST['quorum'],
+      'Invalida' => false,
+      'VotoModificable' => $esModificable,
+      'SoloAsistentes' => $soloAsistentes,
+      'recuentoParalelo' => $recuentoParalelo,
+      'NumOpciones' => $_POST['NumOpciones']
+    );
+
+    return $datos;
+  }
   private function actualizarVotacionFromBoton($boton,$publicar)
   {
     if($this->input->post($boton))
     {
-      //CREAR LA NUEVA VOTACION CON LOS NUEVOS DATOS;
-      $soloAsistentes = false;
-      if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
 
-      $esModificable = false;
-      if(isset($_POST['esModificable']) && $_POST['esModificable'] == 1){$esModificable = true;}
-
-      $recuentoParalelo = false;
-      if(isset($_POST['recuentoParalelo']) && $_POST['recuentoParalelo'] == 1){$recuentoParalelo = true;}
-      $datos = array(
-        'Titulo' => $_POST['titulo'],
-        'Descripcion' => $_POST['descripcion'],
-        'FechaInicio' => $_POST['fecha_inicio'],
-        'FechaFinal' => $_POST['fecha_final'],
-        'isDeleted' => false,
-        'esBorrador' => $publicar,
-        'Finalizada' => false,
-        'Quorum' => $_POST['quorum'],
-        'Invalida' => false,
-        'VotoModificable' => $esModificable,
-        'SoloAsistentes' => $soloAsistentes,
-        'recuentoParalelo' => $recuentoParalelo,
-        'NumOpciones' => $_POST['NumOpciones']
-      );
-    /*  $votacion = new Votacion(
-                          $_POST['id'],
-                          $_POST['titulo'],
-                          $_POST['descripcion'],
-                          $_POST['fecha_inicio'],
-                          $_POST['fecha_final'],
-                          false,
-                          $publicar, // Es borrador
-                          false, // Finalizada
-                          $_POST['quorum'],
-                          false, // Invalida
-                          $esModificable, //Modificable
-                          $soloAsistentes,
-                          $recuentoParalelo,
-                          $_POST['NumOpciones']
-
-                  );
-      $votacion->setId($_POST['id']);*/
+      $datos = $this->actualizarVotacionDatos($publicar);
       $idVotacion = $_POST['id'] ;
       //SACAR MODIFICACION DE LOS CENSOS
       /*$censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
