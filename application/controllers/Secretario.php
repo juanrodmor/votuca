@@ -435,7 +435,8 @@ class Secretario extends CI_Controller{
           'pulsadoParalelo' => $recuentoParalelo,
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
-          'asistentes' => $nombresUsuarios
+          'asistentes' => $nombresUsuarios,
+          'mensaje' => 'Seleccione abajo el censo asistente'
       );
       $this->load->view('elementos/headerSecretario');
       switch($tipo)
