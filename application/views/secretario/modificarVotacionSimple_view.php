@@ -99,6 +99,63 @@
 		  </div>
 		</div>
 
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'name' => 'quorum',
+					'class' => 'form-control',
+					'id' => 'quorum',
+					'placeholder' =>'Introduzca el quorum de esta votación',
+					'required' => true,
+					'value' => $votaciones->Quorum // Mantiene el valor en el form
+			); ?>
+			<?= form_label('Quorum','quorum'); ?>
+			<!-- Igual a: <label for="titulo">Titulo</label> -->
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+
+
+			<?php
+			 $atributos = array(
+					'NumOpciones' => $votaciones->NumOpciones
+			); ?>
+  		<?= form_hidden($atributos) ?> <br/><br/>
+
+
+		<div class="form-check">
+		<?php	if(isset($checkMod) && $checkMod == true) $check = 'checked';
+			else{$check = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'esModificable',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'esModificable',
+			'value' => true,
+			'checked' => $check
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Voto Modificable','esModificable'); ?>
+		</div>
+		 <div class="form-check">
+			 <?php	if(isset($checkAsis) && $checkAsis == true) $checkAs = 'checked';
+	 			else{$checkAs = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'soloAsistentes',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'soloAsistentes',
+			'value' => true,
+			'checked' => $checkAs
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Solo asistentes','soloAsistentes'); ?>
+		</div>
+
+	<!-- CENSO ELECTORAL -->
 		<h2> Censo electoral </h2>
 		<p> Escoja el censo electoral que desee </p>
 		<!-- TABLA DE CENSO -->

@@ -23,22 +23,14 @@ class Votaciones_model extends CI_Model{
 		return $query->row();
 	}
 
-	public function updateVotacion($votacion)
+	public function updateVotacion($votacion,$idVotacion)
   {
-  	$encontrado = $this->db->where('id', $votacion->getId());
-    $realizado = false;
-    if($votacion->getBorrador() == true && $encontrado)
-    {
-        $id = $votacion->getId();
-        $query = $this->db->query("UPDATE votacion SET esBorrador = '1' WHERE Id = '$id'");
-        $realizado = true;
-    }
-    if($encontrado && $votacion->getBorrador() == false)
-    {
-      $id = $votacion->getId();
-      $query = $this->db->query("UPDATE votacion SET esBorrador = '0' WHERE Id = '$id'");
-      $realizado = true;
-    }
+    echo var_dump($votacion);
+  	$realizado = false;
+    $this->db->where('Id', $idVotacion);
+    $this->db->update('votacion',$votacion);
+    $realizado = true;
+
   return $realizado;
 	}
 
