@@ -4,7 +4,7 @@ class SecretariosDelegados_model extends CI_Model{
 
   public function restriccionDelegacion($idVotacion)
   {
-    $query = $this->db->query("SELECT Id_Secretario from secretario_delegado WHERE Id_votacion = '$idVotacion';");
+    $query = $this->db->query("SELECT Id_Usuario from secretario_delegado WHERE Id_votacion = '$idVotacion';");
     $numeroSecretarios = $query->num_rows();
     return $numeroSecretarios;
   }
