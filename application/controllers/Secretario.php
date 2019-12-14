@@ -977,6 +977,33 @@ class Secretario extends CI_Controller{
 
     return $datos;
   }
+
+  private function modificarSoloCensos($idVotacion)
+  {
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+    $censosEliminar = $this->input->post('censoEliminacion');
+    $censosAñadir = $this->input->post('censoInsercion');
+    $idsCensos = array();
+    foreach($censosVotacion as $censo)
+    {$idsCensos[] = $censo->Id_Fichero;}
+
+    if($censosEliminar != NULL)
+    {  // Hay censos a eliminar
+      foreach($censosEliminar as $censo)
+      {
+        $this->eliminarCenso($idsCensos,$censo,$idVotacion);
+        --$idsCensos;
+      }
+    }
+    // AÑADIR CENSOS
+    if($censosAñadir != NULL)
+    {
+      foreach($censosAñadir as $censo)
+      {
+        $this->addCenso($idsCensos,$censo,$idVotacion);
+      }
+    }
+  }
   private function actualizarVotacionFromBoton($boton,$publicar)
   {
     if($this->input->post($boton))
@@ -984,32 +1011,18 @@ class Secretario extends CI_Controller{
 
       $datos = $this->actualizarVotacionDatos($publicar);
       $idVotacion = $_POST['id'] ;
-      //SACAR MODIFICACION DE LOS CENSOS
-      /*$censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
-      $censosEliminar = $this->input->post('censoEliminacion');
-      $censosAñadir = $this->input->post('censoInsercion');
-      $idsCensos = array();
-      foreach($censosVotacion as $censo)
-      {$idsCensos[] = $censo->Id_Fichero;}
 
-      if($censosEliminar != NULL)
-      {  // Hay censos a eliminar
-        foreach($censosEliminar as $censo)
-        {
-          $this->eliminarCenso($idsCensos,$censo,$idVotacion);
-          --$idsCensos;
-        }
+      // MODIFICAR CENSOS
+      // VER SI LA VOTACIÓN TIENE CENSO ASISTENTE O NO
+      $soloAsistentes = false;
+      if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+      if(!$soloAsistentes)
+      {$this->modificarSoloCensos($idVotacion);}
+      else
+      {
+        
       }
 
-      // AÑADIR CENSOS
-      if($censosAñadir != NULL)
-      {
-        foreach($censosAñadir as $censo)
-        {
-          $this->addCenso($idsCensos,$censo,$idVotacion);
-        }
-
-      }*/
       // Modificar datos de la votacion
       $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
 
