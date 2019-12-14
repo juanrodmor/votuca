@@ -16,11 +16,7 @@ class MesaElectoral extends CI_Controller{
 	//Obtiene todas las votaciones de las que el usuario loggeado es miembro de mesa.
 	private function obtenerVotaciones() {
 		$votaciones = $this->Mesa_model->getVotaciones($this->Usuario_model->getId($this->session->userdata('usuario')));
-		$arrayVotaciones = array();
-		foreach($votaciones as $row) {	//$row es un objeto mesa_electoral
-			array_push($arrayVotaciones, $this->votaciones_model->getVotacion($row->Id_Votacion));	//$arrayVotaciones es un array de objetos votacion
-		}
-		return $arrayVotaciones;
+		return $votaciones;
 	}
 
   public function index($votos = array())
@@ -56,49 +52,85 @@ class MesaElectoral extends CI_Controller{
   }
 
 	private function abrirUrna($idVotacion) {
-		$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+		$nuevaConfirmacion = false;
+		if (!($this->Mesa_model->getQuiereAbrir($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion))) {
+			$this->Mesa_model->abreUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+			$this->monitoring->register_action_mElectoralConfirmed($this->session->userdata('usuario'), $this->votaciones_model->getVotacion($idVotacion));
+			$nuevaConfirmacion = true;
+		}			
 		$peticionesApertura = $this->Mesa_model->getNApertura($idVotacion);
-		return ($peticionesApertura >= 3);
+		if ($nuevaConfirmacion && $peticionesApertura == 3) {
+			$apertores = $this->Mesa_model->getNamesApertura($idVotacion);
+			$this->monitoring->register_action_openBox($this->votaciones_model->getVotacion($idVotacion), $apertores);
+			return true;
+		} else if ($peticionesApertura > 3) return true;
+		else return false;
 	}
 
-  public function recuentoVotos(){
-    if($this->input->post('boton_recuento')){
-      $idVotacion = $this->input->post('recuento');
-		if ($this->abrirUrna($idVotacion)) {
-			$nVotos = $this->voto_model->recuentoVotosElectoral($idVotacion);
-			$maxVotantes = 500;	//MODIFICAR CUANDO SE SEPA CENSO
-			$votos = $this->voto_model->recuentoVotos($idVotacion);
-			$votosSi = 0; $votosNo = 0; $votosBlanco = 0;
-			if ($nVotos != 0) {
-				foreach($votos as $voto) {
-					switch ($voto->Id_Voto) {
-						case 2:
-							$votosSi++; break;
-						case 3:
-							$votosNo++; break;
-						case 4:
-							$votosBlanco++; break;
-					}
+	public function recuentoVotos(){
+		if($this->input->post('boton_recuento')){
+			$idVotacion = $this->input->post('recuento');
+			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
+				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
+					$idVotos = $this->Mesa_model->getOptions($idVotacion);
+					$this->volcadoVotos($idVotacion, $idVotos);
 				}
+				$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
+				$this->index($datosVotacion);
+				//$this->votosPerGroup($idVotacion);
+			} else {	//Si no hay suficientes miembros dispuestos a abrir la urna...
+				$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
+				$this->index($mensajes);
 			}
-			$datosVotacion = array(
-				'total' => $nVotos,
-				'si' => $votosSi,
-				'no' => $votosNo,
-				'blanco' => $votosBlanco,
-				'censo' => $maxVotantes,
-				'votacion' => $idVotacion
-			);
-
-			//$this->votosPerGroup($idVotacion);
-			$this->index($datosVotacion);
-		} else {
-			$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
-			$this->index($mensajes);
 		}
-    }
-
-  }
+	}
+	
+	//Comprueba los votos existentes, elimina su registro y almacena el recuento.
+	private function volcadoVotos($idVotacion, $idVotos) {
+		array_push($idVotos, array('Num_Votos' => array()));
+		for($it=0; $it<count($idVotos['Id']); $it++) {
+			$idVotos['Num_Votos'][$it] = $this->Mesa_model->volcadoVotos($idVotacion, $idVotos['Id'][$it]);
+		}
+		$this->Mesa_model->insertVotos($idVotacion, $idVotos['Id'], $idVotos['Num_Votos']);
+	}
+	
+	//Finaliza la votación cuando suficientes miembros lo confirmen.
+	public function finalizaVotacion() {
+		if($this->input->post('boton_finalizar') && !($this->Mesa_model->isFinished($this->input->post('idVotacion')))) {	//Acceso correcto
+			$idVotacion = $this->input->post('idVotacion');
+			if($this->cerrarUrna($idVotacion)) {	//Hay votos suficientes para cerrarla.
+				if($this->input->post('invalida') == true) {	//No se cumple el quorum
+					$this->Mesa_model->setInvalida($idVotacion);
+					$this->monitoring->register_action_closeBoxInvalid($this->votaciones_model->getVotacion($idVotacion));
+					$mensajes = array('mensaje' => 'Votación invalidada. No se cumple el Quorum.');
+					$this->index($mensajes);
+				} else {	//Se cumple el quorum
+					$this->Mesa_model->setFinalizada($idVotacion);
+					$cierran = $this->Mesa_model->getNamesCierre($idVotacion);
+					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion), $cierran);
+					$mensajes = array('success' => '¡Votación finalizada con éxito!');
+					$this->index($mensajes);
+				}
+			} else {	//No hay votos suficientes para cerrarla.
+				$mensajes = array('mensaje' => 'Es necesaria la contribución de más miembros para cerrar la votación.');
+				$this->index($mensajes);
+			}	
+		} else {	//Acceso ilegal
+			$this->index();
+		}
+	}
+	
+	//Añade confirmación de cierre de urna y hace recuento de confirmaciones.
+	private function cerrarUrna($idVotacion) {
+		$nuevaConfirmacion = false;
+		if (!($this->Mesa_model->getQuiereCerrar($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion))) {
+			$this->Mesa_model->cierraUrna($this->Usuario_model->getId($this->session->userdata('usuario')), $idVotacion);
+			$this->monitoring->register_action_mElectoralConfirmedClose($this->session->userdata('usuario'), $this->votaciones_model->getVotacion($idVotacion));
+			$nuevaConfirmacion = true;
+		}
+		$peticionesCierre = $this->Mesa_model->getNCierre($idVotacion);
+		return ($nuevaConfirmacion && $peticionesCierre == 3);
+	}
 
 }
 
