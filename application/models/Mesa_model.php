@@ -30,7 +30,7 @@ class Mesa_model extends CI_Model {
 	private function noFinalizadas($votaciones) {
 		$votacionesOK = array();
 		foreach($votaciones as $votacion) {
-			$consulta = $this->db->get_where('votacion', array('Id' => $votacion->Id_Votacion, 'finalizada' => 0));
+			$consulta = $this->db->get_where('votacion', array('Id' => $votacion->Id_Votacion, 'Finalizada' => 0));
 			if ($consulta->num_rows() != 0) array_push($votacionesOK, $consulta->result()[0]);
 		}
 		return $votacionesOK;
@@ -177,13 +177,13 @@ class Mesa_model extends CI_Model {
 	//Establece como finalizada una votación.
 	public function setFinalizada($idVotacion) {
 		$this->db->where('Id', $idVotacion);
-		$this->db->update('votacion', array('finalizada' => 1));
+		$this->db->update('votacion', array('Finalizada' => 1));
 	}
 	
 	//Establece como inválida una votación.
 	public function setInvalida($idVotacion) {
 		$this->db->where('Id', $idVotacion);
-		$this->db->update('votacion', array('finalizada' => 1, 'invalida' => 1));
+		$this->db->update('votacion', array('Finalizada' => 1, 'Invalida' => 1));
 	}
 	
 	//Comprueba si una votación está finalizada.
