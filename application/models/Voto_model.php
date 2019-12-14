@@ -170,8 +170,9 @@ f<?php
 		}
 
 		/********************************************/
-		/******* INSERTAR UN USUARIO DEL CENSO ******/
+		/******* FUNCIONES INMA *********************/
 		/********************************************/
+
 		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
 			for($i = 0; $i < sizeof($usuarios); $i++)
 	    {
@@ -195,5 +196,64 @@ f<?php
 													 'Id_Usuario' => $usuario
 												 ));
 		}
-	}
+
+		public function votoExists($nombreVoto)
+		{
+			$consulta = $this->db->get_where('voto', array('Nombre' => $nombreVoto));
+			return ($consulta->num_rows() == 1);
+		}
+
+		public function nuevoTipoVoto($nombreVoto)
+		{
+			// COMPROBAR QUE NO EXISTE YA
+			if(!$this->votoExists($nombreVoto))
+			{
+				$nuevoTipo =array(
+					'Nombre' => $nombreVoto
+				);
+				$this->db->insert('voto',$nuevoTipo);
+			}
+		}
+
+		public function insertarOpciones($idVotacion,$idsOpciones)
+		{
+			foreach($idsOpciones as $opcion)
+			{
+				$datos = array(
+					'Id_Votacion' => $idVotacion,
+					'Id_Voto' => $opcion
+				);
+				$this->db->insert('votacion_voto',$datos);
+			}
+		}
+
+		public function getVotosFromVotacion($idVotacion)
+		{
+			$query = $this->db->query("SELECT Id_Voto from votacion_voto WHERE Id_Votacion = '$idVotacion';");
+			return $query->result();
+		}
+
+		public function getIdFromNombreVoto($nombreVoto)
+		{
+			$consulta = $this->db->get_where('voto', array('Nombre' => $nombreVoto));
+			return $consulta->row()->Id;
+		}
+
+		public function recuentoPorDefecto($idVotacion,$opciones,$totalUsuarios)
+		{
+			$valor = 0;
+			$usuariosTotales = $totalUsuarios[0]->total;
+			foreach($opciones as $opcion)
+			{			
+				$valor = 0;
+				$datos = array(
+					'Id_Votacion' => $idVotacion,
+					'Id_Voto' => $opcion->Id_Voto,
+					'Num_Votos' => $valor
+				);
+				$this->db->insert('recuento',$datos);
+			}
+			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES ('.$idVotacion.',1,'.$usuariosTotales.')");
+			}
+}
 ?>

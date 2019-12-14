@@ -15,13 +15,19 @@
             <a class="nav-link" href="<?= base_url().'secretario/'?>">Inicio <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Votaciones</a>
+          <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Crear votaciones</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion'?>">Crear</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/obtenerBorradores'?>">Borradores</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/simple'?>">Simple</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/compleja'?>">Compleja</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/consultasimple'?>">Consulta simple</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/consultacompleja'?>">Consulta compleja</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/representantes'?>">Elección representantes</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/uniponderados'?>">Cargos uniponderados</a>
           </div>
         </li>
-
+        <li class="nav-item active">
+            <a class="nav-link" href="<?= base_url().'secretario/obtenerBorradores'?>">Borradores</a>
+        </li>
       </ul>
       <ul class="navbar-nav ">
         <li class="nav-item my-2 my-lg-0 mr-sm-2">

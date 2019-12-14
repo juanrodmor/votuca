@@ -31,9 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion',
-    		    array('name'=>'crearVotacion'));?>
-            <!-- ESPERAR A SABER CÓMO COMPROBAR QUE UNA VOTACION NO EXISTE YA -->
+    <?=form_open(base_url().'secretario/insertarVotacion/uniponderados');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -110,9 +108,137 @@
           </div>
         </div>
 
-        <h2> Censo electoral </h2>
+        <div class="form-group">
+          <?php
+           $atributos = array(
+              'name' => 'quorum',
+              'class' => 'form-control',
+              'id' => 'quorum',
+              'placeholder' =>'Introduzca el quorum de esta votación',
+              'required' => true,
+              'value' => set_value('quorum') // Mantiene el valor en el form
+          ); ?>
+          <?= form_label('Quorum','quorum'); ?>
+          <!-- Igual a: <label for="titulo">Titulo</label> -->
+          <?= form_input($atributos) ?> <br/><br/>
+        </div>
+
+      <!-- PONDERACIONES -->
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <?php
+               $atributos = array(
+                  'name' => 'ponderacionPAS',
+                  'class' => 'form-control',
+                  'id' => 'pondPas',
+                  'placeholder' =>'Escribe un la ponderacion para el grupo PAS',
+                  'required' => true,
+                  'value' => set_value('pondPas') // Mantiene el valor en el form
+              ); ?>
+              <?= form_label('Ponderacion PAS','ponderacionPAS'); ?>
+              <?= form_input($atributos) ?> <br/><br/>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <?php
+               $atributos = array(
+                  'name' => 'ponderacionAlumnos',
+                  'class' => 'form-control',
+                  'id' => 'pondAlumnos',
+                  'placeholder' =>'Escribe un la ponderacion para el grupo Alumnos',
+                  'required' => true,
+                  'value' => set_value('pondAlumnos') // Mantiene el valor en el form
+              ); ?>
+              <?= form_label('Ponderacion Alumnos','ponderacionAlumnos'); ?>
+              <!-- Igual a: <label for="titulo">Titulo</label> -->
+              <?= form_input($atributos) ?> <br/><br/>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <?php
+               $atributos = array(
+                  'name' => 'ponderacionProfesores',
+                  'class' => 'form-control',
+                  'id' => 'pondProfesores',
+                  'placeholder' =>'Escribe un la ponderacion para el grupo Profesores',
+                  'required' => true,
+                  'value' => set_value('pondProfesores') // Mantiene el valor en el form
+              ); ?>
+              <?= form_label('Ponderacion Profesores','ponderacionProfesores'); ?>
+              <!-- Igual a: <label for="titulo">Titulo</label> -->
+              <?= form_input($atributos) ?> <br/><br/>
+            </div>
+          </div>
+        </div>
+
+        <h2> Opciones </h2>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+          <?php $atributos = array(
+              'id' => 'nOpciones',
+              'name' => 'nOpciones',
+              'class' => 'form-control',
+              'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
+              'required' => true,
+              'value' => set_value('nOpciones')
+          ); ?>
+          <?= form_label('Total de opciones a votar','nOpciones'); ?>
+          <?= form_input($atributos) ?> <br/><br/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+          <?php
+          $totales = array();
+           $atributos = array(
+              'id' => 'opciones',
+              'name' => 'opciones',
+              'class' => 'form-control',
+              'placeholder' =>'Introduzca las opciones posibles',
+              'required' => true,
+              'value' => set_value('opciones')
+            ); ?>
+          <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
+          <p> Separe cada opción por una coma </p>
+          <?= form_input($atributos) ?> <br/><br/>
+          </div>
+          </div>
+        </div>
+        <?php $atributos = array(
+            'name' => 'submit_opc',
+            'class' => 'btn btn-primary',
+            'type' => 'submit',
+            'value' => 'Guardar opción'
+        ); ?>
+
+        <!-- CHECK BUTTONS -->
+        <div class="form-check">
+        <?php
+        $atributos = array(
+          'name' => 'esModificable',
+          'class' => 'form-check-input',
+          'type' => 'checkbox',
+          'id' => 'esModificable',
+          'value' => true
+        );
+        ?>
+        <?= form_checkbox($atributos); ?>
+        <?= form_label('Voto Modificable','esModificable'); ?>
+      </div>
+
+      <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
-        <!-- TABLA DE CENSO -->
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
@@ -145,6 +271,8 @@
         </table>
       </div>
       </div>
+
+    <!-- BOTÓN ENVIAR -->
         <?php $atributos = array(
             'name' => 'submit_reg',
             'class' => 'btn btn-primary',

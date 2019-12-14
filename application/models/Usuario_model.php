@@ -188,6 +188,11 @@ class Usuario_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function getUserNameFromId($id)
+	{
+		$query = $this->db->query("SELECT NombreUsuario from usuario WHERE Id = '$id';");
+		return $query->result();
+	}
 	public function getIdFromUserName($nombre)
 	{
 		$query = $this->db->query("SELECT Id from usuario WHERE NombreUsuario = '$nombre';");
@@ -210,7 +215,7 @@ class Usuario_model extends CI_Model {
 		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
 		$existe = $this->userExists($usuarioElectoral);
 		if(!$existe){$this->db->insert('usuario',$nuevo);}
-		
+
 	}
 
 	/*public function verify_login() {
