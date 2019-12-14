@@ -674,9 +674,9 @@ class Secretario extends CI_Controller{
         break;
 
         case 6:
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,1);
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,1);
-        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,1);
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,2,$this->input->post('ponderacionPAS'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,3,$this->input->post('ponderacionAlumnos'));
+        $this->ponderaciones_model->insertarPonderacion($idVotacion,4,$this->input->post('ponderacionProfesores'));
         break;
       }
     }
