@@ -439,36 +439,35 @@ class Secretario extends CI_Controller{
           'mensaje' => 'Seleccione abajo el censo asistente'
       );
       $this->load->view('elementos/headerSecretario');
-      switch($tipo)
-      {
-        case 'simple':
+        switch($tipo)
+        {
+          case 'simple':
+            $datos += array('soloAsistentes' => true);
+            $this->load->view('secretario/votacionSimple_view',$datos);
+            break;
+          case 'compleja':
           $datos += array('soloAsistentes' => true);
-          $this->load->view('secretario/votacionSimple_view',$datos);
+          $this->load->view('secretario/votacionCompleja_view',$datos);
           break;
-        case 'compleja':
-        $datos += array('soloAsistentes' => true);
-        $this->load->view('secretario/votacionCompleja_view',$datos);
-        break;
 
-        case 'consultasimple':
-        $this->load->view('secretario/consultaSimple_view',$datos);
-        break;
+          case 'consultasimple':
+          $this->load->view('secretario/consultaSimple_view',$datos);
+          break;
 
-        case 'consultacompleja':
-        $this->load->view('secretario/consultaCompleja_view',$datos);
-        break;
+          case 'consultacompleja':
+          $this->load->view('secretario/consultaCompleja_view',$datos);
+          break;
 
-        case 'representantes':
-        $datos += array('soloAsistentes' => true);
-        $this->load->view('secretario/eleccionRepresentantes_view',$datos);
-        break;
+          case 'representantes':
+          $datos += array('soloAsistentes' => true);
+          $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+          break;
 
-        case 'uniponderados':
-        $this->load->view('secretario/cargosUniponderados_view',$datos);
-        break;
+          case 'uniponderados':
+          $this->load->view('secretario/cargosUniponderados_view',$datos);
+          break;
 
-      }
-
+        }
     }
 
     private function obtenerNombreElectoral($idUsuario,$letra)
@@ -739,6 +738,7 @@ class Secretario extends CI_Controller{
       $id = $this->input->post('modificar');
       $votacion = $this->votaciones_model->getVotacion($id);
 
+
       // SACAR CENSOS
       $censosVotacion = $this->censo_model->getCensosfromVotacion($id);
       $nombreCensos = $this->censo_model->getCensos();
@@ -749,14 +749,34 @@ class Secretario extends CI_Controller{
 
       $esModificable = false;
       if($votacion->VotoModificable == 1){$esModificable = true;}
+
+      // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
+      $idsAsistentes = array();
+      $asistentesNombre = array();
+      $asistentes = array();
+      if($soloAsistentes)
+      {
+        $usuariosAsistentes = $this->censo_model->getCensoAsistente($id);
+        foreach($usuariosAsistentes as $asistente)
+        {$idsAsistentes[] = $asistente->Id_Usuario;}
+
+        // EXTRAER NOMBRES DE USUARIOS ASOCIADOS A ESOS IDS
+        foreach($idsAsistentes as $id)
+        {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($id);}
+
+        foreach($asistentesNombre as $nombre)
+        {$asistentes[] = $nombre[0]->NombreUsuario;}
+
+      }
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
         'censosVotacion' => $censosVotacion,
         'checkAsis' => $soloAsistentes,
-        'checkMod' => $esModificable
+        'checkMod' => $esModificable,
+        'asistentes' => $asistentes,
+        'idsAsistentes' => $idsAsistentes
       );
-
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
 
@@ -764,17 +784,12 @@ class Secretario extends CI_Controller{
       switch($tipoVotacion)
       {
         case 1:
+        echo 'CARGANDO VISTA...<br>';
         $this->load->view('secretario/modificarVotacionSimple_view', $datos);
       }
-
-      //echo var_dump($votacion);
-
-
-
-      //echo var_dump($censosVotacion[0]->Id_Censo);
-
-
     }
+    if($this->input->post('boton_borrador')){echo 'HAS PULSADO BORRADOR<br>';}
+    if($this->input->post('boton_publicar')){echo 'HAS PULSADO PUBLICAR<br>';}
 	}
 
   public function updateVotacion()
@@ -786,6 +801,54 @@ class Secretario extends CI_Controller{
   /**********************************************/
   /********** FUNCIONES AUXILIARES MODIFICAR ****/
   /**********************************************/
+
+  private function actualizarVotacionFromBoton($boton,$publicar)
+  {
+    if($this->input->post($boton))
+    {
+
+      $datos = $this->actualizarVotacionDatos($publicar);
+      $idVotacion = $_POST['id'];
+      $idTipo = $_POST['Id_TipoVotacion'];
+
+      // MODIFICAR CENSOS
+      // VER SI LA VOTACIÓN TIENE CENSO ASISTENTE O NO
+      $soloAsistentes = false;
+      if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+      if(!$soloAsistentes)
+      {$this->modificarSoloCensos($idVotacion);}
+      else
+      {
+        if($this->validacionesModificar(true) == FALSE)
+        {$this->modificarVotacion();}
+        else{echo 'TODO EL FORMULARIO ESTÁ BIEN';}
+      }
+
+      // Modificar datos de la votacion
+      $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
+
+        /*if($modificada != NULL){
+            $this->index('La votación se ha guardado en borrador');
+          }*/
+    }
+  }
+
+  private function validacionesModificar($validarAsistentes)
+  {
+    $this->form_validation->set_rules('titulo','Titulo','required');
+    $this->form_validation->set_rules('descripcion','Descripcion','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','required');
+    $this->form_validation->set_rules('final','Fecha Final','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
+    $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+    if($validarAsistentes == true)
+    {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
+
+
+    // MENSAJES DE ERROR.
+    $this->form_validation->set_message('required','El campo %s es obligatorio');
+    return $this->form_validation->run();
+  }
 
   private function extraerUsuariosCensos($censos)
   {
@@ -1004,33 +1067,7 @@ class Secretario extends CI_Controller{
       }
     }
   }
-  private function actualizarVotacionFromBoton($boton,$publicar)
-  {
-    if($this->input->post($boton))
-    {
 
-      $datos = $this->actualizarVotacionDatos($publicar);
-      $idVotacion = $_POST['id'] ;
-
-      // MODIFICAR CENSOS
-      // VER SI LA VOTACIÓN TIENE CENSO ASISTENTE O NO
-      $soloAsistentes = false;
-      if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
-      if(!$soloAsistentes)
-      {$this->modificarSoloCensos($idVotacion);}
-      else
-      {
-        
-      }
-
-      // Modificar datos de la votacion
-      $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
-
-        if($modificada != NULL){
-            $this->index('La votación se ha guardado en borrador');
-          }
-    }
-  }
 
 
 

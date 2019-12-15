@@ -18,7 +18,15 @@
 </head>
 <body>
 
+	<div class="container">
+	  <div class ="mensaje">
+	    <h3><?=   validation_errors();  ?></h3>
+	    <?php if(isset($mensaje)): ?>
+	          <br/><h1><?= $mensaje ?></h1><br/>
 
+	      <?php endif; ?>
+
+	  </div>
 <br><br><br><br>
 <div class = "container">
 	  <?=form_open(base_url().'secretario/updateVotacion/');?>
@@ -35,6 +43,11 @@
 			<?= form_input($atributos) ?> <br/><br/>
 		</div>
 
+		<?php
+		 $atributos = array(
+				'Id_TipoVotacion' => $votaciones->Id_TipoVotacion
+		); ?>
+		<?= form_hidden($atributos) ?> <br/><br/>
 		<!-- TITULO -->
 		<div class="form-group">
 			<?php
@@ -202,7 +215,7 @@
 											'name' => 'censoInsercion[]',
 											'class' => 'form-control',
 											'type' => 'checkbox',
-											'id' => 'censo',
+											'id' => $censo->Nombre,
 											'value' => $censo->Nombre
 									);
 									echo '<td>'.form_checkbox($atributos).'</td>';
@@ -232,6 +245,48 @@
 		    </table>
 		  </div>
 	 </div>
+
+	 <!-- CENSO ASISTENTE -->
+	 <?php
+	 if(isset($asistentes) && $asistentes != NULL && isset($idsAsistentes)){?>
+		 <h2> Censo asistente </h2>
+			 <div class = "container">
+				 <div class="table-wrapper-scroll-y my-custom-scrollbar">
+				 <table class="display table table-striped table-bordered" id="votaciones_admin">
+					 <thead>
+						 <tr>
+							 <th>Asistentes</th>
+							 <th></th>
+						 </tr>
+					 </thead>
+					 <tbody>
+						 <tr>
+							 <?php
+							 $i = 0;
+							 foreach($asistentes as $asistente)
+							 {?>
+							 <td><?php echo $asistente?></td>
+							 <?php
+								 echo '<div class="form-check">';
+									$atributos = array(
+										 'name' => 'asistentes[]',
+										 'class' => 'form-control',
+										 'type' => 'checkbox',
+										 'id' => 'censo',
+										 'checked' => true,
+										 'value' => $idsAsistentes[$i]
+								 );
+								 $i++;
+								 ?>
+							 <td><?= form_checkbox($atributos); ?></td>
+						 </div>
+						 <?php echo '</tr>'; ?>
+				 <?php } ?>
+			 </tbody>
+		 </table>
+	 </div>
+	 </div>
+ <?php } ?>
 					 <?php $atributos = array(
 							 'name' => 'boton_borrador',
 							 'class' => 'btn btn-primary',
