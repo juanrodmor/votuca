@@ -117,9 +117,9 @@ class Mesa_model extends CI_Model {
 		$usuario_votacion = $this->db->get('usuario_votacion');
 		$cont = 0;
 		foreach ($usuario_votacion->result() as $row) {
-			if (password_verify($idVotacion, $row->Id_Votacion) == true && password_verify($idVoto, $row->Id_Voto) == true) {
+			if ($idVotacion == $row->Id_Votacion && password_verify($idVoto, $row->Id_Voto) == true) {
 				$cont++;
-				$this->db->delete('usuario_votacion', array('Id_Votacion' => $row->Id_Votacion, 'Id_Voto' => $row->Id_Voto));
+				$this->db->delete('usuario_votacion', array('Id_Votacion' => $row->Id_Votacion, 'Id_Usuario' => $row->Id_Usuario));
 			}
 		}
 		return $cont;
