@@ -1333,14 +1333,17 @@ class Secretario extends CI_Controller{
   public function validarFicherosCenso(){
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
-    if($asistentes != NULL & sizeof($asistentes) < 3)
+    if($asistentes != NULL)
     {
-      if($elegidos == NULL || sizeof($elegidos) < 1)
+      if(sizeof($asistentes) < 3)
       {
-        $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
-        return FALSE;
+        if($elegidos == NULL || sizeof($elegidos) < 1)
+        {
+          $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+          return FALSE;
+        }
+        else{return TRUE;}
       }
-      else{return TRUE;}
     }
     else{
       return TRUE;
