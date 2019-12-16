@@ -126,8 +126,6 @@
 			<!-- Igual a: <label for="titulo">Titulo</label> -->
 			<?= form_input($atributos) ?> <br/><br/>
 		</div>
-
-
 			<?php
 			 $atributos = array(
 					'NumOpciones' => $votaciones->NumOpciones
@@ -136,7 +134,7 @@
 
 
 		<div class="form-check">
-		<?php	if(isset($checkMod) && $checkMod == true) $check = 'checked';
+		<?php	if(isset($pulsadoModificar) && $pulsadoModificar == true) $check = 'checked';
 			else{$check = false;} ?>
 		<?php
 		$atributos = array(
@@ -152,7 +150,7 @@
 		<?= form_label('Voto Modificable','esModificable'); ?>
 		</div>
 		 <div class="form-check">
-			 <?php	if(isset($checkAsis) && $checkAsis == true) $checkAs = 'checked';
+			 <?php	if(isset($pulsadoAsistentes) && $pulsadoAsistentes == true) $checkAs = 'checked';
 	 			else{$checkAs = false;} ?>
 		<?php
 		$atributos = array(
@@ -212,7 +210,7 @@
 								{
 									echo '<div class="form-check">';
 								$atributos = array(
-											'name' => 'censoInsercion[]',
+											'name' => 'censo[]',
 											'class' => 'form-control',
 											'type' => 'checkbox',
 											'id' => $censo->Nombre,

@@ -110,21 +110,19 @@ class Secretario extends CI_Controller{
          && $this->input->post('censo') != NULL
          ) // SI HAS ELEGIDO ASISTENTES
       {
-          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          if($this->validaciones() == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
           {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
       }
       else
       {
         if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
-        {
-          $this->mostrarAsistentes($tipo);
-        }
+        {$this->mostrarAsistentes($tipo);}
         else
         {
           if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
           {
-            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            if($this->validaciones() == FALSE) // Hay algun error
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
             else{$this->aceptarInsercion($tipo);}
 
@@ -438,6 +436,12 @@ class Secretario extends CI_Controller{
           'asistentes' => $nombresUsuarios,
           'mensaje' => 'Seleccione abajo el censo asistente'
       );
+      $this->llamarVistasCrear($tipo,$datos);
+
+    }
+
+    private function llamarVistasCrear($tipo,$datos)
+    {
       $this->load->view('elementos/headerSecretario');
         switch($tipo)
         {
@@ -543,7 +547,6 @@ class Secretario extends CI_Controller{
 
     private function insertarUsuariosCenso($usuariosIds,$idVotacion)
     {
-      //echo var_dump($usuariosIds);
       $this->censo_model->insertar($usuariosIds,$idVotacion);
     }
 
@@ -622,7 +625,7 @@ class Secretario extends CI_Controller{
       }
     }
 
-    private function validaciones($validarAsistentes,$validarCenso)
+    private function validaciones()
     {
       $this->form_validation->set_rules('titulo','Titulo','required');
       $this->form_validation->set_rules('descripcion','Descripcion','required');
@@ -631,10 +634,8 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
-      if($validarAsistentes == true)
-      {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
-      if($validarCenso == true)
-      {$this->form_validation->set_rules('censos','Censo','callback_validarFicherosCenso');}
+      $this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');
+      $this->form_validation->set_rules('censos','Censo','callback_validarFicherosCenso');
       // MENSAJES DE ERROR.
       $this->form_validation->set_message('required','El campo %s es obligatorio');
       return $this->form_validation->run();
@@ -767,12 +768,14 @@ class Secretario extends CI_Controller{
         {$asistentes[] = $nombre[0]->NombreUsuario;}
 
       }
+
+      //'pulsadoParalelo' => true,
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
         'censosVotacion' => $censosVotacion,
-        'checkAsis' => $soloAsistentes,
-        'checkMod' => $esModificable,
+        'pulsadoAsistentes' => $soloAsistentes,
+        'pulsadoModificar' => $esModificable,
         'asistentes' => $asistentes,
         'idsAsistentes' => $idsAsistentes
       );
@@ -801,7 +804,7 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post($boton))
     {
-      if($this->validaciones(true,false) == FALSE)
+      if($this->validaciones() == FALSE)
       {$this->mostrarErrores($_POST);}
       else
       {
@@ -817,9 +820,12 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES, HAY QUE VALIDAR QUE HAS INTRODUCIDO EL CENSO
         {
-          if($this->validacionesModificar(true,true) == FALSE){$this->mostrarErrores($_POST);}
+          if($this->validaciones() == FALSE){$this->mostrarErrores($_POST);}
           else
-          {$this->mostrarAsistentesModificar($_POST);}
+          {
+            //echo 'EN DESARROLLO...';
+            $this->mostrarAsistentesModificar($_POST);
+          }
         }
 
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
@@ -831,87 +837,141 @@ class Secretario extends CI_Controller{
     }
   }
 
-  private function validacionesModificar($validarAsistentes,$validarCenso)
-  {
-    $this->form_validation->set_rules('titulo','Titulo','required');
-    $this->form_validation->set_rules('descripcion','Descripcion','required');
-    $this->form_validation->set_rules('inicio','Fecha Inicio','required');
-    $this->form_validation->set_rules('final','Fecha Final','required');
-    $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
-    $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-    if($validarAsistentes == true)
-    {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
-    if($validarCenso == true)
-    {$this->form_validation->set_rules('censos','CensoInsercion','callback_validarFicherosCenso');}
-    // MENSAJES DE ERROR.
-    $this->form_validation->set_message('required','El campo %s es obligatorio');
-    return $this->form_validation->run();
-  }
-
   private function mostrarAsistentesModificar($misDatos)
   {
-    echo var_dump($misDatos);
+
+    $esModificable = false;
+    if($this->input->post('esModificable') != NULL)
+        $esModificable = true;
+
+    $recuentoParalelo = false;
+    if($this->input->post('recuentoParalelo') != NULL)
+        $esModificable = true;
+
+    $soloAsistentes = false;
+    if($this->input->post('soloAsistentes') != NULL)
+        $soloAsistentes = true;
+
+    // Recargar los datos de la votacion
+    $datos = $this->recargarDatosVotacion($misDatos);
+
+    // Incorporar asistentes del censo seleccionado
+    $censosSeleccionados = $this->input->post('censo');
+    $totales = array();
+    // Extraer IDS de los ficheros de esos censos seleccionados
+    $idsFicheros = array();
+    $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
+    // SACAR USUARIOS DE TODOS LOS FICHERoS DE CENSOS
+    for($i = 0; $i < sizeof($censosSeleccionados); $i++)
+    {
+      $usuarios = $this->extraerUsuariosFichero($censosSeleccionados[$i]);
+      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+
+      for($j = 0; $j < sizeof($usuariosIds); $j++)
+      {
+        // Relacionar este usuario con este censo en la bd
+        $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);
+        if(!in_array($usuariosIds[$j],$totales))
+        array_push($totales,$usuariosIds[$j]);
+      }
+    }
+    // OBTENER NOMBRES DE ESOS USUARIOS
+    $nombresUsuarios = array();
+    foreach($totales as $idUser)
+    {
+      $aux = $this->usuario_model->getUsuario($idUser);
+      $nombresUsuarios[] = $aux;
+    }
+    // INTRODUCIR ESOS NUEVOS USUARIOS EN LA TABLA DE ASISTENTES
+    $asistentesActuales = $datos['asistentes'];
+    $idsActuales = $datos['idsAsistentes'];
+    //echo var_dump($nombresUsuarios[0]);
+    foreach($nombresUsuarios as $nombre)
+    {
+      if(!in_array($nombre[0]->NombreUsuario,$asistentesActuales))
+      {
+        $asistentesActuales[] = $nombre[0]->NombreUsuario;
+        $idsActuales[] = $nombre[0]->Id;
+      }
+    }
+    $datos['asistentes'] = $asistentesActuales;
+    $datos['idsAsistentes'] = $idsActuales;
+    $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
+    $this->llamarVistasModificar($votacion->Id_TipoVotacion,$datos);
+
+
   }
-  private function mostrarErrores($misDatos)
+
+  private function recargarDatosVotacion($misDatos)
+  {
+    $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
+
+
+    // SACAR CENSOS
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($misDatos['id']);
+    $nombreCensos = $this->censo_model->getCensos();
+
+    // CHECKBOXES ENCENDIDOS
+    $soloAsistentes = false;
+    if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
+
+    $esModificable = false;
+    if($votacion->VotoModificable == 1){$esModificable = true;}
+
+    // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
+    $idsAsistentes = array();
+    $asistentesNombre = array();
+    $asistentes = array();
+    if($soloAsistentes)
+    {
+      $usuariosAsistentes = $this->censo_model->getCensoAsistente($misDatos['id']);
+      foreach($usuariosAsistentes as $asistente)
+      {$idsAsistentes[] = $asistente->Id_Usuario;}
+
+      // EXTRAER NOMBRES DE USUARIOS ASOCIADOS A ESOS IDS
+      foreach($idsAsistentes as $id)
+      {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($id);}
+
+      foreach($asistentesNombre as $nombre)
+      {$asistentes[] = $nombre[0]->NombreUsuario;}
+
+    }
+    $datos = array(
+      'censos' => $nombreCensos,
+      'votaciones' => $votacion,
+      'censosVotacion' => $censosVotacion,
+      'pulsadoAsistentes' => $soloAsistentes,
+      'pulsadoModificar' => $esModificable,
+      'asistentes' => $asistentes,
+      'idsAsistentes' => $idsAsistentes
+    );
+    // SACAR TIPO DE VOTACION
+    $tipoVotacion = $votacion->Id_TipoVotacion;
+    return $datos;
+
+  }
+
+  private function llamarVistasModificar($tipo,$datos)
   {
     if($this->session->userdata('rol') == 'Secretario')
-      {
-        $this->load->view('elementos/headerSecretario');
-      }
-      if($this->session->userdata('rol') == 'SecretarioDelegado')
-      {
-      $this->load->view('elementos/headerDelegado');
-      }
-      $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
+    {$this->load->view('elementos/headerSecretario');}
+    if($this->session->userdata('rol') == 'SecretarioDelegado')
+    {$this->load->view('elementos/headerDelegado');}
 
+    switch($tipo)
+    {
+      case 1:
+      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
+      break;
+    }
 
-      // SACAR CENSOS
-      $censosVotacion = $this->censo_model->getCensosfromVotacion($misDatos['id']);
-      $nombreCensos = $this->censo_model->getCensos();
+  }
 
-      // CHECKBOXES ENCENDIDOS
-      $soloAsistentes = false;
-      if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
+  private function mostrarErrores($misDatos)
+  {
 
-      $esModificable = false;
-      if($votacion->VotoModificable == 1){$esModificable = true;}
-
-      // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
-      $idsAsistentes = array();
-      $asistentesNombre = array();
-      $asistentes = array();
-      if($soloAsistentes)
-      {
-        $usuariosAsistentes = $this->censo_model->getCensoAsistente($misDatos['id']);
-        foreach($usuariosAsistentes as $asistente)
-        {$idsAsistentes[] = $asistente->Id_Usuario;}
-
-        // EXTRAER NOMBRES DE USUARIOS ASOCIADOS A ESOS IDS
-        foreach($idsAsistentes as $id)
-        {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($id);}
-
-        foreach($asistentesNombre as $nombre)
-        {$asistentes[] = $nombre[0]->NombreUsuario;}
-
-      }
-      $datos = array(
-        'censos' => $nombreCensos,
-        'votaciones' => $votacion,
-        'censosVotacion' => $censosVotacion,
-        'checkAsis' => $soloAsistentes,
-        'checkMod' => $esModificable,
-        'asistentes' => $asistentes,
-        'idsAsistentes' => $idsAsistentes
-      );
-      // SACAR TIPO DE VOTACION
-      $tipoVotacion = $votacion->Id_TipoVotacion;
-
-      switch($tipoVotacion)
-      {
-        case 1:
-        $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      }
-
+    $datos = $this->recargarDatosVotacion($misDatos);
+    $this->llamarVistasModificar($misDatos['Id_TipoVotacion'],$datos);
 
   }
 
@@ -1132,9 +1192,6 @@ class Secretario extends CI_Controller{
       }
     }
   }
-
-
-
 
 
   /************************************/
