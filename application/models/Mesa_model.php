@@ -81,6 +81,12 @@ class Mesa_model extends CI_Model {
 		return ($consulta->num_rows() == 1);
 	}
 	
+	//Comprueba si un miembro electoral quiere cerrar una votación concreta.
+	public function getQuiereCerrar($username, $votacion) {
+		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'Id_Usuario' => $username, 'seCierra' => 1));
+		return ($consulta->num_rows() == 1);
+	}
+	
 	//Devuelve el número de decisiones de cierre para una votación concreta.
 	public function getNCierre($votacion) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seCierra' => 1));
