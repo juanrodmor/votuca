@@ -819,7 +819,7 @@ class Secretario extends CI_Controller{
           if($this->validaciones(true,true) == FALSE){$this->mostrarErrores($_POST);}
           else
           {
-            
+
           }
         }
 
@@ -868,7 +868,7 @@ class Secretario extends CI_Controller{
 
         // EXTRAER NOMBRES DE USUARIOS ASOCIADOS A ESOS IDS
         foreach($idsAsistentes as $id)
-        {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($misDatos['id']);}
+        {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($id);}
 
         foreach($asistentesNombre as $nombre)
         {$asistentes[] = $nombre[0]->NombreUsuario;}
