@@ -110,7 +110,7 @@ class Secretario extends CI_Controller{
          && $this->input->post('censo') != NULL
          ) // SI HAS ELEGIDO ASISTENTES
       {
-          if($this->validaciones() == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
           {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
           else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
       }
@@ -122,7 +122,7 @@ class Secretario extends CI_Controller{
         {
           if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
           {
-            if($this->validaciones() == FALSE) // Hay algun error
+            if($this->validaciones(false,true) == FALSE) // Hay algun error
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
             else{$this->aceptarInsercion($tipo);}
 
@@ -625,7 +625,7 @@ class Secretario extends CI_Controller{
       }
     }
 
-    private function validaciones()
+    private function validaciones($validarAsistentes,$validarCenso)
     {
       $this->form_validation->set_rules('titulo','Titulo','required');
       $this->form_validation->set_rules('descripcion','Descripcion','required');
@@ -634,7 +634,9 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
+      if($validarAsistentes)
       $this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');
+      if($validarCenso)
       $this->form_validation->set_rules('censos','Censo','callback_validarFicherosCenso');
       // MENSAJES DE ERROR.
       $this->form_validation->set_message('required','El campo %s es obligatorio');
@@ -781,12 +783,7 @@ class Secretario extends CI_Controller{
       );
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
-
-      switch($tipoVotacion)
-      {
-        case 1:
-        $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      }
+      $this->llamarVistasModificar($tipoVotacion,$datos);
 
 	}
 
@@ -804,7 +801,7 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post($boton))
     {
-      if($this->validaciones() == FALSE)
+      if($this->validaciones(false,false) == FALSE)
       {$this->mostrarErrores($_POST);}
       else
       {
@@ -827,13 +824,12 @@ class Secretario extends CI_Controller{
             $this->mostrarAsistentesModificar($_POST);
           }
         }
-
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
 
       }
-        /*if($modificada != NULL){
+        if($modificada != NULL){
             $this->index('La votación se ha guardado en borrador');
-          }*/
+          }
     }
   }
 
@@ -1320,6 +1316,7 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFicherosCenso(){
+    $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
     if($elegidos == NULL || sizeof($elegidos) < 1)
     {
