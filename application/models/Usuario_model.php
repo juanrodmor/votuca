@@ -152,6 +152,128 @@ class Usuario_model extends CI_Model {
 		return $consulta->row()->Id_Grupo;
 	}
 	
+	public function setAuth($usuario, $auth)
+	{
+		$this->db->set('Auth', $auth);	
+		$this->db->where('NombreUsuario', $usuario);	
+		$this->db->update('usuario');
+		
+		$data = array(
+			'auth_key' => $auth,
+			'first_time' => 1,
+			'attemps' => 0
+		);
+		
+		$this->db->insert('autorizacion', $data);
+		
+	}
+	
+	public function getAuth($usuario)
+	{
+		//$consulta = $this->db->get_where('usuario', array('Id' => $usuario->getId()));
+		$this->db->select('Auth');
+		$this->db->from('usuario');
+		$this->db->where('NombreUsuario', $usuario);
+		$result = $this->db->get()->result_array();
+		
+		if($result[0]['Auth'] == "")
+			return null;
+		else
+			return $result[0]['Auth'];
+		
+	}
+	
+	public function setIP($usuario, $ip)
+	{
+		echo $ip;
+		echo $usuario;
+		$this->db->set('IP', $ip);	
+		$this->db->where('NombreUsuario', $usuario);		
+		$this->db->update('usuario');
+	}
+	
+	public function getIP($usuario)
+	{
+		$this->db->select('IP');
+		$this->db->from('usuario');
+		$this->db->where('NombreUsuario', $usuario);
+		$result = $this->db->get()->result_array();
+		
+		if($result[0]['IP'] == "")
+			return null;
+		else
+			return $result[0]['IP'];
+	}
+	
+	public function is_first_auth()
+	{
+		$usuario = $this->session->userdata('usuario');
+		
+		$auth = $this->getAuth($usuario);
+		$this->db->select('first_time');
+		$this->db->from('autorizacion');
+		$this->db->where('auth_key', $auth);
+		$result = $this->db->get()->result_array();
+		
+		return $result[0]['first_time'];
+	}
+	
+	public function notFirstAuth()
+	{
+		$usuario = $this->session->userdata('usuario');
+		
+		$auth = $this->getAuth($usuario);
+		$this->db->set('first_time', false);	
+		$this->db->where('auth_key', $auth);		
+		$this->db->update('autorizacion');
+	}
+	
+	public function resetAttemps()
+	{
+		$usuario = $this->session->userdata('usuario');
+		
+		$auth = $this->getAuth($usuario);
+		$this->db->set('attemps', 0);	
+		$this->db->where('auth_key', $auth);		
+		$this->db->update('autorizacion');		
+	}
+	
+	public function incrementAttemps()
+	{
+		$usuario = $this->session->userdata('usuario');
+		
+		$auth = $this->getAuth($usuario);
+		$this->db->set('attemps', 'attemps+1', false);	
+		$this->db->where('auth_key', $auth);		
+		$this->db->update('autorizacion');	
+
+		$consulta = $this->db->get_where('autorizacion', array('auth_key' => $auth));
+		$intentos = $consulta->row()->attemps;
+		
+		if($intentos > 3)
+		{
+			$this->db->set('blocked', true);
+			$this->db->where('auth_key', $auth);
+			$this->db->update('autorizacion');
+			return "attemps_limit";
+		}
+
+	}
+	
+	public function blockedAuth()
+	{
+		$usuario = $this->session->userdata('usuario');
+		
+		$auth = $this->getAuth($usuario);
+		$this->db->select('blocked');
+		$this->db->from('autorizacion');
+		$this->db->where('auth_key', $auth);
+		$result = $this->db->get()->result_array();
+		
+		return $result[0]['blocked'];		
+	}
+	
+
 	/**
 	*	Establece una caducidad de 24h para $usuario
 	*	$usuario - nombre de usuario
@@ -217,6 +339,7 @@ class Usuario_model extends CI_Model {
 		if(!$existe){$this->db->insert('usuario',$nuevo);}
 
 	}
+	
 
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));

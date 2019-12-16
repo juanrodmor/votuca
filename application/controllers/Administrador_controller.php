@@ -49,6 +49,8 @@ class Administrador_controller extends CI_Controller {
 			$login = $this->input->post('cLogin'); if($login === 'true'){$login = true;} else{$login = false;}
 			$logout = $this->input->post('cLogout'); if($logout === 'true'){$logout = true;} else{$logout = false;}
 			$vote = $this->input->post('cVote'); if($vote === 'true'){$vote = true;} else{$vote = false;}
+			$urna = $this->input->post('cUrna'); if($urna === 'true'){$urna = true;} else{$urna = false;}
+			$confirm = $this->input->post('cConfirm'); if($confirm === 'true'){$confirm = true;} else{$confirm = false;}
 			$included = false;
 			while (($line = fgets($file)) !== false) {
 				if ($login === true && strpos($line, '[LOGIN]') !== false) {
@@ -60,6 +62,14 @@ class Administrador_controller extends CI_Controller {
 					$included = true;
 				}
 				if ($included == false && $vote === true && strpos($line, '[VOTE]') !== false) {
+					array_push($logarray, $line);
+					$included = true;
+				}
+				if ($included == false && $urna === true && strpos($line, 'Box') !== false) {
+					array_push($logarray, $line);
+					$included = true;
+				}
+				if ($included == false && $confirm === true && strpos($line, 'Confirmed') !== false) {
 					array_push($logarray, $line);
 					$included = true;
 				}
