@@ -11,7 +11,8 @@ f<?php
 		{
 			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, 
 							votacion.FechaInicio, votacion.FechaFinal, 
-							votacion.VotoModificable, votacion.NumOpciones
+							votacion.VotoModificable, votacion.NumOpciones,
+							votacion.Finalizada, votacion.Invalida
 						from votacion, censo
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
@@ -47,7 +48,7 @@ f<?php
 		{
 			if(gettype($voto) == "string") { 			//votacion simple
 
-				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE, 'Invalida' => FALSE));
+				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE));
 				//echo $sql->num_rows();
 				//echo var_dump($sql->row()->Id);
 
@@ -108,7 +109,7 @@ f<?php
 			}
 
 			if(gettype($voto) == "array") {				//votacion compleja
-				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE, 'Invalida' => FALSE));
+				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE));
 
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
 					if($modif == TRUE) {
