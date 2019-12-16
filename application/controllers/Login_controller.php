@@ -256,16 +256,9 @@ class Login_controller extends CI_Controller {
 			}
 			else
 			{
-				//$this->Usuario_model->setIP($usuario, $this->input->ip_address());
-				if($this->Usuario_model->is_first_auth())
-				{				
+				//$this->Usuario_model->setIP($usuario, $this->input->ip_address());		
 					$qr = $this->authenticator->generateQR();
 					$this->load->view('login_verification', array('QR' => $qr));
-				}			
-				else
-				{
-					$this->load->view('login_verification');
-				}
 			}		
 		}
 	}
