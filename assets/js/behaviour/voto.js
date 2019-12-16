@@ -24,3 +24,7 @@ $(document).ready(function(){
 $("#logo-btn").click(function(){
     window.location.replace(base_url+"Elector_controller/");
 });
+
+$("#cerrar-ses-voto").unbind().click(function(){
+    window.location.replace(base_url+"login_controller/logout");
+});
