@@ -14,7 +14,7 @@ class Elector_controller extends CI_Controller {
 			redirect('/Login_controller');
 	    }
 	    else {
-	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto debe hacerlo el sistema automaticamente, o en cada acceso a nueva vista
+	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
 				$titulo['titulo'] = 'MIS VOTACIONES';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$titulo);
@@ -183,24 +183,45 @@ class Elector_controller extends CI_Controller {
 	    	$datos = $this->Voto_model->recuentoVotos($id_votacion);
 
 	    	if($datos != FALSE) {
-		    		$title['titulo'] = 'MIS VOTACIONES';
+		    		$title['titulo'] = 'RESULTADOS';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$title);
 					$this->load->view('elementos/headerComun',$inicio);
-				$total = sizeof($datos);
-	    		$recVotos = $this->Voto_model->tiposVotos($datos);
-	    		$datos = array(
-		    		'total' => $total,
+					//$this->load->view('elementos/headerVotacion',$inicio);		// Avisar a alvaro para que ponga bien los botones y contenido ajustado
+				$total = 0;
+				foreach($datos as $voto) {
+					if($voto->Id_Voto != 1)
+						$total += $voto->Num_Votos;
+				}
+				$censo = $this->Voto_model->censoAsignado($id_votacion);
+	    		$nomVotos = $this->Voto_model->nombreVotos($datos);
+
+	    		$info = array(
 		    		'titulo' => $titulo,
-		    		'votos' => $recVotos
+	    			'censo' => $censo,
+		    		'total' => $total,
+		    		'datos' => $datos,
+		    		'nomVotos' => $nomVotos
 		    	);
-				$this->load->view('Elector/resultados_view', $datos);
+
+	    		/*
+	    		echo "informacion para resultados: <br>";
+	    		echo "censo total: ".$censo.'<br>';
+	    		echo "votos totales: ".$total.'<br><br>';
+	    		for($i=0; $i<sizeof($datos); ++$i)
+	    		{
+	    			echo $nomVotos[$i].": ".$datos[$i]->Num_Votos."<br>";
+	    		}
+	    		*/
+
+				$this->load->view('Elector/resultados_view', $info);
 					$this->load->view('elementos/footer');
 	    	}
 	    	else {
 	    		$mensaje = 'No se pueden mostrar resultados antes de la finalizacion de la votación.';
 	    		$this->index($mensaje);
 	    	}
+	    	
     	}
     }
 }

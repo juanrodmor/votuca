@@ -215,15 +215,11 @@ f<?php
 				return false;
 		}
 
-		public function _usuarioVotacionToRecuento( $id_votacion ) {	// pasar tabla de usuario_votacion a recuento (controlar con fecha afuera)
-			// pasar los votos de usario_votacion a recuento
+		public function _usuarioVotacionToRecuento( $id_votacion ) {	// pasar tabla de usuario_votacion a recuento
 
-			// obtengo todos los campos de usuario_votacion que no esten abstenidos en un array
 			$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Voto !=' => '1') );
-			//echo var_dump($sql->result());
 			$sql = $sql->result();
 
-			// Por cada Id_Voto, tengo que compararlo con los votos asignados en recuento, y cuando coincida, sumarlos en num_votos
 			foreach ($sql as $voto_E) {
 
 				$rec = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Voto !=' => '1'));
@@ -231,7 +227,6 @@ f<?php
 
 				foreach($rec as $voto) {
 					if(password_verify($voto->Id_Voto, $voto_E->Id_Voto)) {
-					//if($voto->Id_Voto == $voto_E->Id_Voto) {	// comprobaciones con votos no encriptados
 
 						$numVotos = $voto->Num_Votos;
 						$numVotos++;
@@ -242,7 +237,6 @@ f<?php
 
 			}
 
-			// Borramos los votos de usuario_votacion que haya en la cesta de la votacion $id_votacion
 			$sql = $this->db->delete('usuario_votacion', array('Id_Votacion' => $id_votacion));
 		}
 
@@ -262,15 +256,32 @@ f<?php
 		/********************************/
 		/******* RECUENTO DE VOTOS ******/
 		/********************************/
-		public function recuentoVotos($id_votacion)
+		public function recuentoVotos($id_votacion)	// Obtengo los ids de los votos y el numero de votos asignado a tal votacion
 		{
-			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE));
+			$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => TRUE));
 
 			if(($sql->num_rows() != 0) and ($sql->row()->FechaFinal < date('Y-m-d H:i:s'))) {
-				$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
-				// return $query->num_rows();
-				return $query->result();
+				//$query = $this->db->query("SELECT Id_voto from recuento WHERE Id_Votacion = '$id_votacion';");
+				$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion));
+				return $sql->result();
 			} else return FALSE;
+		}
+
+		public function censoAsignado($id_votacion) 
+		{
+			$query = $this->db->query('select count(Id_Usuario) as total from censo where Id_votacion = "'.$id_votacion.'"');
+			return $query->row()->total;
+		}
+
+		public function nombreVotos($datos)	// Nombre de los votos de $datos
+		{
+			$votos = array();
+			foreach($datos as $voto)
+			{
+				$sql = $this->db->get_where('voto', array('Id' => $voto->Id_Voto));
+				array_push($votos, $sql->row()->Nombre);
+			}
+			return $votos;
 		}
 
 		public function recuentoVotosElectoral($id_votacion)	//votos totales de la votacion $id_votacion
@@ -278,44 +289,6 @@ f<?php
 			$query = $this->db->query("SELECT Id_voto from usuario_votacion WHERE Id_Votacion = '$id_votacion';");
 			return $query->num_rows();
 			//return $query->result();
-		}
-
-
-		public function tiposVotos($datos)	//votos totales de la votacion $id_votacion
-		{
-/*
-			$Abs = 0;
-			$Si = 0;
-			$No = 0;
-			$Bl = 0;
-			//echo var_dump($datos);
-			//echo $datos[0]->Id_voto;
-			$sql = $this->db->get_where('voto', array('Id' => $datos[0]->Id_voto));
-			for($i = 0; $i < sizeof($datos); ++$i) {
-				switch($datos[$i]->Id_voto) {
-					case '1':
-						$Abs++;
-						break;
-					case '2':
-						$Si++;
-						break;
-					case '3':
-						$No++;
-						break;
-					case '4':
-						$Bl++;
-						break;
-				}
-			}
-			$votos = array (
-				'Abs' => $Abs,
-				'Si' => $Si,
-				'No' => $No,
-				'Bl' => $Bl
-			);
-			return $votos;
-			*/
-
 		}
 
 		/********************************************/
