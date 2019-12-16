@@ -7,10 +7,12 @@ class Login_controller extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Usuario_model');
 		$this->load->model('votaciones_model');
+		$this->load->library('Authenticator');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
 
 	public function redireccionar(){
+		
 		switch($this->session->userdata('rol'))
 		{
 			case 'Elector':
@@ -47,7 +49,11 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			$this->redireccionar();
+			$verified = $this->session->userdata('verified');
+			if(isset($verified) && $verified == 'true')
+				$this->redireccionar();
+			else
+				$this->authentication($this->session->userdata('usuario'));
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
@@ -107,7 +113,10 @@ class Login_controller extends CI_Controller {
 				$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => $this->Usuario_model->getRol($usuario->getId())));
 				$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
 				//$this->evaluaRol();	//Para multirol
-				$this->redireccionar();
+				
+				$this->authentication($usuario->getId());
+				
+				//$this->redireccionar();
 				break;
 			case 'EXPIRA': 
 				$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => 'Temporal'));
@@ -199,6 +208,90 @@ class Login_controller extends CI_Controller {
 			$this->load->view('login_view', $data);
 		} else {	//Si no...
 			$this->load->view('login_view');
+		}
+	}
+	
+	
+	public function authentication($usuario)
+	{
+		$ip = $this->Usuario_model->getIP($usuario);
+		$this->session->set_userdata('verified', 'false');
+		
+		if($this->Usuario_model->blockedAuth())
+		{
+			$this->session->sess_destroy();
+			$this->load->view('login_view', array('mensaje' => "Número de intentos superados. Su autenticación ha sido bloqueada."));
+		}
+		else
+		{
+			if(isset($ip))
+			{
+				if($ip == $this->input->ip_address() && $this->Usuario_model->getAuth($usuario) != '')
+				{
+					if($this->Usuario_model->is_first_auth())
+					{
+						$qr = $this->authenticator->generateQR();
+						$this->load->view('login_verification', array('QR' => $qr));						
+					}
+					else
+					{
+						$this->session->set_userdata('verified', 'true');
+						$this->redireccionar();
+					}
+				}
+				else
+				{
+					//$this->Usuario_model->setIP($usuario, $this->input->ip_address());
+					if($this->Usuario_model->getAuth($usuario) == '')
+					{
+						$newQR = $this->authenticator->generateQR();
+						$this->load->view('login_verification', array('QR' => $newQR));		
+					}
+					else
+					{
+						//$newQR = $this->authenticator->generateQR();
+						$this->load->view('login_verification');					
+					}
+				}
+			}
+			else
+			{
+				//$this->Usuario_model->setIP($usuario, $this->input->ip_address());		
+					$qr = $this->authenticator->generateQR();
+					$this->load->view('login_verification', array('QR' => $qr));
+			}		
+		}
+	}
+	
+	public function pass_auth()
+	{
+		if($this->input->post('enviar'))
+		{
+			$result = $this->authenticator->verifyAuth($this->input->post('key'));
+			echo $result;
+			if($result)
+			{
+				$this->session->set_userdata('verified', 'true');
+				$this->Usuario_model->setIP($this->session->userdata('usuario'), $this->input->ip_address());
+				$this->Usuario_model->notFirstAuth();
+				$this->Usuario_model->resetAttemps();
+				$this->redireccionar();
+			}
+			else
+			{
+				if($this->Usuario_model->incrementAttemps() == "attemps_limit")
+				{
+					$limit_error = "Se ha superado el número de intentos. Autenticación bloqueada";
+					$data = array('mensaje' => $limit_error);
+					$this->load->view('login_view', $data);
+				}
+				else
+				{
+					$data = array('mensaje' => "Se ha producido un error");
+					$this->load->view('login_verification', $data);
+				}
+			}
+			
 		}
 	}
 

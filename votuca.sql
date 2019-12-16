@@ -2,10 +2,10 @@
 -- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 14-12-2019 a las 18:17:44
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 16-12-2019 a las 17:21:11
 -- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.2.23
+-- Versión de PHP: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,6 +25,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `autorizacion`
+--
+
+CREATE TABLE `autorizacion` (
+  `auth_key` varchar(128) NOT NULL,
+  `first_time` tinyint(1) NOT NULL,
+  `attemps` int(11) NOT NULL,
+  `blocked` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `autorizacion`
+--
+
+INSERT INTO `autorizacion` (`auth_key`, `first_time`, `attemps`, `blocked`) VALUES
+('I46J5QWAX4PCKL7I', 0, 0, 0),
+('IXP5FNAVQVUIPQCP', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `censo`
 --
 
@@ -32,7 +53,6 @@ CREATE TABLE `censo` (
   `Id_Usuario` int(32) NOT NULL,
   `Id_Votacion` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -199,30 +219,32 @@ CREATE TABLE `usuario` (
   `Id_Grupo` int(32) NOT NULL,
   `NombreUsuario` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
   `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
-  `Email` varchar(128) COLLATE utf8_spanish_ci NOT NULL
+  `Email` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
+  `Auth` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
+  `IP` varchar(64) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`Id`, `Id_Rol`, `Id_Grupo`, `NombreUsuario`, `Password`, `Email`) VALUES
-(1, 1, 2, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(2, 4, 1, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', ''),
-(3, 3, 1, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(5, 2, 1, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(6, 1, 2, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(7, 1, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(8, 1, 2, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(9, 1, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(10, 1, 2, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(11, 1, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(12, 5, 1, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(13, 5, 1, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(14, 5, 1, 'm12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(15, 5, 1, 'm14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(16, 5, 1, 'm15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', ''),
-(17, 5, 3, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '');
+INSERT INTO `usuario` (`Id`, `Id_Rol`, `Id_Grupo`, `NombreUsuario`, `Password`, `Email`, `Auth`, `IP`) VALUES
+(1, 1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', 'I46J5QWAX4PCKL7I', '::1'),
+(2, 4, 1, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', '', 'IXP5FNAVQVUIPQCP', '192.168.0.1'),
+(3, 3, 1, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(5, 2, 1, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(6, 1, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(7, 1, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(8, 1, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(9, 1, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(10, 1, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(11, 1, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(12, 5, 1, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(13, 5, 1, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(14, 5, 1, 'm12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(15, 5, 1, 'm14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(16, 5, 1, 'm15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
+(17, 5, 1, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1');
 
 -- --------------------------------------------------------
 
@@ -357,6 +379,13 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `autorizacion`
+--
+ALTER TABLE `autorizacion`
+  ADD PRIMARY KEY (`auth_key`),
+  ADD UNIQUE KEY `auth_key` (`auth_key`);
 
 --
 -- Indices de la tabla `censo`
@@ -506,7 +535,7 @@ ALTER TABLE `tipo_votacion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `votacion`

@@ -18,7 +18,15 @@
 </head>
 <body>
 
+	<div class="container">
+	  <div class ="mensaje">
+	    <h3><?=   validation_errors();  ?></h3>
+	    <?php if(isset($mensaje)): ?>
+	          <br/><h1><?= $mensaje ?></h1><br/>
 
+	      <?php endif; ?>
+
+	  </div>
 <br><br><br><br>
 <div class = "container">
 	  <?=form_open(base_url().'secretario/updateVotacion/');?>
@@ -35,6 +43,11 @@
 			<?= form_input($atributos) ?> <br/><br/>
 		</div>
 
+		<?php
+		 $atributos = array(
+				'Id_TipoVotacion' => $votaciones->Id_TipoVotacion
+		); ?>
+		<?= form_hidden($atributos) ?> <br/><br/>
 		<!-- TITULO -->
 		<div class="form-group">
 			<?php
@@ -99,6 +112,117 @@
 		  </div>
 		</div>
 
+		<div class="form-group">
+			<?php
+			 $atributos = array(
+					'name' => 'quorum',
+					'class' => 'form-control',
+					'id' => 'quorum',
+					'placeholder' =>'Introduzca el quorum de esta votación',
+					'required' => true,
+					'value' => $votaciones->Quorum // Mantiene el valor en el form
+			); ?>
+			<?= form_label('Quorum','quorum'); ?>
+			<!-- Igual a: <label for="titulo">Titulo</label> -->
+			<?= form_input($atributos) ?> <br/><br/>
+		</div>
+			<?php
+			 $atributos = array(
+					'NumOpciones' => $votaciones->NumOpciones
+			); ?>
+  		<?= form_hidden($atributos) ?> <br/><br/>
+
+<?php if(isset($cambiarOpciones) && $cambiarOpciones == true){ ?>
+			<h2> Opciones </h2>
+	    <div class="form-group">
+	      <div class="row">
+	        <div class="col-sm-6">
+	      <?php $atributos = array(
+	          'id' => 'nOpciones',
+	          'name' => 'nOpciones',
+	          'class' => 'form-control',
+	          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
+	          'required' => true,
+	          'value' => set_value('nOpciones')
+	      ); ?>
+	      <?= form_label('Total de opciones a votar','nOpciones'); ?>
+	      <?= form_input($atributos) ?> <br/><br/>
+	        </div>
+	      </div>
+	    </div>
+
+
+			<div class="form-group">
+			      <div class="row">
+			        <div class="col-sm-6">
+			      <?php
+			      $totales = array();
+			       $atributos = array(
+			          'id' => 'opciones',
+			          'name' => 'opciones',
+			          'class' => 'form-control',
+			          'placeholder' =>'Introduzca las opciones posibles',
+			          'required' => true,
+			          'value' => set_value('opciones')
+			        ); ?>
+			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
+			      <p> Separe cada opción por una coma </p>
+			      <?= form_input($atributos) ?> <br/><br/>
+			      </div>
+			      </div>
+			    </div>
+
+	<?php } ?>
+		<div class="form-check">
+		<?php	if(isset($pulsadoModificar) && $pulsadoModificar == true) $check = 'checked';
+			else{$check = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'esModificable',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'esModificable',
+			'value' => true,
+			'checked' => $check
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Voto Modificable','esModificable'); ?>
+		</div>
+		<div class="form-check">
+		<?php	if(isset($pulsadoRecuento) && $pulsadoRecuento== true) $checkRec = 'checked';
+			else{$checkRec = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'recuentoParalelo',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'recuentoParalelo',
+			'value' => true,
+			'checked' => $checkRec
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
+		</div>
+		 <div class="form-check">
+			 <?php	if(isset($pulsadoAsistentes) && $pulsadoAsistentes == true) $checkAs = 'checked';
+	 			else{$checkAs = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'soloAsistentes',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'soloAsistentes',
+			'value' => true,
+			'checked' => $checkAs
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Solo asistentes','soloAsistentes'); ?>
+		</div>
+
+	<!-- CENSO ELECTORAL -->
 		<h2> Censo electoral </h2>
 		<p> Escoja el censo electoral que desee </p>
 		<!-- TABLA DE CENSO -->
@@ -138,15 +262,18 @@
 									{$encontrado = true;}
 									$i = $i + 1;
 								}
+								if(isset($_POST['censo']) && in_array($censo->Nombre, $_POST['censo'])) $checkCenso = 'checked';
+								else{$checkCenso = false;}
 								if(!$encontrado)
 								{
 									echo '<div class="form-check">';
 								$atributos = array(
-											'name' => 'censoInsercion[]',
+											'name' => 'censo[]',
 											'class' => 'form-control',
 											'type' => 'checkbox',
-											'id' => 'censo',
-											'value' => $censo->Nombre
+											'id' => $censo->Nombre,
+											'value' => $censo->Nombre,
+											'checked' => $checkCenso
 									);
 									echo '<td>'.form_checkbox($atributos).'</td>';
 								}
@@ -175,6 +302,48 @@
 		    </table>
 		  </div>
 	 </div>
+
+	 <!-- CENSO ASISTENTE -->
+	 <?php
+	 if(isset($asistentes) && $asistentes != NULL && isset($idsAsistentes)){?>
+		 <h2> Censo asistente </h2>
+			 <div class = "container">
+				 <div class="table-wrapper-scroll-y my-custom-scrollbar">
+				 <table class="display table table-striped table-bordered" id="votaciones_admin">
+					 <thead>
+						 <tr>
+							 <th>Asistentes</th>
+							 <th></th>
+						 </tr>
+					 </thead>
+					 <tbody>
+						 <tr>
+							 <?php
+							 $i = 0;
+							 foreach($asistentes as $asistente)
+							 {?>
+							 <td><?php echo $asistente?></td>
+							 <?php
+								 echo '<div class="form-check">';
+									$atributos = array(
+										 'name' => 'asistentes[]',
+										 'class' => 'form-control',
+										 'type' => 'checkbox',
+										 'id' => 'censo',
+										 'checked' => true,
+										 'value' => $idsAsistentes[$i]
+								 );
+								 $i++;
+								 ?>
+							 <td><?= form_checkbox($atributos); ?></td>
+						 </div>
+						 <?php echo '</tr>'; ?>
+				 <?php } ?>
+			 </tbody>
+		 </table>
+	 </div>
+	 </div>
+ <?php } ?>
 					 <?php $atributos = array(
 							 'name' => 'boton_borrador',
 							 'class' => 'btn btn-primary',
