@@ -634,6 +634,7 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
+      $this->form_validation->set_rules('quorum','Quorum','callback_validarQuorum');
       if($validarAsistentes)
       $this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');
       if($validarCenso)
@@ -1330,6 +1331,16 @@ class Secretario extends CI_Controller{
     else{return TRUE;}
   }
 
+  public function validarQuorum()
+  {
+    $quorum = $this->input->post('quorum');
+    if($quorum < 0 || $quorum > 1)
+    {
+      $this->form_validation->set_message('validarQuorum','Introduzca un quorum válido (entre 0 y 1)');
+      return FALSE;
+    }
+    else{return TRUE;}
+  }
   public function validarFicherosCenso(){
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
