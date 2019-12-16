@@ -1172,7 +1172,7 @@ class Secretario extends CI_Controller{
   {
     $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
     $censosEliminar = $this->input->post('censoEliminacion');
-    $censosAñadir = $this->input->post('censoInsercion');
+    $censosAñadir = $this->input->post('censo');
     $idsCensos = array();
     foreach($censosVotacion as $censo)
     {$idsCensos[] = $censo->Id_Fichero;}
