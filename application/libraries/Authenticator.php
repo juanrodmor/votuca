@@ -9,19 +9,29 @@ class Authenticator
 
 	$this->CI =& get_instance();
 	$this->CI->load->library('session');
+	$this->CI->load->model('Usuario_model');
 	}
 	
 	public function generateQR()
 	{
-		$secret = $this->generateRandomSecret();
-	
-		$qrCodeUrl = $this->getQR('VotUCA', $this->CI->session->userdata('auth_secret'));
-		return $qrCodeUrl;
+		$storedSecret = $this->CI->Usuario_model->getAuth($this->CI->session->userdata('usuario'));
+		if($storedSecret != '')
+		{
+			return $this->getQR('VotUCA', $storedSecret);
+		}
+		else
+		{
+			$secret = $this->generateRandomSecret();
+			$this->CI->Usuario_model->setAuth($this->CI->session->userdata('usuario'), $secret);
+			return $this->getQR('VotUCA', $secret);
+		}
 	}
 	
 	public function verifyAuth($userKey)
 	{
-		return $this->verifyCode($this->CI->session->userdata('auth_secret'), $userKey, 2);
+		$secret = $this->CI->Usuario_model->getAuth($this->CI->session->userdata('usuario'));
+		
+		return $this->verifyCode($secret, $userKey, 2);
 	}
 	
 	
