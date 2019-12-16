@@ -215,7 +215,10 @@ class Usuario_model extends CI_Model {
 		$this->db->where('auth_key', $auth);
 		$result = $this->db->get()->result_array();
 		
-		return $result[0]['first_time'];
+		if(!empty($result))
+			return $result[0]['first_time'];
+		else
+			false;
 	}
 	
 	public function notFirstAuth()
@@ -271,7 +274,9 @@ class Usuario_model extends CI_Model {
 		$result = $this->db->get()->result_array();
 		
 		if(!empty($result))
-			return $result[0]['blocked'];	
+			return $result[0]['blocked'];
+		else
+			return false;
 	}
 	
 
@@ -311,11 +316,6 @@ class Usuario_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function getUserNameFromId($id)
-	{
-		$query = $this->db->query("SELECT NombreUsuario from usuario WHERE Id = '$id';");
-		return $query->result();
-	}
 	public function getIdFromUserName($nombre)
 	{
 		$query = $this->db->query("SELECT Id from usuario WHERE NombreUsuario = '$nombre';");
@@ -338,7 +338,7 @@ class Usuario_model extends CI_Model {
 		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
 		$existe = $this->userExists($usuarioElectoral);
 		if(!$existe){$this->db->insert('usuario',$nuevo);}
-
+		
 	}
 	
 
