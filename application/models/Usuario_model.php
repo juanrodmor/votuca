@@ -270,7 +270,8 @@ class Usuario_model extends CI_Model {
 		$this->db->where('auth_key', $auth);
 		$result = $this->db->get()->result_array();
 		
-		return $result[0]['blocked'];		
+		if(!empty($result))
+			return $result[0]['blocked'];	
 	}
 	
 
