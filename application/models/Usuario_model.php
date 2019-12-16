@@ -1,12 +1,10 @@
 <?php
-
 class Usuario_model extends CI_Model {
 	//Nos aseguramos que cargue la base de datos.
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
 	}
-
 	/**
 	*	Crea un nuevo usuario en la base de datos.
 	*	$username - Identificador del usuario. Ej: u00000000
@@ -26,25 +24,21 @@ class Usuario_model extends CI_Model {
 		
 		$this->db->insert('usuario', $data);
 	}
-
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return $consulta->row()->Password;
 	}
-
 	//Devuelve el Id de un usuario dado.
 	public function getId($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return $consulta->row()->Id;
 	}
-
 	//Elimina un usuario de la tabla Expiracion.
 	public function deleteExpiracion($usuario) {
 		$idUsuario = $this->getId($usuario);
 		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
 	}
-
 	//Elimina un usuario de la BD.
 	public function deleteUsuario($usuario) {
 		$idUsuario = $this->getId($usuario);
@@ -56,7 +50,6 @@ class Usuario_model extends CI_Model {
 		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
 		$this->db->delete('usuario', array('Id' => $idUsuario));
 	}
-
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -68,7 +61,6 @@ class Usuario_model extends CI_Model {
 		$consulta = $this->db->get_where($tabla, array('Id_Usuario' => $idUsuario));
 		return ($consulta->num_rows() >= 1);
 	}
-
 	//Devuelve el rol de un usuario específico.
 	public function getRol($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -99,7 +91,6 @@ class Usuario_model extends CI_Model {
 		$consulta = $this->db->get_where('rol', array('Nombre' => $rolname));
 		return $consulta->row()->Id;
 	}
-
 	//Devuelve una lista con los roles existentes.
 	public function getRoles() {
 		$this->db->select('Nombre');
@@ -118,13 +109,10 @@ class Usuario_model extends CI_Model {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		return $consulta->row()->Email;
 	}
-
 	//Modifica el rol de un usuario específico.
 	public function setRol($usuario, $rol) {
-
 		$consultaId = $this->db->get_where('rol', array('Nombre' => $rol));
 		$rol_id = $consultaId->row()->Id;
-
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
 		$this->db->where('Id', $consulta->row()->Id);
 		$this->db->update('usuario', array('Id_Rol' => $rol_id));
@@ -249,7 +237,6 @@ class Usuario_model extends CI_Model {
 		$this->db->set('attemps', 'attemps+1', false);	
 		$this->db->where('auth_key', $auth);		
 		$this->db->update('autorizacion');	
-
 		$consulta = $this->db->get_where('autorizacion', array('auth_key' => $auth));
 		$intentos = $consulta->row()->attemps;
 		
@@ -260,7 +247,6 @@ class Usuario_model extends CI_Model {
 			$this->db->update('autorizacion');
 			return "attemps_limit";
 		}
-
 	}
 	
 	public function blockedAuth()
@@ -279,7 +265,6 @@ class Usuario_model extends CI_Model {
 			return false;
 	}
 	
-
 	/**
 	*	Establece una caducidad de 24h para $usuario
 	*	$usuario - nombre de usuario
@@ -296,8 +281,6 @@ class Usuario_model extends CI_Model {
 		$this->db->insert('expiracion', $data);
 		
 	}
-
-
 	/*****************************/
 	/******* FUNCIONES INMA ******/
 	/*****************************/
@@ -321,7 +304,6 @@ class Usuario_model extends CI_Model {
 		$query = $this->db->query("SELECT Id from usuario WHERE NombreUsuario = '$nombre';");
 		return $query->result();
 	}
-
 	public function insertUserAs($idUser, $idRol, $letraRol)
 	{
 		//echo '<br>ANALIZANDO USUARIO CON ID: '.$idUser.'<br>';
@@ -331,9 +313,7 @@ class Usuario_model extends CI_Model {
 			'Id_Rol' => $idRol,
 			'NombreUsuario' => $letraRol.substr($usuario[0]->NombreUsuario,1),
 			'Password' => $usuario[0]->Password
-
 		);
-
 	 // ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL (cuenta m+DNI)
 		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
 		$existe = $this->userExists($usuarioElectoral);
@@ -341,7 +321,6 @@ class Usuario_model extends CI_Model {
 		
 	}
 	
-
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)
@@ -349,7 +328,6 @@ class Usuario_model extends CI_Model {
 		else
 			return false;
 	}*/
-
 	/*public function add_usuario() {
 		$this->db->insert('usuario', array('Nombre' => $this->input->post('nombre', true),
 											'Correo' => $this->input->post('correo', true),
