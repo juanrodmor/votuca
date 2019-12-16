@@ -1,5 +1,25 @@
 <!doctype html>
 <html lang="en">
+
+<script type="text/javascript">
+  function checkBoxLimit(limit) {
+    var checkBoxGroup = document.forms['votosdisp']['voto[]'];     
+    var limit = limit;
+    for (var i = 0; i < checkBoxGroup.length; i++) {
+      checkBoxGroup[i].onclick = function() {
+        var checkedcount = 0;
+        for (var i = 0; i < checkBoxGroup.length; i++) {
+          checkedcount += (checkBoxGroup[i].checked) ? 1 : 0;
+        }
+        if (checkedcount > limit) {
+          alert("Solo puedes seleccionar un maximo de " + limit + " votos.");           
+          this.checked = false;
+        }
+      }
+    }
+  }
+</script>
+
   <body style="overflow:hidden;">
   <div class="container">
   <div style="overflow: inherit;z-index:200;margin-top:8%;position:fixed;width:85%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -32,37 +52,62 @@
         </tr>
         <tr>
           <td>
-            <?php echo "<h4 style='padding-left:2%;'>Opciones: </h4>";?>
+            <?php echo "<h4 style='padding-left:2%;'> Información: </h4>";?>
           </td>
         </tr>
         <tr>
           <td>
-            <?php echo "<span style='padding-left:2%;'>Puede marcar un maximo de 1</span>";?>
+            <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span>";
+                  else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span>"; 
+            ?>
           </td>
         </tr>
         <tr>
           <td>
-          <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post">
+            <?php 
+              if($modif == 1)
+                echo "<span class='alert alert-info' role='alert' style='padding-left:2%;'> El voto es rectificable </span>";
+              if($modif != 1)
+                echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;'> El voto NO es rectificable </span>";
+            ?>
+          </td>
+        </tr>
+        <tr>
+          <td>
+          <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post" name="votosdisp">
       <center>
         <?php
           if(form_error('voto') != NULL)
-            echo '<div class="alert alert-primary" role="alert">' . form_error('voto') . '</div>'; 
+            echo '<div class="alert alert-danger" role="alert">' . form_error('voto') . '</div>'; 
+          if(form_error('voto[]') != NULL)
+            echo '<div class="alert alert-danger" role="alert">' . form_error('voto[]') . '</div>';
         ?>
-        
           <?php foreach($votos as $voto) { ?>
             
               <input type="hidden" name="id_votacion" value="<?php echo $id_votacion; ?>"/>
               <input type="hidden" name="titulo" value="<?php echo $titulo; ?>"/>
               <input type="hidden" name="descrip" value="<?php echo $descrip; ?>"/>
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
-              <input type="radio" name="voto" value="<?php echo $voto->Nombre?>"> <?php echo $voto->Nombre ?>
-            
+              <input type="hidden" name="modif" value="<?php echo $modif; ?>"/>
+              <input type="hidden" name="opc" value="<?php echo $opc; ?>"/>
+              <!-- <div style=""> -->
+                <?php 
+                  if($opc > 1) {  //votacion compleja 
+                    echo '<input class="single-checkbox" type="checkbox" name="voto[]" value="'.$voto.'">'.$voto;
+                  }
+                  else echo '<input type="radio" name="voto" value="'.$voto.'">'.$voto; // votacion simple
+                ?>
+              <!-- </div> -->
+
           <?php } ?>
         
         <br><br>
         <input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
       </center>
     </form>
+    <script type="text/javascript">   // controlador de checkbox de votos -> como maximo $opc opciones
+      checkBoxLimit(<?php echo $opc; ?>) 
+    </script>
           </td>
         </tr>
       </tbody>
@@ -78,9 +123,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
+    <script src="<?php echo base_url()."assets/js/jquerySlim.js"?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url()."assets/js/bootstrap.min.js"?>"></script>
 
     <!-- Scripts para la tabla de votaciones -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -89,6 +134,6 @@
    <script src="<?php echo base_url()."assets/js/behaviour/voto.js"?>"></script>
 
     <!-- DATE PICKER -->
-    <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>
+    <script src="<?php echo base_url()."assets/js/bootstrap-datepicker.js"?>"></script>
 
 </html>

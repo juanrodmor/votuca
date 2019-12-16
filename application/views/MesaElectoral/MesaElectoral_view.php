@@ -33,6 +33,11 @@
             {
               echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensaje .'</div>';
             }
+            else
+            {
+              if(isset($success))
+                  echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $success .'</div>';
+            }
         }
         
     ?>
@@ -41,14 +46,14 @@
   <div class = "container">
     <div>
     <?php
-    if(isset($total)){
+    if(isset($cantidad)){
     echo'
       <div id="graphic-info">
       <h2>Porcentaje de voto</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p'.$total*100/$censo.' big center" style="float:left;">
-                <span>'.$total*100/$censo.'</span>
+            <div class="c100 p'.$totalVotos*100/$censo.' big center" style="float:left;">
+                <span>'.$totalVotos*100/$censo.'</span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
@@ -60,7 +65,7 @@
                   Número de votos
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text">'.$total.'</h3>
+                  <h3 class="card-text">'.$totalVotos.'</h3>
                 </div>
               </div>   
               <div class="card">
@@ -76,12 +81,21 @@
                   Información sobre el voto
                 </div>
                 <div class="card-body">
-                  <h5 class="card-text si">'.$si.'</h5>
-                  <h5 class="card-text no">'.$no.'</h5>
-                  <h5 class="card-text blanco">'.$blanco.'</h5>
+                  '; for($i = 0 ; $i < count($opciones) ; $i = $i + 1)
+                  {
+                    echo '<h5 class="card-text">'.$opciones[$i].': '.$cantidad[$i].'</h5>';
+                  } echo'
                 </div>
-              </div>      
+              </div>    
           </div>
+
+              <div>
+                <form action="finalizaVotacion" method="post">
+                  <input type="hidden" name="idVotacion" value="'.$votacion.'">
+                  <input id="endButton" type="submit" name="boton_finalizar" value="Finalizar" class="btn btn-primary">
+                </form>
+              </div>
+
         </div>
     ';
     }

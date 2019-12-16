@@ -61,28 +61,61 @@
 
         <?php
           if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
-            ?>
-            <td>
-              <form action="<?= base_url().'Elector_controller/votar/'?>" method="post">
-                <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
-                <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
-                <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
-                <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
-                <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
-              </form>
-            </td>
-            <?php
+            if($objeto->VotoModificable == '1') {
+              ?>
+              <td>
+                <form action="<?= base_url().'Elector_controller/votar/'?>" method="post">
+                  <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
+                  <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
+                  <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
+                  <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
+                  <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
+                  <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
+                  <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
+                </form>
+              </td>
+              <?php
+            }
+            else {
+              if( $this->Voto_model->_haVotado($objeto->Id) )
+                echo '<td> Ya votado </td>';
+              else {
+                ?>
+                <td>
+                  <form action="<?= base_url().'Elector_controller/votar/'?>" method="post">
+                    <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
+                    <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
+                    <input type="hidden" name="descrip" value="<?php echo $objeto->Descripcion; ?>"/>
+                    <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
+                    <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
+                    <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
+                    <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
+                  </form>
+                </td>
+                <?php
+              }
+            }
           }
           if($objeto->FechaFinal < date('Y-m-d H:i:s')) {
-            ?>
-            <td>
-              <form action="<?= base_url().'Elector_controller/verResultados/'?>" method="post">
-                <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
-                <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
-                <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Resultados">
-              </form>
-            </td>
-            <?php
+            if($objeto->Finalizada == TRUE) {
+              if($objeto->Invalida == TRUE) {
+                echo '<td> Votación invalidada <br>por falta de votos. </td>';
+              }
+              else {
+                ?>
+                <td>
+                  <form action="<?= base_url().'Elector_controller/verResultados/'?>" method="post">
+                    <input type="hidden" name="id_votacion" value="<?php echo $objeto->Id; ?>"/>
+                    <input type="hidden" name="titulo" value="<?php echo $objeto->Titulo; ?>"/>
+                    <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Resultados">
+                  </form>
+                </td>
+                <?php
+              }
+            }
+            else {
+              echo '<td> Esperando resultados... </td>';
+            }
           }
           if($objeto->FechaInicio > date('Y-m-d H:i:s')) {
             echo '<td> Proximamente </td>';
