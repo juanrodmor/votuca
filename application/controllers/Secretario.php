@@ -746,6 +746,7 @@ class Secretario extends CI_Controller{
       $censosVotacion = $this->censo_model->getCensosfromVotacion($id);
       $nombreCensos = $this->censo_model->getCensos();
 
+      echo var_dump($votacion);
       // CHECKBOXES ENCENDIDOS
       $soloAsistentes = false;
       if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
@@ -793,7 +794,7 @@ class Secretario extends CI_Controller{
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
       $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      //$this->llamarVistasModificar($tipoVotacion,$datos);
+      //$this->llamarVistasModificar($tipoVotacion,$datos);*/
 
 	}
 
