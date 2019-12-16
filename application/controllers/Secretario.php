@@ -800,7 +800,7 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post($boton))
     {
-      if($this->validacionesModificar(true) == FALSE)
+      if($this->validaciones(true,false) == FALSE)
       {$this->mostrarErrores($_POST);}
       else
       {
@@ -814,6 +814,14 @@ class Secretario extends CI_Controller{
         if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
         if(!$soloAsistentes)
         {$this->modificarSoloCensos($idVotacion);}
+        else // HAY ASISTENTES, HAY QUE VALIDAR QUE HAS INTRODUCIDO EL CENSO
+        {
+          if($this->validaciones(true,true) == FALSE){$this->mostrarErrores($_POST);}
+          else
+          {
+            
+          }
+        }
 
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
 
@@ -886,6 +894,7 @@ class Secretario extends CI_Controller{
 
 
   }
+
   private function validacionesModificar($validarAsistentes)
   {
     $this->form_validation->set_rules('titulo','Titulo','required');
