@@ -40,7 +40,7 @@
         <!----- AQUI ACABA EL ENCABEZADO --->
 
     <div class="container">
-          <form action="monitoring" id="monitoring_search" method='post'>
+          <form action="<?php base_url() . 'administrador_controller/monitoring'?>" id="monitoring_search" method='post'>
           <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Opciones
