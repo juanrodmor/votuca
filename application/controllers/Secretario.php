@@ -630,6 +630,7 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('final','Fecha Final','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+      $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
       if($validarAsistentes == true)
       {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
       if($validarCenso == true)
@@ -816,11 +817,9 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES, HAY QUE VALIDAR QUE HAS INTRODUCIDO EL CENSO
         {
-          if($this->validaciones(true,true) == FALSE){$this->mostrarErrores($_POST);}
+          if($this->validacionesModificar(true,true) == FALSE){$this->mostrarErrores($_POST);}
           else
-          {
-
-          }
+          {$this->mostrarAsistentesModificar($_POST);}
         }
 
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
@@ -832,6 +831,27 @@ class Secretario extends CI_Controller{
     }
   }
 
+  private function validacionesModificar($validarAsistentes,$validarCenso)
+  {
+    $this->form_validation->set_rules('titulo','Titulo','required');
+    $this->form_validation->set_rules('descripcion','Descripcion','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','required');
+    $this->form_validation->set_rules('final','Fecha Final','required');
+    $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
+    $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
+    if($validarAsistentes == true)
+    {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
+    if($validarCenso == true)
+    {$this->form_validation->set_rules('censos','CensoInsercion','callback_validarFicherosCenso');}
+    // MENSAJES DE ERROR.
+    $this->form_validation->set_message('required','El campo %s es obligatorio');
+    return $this->form_validation->run();
+  }
+
+  private function mostrarAsistentesModificar($misDatos)
+  {
+    echo var_dump($misDatos);
+  }
   private function mostrarErrores($misDatos)
   {
     if($this->session->userdata('rol') == 'Secretario')
@@ -893,23 +913,6 @@ class Secretario extends CI_Controller{
       }
 
 
-  }
-
-  private function validacionesModificar($validarAsistentes)
-  {
-    $this->form_validation->set_rules('titulo','Titulo','required');
-    $this->form_validation->set_rules('descripcion','Descripcion','required');
-    $this->form_validation->set_rules('inicio','Fecha Inicio','required');
-    $this->form_validation->set_rules('final','Fecha Final','required');
-    $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
-    $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
-    if($validarAsistentes == true)
-    {$this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');}
-
-
-    // MENSAJES DE ERROR.
-    $this->form_validation->set_message('required','El campo %s es obligatorio');
-    return $this->form_validation->run();
   }
 
   private function extraerUsuariosCensos($censos)
@@ -1247,6 +1250,18 @@ class Secretario extends CI_Controller{
     }
   }
 
+  public function validarOpciones()
+  {
+    $opciones = explode(",",$this->input->post('opciones'));
+    $numero = $this->input->post('nOpciones');
+    if(sizeof($opciones) < $numero)
+    {
+      $this->form_validation->set_message('validarOpciones','Introduzca al menos '.$numero.' opciones');
+      return FALSE;
+    }
+    else{return TRUE;}
+  }
+
   public function validarFicherosCenso(){
     $elegidos = $this->input->post('censo');
     if($elegidos == NULL || sizeof($elegidos) < 1)
@@ -1255,6 +1270,11 @@ class Secretario extends CI_Controller{
       return FALSE;
     }
     else{return TRUE;}
+  }
+
+  public function validarFicherosCensoInsercion()
+  {
+
   }
 
   public function validarAsistentes(){
