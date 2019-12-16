@@ -1,4 +1,4 @@
-f<?php
+<?php
 	class Voto_model extends CI_Model {
 		public function __construct ()
 		{
