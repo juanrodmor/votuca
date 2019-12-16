@@ -75,7 +75,7 @@
 
                );
                 ?>
-          <?= form_hidden($atributos);?>          
+          <?= form_hidden($atributos);?>
           <?php $atributos = array(
               'name' => 'boton_eliminar',
               'class' => 'btn btn-primary',
@@ -112,7 +112,7 @@
              $objeto->FechaFinal >= date('Y-m-d H:i:s') ){?>
 
         <!-- BOTON DE MODIFICAR -->
-        <?=form_open(base_url().'secretario/modificarVotacion',
+        <?=form_open(base_url().'secretario/modificarVotacion/',
                 array('name'=>'modificarVotacion'));?>
                <?php
                $atributos = array(

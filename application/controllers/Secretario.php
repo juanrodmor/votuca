@@ -723,9 +723,7 @@ class Secretario extends CI_Controller{
   // FUNCIÓN QUE MUESTRA LA VISTA DE MODIFICAR VOTACION
   public function modificarVotacion()
 	{
-    if($this->input->post('boton_modificar'))
-    {
-      if($this->session->userdata('rol') == 'Secretario')
+    if($this->session->userdata('rol') == 'Secretario')
       {
         $this->load->view('elementos/headerSecretario');
       }
@@ -780,16 +778,12 @@ class Secretario extends CI_Controller{
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
 
-
       switch($tipoVotacion)
       {
         case 1:
-        echo 'CARGANDO VISTA...<br>';
         $this->load->view('secretario/modificarVotacionSimple_view', $datos);
       }
-    }
-    if($this->input->post('boton_borrador')){echo 'HAS PULSADO BORRADOR<br>';}
-    if($this->input->post('boton_publicar')){echo 'HAS PULSADO PUBLICAR<br>';}
+
 	}
 
   public function updateVotacion()
@@ -806,33 +800,92 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post($boton))
     {
-
-      $datos = $this->actualizarVotacionDatos($publicar);
-      $idVotacion = $_POST['id'];
-      $idTipo = $_POST['Id_TipoVotacion'];
-
-      // MODIFICAR CENSOS
-      // VER SI LA VOTACIÓN TIENE CENSO ASISTENTE O NO
-      $soloAsistentes = false;
-      if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
-      if(!$soloAsistentes)
-      {$this->modificarSoloCensos($idVotacion);}
+      if($this->validacionesModificar(true) == FALSE)
+      {$this->mostrarErrores($_POST);}
       else
       {
-        if($this->validacionesModificar(true) == FALSE)
-        {$this->modificarVotacion();}
-        else{echo 'TODO EL FORMULARIO ESTÁ BIEN';}
+        // MODIFICAR DATOS DE LA VOTACION
+        $datos = $this->actualizarVotacionDatos($publicar);
+        $idVotacion = $_POST['id'];
+        $idTipo = $_POST['Id_TipoVotacion'];
+
+        // MODIFICAR CENSOS DE LA VOTACION
+        $soloAsistentes = false;
+        if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+        if(!$soloAsistentes)
+        {$this->modificarSoloCensos($idVotacion);}
+
+        $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
+
       }
-
-      // Modificar datos de la votacion
-      $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
-
         /*if($modificada != NULL){
             $this->index('La votación se ha guardado en borrador');
           }*/
     }
   }
 
+  private function mostrarErrores($misDatos)
+  {
+    if($this->session->userdata('rol') == 'Secretario')
+      {
+        $this->load->view('elementos/headerSecretario');
+      }
+      if($this->session->userdata('rol') == 'SecretarioDelegado')
+      {
+      $this->load->view('elementos/headerDelegado');
+      }
+      $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
+
+
+      // SACAR CENSOS
+      $censosVotacion = $this->censo_model->getCensosfromVotacion($misDatos['id']);
+      $nombreCensos = $this->censo_model->getCensos();
+
+      // CHECKBOXES ENCENDIDOS
+      $soloAsistentes = false;
+      if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
+
+      $esModificable = false;
+      if($votacion->VotoModificable == 1){$esModificable = true;}
+
+      // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
+      $idsAsistentes = array();
+      $asistentesNombre = array();
+      $asistentes = array();
+      if($soloAsistentes)
+      {
+        $usuariosAsistentes = $this->censo_model->getCensoAsistente($misDatos['id']);
+        foreach($usuariosAsistentes as $asistente)
+        {$idsAsistentes[] = $asistente->Id_Usuario;}
+
+        // EXTRAER NOMBRES DE USUARIOS ASOCIADOS A ESOS IDS
+        foreach($idsAsistentes as $id)
+        {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($misDatos['id']);}
+
+        foreach($asistentesNombre as $nombre)
+        {$asistentes[] = $nombre[0]->NombreUsuario;}
+
+      }
+      $datos = array(
+        'censos' => $nombreCensos,
+        'votaciones' => $votacion,
+        'censosVotacion' => $censosVotacion,
+        'checkAsis' => $soloAsistentes,
+        'checkMod' => $esModificable,
+        'asistentes' => $asistentes,
+        'idsAsistentes' => $idsAsistentes
+      );
+      // SACAR TIPO DE VOTACION
+      $tipoVotacion = $votacion->Id_TipoVotacion;
+
+      switch($tipoVotacion)
+      {
+        case 1:
+        $this->load->view('secretario/modificarVotacionSimple_view', $datos);
+      }
+
+
+  }
   private function validacionesModificar($validarAsistentes)
   {
     $this->form_validation->set_rules('titulo','Titulo','required');
