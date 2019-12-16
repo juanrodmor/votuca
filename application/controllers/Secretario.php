@@ -752,6 +752,12 @@ class Secretario extends CI_Controller{
       $esModificable = false;
       if($votacion->VotoModificable == 1){$esModificable = true;}
 
+      $recuentoParalelo = false;
+      if($votacion->RecuentoParalelo == 1){$recuentoParalelo = true;}
+
+      $cambiarOpciones = false;
+      if($votacion->NumOpciones > 1){$cambiarOpciones = true;}
+
       // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
       $idsAsistentes = array();
       $asistentesNombre = array();
@@ -778,12 +784,15 @@ class Secretario extends CI_Controller{
         'censosVotacion' => $censosVotacion,
         'pulsadoAsistentes' => $soloAsistentes,
         'pulsadoModificar' => $esModificable,
+        'pulsadoRecuento' => $recuentoParalelo,
+        'cambiarOpciones' => $cambiarOpciones,
         'asistentes' => $asistentes,
         'idsAsistentes' => $idsAsistentes
       );
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
-      $this->llamarVistasModificar($tipoVotacion,$datos);
+      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
+      //$this->llamarVistasModificar($tipoVotacion,$datos);
 
 	}
 

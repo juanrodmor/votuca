@@ -132,7 +132,47 @@
 			); ?>
   		<?= form_hidden($atributos) ?> <br/><br/>
 
+<?php if(isset($cambiarOpciones) && $cambiarOpciones == true){ ?>
+			<h2> Opciones </h2>
+	    <div class="form-group">
+	      <div class="row">
+	        <div class="col-sm-6">
+	      <?php $atributos = array(
+	          'id' => 'nOpciones',
+	          'name' => 'nOpciones',
+	          'class' => 'form-control',
+	          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
+	          'required' => true,
+	          'value' => set_value('nOpciones')
+	      ); ?>
+	      <?= form_label('Total de opciones a votar','nOpciones'); ?>
+	      <?= form_input($atributos) ?> <br/><br/>
+	        </div>
+	      </div>
+	    </div>
 
+
+			<div class="form-group">
+			      <div class="row">
+			        <div class="col-sm-6">
+			      <?php
+			      $totales = array();
+			       $atributos = array(
+			          'id' => 'opciones',
+			          'name' => 'opciones',
+			          'class' => 'form-control',
+			          'placeholder' =>'Introduzca las opciones posibles',
+			          'required' => true,
+			          'value' => set_value('opciones')
+			        ); ?>
+			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
+			      <p> Separe cada opción por una coma </p>
+			      <?= form_input($atributos) ?> <br/><br/>
+			      </div>
+			      </div>
+			    </div>
+
+	<?php } ?>
 		<div class="form-check">
 		<?php	if(isset($pulsadoModificar) && $pulsadoModificar == true) $check = 'checked';
 			else{$check = false;} ?>
@@ -148,6 +188,22 @@
 		?>
 		<?= form_checkbox($atributos); ?>
 		<?= form_label('Voto Modificable','esModificable'); ?>
+		</div>
+		<div class="form-check">
+		<?php	if(isset($pulsadoRecuento) && $pulsadoRecuento== true) $checkRec = 'checked';
+			else{$checkRec = false;} ?>
+		<?php
+		$atributos = array(
+			'name' => 'recuentoParalelo',
+			'class' => 'form-check-input',
+			'type' => 'checkbox',
+			'id' => 'recuentoParalelo',
+			'value' => true,
+			'checked' => $checkRec
+		);
+		?>
+		<?= form_checkbox($atributos); ?>
+		<?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
 		</div>
 		 <div class="form-check">
 			 <?php	if(isset($pulsadoAsistentes) && $pulsadoAsistentes == true) $checkAs = 'checked';
