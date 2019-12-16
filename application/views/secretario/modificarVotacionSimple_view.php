@@ -206,6 +206,8 @@
 									{$encontrado = true;}
 									$i = $i + 1;
 								}
+								if(isset($_POST['censo']) && in_array($censo->Nombre, $_POST['censo'])) $checkCenso = 'checked';
+								else{$checkCenso = false;}
 								if(!$encontrado)
 								{
 									echo '<div class="form-check">';
@@ -214,7 +216,8 @@
 											'class' => 'form-control',
 											'type' => 'checkbox',
 											'id' => $censo->Nombre,
-											'value' => $censo->Nombre
+											'value' => $censo->Nombre,
+											'checked' => $checkCenso
 									);
 									echo '<td>'.form_checkbox($atributos).'</td>';
 								}
