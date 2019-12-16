@@ -117,6 +117,20 @@ public function getCensosFromUsuarios($usuario)
     }
   }
 
+  /************************************/
+  /********** CENSO ASISTENTE *********/
+  /************************************/
+
+  public function insertarCensoAsistente($usuarios,$idVotacion)
+  {
+    for($i = 0; $i < sizeof($usuarios); $i++)
+    {
+      $censo = new Censos($usuarios[$i],$idVotacion);
+      $this->db->insert('censo_asistente',$censo);
+    }
+
+  }
+
 
 }
 

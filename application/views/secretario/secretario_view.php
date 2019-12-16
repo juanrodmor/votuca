@@ -75,7 +75,7 @@
 
                );
                 ?>
-          <?= form_hidden($atributos);?>
+          <?= form_hidden($atributos);?>          
           <?php $atributos = array(
               'name' => 'boton_eliminar',
               'class' => 'btn btn-primary',

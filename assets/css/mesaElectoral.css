@@ -21,19 +21,10 @@
     margin-bottom: 5%;
 }
 
-.si
+#endButton
 {
-    color: green;
-}
-
-.no
-{
-    color: red;
-}
-
-.blanco
-{
-    color: gray
+    margin-top: 2%;
+    float: right;
 }
 
 .card-body
