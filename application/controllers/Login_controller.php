@@ -228,8 +228,16 @@ class Login_controller extends CI_Controller {
 			{
 				if($ip == $this->input->ip_address() && $this->Usuario_model->getAuth($usuario) != '')
 				{
-					$this->session->set_userdata('verified', 'true');
-					$this->redireccionar();
+					if($this->Usuario_model->is_first_auth())
+					{
+						$qr = $this->authenticator->generateQR();
+						$this->load->view('login_verification', array('QR' => $qr));						
+					}
+					else
+					{
+						$this->session->set_userdata('verified', 'true');
+						$this->redireccionar();
+					}
 				}
 				else
 				{
