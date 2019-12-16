@@ -54,6 +54,14 @@
               <input class="form-check-input" type="checkbox" id="checkLogout" name="cLogout" value="true" checked>
               <label class="form-check-label" for="checkLogout">Logout</label>
             </div>
+			<div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="checkLogin" name="cUrna" value="true" checked>
+              <label class="form-check-label" for="checkUrna">Urnas</label>
+            </div>
+			<div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="checkLogin" name="cConfirm" value="true" checked>
+              <label class="form-check-label" for="checkConfirm">Responsabilidades</label>
+            </div>
             <!--- DE MOMENTO VIOLARIA LA PRIVACIDAD -->
             <!--<div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" id="checkVotos" name="cVote" value="true" checked>
@@ -116,6 +124,28 @@
         });
 
         $("#checkVotos").click(function(){
+            if($(this).val() == 'true')
+            {
+              $(this).val('false');
+            }
+            else
+            {
+              $(this).val('true');
+            }
+        });
+		
+		$("#checkUrna").click(function(){
+            if($(this).val() == 'true')
+            {
+              $(this).val('false');
+            }
+            else
+            {
+              $(this).val('true');
+            }
+        });
+		
+		$("#checkConfirm").click(function(){
             if($(this).val() == 'true')
             {
               $(this).val('false');
