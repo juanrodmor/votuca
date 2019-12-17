@@ -513,6 +513,7 @@ class Secretario extends CI_Controller{
       Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
 
       <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+      <p> Disponie de un periódo de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
       <p>Coordialmente, la administración de VotUCA.</p>
       ';
       //echo var_dump($miembroNuevo);
