@@ -1349,9 +1349,10 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFechaFinal(){
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
     $fechaFinal = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
     $hoy = date('Y-m-d H:i:s');
-    if($fechaFinal < $hoy){
+    if($fechaFinal <= $fechaInicio){
         $this->form_validation->set_message('validarFechaFinal','Introduzca bien la fecha %s');
         return FALSE;
     }
