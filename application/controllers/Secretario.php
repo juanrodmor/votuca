@@ -491,31 +491,49 @@ class Secretario extends CI_Controller{
         $elegidos[$i] = $usuarios[$elegidos[$i]];
 
         // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-        $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+        $insertado = $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
 
         // Crear el nuevo nombre de usuario
         $idUsuario = (int)$elegidos[$i];
         $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
-        // Crear tiempo de expiracion para ese usuario
-        if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
-        {$this->usuario_model->setUserTimeLimit($nombre);}
 
-        // Obtener correo de ese miembro
+        // Obtener correo de ese miembro insertado o no insertado
         $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+
+        // Crear tiempo de expiracion para ese usuario y correo
+        $asunto = 0;
+        $mensaje = 0;
+        if($insertado)
+        {
+          if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
+          {$this->usuario_model->setUserTimeLimit($nombre);}
+          // Enviar correo a cada elegido en la mesa electoral
+          $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+          $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+          Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+          <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
+          <p>Coordialmente, la administración de VotUCA.</p>
+          ';
+        }
+        else
+        {
+          // Enviar correo a cada elegido en la mesa electoral
+          $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+          $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+          Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+          <p>Coordialmente, la administración de VotUCA.</p>
+          ';
+        }
+
         //echo var_dump($existe);
 
       }
-      // Enviar correo a cada elegido en la mesa electoral
-      $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
-      $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
-      Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
-
-      <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
-      <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
-      <p>Coordialmente, la administración de VotUCA.</p>
-      ';
       //echo var_dump($miembroNuevo);
       $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
       /*$data = array('mensaje_success' => 'Se ha enviado la notificacion de miembro electoral al usuario ' . $miembroNuevo[0]->NombreUsuario . '.');

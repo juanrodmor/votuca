@@ -325,8 +325,8 @@ class Usuario_model extends CI_Model {
 	 // ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL (cuenta m+DNI)
 		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
 		$existe = $this->userExists($usuarioElectoral);
-		if(!$existe){$this->db->insert('usuario',$nuevo);}
-
+		if(!$existe){$this->db->insert('usuario',$nuevo); return true;}
+		else{return false;}
 	}
 
 	public function comprobarExpiracion($idUsuario)
