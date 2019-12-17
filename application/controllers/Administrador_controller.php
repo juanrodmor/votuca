@@ -65,11 +65,11 @@ class Administrador_controller extends CI_Controller {
 					array_push($logarray, $line);
 					$included = true;
 				}
-				if ($included == false && $urna === true && strpos($line, 'Box') !== false) {
+				if ($included == false && $urna === true && strpos($line, 'BOX') !== false) {
 					array_push($logarray, $line);
 					$included = true;
 				}
-				if ($included == false && $confirm === true && strpos($line, 'Confirmed') !== false) {
+				if ($included == false && $confirm === true && strpos($line, 'ME C') !== false) {
 					array_push($logarray, $line);
 					$included = true;
 				}

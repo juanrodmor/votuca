@@ -62,7 +62,7 @@ class MesaElectoral extends CI_Controller{
 			$apertores = $this->Mesa_model->getNamesApertura($idVotacion);
 			$this->monitoring->register_action_openBox($this->votaciones_model->getVotacion($idVotacion), $apertores);
 			return true;
-		} else if ($peticionesApertura > 3) return true;
+		} else if ($peticionesApertura >= 3) return true;
 		else return false;
 	}
 
@@ -107,7 +107,7 @@ class MesaElectoral extends CI_Controller{
 					$this->Mesa_model->setFinalizada($idVotacion);
 					$cierran = $this->Mesa_model->getNamesCierre($idVotacion);
 					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion), $cierran);
-					$mensajes = array('success' => '¡Votación finalizada con éxito!');
+					$mensajes = array('mensaje' => '¡Votación finalizada con éxito!');
 					$this->index($mensajes);
 				}
 			} else {	//No hay votos suficientes para cerrarla.
