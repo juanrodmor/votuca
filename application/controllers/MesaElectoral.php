@@ -77,8 +77,9 @@ class MesaElectoral extends CI_Controller{
 			$idVotacion = $this->input->post('recuento');
 			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
 				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
-					$idVotos = $this->Mesa_model->getOptions($idVotacion);
-					$this->volcadoVotos($idVotacion, $idVotos);
+					//$idVotos = $this->Mesa_model->getOptions($idVotacion);
+					$this->Voto_model->_usuarioVotacionToRecuento($idVotacion);
+					//$this->volcadoVotos($idVotacion, $idVotos);
 				}
 				$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
 				$this->index($datosVotacion);
