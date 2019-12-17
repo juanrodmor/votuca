@@ -1278,7 +1278,7 @@ class Secretario extends CI_Controller{
         'secretarios'=> $secretarios
       );
       $this->load->view('secretario/delegar_view',$datos);
-      $this->load->view('elementos/footer');
+      //$this->load->view('elementos/footer');
     }
   }
 
