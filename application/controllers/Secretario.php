@@ -884,7 +884,7 @@ class Secretario extends CI_Controller{
 
       }
         if($modificada != NULL){
-            $this->index('La votación se ha guardado en borrador');
+            $this->index('La votación se ha modificado correctamente');
           }
     }
   }
