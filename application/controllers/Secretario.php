@@ -20,34 +20,41 @@ class Secretario extends CI_Controller{
   }
 
   public function index($mensaje = ''){
-    // Seguridad Básica URL
-    switch ($this->session->userdata('rol')) {
-       case 'Administrador':
-       redirect('/Administrador_controller');
-        break;
-       case 'Elector':
-        redirect('/Elector_controller');
-        break;
-       case 'Secretario':
+    // SEGURIDAD DEL QR
+    $verified = $this->session->userdata('verified');
+    if(isset($verified) && $verified == true)
+    {
+      // Seguridad Básica URL
+      switch ($this->session->userdata('rol')) {
+         case 'Administrador':
+         redirect('/Administrador_controller');
+          break;
+         case 'Elector':
+          redirect('/Elector_controller');
+          break;
+         case 'Secretario':
 
-       $this->load->view('elementos/headerSecretario');
-       // VOTACIONES QUE NO ESTÁN ELIMINADAS
-       $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-       $datos = array(
-         'votaciones'=> $votaciones,
-         'mensaje' => $mensaje
-       );
-       //$this->load->view('datetime');
-       $this->load->view('secretario/secretario_view',$datos);
-       //$this->load->view('elementos/footer');
-        break;
-       case 'Secretario delegado':
-        redirect('/secretario/delegado');
-        break;
-       default:
-        redirect('/Login_controller');
-        break;
+         $this->load->view('elementos/headerSecretario');
+         // VOTACIONES QUE NO ESTÁN ELIMINADAS
+         $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
+         $datos = array(
+           'votaciones'=> $votaciones,
+           'mensaje' => $mensaje
+         );
+         //$this->load->view('datetime');
+         $this->load->view('secretario/secretario_view',$datos);
+         //$this->load->view('elementos/footer');
+          break;
+         case 'Secretario delegado':
+          redirect('/secretario/delegado');
+          break;
+         default:
+          redirect('/Login_controller');
+          break;
+      }
     }
+    else{redirect('/Login_controller');}
+
 
 
   }

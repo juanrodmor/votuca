@@ -10,25 +10,31 @@ class Elector_controller extends CI_Controller {
 	}
 
 	public function index($mensaje = FALSE) {
-		if ($this->session->userdata('rol') != 'Elector') {
-			redirect('/Login_controller');
-	    }
-	    else {
-	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
-				$titulo['titulo'] = 'MIS VOTACIONES';
-				$inicio['inicio'] = 'Elector_controller/';
-				$this->load->view('elementos/head',$titulo);
-					//$this->load->view('elementos/headerComun',$inicio);
-				$this->load->view('elementos/headerVotacion',$inicio);
-	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
-	        $datos = $this->Voto_model->_listar($id_user);
-        	$votos = array(
-	        	'datos' => $datos,
-	        	'mensaje' => $mensaje
-	        );
-			$this->load->view('Elector/votacion_view', $votos);
-			//$this->load->view('elementos/footer');
-	    }
+		$verified = $this->session->userdata('verified');
+		if(isset($verified) && $verified == true)
+		{
+			if ($this->session->userdata('rol') != 'Elector') {
+				redirect('/Login_controller');
+		    }
+		    else {
+		    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
+					$titulo['titulo'] = 'MIS VOTACIONES';
+					$inicio['inicio'] = 'Elector_controller/';
+					$this->load->view('elementos/head',$titulo);
+						//$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);
+		    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
+		        $datos = $this->Voto_model->_listar($id_user);
+	        	$votos = array(
+		        	'datos' => $datos,
+		        	'mensaje' => $mensaje
+		        );
+				$this->load->view('Elector/votacion_view', $votos);
+				//$this->load->view('elementos/footer');
+		    }	
+		}
+		else{redirect('/Login_controller');}
+		
 
     }
 

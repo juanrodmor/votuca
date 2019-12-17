@@ -14,26 +14,31 @@ class Administrador_controller extends CI_Controller {
 	}
 
 	public function index() {
-		switch ($this->session->userdata('rol')) {
-			case 'Administrador':
-				$this->monitoring();
-				//$this->load->view('administracion/administracion_view');
-				//$this->load->view('administracion/administracionMonitoring_view');
-				//$this->load->view('elementos/footer');
-				break;
-			case 'Elector':
-				redirect('Elector_controller');
-				break;
-			case 'Secretario':
-				redirect('Secretario');
-				break;
-			case 'Secretario delegado':
-				redirect('Secretario_delegado');
-				break;
-			default:
-				redirect('/Login_controller');
-				break;
+		$verified = $this->session->userdata('verified');
+		if(isset($verified) && $verified == true)
+		{
+			switch ($this->session->userdata('rol')) {
+				case 'Administrador':
+					$this->monitoring();
+					//$this->load->view('administracion/administracion_view');
+					//$this->load->view('administracion/administracionMonitoring_view');
+					//$this->load->view('elementos/footer');
+					break;
+				case 'Elector':
+					redirect('Elector_controller');
+					break;
+				case 'Secretario':
+					redirect('Secretario');
+					break;
+				case 'Secretario delegado':
+					redirect('Secretario_delegado');
+					break;
+				default:
+					redirect('/Login_controller');
+					break;
+			}
 		}
+		else{redirect('/Login_controller');}
 	}
 
 	private function logs() {
@@ -97,7 +102,7 @@ class Administrador_controller extends CI_Controller {
 					'usuario' => $usuario,
 					'rol' => $roles
 				);
-				
+
 			} else {
 				$data = array('mensaje' => 'No hay ningún usuario con ese identificador.');
 			}
@@ -131,7 +136,7 @@ class Administrador_controller extends CI_Controller {
 					if($this->Usuario_model->userExists($newUsername))
 					{
 						$data = array('mensaje_failure' => 'Intenta conceder permisos a un usuario que ya los tiene. Por favor, revise su acción.');
-						$this->load->view('administracion/administracion_view', $data);		
+						$this->load->view('administracion/administracion_view', $data);
 					}
 					else
 					{
@@ -142,26 +147,26 @@ class Administrador_controller extends CI_Controller {
 
 						$asunto = '[NOTIFICACIÓN VOTUCA] Nuevo rol.';
 						$mensaje = '<h1>Tienes un nuevo rol en VotUCA</h1>
-						
+
 						<p>Has sido designado como ' . $newrol . ' en la plataforma. Por ello, <b>dispondrás de una nueva cuenta únicamente para ejercer dicho rol.</b></p>
 						<p>El usuario generado para acceder a tu cuenta con privilegios es el siguiente: ' . $newUsername . '. <b>Podrás acceder usando tu contraseña actual. Una vez accedas al sistema, deberás establecer tu propia contraseña antes de 24 horas.</b><p>
 						<br><br><br>
-						
+
 						<p>Coordialmente, la administración de VotUCA.</p>
 						';
-						
+
 						$result = $this->mailing->sendEmail($newUsername, $asunto, $mensaje);
-						$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');						
-						
+						$data = array('mensaje_success' => 'Se ha actualizado el rol de ' . $usuario . ', que pasa de ser ' . $oldrol . ' a ser ' . $newrol . '.');
+
 						if($result == 'success')
 						{
 							$data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
 						}
 						else
 						{
-							$data['mensaje_failure'] = 'La notificación por correo ha fallado.';						
+							$data['mensaje_failure'] = 'La notificación por correo ha fallado.';
 						}
-						
+
 						if ($newUsername[0] == 's' || $newUsername[0] == 'm') {	//Si el nuevo rol es secretario delegado o miembro electoral
 							$votaciones = $this->Votaciones_model->recuperarVotaciones();
 							$idVotaciones = array();
@@ -177,7 +182,7 @@ class Administrador_controller extends CI_Controller {
 						}
 						else
 						{
-							$this->load->view('administracion/administracion_view', $data);	
+							$this->load->view('administracion/administracion_view', $data);
 						}
 
 					}
@@ -186,26 +191,26 @@ class Administrador_controller extends CI_Controller {
 				else
 				{
 					$data = array('mensaje_failure' => 'Intenta conceder permisos a un usuario inexistente. Por favor, revise su acción.');
-					$this->load->view('administracion/administracion_view', $data);						
+					$this->load->view('administracion/administracion_view', $data);
 				}
 			}
 			else
 			{
 				$data = array('mensaje_failure' => 'Se ha intentado modificar el rol de forma ilegal. Por favor, seleccione uno de los valores mostrados.');
-				$this->load->view('administracion/administracion_view', $data);				
+				$this->load->view('administracion/administracion_view', $data);
 			}
 
 		}
 	}
-	
+
 	//Asigna al nuevo rol las votaciones indicadas.
 	public function asignaVotaciones() {
 		if($this->input->post('Asignar')) {
 			$usuario = $this->session->userdata('userSearched');
 			$idVotacion = $this->input->post('votacionId');
-					
+
 			$this->SecretariosDelegados_model->setVotacion($this->Usuario_model->getId($usuario), $idVotacion);
-			
+
 			$data = array('mensaje_success' => 'Se han asignado con éxito las votaciones seleccionadas al usuario.');
 			$this->load->view('administracion/administracion_view', $data);
 		} else {
