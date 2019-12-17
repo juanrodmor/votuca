@@ -15,38 +15,46 @@ class Secretario extends CI_Controller{
     $this->load->model('ponderaciones_model');
     $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
+    $this->load->library('mailing');
 
   }
 
   public function index($mensaje = ''){
-    // Seguridad Básica URL
-    switch ($this->session->userdata('rol')) {
-       case 'Administrador':
-       redirect('/Administrador_controller');
-        break;
-       case 'Elector':
-        redirect('/Elector_controller');
-        break;
-       case 'Secretario':
+    // SEGURIDAD DEL QR
+    $verified = $this->session->userdata('verified');
+    if(isset($verified) && $verified == true)
+    {
+      // Seguridad Básica URL
+      switch ($this->session->userdata('rol')) {
+         case 'Administrador':
+         redirect('/Administrador_controller');
+          break;
+         case 'Elector':
+          redirect('/Elector_controller');
+          break;
+         case 'Secretario':
 
-       $this->load->view('elementos/headerSecretario');
-       // VOTACIONES QUE NO ESTÁN ELIMINADAS
-       $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-       $datos = array(
-         'votaciones'=> $votaciones,
-         'mensaje' => $mensaje
-       );
-       //$this->load->view('datetime');
-       $this->load->view('secretario/secretario_view',$datos);
-       //$this->load->view('elementos/footer');
-        break;
-       case 'Secretario delegado':
-        redirect('/secretario/delegado');
-        break;
-       default:
-        redirect('/Login_controller');
-        break;
+         $this->load->view('elementos/headerSecretario');
+         // VOTACIONES QUE NO ESTÁN ELIMINADAS
+         $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
+         $datos = array(
+           'votaciones'=> $votaciones,
+           'mensaje' => $mensaje
+         );
+         //$this->load->view('datetime');
+         $this->load->view('secretario/secretario_view',$datos);
+         //$this->load->view('elementos/footer');
+          break;
+         case 'Secretario delegado':
+          redirect('/secretario/delegado');
+          break;
+         default:
+          redirect('/Login_controller');
+          break;
+      }
     }
+    else{redirect('/Login_controller');}
+
 
 
   }
@@ -498,9 +506,28 @@ class Secretario extends CI_Controller{
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
 
+        // Obtener correo de ese miembro
+        $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+
       }
       // Enviar correo a cada elegido en la mesa electoral
-      //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+      $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+      $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+      Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+      /*$data = array('mensaje_success' => 'Se ha enviado la notificacion de miembro electoral al usuario ' . $miembroNuevo[0]->NombreUsuario . '.');
+
+      if($result == 'success')
+      {
+        $data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
+      }
+      else
+      {$data['mensaje_failure'] = 'La notificación por correo ha fallado.';}*/
+
     }
 
     private function extraerIdsFicheros($nombreCensos)
@@ -634,6 +661,7 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
+      $this->form_validation->set_rules('quorum','Quorum','callback_validarQuorum');
       if($validarAsistentes)
       $this->form_validation->set_rules('asistentes','Asistentes','callback_validarAsistentes');
       if($validarCenso)
@@ -777,7 +805,15 @@ class Secretario extends CI_Controller{
 
       }
 
-      //'pulsadoParalelo' => true,
+      // SACAR OPCIONES DE UNA VOTACION
+      /*if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
+         || $votacion->Id_TipoVotacion == 4 || $votacion->Id_TipoVotacion == 6)
+      {
+        $idsVotos = $this->voto_model->getVotosFromVotacion($votacion->Id);
+        foreach($idsVotos as $id)
+        $nombresVotos = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
+      }
+      echo var_dump($nombresVotos);*/
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -792,7 +828,6 @@ class Secretario extends CI_Controller{
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
       $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      //$this->llamarVistasModificar($tipoVotacion,$datos);
 
 	}
 
@@ -826,7 +861,7 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES... ¿Los suficientes?
         {
-          if(sizeof($_POST['asistentes']) >= 3)
+          /*if(sizeof($_POST['asistentes']) >= 3)
           {
             if($this->validaciones(false,false) == FALSE){$this->mostrarErrores($_POST);}
           }
@@ -836,7 +871,7 @@ class Secretario extends CI_Controller{
             else
             {
             }
-          }
+          }*/
 
         }
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
@@ -1129,7 +1164,22 @@ class Secretario extends CI_Controller{
     $usuariosMesa = array();
     foreach($miMesa as $dato)
     {$usuariosMesa[] = $dato->Id_Usuario;}
+
     // Notificar a los usuariosMesa de la mesa que se va a la puta pq se añade un censo
+    foreach($usuariosMesa as $id)
+    {
+      // Obtener correo de ese miembro
+      $miembroNuevo = $this->usuario_model->getUsuario($id);
+      $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+      $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+      Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+    }
+
 
     // Borrar la mesa electoral
     $this->mesa_model->deleteMesa($idVotacion);
@@ -1256,7 +1306,7 @@ class Secretario extends CI_Controller{
        'mensaje' => $mensaje = ''
      );
      //$this->load->view('datetime');
-     $this->load->view('secretario/secretario_view',$datos);
+     $this->load->view('secretario/borradores_view',$datos);
   }
 
   public function enviar()
@@ -1330,17 +1380,30 @@ class Secretario extends CI_Controller{
     else{return TRUE;}
   }
 
+  public function validarQuorum()
+  {
+    $quorum = $this->input->post('quorum');
+    if($quorum < 0 || $quorum > 1)
+    {
+      $this->form_validation->set_message('validarQuorum','Introduzca un quorum válido (entre 0 y 1)');
+      return FALSE;
+    }
+    else{return TRUE;}
+  }
   public function validarFicherosCenso(){
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
-    if($asistentes != NULL & sizeof($asistentes) < 3)
+    if($asistentes != NULL)
     {
-      if($elegidos == NULL || sizeof($elegidos) < 1)
+      if(sizeof($asistentes) < 3)
       {
-        $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
-        return FALSE;
+        if($elegidos == NULL || sizeof($elegidos) < 1)
+        {
+          $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+          return FALSE;
+        }
+        else{return TRUE;}
       }
-      else{return TRUE;}
     }
     else{
       return TRUE;
@@ -1364,8 +1427,7 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  public function enviarCorreo($elegidos,$idVotacion){
-    //echo var_dump($idVotacion);
+  /*public function enviarCorreo($elegido,$idVotacion,$titulo,$contenido){
     $config = array(
       'protocol' => 'smtp',
       'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -1380,18 +1442,14 @@ class Secretario extends CI_Controller{
 
     $this->email->initialize($config);
     $this->email->from('votvotuca@gmail.com', 'votuca');
-    $this->email->to('ibsantamaria96@gmail.com');
-    $this->email->subject('ERES MIEMBRO DE LA MESA ELECTORAL');
-    $this->email->message('
-        <h1> ¡Enhorabuena! </h1>
-        <p> Eres miembro de la mesa electoral para la votacion '.$idVotacion[0]['Id'].'</p>'
-
-    );
+    $this->email->to($elegido[0]->Email);
+    $this->email->subject($titulo);
+    $this->email->message($contenido);
 
     $this->email->set_newline("\r\n");
     if($this->email->send()){
     }else{echo $this->email->print_debugger();}
-  }
+  }*/
 
 
 }

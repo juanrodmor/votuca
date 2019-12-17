@@ -81,6 +81,12 @@ class Mesa_model extends CI_Model {
 		return ($consulta->num_rows() == 1);
 	}
 	
+	//Comprueba si un miembro electoral quiere cerrar una votación concreta.
+	public function getQuiereCerrar($username, $votacion) {
+		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'Id_Usuario' => $username, 'seCierra' => 1));
+		return ($consulta->num_rows() == 1);
+	}
+	
 	//Devuelve el número de decisiones de cierre para una votación concreta.
 	public function getNCierre($votacion) {
 		$consulta = $this->db->get_where('mesa_electoral', array('Id_Votacion' => $votacion, 'seCierra' => 1));
@@ -89,13 +95,15 @@ class Mesa_model extends CI_Model {
 	
 	//Comprueba si existe algún recuento para la votación.
 	public function checkVotos($idVotacion) {
-		$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
+		/*$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
 		$rows = $consulta->result();
 		if(!empty($rows))
 		{
 			$consulta2 = $this->db->get_where('recuento', array('Id_Votacion' => $rows[0]->Id_Voto));
 			return ($consulta2->num_rows()>=1);
-		}
+		}*/
+		$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion));
+		return ($consulta->num_rows()>=1);
 	}
 	
 	//Devuelve las opciones de voto de una votacion.
@@ -114,10 +122,10 @@ class Mesa_model extends CI_Model {
 	
 	//Devuelve un recuento de un voto en concreto en una votación concreta, eliminando dichos votos del registro.
 	public function volcadoVotos($idVotacion, $idVoto) {
-		$usuario_votacion = $this->db->get('usuario_votacion');
+		$usuario_votacion = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $idVotacion));
 		$cont = 0;
 		foreach ($usuario_votacion->result() as $row) {
-			if ($idVotacion == $row->Id_Votacion && password_verify($idVoto, $row->Id_Voto) == true) {
+			if (password_verify($idVoto, $row->Id_Voto) == true) {
 				$cont++;
 				$this->db->delete('usuario_votacion', array('Id_Votacion' => $row->Id_Votacion, 'Id_Usuario' => $row->Id_Usuario));
 			}
@@ -128,9 +136,10 @@ class Mesa_model extends CI_Model {
 	//Inserta los resultados de una votación en la tabla recuento.
 	public function insertVotos($idVotacion, $arrayIdVoto, $arrayNumVotos) {
 		for($it=0; $it<count($arrayIdVoto); $it++) {
-			$sql = "INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES (" . $idVotacion . "," . $arrayIdVoto[$it] . "," . $arrayNumVotos[$it] . ") ON DUPLICATE KEY UPDATE Id_Votacion=Id_Votacion, Id_Voto=Id_Voto";
+			$this->db->insert('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
+			//$sql = "INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES (" . $idVotacion . "," . $arrayIdVoto[$it] . "," . $arrayNumVotos[$it] . ") ON DUPLICATE KEY UPDATE Id_Votacion=Id_Votacion, Id_Voto=Id_Voto";
 			//$this->db->update('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
-			$this->db->query($sql);
+			//$this->db->query($sql);
 		}
 	}
 	
@@ -159,8 +168,9 @@ class Mesa_model extends CI_Model {
 		$contVotos = array();
 		$totalVotos = 0;
 		foreach($votos['Id'] as $idVoto) {
-			array_push($contVotos, $this->getNVotos($idVotacion, $idVoto));
-			$totalVotos = $totalVotos + $this->getNVotos($idVotacion, $idVoto);
+			$nVotos = $this->getNVotos($idVotacion, $idVoto);
+			array_push($contVotos, $nVotos);
+			$totalVotos = $totalVotos + $nVotos;
 		}
 		$result = array('opciones' => $votos['Nombre'],
 						'cantidad' => $contVotos,

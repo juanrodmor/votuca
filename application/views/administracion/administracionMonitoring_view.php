@@ -40,7 +40,7 @@
         <!----- AQUI ACABA EL ENCABEZADO --->
 
     <div class="container">
-          <form action="monitoring" id="monitoring_search" method='post'>
+          <form action="<?php base_url() . 'administrador_controller/monitoring'?>" id="monitoring_search" method='post'>
           <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Opciones
@@ -53,6 +53,14 @@
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" id="checkLogout" name="cLogout" value="true" checked>
               <label class="form-check-label" for="checkLogout">Logout</label>
+            </div>
+			<div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="checkUrna" name="cUrna" value="true" checked>
+              <label class="form-check-label" for="checkUrna">Urnas</label>
+            </div>
+			<div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="checkConfirm" name="cConfirm" value="true" checked>
+              <label class="form-check-label" for="checkConfirm">Responsabilidades</label>
             </div>
             <!--- DE MOMENTO VIOLARIA LA PRIVACIDAD -->
             <!--<div class="form-check form-check-inline">
@@ -116,6 +124,28 @@
         });
 
         $("#checkVotos").click(function(){
+            if($(this).val() == 'true')
+            {
+              $(this).val('false');
+            }
+            else
+            {
+              $(this).val('true');
+            }
+        });
+		
+		$("#checkUrna").click(function(){
+            if($(this).val() == 'true')
+            {
+              $(this).val('false');
+            }
+            else
+            {
+              $(this).val('true');
+            }
+        });
+		
+		$("#checkConfirm").click(function(){
             if($(this).val() == 'true')
             {
               $(this).val('false');

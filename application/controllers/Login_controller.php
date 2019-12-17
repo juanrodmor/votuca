@@ -1,6 +1,5 @@
 <?php
 error_reporting(E_ALL ^ E_DEPRECATED);
-
 class Login_controller extends CI_Controller {
 	//El controlador trabaja con el modelo de Usuario.
 	public function __construct() {
@@ -10,7 +9,6 @@ class Login_controller extends CI_Controller {
 		$this->load->library('Authenticator');
 		include $_SERVER['DOCUMENT_ROOT'] . '/votuca/classes/Usuario.php';
 	}
-
 	public function redireccionar(){
 		
 		switch($this->session->userdata('rol'))
@@ -58,21 +56,18 @@ class Login_controller extends CI_Controller {
 			$this->load->view('login_view');
 		}
 	}
-
 	/*
 	//Función auxiliar de encriptación de contraseñas.
 	private function encriptar($pass) {
 		return password_hash($pass, PASSWORD_DEFAULT);
 	}
 	*/
-
 	//Función de verificación de los datos introducidos en el login.
 	public function verificar() {
 		if ($this->input->post('Enviar')) {		//Si se accede mediante envío de datos y no por URL...
 			$this->form_validation->set_rules('usuario', 'Nombre de usuario', 'required|trim');
 			$this->form_validation->set_rules('pass', 'Contraseña', 'required|trim');
 			$this->form_validation->set_message('required', 'El campo \'%s\' es obligatorio.');
-
 			if ($this->form_validation->run() != false) {	//Si se cumplen las reglas de validación...
 				$usuario = new Usuario($this->input->post('usuario'), $this->input->post('pass'));
 				
@@ -133,7 +128,6 @@ class Login_controller extends CI_Controller {
 				break;
 		}
 	}
-
 	//Cambia la contraseña temporal concedida a un usuario dado.
 	public function setPass() {
 		if ($this->input->post('Enviar')) {
@@ -151,7 +145,6 @@ class Login_controller extends CI_Controller {
 			} else $this->load->view('Contrasenia_view');
 		} else redirect('/Login_controller');
 	}
-
 	//Comprueba que la contraseña introducida cumple todos los requisitos.
 	private function validarPass($pass) {
 		$nchar = (strlen($pass) >= 8);
@@ -166,7 +159,6 @@ class Login_controller extends CI_Controller {
 			return false;
 		} else return true;
 	}
-
 	//Realiza los cambios pertinentes para que un usuario se haga oficial.
 	private function formalizarUsuario($pass) {
 		$this->Usuario_model->setPass($this->session->userdata('usuario'), password_hash($pass, PASSWORD_DEFAULT));
@@ -174,7 +166,6 @@ class Login_controller extends CI_Controller {
 		$this->session->set_userdata(array('rol' => $this->Usuario_model->getRol($this->session->userdata('usuario'))));
 		$this->redireccionar();
 	}
-
 	/*	PARA MULTIROL
 	//Evalúa los permisos del usuario loggeado.
 	public function evaluaRol() {
@@ -187,7 +178,6 @@ class Login_controller extends CI_Controller {
 			$this->load->view('loginSeleccionRol_view', $data);
 		}
 	}
-
 	//Elección de rol por parte del usuario.
 	public function seleccionRol() {
 		if ($this->input->post('radio') != NULL) {
@@ -196,7 +186,6 @@ class Login_controller extends CI_Controller {
 		} else $this->evaluaRol();
 	}
 	*/
-
 	//Función para desconectarse de la web.
 	public function logout() {
 		$loggeado = $this->session->userdata('usuario');
@@ -226,17 +215,16 @@ class Login_controller extends CI_Controller {
 		{
 			if(isset($ip))
 			{
-				if($ip == $this->input->ip_address() && $this->Usuario_model->getAuth($usuario) != '')
+				if(/**$ip == $this->input->ip_address() &&**/ $this->Usuario_model->getAuth($usuario) != '')
 				{
 					if($this->Usuario_model->is_first_auth())
 					{
 						$qr = $this->authenticator->generateQR();
-						$this->load->view('login_verification', array('QR' => $qr));						
+						$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+						$this->load->view('login_verification', array('QR' => $qr, 'secret' => $secret));						
 					}
-					else
 					{
-						$this->session->set_userdata('verified', 'true');
-						$this->redireccionar();
+						$this->load->view('login_verification');
 					}
 				}
 				else
@@ -245,7 +233,8 @@ class Login_controller extends CI_Controller {
 					if($this->Usuario_model->getAuth($usuario) == '')
 					{
 						$newQR = $this->authenticator->generateQR();
-						$this->load->view('login_verification', array('QR' => $newQR));		
+						$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+						$this->load->view('login_verification', array('QR' => $newQR, 'secret' => $secret));		
 					}
 					else
 					{
@@ -258,7 +247,8 @@ class Login_controller extends CI_Controller {
 			{
 				//$this->Usuario_model->setIP($usuario, $this->input->ip_address());		
 					$qr = $this->authenticator->generateQR();
-					$this->load->view('login_verification', array('QR' => $qr));
+					$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+					$this->load->view('login_verification', array('QR' => $qr, 'secret' => $secret));
 			}		
 		}
 	}
@@ -287,29 +277,28 @@ class Login_controller extends CI_Controller {
 				}
 				else
 				{
-					$data = array('mensaje' => "Se ha producido un error");
+					if($this->Usuario_model->is_first_auth())
+						$data = array('mensaje' => "Clave incorrecta", 'QR' => $this->authenticator->generateQR(), 'secret' => $this->Usuario_model->getAuth($this->session->userdata('usuario')));
+					else
+						$data = array('mensaje' => "Clave incorrecta");
 					$this->load->view('login_verification', $data);
 				}
 			}
 			
 		}
 	}
-
 	/***********************************/
 	/***********************************/
 	/***********************************/
-
 	public function crearPassword($pass)
 	{
 		echo password_hash($pass, PASSWORD_DEFAULT);
 	}
-
 	//Funciones de registro
 	/*
 	public function registro() {
 		$this->load->view('Registro_view');
 	}
-
 	public function verifica_registro() {
 		if ($this->input->post('Enviar')) {
 			$this->form_validation->set_rules();
@@ -317,7 +306,6 @@ class Login_controller extends CI_Controller {
 			$this->form_validation->set_rules();
 			$this->form_validation->set_rules();
 			$this->form_validation->set_rules();
-
 			if ($this->form_validation->run() == false)
 				$this->registro();
 			else {
@@ -328,5 +316,4 @@ class Login_controller extends CI_Controller {
 	}
 	*/
 }
-
 ?>

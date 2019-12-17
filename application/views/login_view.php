@@ -48,18 +48,21 @@
                     <div class="input-group mb-3">
                         <label id="labelUser" for="username" class="col-xs-5 col-form-label text-right">Nombre de usuario</label>
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input name="usuario" type="text" class="form-control col-sm-5 col-xs-7" id="u" placeholder="Nombre de usuario">
+                        <input name="usuario" type="text" class="form-control col-sm-5 col-xs-7" id="u" placeholder="Nombre de usuario"
+                        autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                     </div>
                     <div class="input-group mb-3">
                         <label id="labelPass" for="pass" class="col-xs-5 col-form-label text-right">Clave de acceso</label>
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input name="pass" type="password" class="form-control col-sm-5 col-xs-7" id="passwd" placeholder ="Clave de acceso">
+                        <input name="pass" type="password" class="form-control col-sm-5 col-xs-7" id="passwd" placeholder ="Clave de acceso"
+                        autocomplete="off" readonly
+onfocus="this.removeAttribute('readonly');">
                     </div>
                     <input id="button-form" class="btn btn-primary" type="submit" name="Enviar" value="Enviar">
                 </form>
 
             <div id="lock-image">
-                <img src="<?php echo base_url('assets/img/lock.png')?>">               
+                <img src="<?php echo base_url('assets/img/lock.png')?>">
             </div>
 
     </div>

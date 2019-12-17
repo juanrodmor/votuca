@@ -10,25 +10,30 @@ class Elector_controller extends CI_Controller {
 	}
 
 	public function index($mensaje = FALSE) {
-		if ($this->session->userdata('rol') != 'Elector') {
-			redirect('/Login_controller');
-	    }
-	    else {
-	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
-				$titulo['titulo'] = 'MIS VOTACIONES';
-				$inicio['inicio'] = 'Elector_controller/';
-				$this->load->view('elementos/head',$titulo);
-					//$this->load->view('elementos/headerComun',$inicio);
-				$this->load->view('elementos/headerVotacion',$inicio);
-	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
-	        $datos = $this->Voto_model->_listar($id_user);
-        	$votos = array(
-	        	'datos' => $datos,
-	        	'mensaje' => $mensaje
-	        );
-			$this->load->view('Elector/votacion_view', $votos);
-			$this->load->view('elementos/footer');
-	    }
+		$verified = $this->session->userdata('verified');
+		if(isset($verified) && $verified == true)
+		{
+			if ($this->session->userdata('rol') != 'Elector') {
+				redirect('/Login_controller');
+		    }
+		    else {
+					$titulo['titulo'] = 'MIS VOTACIONES';
+					$inicio['inicio'] = 'Elector_controller/';
+					$this->load->view('elementos/head',$titulo);
+						//$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);
+		    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
+		        $datos = $this->Voto_model->_listar($id_user);
+	        	$votos = array(
+		        	'datos' => $datos,
+		        	'mensaje' => $mensaje
+		        );
+				$this->load->view('Elector/votacion_view', $votos);
+				//$this->load->view('elementos/footer');
+		    }	
+		}
+		else{redirect('/Login_controller');}
+		
 
     }
 
@@ -68,7 +73,7 @@ class Elector_controller extends CI_Controller {
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);
-			$this->load->view('elementos/footer');	// arreglar footer
+			//$this->load->view('elementos/footer');	// arreglar footer
 		}
 
     }
@@ -98,9 +103,9 @@ class Elector_controller extends CI_Controller {
 
 			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
-			    	if($votado == TRUE) 
+			    	if($votado == TRUE)
 			    		$mensaje = 'correcto';
-			    	if($votado == FALSE) 
+			    	if($votado == FALSE)
 			    		$mensaje = 'mal';
 
 			    	$this->index($mensaje);
@@ -123,7 +128,7 @@ class Elector_controller extends CI_Controller {
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
 			        $this->load->view('Elector/voto_view', $datos);
-			        	$this->load->view('elementos/footer');		//arreglar footer
+			        //	$this->load->view('elementos/footer');		//arreglar footer
 		    	}
 			}
 			else {	// votacion compleja
@@ -136,9 +141,9 @@ class Elector_controller extends CI_Controller {
 
 			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
-			    	if($votado == TRUE) 
+			    	if($votado == TRUE)
 			    		$mensaje = 'correcto';
-			    	if($votado == FALSE) 
+			    	if($votado == FALSE)
 			    		$mensaje = 'mal';
 
 			    	$this->index($mensaje);
@@ -161,7 +166,7 @@ class Elector_controller extends CI_Controller {
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
 			        $this->load->view('Elector/voto_view', $datos);
-			        	$this->load->view('elementos/footer');		//arreglar footer
+			        //	$this->load->view('elementos/footer');		//arreglar footer
     			}
 			}
 		}
@@ -215,13 +220,13 @@ class Elector_controller extends CI_Controller {
 	    		*/
 
 				$this->load->view('Elector/resultados_view', $info);
-					$this->load->view('elementos/footer');
+				//	$this->load->view('elementos/footer');
 	    	}
 	    	else {
 	    		$mensaje = 'No se pueden mostrar resultados antes de la finalizacion de la votación.';
 	    		$this->index($mensaje);
 	    	}
-	    	
+
     	}
     }
 }

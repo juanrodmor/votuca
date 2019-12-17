@@ -143,7 +143,7 @@
 	          'class' => 'form-control',
 	          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
 	          'required' => true,
-	          'value' => set_value('nOpciones')
+	          'value' => $votaciones->NumOpciones
 	      ); ?>
 	      <?= form_label('Total de opciones a votar','nOpciones'); ?>
 	      <?= form_input($atributos) ?> <br/><br/>
@@ -189,8 +189,9 @@
 		<?= form_checkbox($atributos); ?>
 		<?= form_label('Voto Modificable','esModificable'); ?>
 		</div>
+		<?php if($votaciones->Id_TipoVotacion == 3 || $votaciones->Id_TipoVotacion == 4){?>
 		<div class="form-check">
-		<?php	if(isset($pulsadoRecuento) && $pulsadoRecuento== true) $checkRec = 'checked';
+		<?php if(isset($pulsadoRecuento) && $pulsadoRecuento == true) $checkRec = 'checked';
 			else{$checkRec = false;} ?>
 		<?php
 		$atributos = array(
@@ -205,6 +206,8 @@
 		<?= form_checkbox($atributos); ?>
 		<?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
 		</div>
+		<?php }?>
+		<?php if($votaciones->Id_TipoVotacion == 1 || $votaciones->Id_TipoVotacion == 2 || $votaciones->Id_TipoVotacion == 5){?>
 		 <div class="form-check">
 			 <?php	if(isset($pulsadoAsistentes) && $pulsadoAsistentes == true) $checkAs = 'checked';
 	 			else{$checkAs = false;} ?>
@@ -221,6 +224,7 @@
 		<?= form_checkbox($atributos); ?>
 		<?= form_label('Solo asistentes','soloAsistentes'); ?>
 		</div>
+	<?php } ?>
 
 	<!-- CENSO ELECTORAL -->
 		<h2> Censo electoral </h2>
