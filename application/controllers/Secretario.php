@@ -1344,7 +1344,7 @@ class Secretario extends CI_Controller{
     $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
 
     $hoy = date('Y-m-d H:i:s');
-    if($fechaInicio < $hoy){
+    if($fechaInicio <= $hoy){
         $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');
         return FALSE;
     }
