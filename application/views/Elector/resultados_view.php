@@ -19,8 +19,8 @@
       <h2 style="color:black;">Porcentaje de voto</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p<?php ($total*100)/$censo; ?> big center" style="float:left;color:black;">
-                <span><?php echo ($total*100)/$censo.'%'; ?></span>
+            <div class="c100 p<?php (100-($datos[0]->Num_Votos*100)/$censo); ?> big center" style="float:left;color:black;">
+                <span><?php echo (100-($datos[0]->Num_Votos*100)/$censo).'%'; ?></span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
