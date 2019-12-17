@@ -120,10 +120,10 @@ class Mesa_model extends CI_Model {
 	
 	//Devuelve un recuento de un voto en concreto en una votación concreta, eliminando dichos votos del registro.
 	public function volcadoVotos($idVotacion, $idVoto) {
-		$usuario_votacion = $this->db->get('usuario_votacion');
+		$usuario_votacion = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $idVotacion));
 		$cont = 0;
 		foreach ($usuario_votacion->result() as $row) {
-			if ($idVotacion == $row->Id_Votacion && password_verify($idVoto, $row->Id_Voto) == true) {
+			if (password_verify($idVoto, $row->Id_Voto) == true) {
 				$cont++;
 				$this->db->delete('usuario_votacion', array('Id_Votacion' => $row->Id_Votacion, 'Id_Usuario' => $row->Id_Usuario));
 			}
@@ -134,9 +134,10 @@ class Mesa_model extends CI_Model {
 	//Inserta los resultados de una votación en la tabla recuento.
 	public function insertVotos($idVotacion, $arrayIdVoto, $arrayNumVotos) {
 		for($it=0; $it<count($arrayIdVoto); $it++) {
-			$sql = "INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES (" . $idVotacion . "," . $arrayIdVoto[$it] . "," . $arrayNumVotos[$it] . ") ON DUPLICATE KEY UPDATE Id_Votacion=Id_Votacion, Id_Voto=Id_Voto";
+			$this->db->insert('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
+			//$sql = "INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES (" . $idVotacion . "," . $arrayIdVoto[$it] . "," . $arrayNumVotos[$it] . ") ON DUPLICATE KEY UPDATE Id_Votacion=Id_Votacion, Id_Voto=Id_Voto";
 			//$this->db->update('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $arrayIdVoto[$it], 'Num_Votos' => $arrayNumVotos[$it]));
-			$this->db->query($sql);
+			//$this->db->query($sql);
 		}
 	}
 	
@@ -165,8 +166,9 @@ class Mesa_model extends CI_Model {
 		$contVotos = array();
 		$totalVotos = 0;
 		foreach($votos['Id'] as $idVoto) {
-			array_push($contVotos, $this->getNVotos($idVotacion, $idVoto));
-			$totalVotos = $totalVotos + $this->getNVotos($idVotacion, $idVoto);
+			$nVotos = $this->getNVotos($idVotacion, $idVoto);
+			array_push($contVotos, $nVotos);
+			$totalVotos = $totalVotos + $nVotos;
 		}
 		$result = array('opciones' => $votos['Nombre'],
 						'cantidad' => $contVotos,

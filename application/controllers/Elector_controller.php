@@ -27,7 +27,7 @@ class Elector_controller extends CI_Controller {
 	        	'mensaje' => $mensaje
 	        );
 			$this->load->view('Elector/votacion_view', $votos);
-			$this->load->view('elementos/footer');
+			//$this->load->view('elementos/footer');
 	    }
 
     }
@@ -68,7 +68,7 @@ class Elector_controller extends CI_Controller {
 				'votos' => $votos
 			);
 			$this->load->view('Elector/voto_view', $datos);
-			$this->load->view('elementos/footer');	// arreglar footer
+			//$this->load->view('elementos/footer');	// arreglar footer
 		}
 
     }
@@ -98,9 +98,9 @@ class Elector_controller extends CI_Controller {
 
 			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
-			    	if($votado == TRUE) 
+			    	if($votado == TRUE)
 			    		$mensaje = 'correcto';
-			    	if($votado == FALSE) 
+			    	if($votado == FALSE)
 			    		$mensaje = 'mal';
 
 			    	$this->index($mensaje);
@@ -123,7 +123,7 @@ class Elector_controller extends CI_Controller {
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
 			        $this->load->view('Elector/voto_view', $datos);
-			        	$this->load->view('elementos/footer');		//arreglar footer
+			        //	$this->load->view('elementos/footer');		//arreglar footer
 		    	}
 			}
 			else {	// votacion compleja
@@ -136,9 +136,9 @@ class Elector_controller extends CI_Controller {
 
 			    	$votado = $this->Voto_model->_votar($id_usuario, $id_votacion, $voto, $modif);
 
-			    	if($votado == TRUE) 
+			    	if($votado == TRUE)
 			    		$mensaje = 'correcto';
-			    	if($votado == FALSE) 
+			    	if($votado == FALSE)
 			    		$mensaje = 'mal';
 
 			    	$this->index($mensaje);
@@ -161,7 +161,7 @@ class Elector_controller extends CI_Controller {
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
 			        $this->load->view('Elector/voto_view', $datos);
-			        	$this->load->view('elementos/footer');		//arreglar footer
+			        //	$this->load->view('elementos/footer');		//arreglar footer
     			}
 			}
 		}
@@ -215,13 +215,13 @@ class Elector_controller extends CI_Controller {
 	    		*/
 
 				$this->load->view('Elector/resultados_view', $info);
-					$this->load->view('elementos/footer');
+				//	$this->load->view('elementos/footer');
 	    	}
 	    	else {
 	    		$mensaje = 'No se pueden mostrar resultados antes de la finalizacion de la votación.';
 	    		$this->index($mensaje);
 	    	}
-	    	
+
     	}
     }
 }
