@@ -72,7 +72,7 @@ class Usuario_model extends CI_Model {
 	public function getAllRoles($usuario)
 	{
 		$usr = substr($usuario, 1);
-		$query = "SELECT Id_Rol FROM USUARIO WHERE NombreUsuario LIKE '%".$usr."';";
+		$query = "SELECT Id_Rol FROM usuario WHERE NombreUsuario LIKE '%".$usr."';";
 		$roles = array();
 		foreach($this->db->query($query)->result_array() as $rol)
 		{
