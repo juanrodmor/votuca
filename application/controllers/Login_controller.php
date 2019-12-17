@@ -215,7 +215,7 @@ class Login_controller extends CI_Controller {
 		{
 			if(isset($ip))
 			{
-				if($ip == $this->input->ip_address() && $this->Usuario_model->getAuth($usuario) != '')
+				if(/**$ip == $this->input->ip_address() &&**/ $this->Usuario_model->getAuth($usuario) != '')
 				{
 					if($this->Usuario_model->is_first_auth())
 					{
@@ -223,10 +223,8 @@ class Login_controller extends CI_Controller {
 						$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
 						$this->load->view('login_verification', array('QR' => $qr, 'secret' => $secret));						
 					}
-					else
 					{
-						$this->session->set_userdata('verified', 'true');
-						$this->redireccionar();
+						$this->load->view('login_verification');
 					}
 				}
 				else
