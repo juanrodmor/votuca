@@ -53,7 +53,17 @@ div > a:hover
     font-family: inherit;
     font-weight: inherit;
     line-height: 1.1;
-    color: black;
+    color: white;
+}
+
+#title-porcentaje
+{
+	color: white;
+}
+
+.h3, .h5, h3, h5
+{
+	color: black !important;
 }
 
 body {

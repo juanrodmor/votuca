@@ -33,7 +33,7 @@
             </div>
             <hr class="divider">
             <div class="col-xs-12 col-sm-8" id="linkBox">
-              <a href="#" class="marked">Votaciones</a>
+              <a href="<?php echo base_url() . 'MesaElectoral';?>" class="marked">Votaciones</a>
             </div>
         </div>
     </div>
@@ -70,11 +70,11 @@
     if(isset($cantidad)){
     echo'
       <div id="graphic-info">
-      <h2>Porcentaje de voto</h2>
+      <h2 id="title-porcentaje">Porcentaje de participación</h2>
       </div>
         <div id="vote-info">
             <div class="c100 p'.$totalVotos*100/$censo.' big center" style="float:left;">
-                <span>'.$totalVotos*100/$censo.'</span>
+                <span>'.$totalVotos*100/$censo.'%</span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
@@ -86,7 +86,7 @@
                   Número de votos
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text">'.$totalVotos.'</h3>
+                  <h3 class="card-text"><center>'.$totalVotos.'</center></h3>
                 </div>
               </div>   
               <div class="card">
@@ -94,7 +94,7 @@
                   Tamaño del censo
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text">'.$censo.'</h3>
+                  <h3 class="card-text"><center>'.$censo.'</center></h3>
                 </div>
               </div>  
               <div class="card">
@@ -118,7 +118,7 @@
                   <input id="endButton" type="submit" name="boton_finalizar" value="Finalizar" class="btn btn-primary">
                 </form>
               </div>
-
+            <br><br>
         </div>
     ';
     }

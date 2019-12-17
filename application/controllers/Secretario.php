@@ -62,7 +62,7 @@ class Secretario extends CI_Controller{
   /************************************/
   /*********** CREAR VOTACION *********/
   /************************************/
-
+  //public function encriptado($palabra){echo password_hash($palabra,PASSWORD_DEFAULT);}
   // FUNCION QUE LLAMA A LAS VISTAS
   public function crearVotacion($tipo = '')
   {
@@ -505,9 +505,13 @@ class Secretario extends CI_Controller{
         $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
+        // Crear tiempo de expiracion para ese usuario
+        if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
+        {$this->usuario_model->setUserTimeLimit($nombre);}
 
         // Obtener correo de ese miembro
         $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+        //echo var_dump($existe);
 
       }
       // Enviar correo a cada elegido en la mesa electoral
@@ -515,6 +519,8 @@ class Secretario extends CI_Controller{
       $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
       Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
 
+      <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+      <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
       <p>Coordialmente, la administración de VotUCA.</p>
       ';
       //echo var_dump($miembroNuevo);
@@ -878,7 +884,7 @@ class Secretario extends CI_Controller{
 
       }
         if($modificada != NULL){
-            $this->index('La votación se ha guardado en borrador');
+            $this->index('La votación se ha modificado correctamente');
           }
     }
   }
@@ -1272,7 +1278,7 @@ class Secretario extends CI_Controller{
         'secretarios'=> $secretarios
       );
       $this->load->view('secretario/delegar_view',$datos);
-      $this->load->view('elementos/footer');
+      //$this->load->view('elementos/footer');
     }
   }
 
@@ -1345,7 +1351,7 @@ class Secretario extends CI_Controller{
     $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
 
     $hoy = date('Y-m-d H:i:s');
-    if($fechaInicio < $hoy){
+    if($fechaInicio <= $hoy){
         $this->form_validation->set_message('validarFechaInicio','Introduzca bien la fecha %s');
         return FALSE;
     }
@@ -1356,9 +1362,10 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFechaFinal(){
+    $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
     $fechaFinal = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
     $hoy = date('Y-m-d H:i:s');
-    if($fechaFinal < $hoy){
+    if($fechaFinal <= $fechaInicio){
         $this->form_validation->set_message('validarFechaFinal','Introduzca bien la fecha %s');
         return FALSE;
     }
