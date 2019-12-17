@@ -15,6 +15,7 @@ class Secretario extends CI_Controller{
     $this->load->model('ponderaciones_model');
     $this->load->model('SecretariosDelegados_model');
     $this->load->library('pagination');
+    $this->load->library('mailing');
 
   }
 
@@ -503,7 +504,23 @@ class Secretario extends CI_Controller{
 
       }
       // Enviar correo a cada elegido en la mesa electoral
-      $this->enviarCorreo($miembroNuevo,$idVotacion,'Eres miembro de la mesa electoral','Eres miembro de la mesa electoral de la votacion '.$idVotacion.' ');  // FUNCIONA
+      $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+      $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+      Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+      /*$data = array('mensaje_success' => 'Se ha enviado la notificacion de miembro electoral al usuario ' . $miembroNuevo[0]->NombreUsuario . '.');
+
+      if($result == 'success')
+      {
+        $data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
+      }
+      else
+      {$data['mensaje_failure'] = 'La notificación por correo ha fallado.';}*/
+
     }
 
     private function extraerIdsFicheros($nombreCensos)
@@ -1146,7 +1163,14 @@ class Secretario extends CI_Controller{
     {
       // Obtener correo de ese miembro
       $miembroNuevo = $this->usuario_model->getUsuario($id);
-      $this->enviarCorreo($miembroNuevo,$idVotacion,'Su mesa electoral ha sido modificada','Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso');
+      $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+      $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+      Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
     }
 
 
@@ -1396,7 +1420,7 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  public function enviarCorreo($elegido,$idVotacion,$titulo,$contenido){
+  /*public function enviarCorreo($elegido,$idVotacion,$titulo,$contenido){
     $config = array(
       'protocol' => 'smtp',
       'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -1418,7 +1442,7 @@ class Secretario extends CI_Controller{
     $this->email->set_newline("\r\n");
     if($this->email->send()){
     }else{echo $this->email->print_debugger();}
-  }
+  }*/
 
 
 }
