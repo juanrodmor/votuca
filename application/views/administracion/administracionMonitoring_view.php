@@ -55,11 +55,11 @@
               <label class="form-check-label" for="checkLogout">Logout</label>
             </div>
 			<div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="checkLogin" name="cUrna" value="true" checked>
+              <input class="form-check-input" type="checkbox" id="checkUrna" name="cUrna" value="true" checked>
               <label class="form-check-label" for="checkUrna">Urnas</label>
             </div>
 			<div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="checkLogin" name="cConfirm" value="true" checked>
+              <input class="form-check-input" type="checkbox" id="checkConfirm" name="cConfirm" value="true" checked>
               <label class="form-check-label" for="checkConfirm">Responsabilidades</label>
             </div>
             <!--- DE MOMENTO VIOLARIA LA PRIVACIDAD -->
