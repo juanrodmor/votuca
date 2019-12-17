@@ -55,7 +55,7 @@ class Secretario extends CI_Controller{
   /************************************/
   /*********** CREAR VOTACION *********/
   /************************************/
-
+  //public function encriptado($palabra){echo password_hash($palabra,PASSWORD_DEFAULT);}
   // FUNCION QUE LLAMA A LAS VISTAS
   public function crearVotacion($tipo = '')
   {
@@ -499,10 +499,12 @@ class Secretario extends CI_Controller{
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
         // Crear tiempo de expiracion para ese usuario
-        $this->usuario_model->setUserTimeLimit($nombre);
+        if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
+        {$this->usuario_model->setUserTimeLimit($nombre);}
 
         // Obtener correo de ese miembro
         $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+        //echo var_dump($existe);
 
       }
       // Enviar correo a cada elegido en la mesa electoral
