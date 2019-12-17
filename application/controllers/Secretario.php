@@ -1299,7 +1299,7 @@ class Secretario extends CI_Controller{
        'mensaje' => $mensaje = ''
      );
      //$this->load->view('datetime');
-     $this->load->view('secretario/secretario_view',$datos);
+     $this->load->view('secretario/borradores_view',$datos);
   }
 
   public function enviar()
