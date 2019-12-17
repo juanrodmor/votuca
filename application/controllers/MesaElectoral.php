@@ -7,7 +7,7 @@ class MesaElectoral extends CI_Controller{
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('voto_model');
+    $this->load->model('Voto_model');
     $this->load->model('votaciones_model');
 	$this->load->model('Usuario_model');
 	$this->load->model('Mesa_model');
@@ -76,11 +76,13 @@ class MesaElectoral extends CI_Controller{
 		if($this->input->post('boton_recuento')){
 			$idVotacion = $this->input->post('recuento');
 			if ($this->abrirUrna($idVotacion)) {	//Si hay al menos 3 miembros dispuesto a abrir la urna...
+				/*
 				if (!($this->Mesa_model->checkVotos($idVotacion))) {	//Si no se ha hecho aún el recuento...
 					//$idVotos = $this->Mesa_model->getOptions($idVotacion);
-					$this->Voto_model->_usuarioVotacionToRecuento($idVotacion);
 					//$this->volcadoVotos($idVotacion, $idVotos);
 				}
+				*/
+				$this->Voto_model->_usuarioVotacionToRecuento($idVotacion);			// Aqui te he puesto la funcion, borra este coment xD
 				$datosVotacion = $this->Mesa_model->getFullVotoData($idVotacion);
 				$this->index($datosVotacion);
 				//$this->votosPerGroup($idVotacion);

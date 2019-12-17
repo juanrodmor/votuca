@@ -16,7 +16,7 @@
       <h2 style="color:black;"><?php echo 'Resultados '.$titulo; ?> </h2>
 
       <div id="graphic-info">
-      <h2 style="color:black;">Porcentaje de voto</h2>
+      <h2 style="color:black;">Porcentaje de participación</h2>
       </div>
         <div id="vote-info">
             <div class="c100 p<?php (100-($datos[0]->Num_Votos*100)/$censo); ?> big center" style="float:left;color:black;">
@@ -45,7 +45,9 @@
               </div>  
               <div class="card">
                 <div class="card-header" style="color:black;">
-                  Información sobre el voto
+                  <center>
+                    Resultados
+                  </center>
                 </div>
                 <div class="card-body" style="color:black;">
                   <?php 
