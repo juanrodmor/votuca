@@ -507,7 +507,7 @@ class Secretario extends CI_Controller{
       $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
       $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
       Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
-
+      Puede loguearse como usuario:'.$nombre.' y su misma contraseña.
       <p>Coordialmente, la administración de VotUCA.</p>
       ';
       //echo var_dump($miembroNuevo);
