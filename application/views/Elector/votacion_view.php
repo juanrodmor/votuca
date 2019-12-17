@@ -38,7 +38,7 @@
         echo '</div>';
       }
     ?>
-    <div style="overflow: inherit;z-index:200;margin-top:8%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div style="overflow: inherit;z-index:200;margin-top:10%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table" id="votaciones_usuario" >
        <thead>
          <tr>
@@ -126,7 +126,7 @@
         <?php }?>
       </tbody>
     </table>
-    
+
   </div>
 </div>
 
@@ -137,7 +137,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
-    
+
     <!-- Scripts para la tabla de votaciones -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
