@@ -33,11 +33,10 @@ class MesaElectoral extends CI_Controller{
         break;
         case 'MiembroElectoral':
         $inicio['inicio'] = '/MesaElectoral';
-        $this->load->view('elementos/headerComun',$inicio);
         $votaciones = $this->obtenerVotaciones();
 		$data = array_merge(array('votaciones'=> $votaciones), $votos);
           $this->load->view('MesaElectoral/MesaElectoral_view',$data);
-          $this->load->view('elementos/footer');
+          //$this->load->view('elementos/footer');
         break;
 
        case 'Secretario delegado':

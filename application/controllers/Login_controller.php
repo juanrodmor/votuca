@@ -220,7 +220,8 @@ class Login_controller extends CI_Controller {
 					if($this->Usuario_model->is_first_auth())
 					{
 						$qr = $this->authenticator->generateQR();
-						$this->load->view('login_verification', array('QR' => $qr));						
+						$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+						$this->load->view('login_verification', array('QR' => $qr, 'secret' => $secret));						
 					}
 					else
 					{
@@ -234,7 +235,8 @@ class Login_controller extends CI_Controller {
 					if($this->Usuario_model->getAuth($usuario) == '')
 					{
 						$newQR = $this->authenticator->generateQR();
-						$this->load->view('login_verification', array('QR' => $newQR));		
+						$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+						$this->load->view('login_verification', array('QR' => $newQR, 'secret' => $secret));		
 					}
 					else
 					{
@@ -247,7 +249,8 @@ class Login_controller extends CI_Controller {
 			{
 				//$this->Usuario_model->setIP($usuario, $this->input->ip_address());		
 					$qr = $this->authenticator->generateQR();
-					$this->load->view('login_verification', array('QR' => $qr));
+					$secret = $this->Usuario_model->getAuth($this->session->userdata('usuario'));
+					$this->load->view('login_verification', array('QR' => $qr, 'secret' => $secret));
 			}		
 		}
 	}
@@ -276,7 +279,10 @@ class Login_controller extends CI_Controller {
 				}
 				else
 				{
-					$data = array('mensaje' => "Se ha producido un error");
+					if($this->Usuario_model->is_first_auth())
+						$data = array('mensaje' => "Clave incorrecta", 'QR' => $this->authenticator->generateQR(), 'secret' => $this->Usuario_model->getAuth($this->session->userdata('usuario')));
+					else
+						$data = array('mensaje' => "Clave incorrecta");
 					$this->load->view('login_verification', $data);
 				}
 			}

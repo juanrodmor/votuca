@@ -1,38 +1,170 @@
-.card
+#title-container
 {
+    background-color: #62485e;
+    padding: 2%;
+    padding-bottom: 0.8%;
+    position: relative;
+    margin-top: -3%;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.divider
+{
+    width: 100%;
+    border-color: white !important;
+    margin-bottom: 0.9%;
+    margin-top: 0;
+}
+
+.marked
+{
+    background-color: #3d2d3b;
+}
+
+.unmarked:hover
+{
+    background-color: #4f3a4c;
+}
+
+.container
+{
+    margin-left: 8%;
+   margin-right: 8%;
+   padding-right: 5%;
+}
+
+div > a
+{
+    margin-top: -2%;
+    margin-left: -1%;
+    padding: 2%;
+    color: white;
+}
+
+div > a:hover
+{
+    color:white;
+    text-decoration: none;
+}
+
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: 1.1;
+    color: white;
+}
+
+body {
+    position: relative !important;
+    background-color: #ffffff !important;
+    font-size: 16px !important;
+    font-family: 'Lato', Arial, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+    color: #808080 !important;
+    -webkit-font-smoothing: antialiased !important;
+    background-size: 50% !important;
+}
+
+#cerrar-ses
+{
+    margin-top: 1%;
+}
+
+.btn-custom
+{
+    display: block;
+    margin-left: 50%;
+    color: #fff;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+#monitoring_search
+{
+    margin-top: 4%;
     margin-right: 5%;
 }
 
-#vote-card {
-    margin-left: 5%;
-    display: -webkit-inline-box;
-}
-
-#vote-info
+#options_dropdown
 {
-    padding: 5%;
-    padding-bottom: 8%;
-    margin-bottom: 3%;
-    border: 1px solid #dee2e6;
+    padding: 2%;
 }
 
-#result-table
+#dropdownMenuButton
 {
-    margin-bottom: 5%;
+    background-color: #306056;
 }
 
-#endButton
+#header > nav
+{
+    padding-top: 10px;
+    padding-bottom:30px;
+}
+
+#header > nav > a
+{
+    padding-left:7%;
+}
+
+#header > nav > span
+{
+    color:white;
+    position:absolute;
+    right:8%;
+    cursor:pointer;
+}
+
+#card_monitoringView
 {
     margin-top: 2%;
-    float: right;
+    margin-right: 20%;
 }
 
-.card-body
-{
-    text-align: center;
-}
-
-.card-header
+.bold
 {
     font-weight: bold;
+}
+
+#search_form
+{
+    margin-top: 2%;
+}
+
+#input-search
+{
+    width: 300px;
+    border-radius: 20px;
+}
+
+#button-search
+{
+    display: block;
+    color: #fff;
+    margin-left: 5%;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+#error_alert
+{
+    margin-top: 3%;
+}
+
+#data-div
+{
+    margin-right: 10%;
 }
