@@ -498,6 +498,8 @@ class Secretario extends CI_Controller{
         $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
+        // Crear tiempo de expiracion para ese usuario
+        $this->usuario_model->setUserTimeLimit($nombre);
 
         // Obtener correo de ese miembro
         $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
