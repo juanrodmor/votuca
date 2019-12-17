@@ -64,6 +64,8 @@
                     </div>
                     <input id="button-form" class="btn btn-primary" type="submit" name="enviar" value="Enviar">
                 </form>
+				<button id="button-form-back" class="btn btn-primary" onclick="location='<?= base_url().'login_controller/logout'?>'">Atrás</button>
+	
 
             <div id="lock-image">
                 <img src="<?php echo base_url('assets/img/lock.png')?>">               
