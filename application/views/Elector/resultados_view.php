@@ -13,14 +13,14 @@
 <br><br><br><br>
   <div class="container">
     <div class = "container">
-      <h2><?php echo 'Resultados '.$titulo; ?> </h2>
+      <h2 style="color:black;"><?php echo 'Resultados '.$titulo; ?> </h2>
 
       <div id="graphic-info">
-      <h2>Porcentaje de voto</h2>
+      <h2 style="color:black;">Porcentaje de voto</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p<?php ($total*100)/$censo; ?> big center" style="float:left;">
-                <span><?php echo ($total*100)/$censo; ?></span>
+            <div class="c100 p<?php ($total*100)/$censo; ?> big center" style="float:left;color:black;">
+                <span><?php echo ($total*100)/$censo.'%'; ?></span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
@@ -28,29 +28,29 @@
             </div>
           <div id="vote-card" class="row">
               <div class="card" >
-                <div class="card-header">
+                <div class="card-header" style="color:black;">
                   Número de votos
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text"><center><?php echo $total; ?></center></h3>
+                  <h3 class="card-text" style="color:black;"><center><?php echo $total; ?></center></h3>
                 </div>
               </div>   
               <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="color:black;">
                   Tamaño del censo
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text"><center><?php echo $censo; ?></center></h3>
+                  <h3 class="card-text" style="color:black;"><center><?php echo $censo; ?></center></h3>
                 </div>
               </div>  
               <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="color:black;">
                   Información sobre el voto
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="color:black;">
                   <?php 
                   for($i=0; $i<sizeof($datos); ++$i) {
-                    echo '<h5 class="card-text">'.$nomVotos[$i].': '.$datos[$i]->Num_Votos.'</h5>';
+                    echo '<h5 class="card-text" style="color:black;">'.$nomVotos[$i].': '.$datos[$i]->Num_Votos.'</h5>';
                   } ?>
                 </div>
               </div>    

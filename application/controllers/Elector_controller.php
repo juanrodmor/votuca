@@ -17,7 +17,6 @@ class Elector_controller extends CI_Controller {
 				redirect('/Login_controller');
 		    }
 		    else {
-		    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
 					$titulo['titulo'] = 'MIS VOTACIONES';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$titulo);
