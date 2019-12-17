@@ -498,9 +498,12 @@ class Secretario extends CI_Controller{
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
 
+        // Obtener correo de ese miembro
+        $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+
       }
       // Enviar correo a cada elegido en la mesa electoral
-      //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+      $this->enviarCorreo($miembroNuevo,$idVotacion,'Eres miembro de la mesa electoral','Eres miembro de la mesa electoral de la votacion '.$idVotacion.' ');  // FUNCIONA
     }
 
     private function extraerIdsFicheros($nombreCensos)
@@ -778,7 +781,15 @@ class Secretario extends CI_Controller{
 
       }
 
-      //'pulsadoParalelo' => true,
+      // SACAR OPCIONES DE UNA VOTACION
+      /*if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
+         || $votacion->Id_TipoVotacion == 4 || $votacion->Id_TipoVotacion == 6)
+      {
+        $idsVotos = $this->voto_model->getVotosFromVotacion($votacion->Id);
+        foreach($idsVotos as $id)
+        $nombresVotos = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
+      }
+      echo var_dump($nombresVotos);*/
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -793,7 +804,6 @@ class Secretario extends CI_Controller{
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
       $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      //$this->llamarVistasModificar($tipoVotacion,$datos);*/
 
 	}
 
@@ -827,7 +837,7 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES... ¿Los suficientes?
         {
-          if(sizeof($_POST['asistentes']) >= 3)
+          /*if(sizeof($_POST['asistentes']) >= 3)
           {
             if($this->validaciones(false,false) == FALSE){$this->mostrarErrores($_POST);}
           }
@@ -837,7 +847,7 @@ class Secretario extends CI_Controller{
             else
             {
             }
-          }
+          }*/
 
         }
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
@@ -1130,7 +1140,15 @@ class Secretario extends CI_Controller{
     $usuariosMesa = array();
     foreach($miMesa as $dato)
     {$usuariosMesa[] = $dato->Id_Usuario;}
+
     // Notificar a los usuariosMesa de la mesa que se va a la puta pq se añade un censo
+    foreach($usuariosMesa as $id)
+    {
+      // Obtener correo de ese miembro
+      $miembroNuevo = $this->usuario_model->getUsuario($id);
+      $this->enviarCorreo($miembroNuevo,$idVotacion,'Su mesa electoral ha sido modificada','Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso');
+    }
+
 
     // Borrar la mesa electoral
     $this->mesa_model->deleteMesa($idVotacion);
@@ -1378,8 +1396,7 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  public function enviarCorreo($elegidos,$idVotacion){
-    //echo var_dump($idVotacion);
+  public function enviarCorreo($elegido,$idVotacion,$titulo,$contenido){
     $config = array(
       'protocol' => 'smtp',
       'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -1394,13 +1411,9 @@ class Secretario extends CI_Controller{
 
     $this->email->initialize($config);
     $this->email->from('votvotuca@gmail.com', 'votuca');
-    $this->email->to('ibsantamaria96@gmail.com');
-    $this->email->subject('ERES MIEMBRO DE LA MESA ELECTORAL');
-    $this->email->message('
-        <h1> ¡Enhorabuena! </h1>
-        <p> Eres miembro de la mesa electoral para la votacion '.$idVotacion[0]['Id'].'</p>'
-
-    );
+    $this->email->to($elegido[0]->Email);
+    $this->email->subject($titulo);
+    $this->email->message($contenido);
 
     $this->email->set_newline("\r\n");
     if($this->email->send()){

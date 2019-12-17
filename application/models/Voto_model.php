@@ -9,8 +9,8 @@
 		// Lista los datos de las votaciones
 		public function _listar ($id_user)
 		{
-			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion, 
-							votacion.FechaInicio, votacion.FechaFinal, 
+			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion,
+							votacion.FechaInicio, votacion.FechaFinal,
 							votacion.VotoModificable, votacion.NumOpciones,
 							votacion.Finalizada, votacion.Invalida
 						from votacion, censo
@@ -92,7 +92,7 @@
 							$query = $this -> db -> query($sql);
 
 
-						// Decrementar el numero de abstenidos 
+						// Decrementar el numero de abstenidos
 							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
 							//$sql = $sql->result();
 							$numVotos = $sql->row()->Num_Votos;
@@ -163,7 +163,7 @@
 						}
 
 
-						// Decrementar el numero de abstenidos 
+						// Decrementar el numero de abstenidos
 							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
 							//$sql = $sql->result();
 							$numVotos = $sql->row()->Num_Votos;
@@ -174,7 +174,7 @@
 
 						return TRUE;
 					}
-				} else 
+				} else
 					return FALSE;
 			}
 
@@ -190,7 +190,7 @@
 			$sql = "select Id_Voto from votacion_voto where Id_Votacion = '".$id_votacion."';";
 			$query = $this -> db -> query($sql);
 			$query = $query->result();
-			// echo var_dump($query[$i]->Id_Voto);	
+			// echo var_dump($query[$i]->Id_Voto);
 
 			$votos = array();
 			foreach($query as $voto) {
@@ -209,9 +209,9 @@
 			$id_user = $this->_userId($_SESSION['usuario']);
 			$sql = "select Id_usuario from usuario_votacion where Id_Usuario = '".$id_user."' and Id_Votacion = '".$id_votacion."' and Id_Voto = '1';";
 			$query = $this -> db -> query($sql);
-			if( $query->num_rows() == 0 ) 
+			if( $query->num_rows() == 0 )
 				return true;
-			else 
+			else
 				return false;
 		}
 
@@ -240,7 +240,7 @@
 			$sql = $this->db->delete('usuario_votacion', array('Id_Votacion' => $id_votacion));
 		}
 
-		public function _actualizarFechasVotaciones() {			
+		public function _actualizarFechasVotaciones() {
 			$sql = $this->db->get_where('votacion', array());
 			$sql = $sql->result();
 			foreach($sql as $votacion) {
@@ -267,7 +267,7 @@
 			} else return FALSE;
 		}
 
-		public function censoAsignado($id_votacion) 
+		public function censoAsignado($id_votacion)
 		{
 			$query = $this->db->query('select count(Id_Usuario) as total from censo where Id_votacion = "'.$id_votacion.'"');
 			return $query->row()->total;
@@ -360,12 +360,19 @@
 			return $consulta->row()->Id;
 		}
 
+		public function getNombreFromIdVoto($id)
+		{
+			$consulta = $this->db->get_where('voto', array('Id' => $id));
+			return $consulta->row()->Nombre;
+		}
+
+
 		public function recuentoPorDefecto($idVotacion,$opciones,$totalUsuarios)
 		{
 			$valor = 0;
 			$usuariosTotales = $totalUsuarios[0]->total;
 			foreach($opciones as $opcion)
-			{			
+			{
 				$valor = 0;
 				$datos = array(
 					'Id_Votacion' => $idVotacion,
