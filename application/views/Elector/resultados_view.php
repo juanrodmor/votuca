@@ -14,12 +14,13 @@
   <div class="container">
     <div class = "container">
       <h2 style="color:black;"><?php echo 'Resultados '.$titulo; ?> </h2>
+      <br>
 
       <div id="graphic-info">
-      <h2 style="color:black;">Porcentaje de participación</h2>
+      <h2 id="title-porcentaje" style="color:black;">Porcentaje de participación</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p<?php (100-($datos[0]->Num_Votos*100)/$censo); ?> big center" style="float:left;color:black;">
+            <div class="c100 p<?php echo (100-($datos[0]->Num_Votos*100)/$censo) ?> big center" style="float:left;color:black;margin-top:5%;">
                 <span><?php echo (100-($datos[0]->Num_Votos*100)/$censo).'%'; ?></span>
                 <div class="slice">
                   <div class="bar"></div>
@@ -27,7 +28,7 @@
                 </div>
             </div>
           <div id="vote-card" class="row">
-              <div class="card" >
+              <div class="card" style="margin-left:5%;margin-top:10%;">
                 <div class="card-header" style="color:black;">
                   Número de votos
                 </div>
@@ -35,7 +36,7 @@
                   <h3 class="card-text" style="color:black;"><center><?php echo $total; ?></center></h3>
                 </div>
               </div>   
-              <div class="card">
+              <div class="card" style="margin-left:5%;margin-top:10%;">
                 <div class="card-header" style="color:black;">
                   Tamaño del censo
                 </div>
@@ -43,7 +44,7 @@
                   <h3 class="card-text" style="color:black;"><center><?php echo $censo; ?></center></h3>
                 </div>
               </div>  
-              <div class="card">
+              <div class="card" style="margin-left:5%;margin-top:10%;">
                 <div class="card-header" style="color:black;">
                   <center>
                     Resultados
