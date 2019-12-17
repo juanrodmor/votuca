@@ -30,21 +30,7 @@
       <?php endif; ?>
 
   </div>
-  
-  <div style="background-color:#7E392B;color:white;z-indez:300;position:absolute;top:13%;width:80%;height: 15%;">
-      <h2>&nbsp;&nbsp;&nbsp;Secretario</h2>
-      <hr style="width:95%;background-color:white;">
-      <div style="width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;margin-left: 2%;width: 12%;">
-        <h5>&nbsp;&nbsp;&nbsp;Votaciones</h5>
-      </div>
-      <div style="background-color:#8C240E;width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;left: 15%;width: 15%;">
-        <h5>&nbsp;&nbsp;&nbsp;Crear Votación</h5>
-      </div>
-      <div style="width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;left: 30%;width: 15%;">
-        <h5>&nbsp;&nbsp;&nbsp;Borradores</h5>
-      </div>
   <!-- FORMULARIO DE VOTACION -->
-  <div style="margin-top: 5%;color: black;">
     <?=form_open(base_url().'secretario/insertarVotacion/representantes');?>
 
             <!--<div class="form-group">
@@ -301,7 +287,6 @@
           <?php } ?>
         </tbody>
       </table>
-    </div>
     </div>
     </div>
   <?php } ?>
