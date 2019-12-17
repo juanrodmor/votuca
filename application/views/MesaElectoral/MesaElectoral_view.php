@@ -33,7 +33,7 @@
             </div>
             <hr class="divider">
             <div class="col-xs-12 col-sm-8" id="linkBox">
-              <a href="#" class="marked">Votaciones</a>
+              <a href="<?php echo base_url() . 'MesaElectoral';?>" class="marked">Votaciones</a>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
     if(isset($cantidad)){
     echo'
       <div id="graphic-info">
-      <h2>Porcentaje de voto</h2>
+      <h2 id="title-porcentaje">Porcentaje de voto</h2>
       </div>
         <div id="vote-info">
             <div class="c100 p'.$totalVotos*100/$censo.' big center" style="float:left;">
