@@ -498,9 +498,12 @@ class Secretario extends CI_Controller{
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
 
+        // Obtener correo de ese miembro
+        $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+
       }
       // Enviar correo a cada elegido en la mesa electoral
-      //$this->enviarCorreo($elegidos[$i],$ultimoId);  // FUNCIONA
+      $this->enviarCorreo($miembroNuevo,$idVotacion);  // FUNCIONA
     }
 
     private function extraerIdsFicheros($nombreCensos)
@@ -778,7 +781,15 @@ class Secretario extends CI_Controller{
 
       }
 
-      //'pulsadoParalelo' => true,
+      // SACAR OPCIONES DE UNA VOTACION
+      /*if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
+         || $votacion->Id_TipoVotacion == 4 || $votacion->Id_TipoVotacion == 6)
+      {
+        $idsVotos = $this->voto_model->getVotosFromVotacion($votacion->Id);
+        foreach($idsVotos as $id)
+        $nombresVotos = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
+      }
+      echo var_dump($nombresVotos);*/
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -792,8 +803,7 @@ class Secretario extends CI_Controller{
       );
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
-      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      //$this->llamarVistasModificar($tipoVotacion,$datos);*/
+      $this->load->view('secretario/modificarVotacionSimple_view', $datos);      
 
 	}
 
@@ -1378,8 +1388,7 @@ class Secretario extends CI_Controller{
     return $elegidos;
   }
 
-  public function enviarCorreo($elegidos,$idVotacion){
-    //echo var_dump($idVotacion);
+  public function enviarCorreo($elegido,$idVotacion){
     $config = array(
       'protocol' => 'smtp',
       'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -1394,11 +1403,11 @@ class Secretario extends CI_Controller{
 
     $this->email->initialize($config);
     $this->email->from('votvotuca@gmail.com', 'votuca');
-    $this->email->to('ibsantamaria96@gmail.com');
+    $this->email->to($elegido[0]->Email);
     $this->email->subject('ERES MIEMBRO DE LA MESA ELECTORAL');
     $this->email->message('
         <h1> ¡Enhorabuena! </h1>
-        <p> Eres miembro de la mesa electoral para la votacion '.$idVotacion[0]['Id'].'</p>'
+        <p> Eres miembro de la mesa electoral para la votacion '.$idVotacion.'</p>'
 
     );
 
