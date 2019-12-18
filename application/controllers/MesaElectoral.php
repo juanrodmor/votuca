@@ -22,7 +22,7 @@ class MesaElectoral extends CI_Controller{
   public function index($votos = array())
   {
   $verified = $this->session->userdata('verified');
-  if(isset($verified) && $verified == true)
+  if(isset($verified) && $verified == 'true')
   {
 
       switch ($this->session->userdata('rol')) {
