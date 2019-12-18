@@ -62,9 +62,11 @@
                         <label id="labelUser" for="username" class="col-xs-5 col-form-label text-right">Clave</label>
                         <input name="key" type="text" class="form-control col-sm-5 col-xs-7" id="u" placeholder="Clave">
                     </div>
-                    <input id="button-form" class="btn btn-primary" type="submit" name="enviar" value="Enviar">
+                    <input id="button-form" class="btn btn-primary" type="submit" name="enviar" value="Enviar" >
                 </form>
-				<button id="button-form-back" class="btn btn-primary" onclick="location='<?= base_url().'login_controller/logout'?>'">Atrás</button>
+                <div>
+				    <button id="button-form-back" class="btn btn-primary" onclick="location='<?= base_url().'login_controller/logout'?>'">Atrás</button>
+                </div>
 	
 
             <div id="lock-image">

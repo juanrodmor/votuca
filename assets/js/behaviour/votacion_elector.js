@@ -12,7 +12,7 @@ $(document).ready(function(){
     // });
     table = $('#votaciones_usuario').DataTable({
         "dom": 'rt<"bottom"fp><"clear">',
-        "scrollY":        '40vh',
+        "scrollY":        '50vh',
         "scrollX": false,
         "scrollCollapse": true,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],

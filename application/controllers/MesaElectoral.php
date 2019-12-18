@@ -22,7 +22,7 @@ class MesaElectoral extends CI_Controller{
   public function index($votos = array())
   {
   $verified = $this->session->userdata('verified');
-  if(isset($verified) && $verified == true)
+  if(isset($verified) && $verified == 'true')
   {
 
       switch ($this->session->userdata('rol')) {
@@ -87,7 +87,7 @@ class MesaElectoral extends CI_Controller{
 				$this->index($datosVotacion);
 				//$this->votosPerGroup($idVotacion);
 			} else {	//Si no hay suficientes miembros dispuestos a abrir la urna...
-				$mensajes = array('mensaje' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
+				$mensajes = array('mensajeAperturaWait' => 'Aún no hay acuerdo entre los miembros de mesa para hacer recuento de la votación ' . $idVotacion . '.');
 				$this->index($mensajes);
 			}
 		}
@@ -110,17 +110,17 @@ class MesaElectoral extends CI_Controller{
 				if($this->input->post('invalida') == true) {	//No se cumple el quorum
 					$this->Mesa_model->setInvalida($idVotacion);
 					$this->monitoring->register_action_closeBoxInvalid($this->votaciones_model->getVotacion($idVotacion));
-					$mensajes = array('mensaje' => 'Votación invalidada. No se cumple el Quorum.');
+					$mensajes = array('mensajeVotacionInvalida' => 'Votación invalidada. No se cumple el Quorum.');
 					$this->index($mensajes);
 				} else {	//Se cumple el quorum
 					$this->Mesa_model->setFinalizada($idVotacion);
 					$cierran = $this->Mesa_model->getNamesCierre($idVotacion);
 					$this->monitoring->register_action_closeBox($this->votaciones_model->getVotacion($idVotacion), $cierran);
-					$mensajes = array('mensaje' => '¡Votación finalizada con éxito!');
+					$mensajes = array('mensajeVotacionOK' => '¡Votación finalizada con éxito!');
 					$this->index($mensajes);
 				}
 			} else {	//No hay votos suficientes para cerrarla.
-				$mensajes = array('mensaje' => 'Es necesaria la contribución de más miembros para cerrar la votación.');
+				$mensajes = array('mensajeCierreWait' => 'Es necesaria la contribución de más miembros para cerrar la votación.');
 				$this->index($mensajes);
 			}
 		} else {	//Acceso ilegal

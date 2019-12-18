@@ -38,7 +38,7 @@
         echo '</div>';
       }
     ?>
-    <div style="overflow: inherit;z-index:200;margin-top:10%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div style="overflow: inherit;z-index:200;margin-top:11%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table" id="votaciones_usuario" >
        <thead>
          <tr>
@@ -46,7 +46,7 @@
             <th style="border:0px;background-color:#7C9024;color:white;align:left;"></th>
          </tr>
          <tr style="margin-top:-1%;">
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:1%;">Votaciones</h4></td>
+            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:0%;">Votaciones</h4></td>
             <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"></td>
          </tr>
        </thead>

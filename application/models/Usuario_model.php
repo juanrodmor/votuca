@@ -317,16 +317,24 @@ class Usuario_model extends CI_Model {
 		//echo var_dump(substr($usuario[0]->NombreUsuario,1));
     $nuevo = array(
 			'Id_Rol' => $idRol,
+			'Id_Grupo' => $usuario[0]->Id_Grupo,
 			'NombreUsuario' => $letraRol.substr($usuario[0]->NombreUsuario,1),
-			'Password' => $usuario[0]->Password
+			'Password' => $usuario[0]->Password,
+			'Email' => $usuario[0]->Email
 		);
 	 // ASEGURARSE QUE ESTE USUARIO NO TENGA YA ESTE ROL (cuenta m+DNI)
 		$usuarioElectoral = $letraRol.substr($usuario[0]->NombreUsuario,1);
 		$existe = $this->userExists($usuarioElectoral);
-		if(!$existe){$this->db->insert('usuario',$nuevo);}
-
+		if(!$existe){$this->db->insert('usuario',$nuevo); return true;}
+		else{return false;}
 	}
 
+	public function comprobarExpiracion($idUsuario)
+	{
+		$consulta = $this->db->get_where('expiracion', array('Id_Usuario' => $idUsuario));
+		return ($consulta->num_rows() == 1);
+
+	}
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)
