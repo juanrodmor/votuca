@@ -6,7 +6,7 @@ $(document).ready(function(){
 });
 
 $("#logo-btn").click(function(){
-    window.location.replace(base_url+"Elector_controller/");
+    window.location.replace(base_url+"MesaElectoral/");
 });
 
 $("#cerrar-ses-voto").unbind().click(function(){
