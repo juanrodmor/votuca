@@ -492,7 +492,7 @@ class Secretario extends CI_Controller{
 
         // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
         $insertado = $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
-
+a
         // Crear el nuevo nombre de usuario
         $idUsuario = (int)$elegidos[$i];
         $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
