@@ -166,8 +166,10 @@
 
                   );
                 echo form_hidden($atributos);
-                  if($objeto->FechaFinal == date('Y-m-d H:i:s') || $objeto->FechaFinal < date('Y-m-d H:i:s'))  
+                  if($objeto->FechaFinal <= date('Y-m-d H:i:s'))  
                     echo '<td><input class="btn btn-primary" type="submit" value="Recuento" name="boton_recuento"></td>';
+                  if($objeto->FechaInicio <= date('Y-m-d H:i:s') && $objeto->FechaFinal > date('Y-m-d H:i:s'))
+                    echo '<td> Aún en votación </td>';
                 echo form_close(); 
               echo'
           </tr>';
