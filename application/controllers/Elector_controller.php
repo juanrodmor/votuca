@@ -17,7 +17,7 @@ class Elector_controller extends CI_Controller {
 				redirect('/Login_controller');
 		    }
 		    else {
-					$titulo['titulo'] = 'MIS VOTACIONES';
+					$titulo['titulo'] = 'LISTA DE VOTACIONES';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$titulo);
 						//$this->load->view('elementos/headerComun',$inicio);
@@ -55,7 +55,7 @@ class Elector_controller extends CI_Controller {
 			$modif = $_POST['modif'];
 			$opc = $_POST['opc'];
 
-				$title['titulo'] = 'MIS VOTACIONES';
+				$title['titulo'] = 'VOTACION';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$title);
 				//$this->load->view('elementos/headerComun',$inicio);
@@ -123,7 +123,7 @@ class Elector_controller extends CI_Controller {
 					'opc' => $opc,
 		    		'votos' => $votos
 		    		);
-				    	$title['titulo'] = 'MIS VOTACIONES';
+				    	$title['titulo'] = 'VOTACION';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
@@ -161,7 +161,7 @@ class Elector_controller extends CI_Controller {
 					'opc' => $opc,
 		    		'votos' => $votos
 		    		);
-				    	$title['titulo'] = 'MIS VOTACIONES';
+				    	$title['titulo'] = 'LISTA DE VOTACIONES';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
@@ -191,8 +191,8 @@ class Elector_controller extends CI_Controller {
 		    		$title['titulo'] = 'RESULTADOS';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$title);
-					$this->load->view('elementos/headerComun',$inicio);
-					//$this->load->view('elementos/headerVotacion',$inicio);		// Avisar a alvaro para que ponga bien los botones y contenido ajustado
+						//$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);		// Avisar a alvaro para que ponga bien los botones y contenido ajustado
 				$total = 0;
 				foreach($datos as $voto) {
 					if($voto->Id_Voto != 1)
