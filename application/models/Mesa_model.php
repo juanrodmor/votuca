@@ -163,6 +163,7 @@ class Mesa_model extends CI_Model {
 		$votos = $this->getOptions($idVotacion);
 		$contVotos = array();
 		$totalVotos = 0;
+		$abstenciones = $this->getNVotos($idVotacion, 1);
 		foreach($votos['Id'] as $idVoto) {
 			$nVotos = $this->getNVotos($idVotacion, $idVoto);
 			array_push($contVotos, $nVotos);
@@ -171,6 +172,7 @@ class Mesa_model extends CI_Model {
 		$result = array('opciones' => $votos['Nombre'],
 						'cantidad' => $contVotos,
 						'totalVotos' => $totalVotos,
+						'abstenciones' => $abstenciones,
 						'quorum' => $this->getQuorum($idVotacion),
 						'censo' => $this->getCenso($idVotacion),
 						'votacion' => $idVotacion);
