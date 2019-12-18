@@ -22,7 +22,7 @@
 
   <body style="overflow:hidden;">
   <div class="container">
-  <div style="overflow: inherit;z-index:200;margin-top:8%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+  <div style="overflow: inherit;z-index:200;margin-top:11%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="table" id="voto_usuario" >
        <thead>
          <tr>
@@ -35,9 +35,8 @@
       <tbody>
         <tr>
           <th>
-            <?php echo "<h2 style='padding-left:2%;'>".$titulo."</h2>";?>
+            <?php echo "<h2 style='padding-left:5%;'>".$titulo."</h2>";?>
           </th>
-          <hr style="background-color: #7C9024;position: relative;top: 53%;width: 70%;float: left;height: 1%;border-style: hidden;">
         </tr>
         <!-- <hr style="width: 50%;color: red;z-index: 200;float: left;background-color: #7C9024;position: relative;top: 56%;border-top-width: 3px;"> -->
         <tr>

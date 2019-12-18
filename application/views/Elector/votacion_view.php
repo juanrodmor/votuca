@@ -38,7 +38,7 @@
         echo '</div>';
       }
     ?>
-    <div style="overflow: inherit;z-index:200;margin-top:10%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div style="overflow: inherit;z-index:200;margin-top:11%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table" id="votaciones_usuario" >
        <thead>
          <tr>

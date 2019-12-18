@@ -13,7 +13,7 @@
 <br><br><br><br>
   <div class="container">
     
-    <div style="overflow: inherit;z-index:200;margin-top:10%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div style="overflow: inherit;z-index:200;margin-top:11%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table" id="votaciones_usuario" >
        <thead>
          <tr>
@@ -27,7 +27,7 @@
        </thead>
     </table>
     </div>
-    <div class = "container" style="position:absolute;margin-top:10%;">
+    <div class = "container" style="position:absolute;margin-top:11%;">
       <h2 style="color:black;"><?php echo 'Resultados '.$titulo; ?> </h2>
 
       <div id="graphic-info">
