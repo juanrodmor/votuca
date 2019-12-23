@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 23-12-2019 a las 19:41:54
+-- Tiempo de generación: 23-12-2019 a las 19:57:25
 -- Versión del servidor: 10.4.8-MariaDB
 -- Versión de PHP: 7.2.23
 
@@ -266,10 +266,6 @@ CREATE TABLE `usuario_grupo` (
 INSERT INTO `usuario_grupo` (`Id_Usuario`, `Id_Grupo`) VALUES
 (1, 2),
 (1, 3),
-(2, 1),
-(3, 1),
-(5, 1),
-(5, 3),
 (6, 2),
 (7, 2),
 (7, 3),
@@ -278,13 +274,7 @@ INSERT INTO `usuario_grupo` (`Id_Usuario`, `Id_Grupo`) VALUES
 (9, 1),
 (10, 1),
 (10, 2),
-(11, 3),
-(12, 2),
-(13, 2),
-(13, 3),
-(14, 1),
-(15, 2),
-(15, 3);
+(11, 3);
 
 -- --------------------------------------------------------
 
