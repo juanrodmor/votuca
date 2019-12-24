@@ -91,13 +91,15 @@ class Mesa_model extends CI_Model {
 
 	//Comprueba si existe algún recuento para la votación.
 	public function checkVotos($idVotacion) {
-		$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
+		/*$consulta = $this->db->get_where('votacion_voto', array('Id_Votacion' => $idVotacion));
 		$rows = $consulta->result();
 		if(!empty($rows))
 		{
 			$consulta2 = $this->db->get_where('recuento', array('Id_Votacion' => $rows[0]->Id_Voto));
 			return ($consulta2->num_rows()>=1);
-		}
+		}*/
+		$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion));
+		return ($consulta->num_rows()>=1);
 	}
 
 	//Devuelve las opciones de voto de una votacion.
@@ -161,6 +163,7 @@ class Mesa_model extends CI_Model {
 		$votos = $this->getOptions($idVotacion);
 		$contVotos = array();
 		$totalVotos = 0;
+		$abstenciones = $this->getNVotos($idVotacion, 1);
 		foreach($votos['Id'] as $idVoto) {
 			$nVotos = $this->getNVotos($idVotacion, $idVoto);
 			array_push($contVotos, $nVotos);
@@ -169,6 +172,7 @@ class Mesa_model extends CI_Model {
 		$result = array('opciones' => $votos['Nombre'],
 						'cantidad' => $contVotos,
 						'totalVotos' => $totalVotos,
+						'abstenciones' => $abstenciones,
 						'quorum' => $this->getQuorum($idVotacion),
 						'censo' => $this->getCenso($idVotacion),
 						'votacion' => $idVotacion);

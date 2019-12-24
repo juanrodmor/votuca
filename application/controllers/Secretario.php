@@ -20,34 +20,41 @@ class Secretario extends CI_Controller{
   }
 
   public function index($mensaje = ''){
-    // Seguridad Básica URL
-    switch ($this->session->userdata('rol')) {
-       case 'Administrador':
-       redirect('/Administrador_controller');
-        break;
-       case 'Elector':
-        redirect('/Elector_controller');
-        break;
-       case 'Secretario':
+    // SEGURIDAD DEL QR
+    $verified = $this->session->userdata('verified');
+    if(isset($verified) && $verified == 'true')
+    {
+      // Seguridad Básica URL
+      switch ($this->session->userdata('rol')) {
+         case 'Administrador':
+         redirect('/Administrador_controller');
+          break;
+         case 'Elector':
+          redirect('/Elector_controller');
+          break;
+         case 'Secretario':
 
-       $this->load->view('elementos/headerSecretario');
-       // VOTACIONES QUE NO ESTÁN ELIMINADAS
-       $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-       $datos = array(
-         'votaciones'=> $votaciones,
-         'mensaje' => $mensaje
-       );
-       //$this->load->view('datetime');
-       $this->load->view('secretario/secretario_view',$datos);
-       //$this->load->view('elementos/footer');
-        break;
-       case 'Secretario delegado':
-        redirect('/secretario/delegado');
-        break;
-       default:
-        redirect('/Login_controller');
-        break;
+         $this->load->view('elementos/headerSecretario');
+         // VOTACIONES QUE NO ESTÁN ELIMINADAS
+         $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
+         $datos = array(
+           'votaciones'=> $votaciones,
+           'mensaje' => $mensaje
+         );
+         //$this->load->view('datetime');
+         $this->load->view('secretario/secretario_view',$datos);
+         //$this->load->view('elementos/footer');
+          break;
+         case 'Secretario delegado':
+          redirect('/secretario/delegado');
+          break;
+         default:
+          redirect('/Login_controller');
+          break;
+      }
     }
+    else{redirect('/Login_controller');}
+
 
 
   }
@@ -514,7 +521,7 @@ class Secretario extends CI_Controller{
           $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
           Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
 
-          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña de elector.</p>
           <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
           <p>Coordialmente, la administración de VotUCA.</p>
           ';
@@ -526,7 +533,7 @@ class Secretario extends CI_Controller{
           $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
           Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
 
-          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña de elector.</p>
           <p>Coordialmente, la administración de VotUCA.</p>
           ';
         }
@@ -895,7 +902,7 @@ class Secretario extends CI_Controller{
 
       }
         if($modificada != NULL){
-            $this->index('La votación se ha guardado en borrador');
+            $this->index('La votación se ha modificado correctamente');
           }
     }
   }
@@ -1289,7 +1296,7 @@ class Secretario extends CI_Controller{
         'secretarios'=> $secretarios
       );
       $this->load->view('secretario/delegar_view',$datos);
-      $this->load->view('elementos/footer');
+      //$this->load->view('elementos/footer');
     }
   }
 
@@ -1323,7 +1330,7 @@ class Secretario extends CI_Controller{
        'mensaje' => $mensaje = ''
      );
      //$this->load->view('datetime');
-     $this->load->view('secretario/secretario_view',$datos);
+     $this->load->view('secretario/borradores_view',$datos);
   }
 
   public function enviar()
