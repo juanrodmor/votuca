@@ -363,8 +363,8 @@ class Secretario extends CI_Controller{
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$idVotacion,1);
 
-        // MESA ELECTORAL
-        $this->generarMesaElectoral($totales,$idVotacion);
+        // MESA ELECTORAL Y CORREOS
+        $correoEnviado = $this->generarMesaElectoral($totales,$idVotacion);
 
         // GUARDAR NUM_VOTOS EN RECUENTO
         $this->generarNumeroVotos($idVotacion,$datos->getTipo());
@@ -388,24 +388,22 @@ class Secretario extends CI_Controller{
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
 
-        // MESA ELECTORAL
-        $this->generarMesaElectoral($asistentes,$idVotacion);
+        // MESA ELECTORAL Y CORREOS
+        $correoEnviado = $this->generarMesaElectoral($asistentes,$idVotacion);
 
         // GUARDAR NUM_VOTOS EN RECUENTO
         $this->generarNumeroVotos($idVotacion,$datos->getTipo());
       }
 
-      // FINAL DE ESTA MIERDA
-
-      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
+      // MOSTRAR MENSAJE FINAL
+      /*if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
       {
         $datos = array('mensaje'=>'La votación NO se ha guardado');
         $this->load->view('secretario/crearVotacion_view',$datos);
       }
       else{
-        $datos = array('mensaje'=>'La votación se ha guardado correctamente');
-        $this->index('La votación se ha guardado correctamente');
-      }
+        $this->index('La votación se ha guardado correctamente.');
+      }*/
     }
 
 
@@ -472,35 +470,59 @@ class Secretario extends CI_Controller{
     private function llamarVistasCrear($tipo,$datos)
     {
       $this->load->view('elementos/headerSecretario');
-        switch($tipo)
-        {
-          case 'simple':
-            $datos += array('soloAsistentes' => true);
-            $this->load->view('secretario/votacionSimple_view',$datos);
-            break;
-          case 'compleja':
-          $datos += array('soloAsistentes' => true);
-          $this->load->view('secretario/votacionCompleja_view',$datos);
+      $datos = array(
+        'censos' => $nombreCensos
+      );
+      switch($tipo)
+      {
+        case 'simple':
+          $datos += array('permitirAsistentes' => true,
+                          'permitirPonderaciones' => false,
+                          'permitirRecuento' => false,
+                          'permitirOpciones' => false);
+          $this->load->view('secretario/crearVotacion_view',$datos);
           break;
+        case 'compleja':
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'consultasimple':
-          $this->load->view('secretario/consultaSimple_view',$datos);
-          break;
+        case 'consultasimple':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => true,
+                        'permitirOpciones' => false);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'consultacompleja':
-          $this->load->view('secretario/consultaCompleja_view',$datos);
-          break;
+        case 'consultacompleja':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => true,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'representantes':
-          $datos += array('soloAsistentes' => true);
-          $this->load->view('secretario/eleccionRepresentantes_view',$datos);
-          break;
+        case 'representantes':
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'uniponderados':
-          $this->load->view('secretario/cargosUniponderados_view',$datos);
-          break;
+        case 'uniponderados':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-        }
+      }
     }
 
     private function obtenerNombreElectoral($idUsuario,$letra)
@@ -572,7 +594,7 @@ class Secretario extends CI_Controller{
       }
       else
       {$data['mensaje_failure'] = 'La notificación por correo ha fallado.';}*/
-
+      return $result;
     }
 
     private function extraerIdsFicheros($nombreCensos)
