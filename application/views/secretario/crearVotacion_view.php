@@ -31,7 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion/simple');?>
+    <?=form_open(base_url().'secretario/insertarVotacion/'.$tipoVotacion);?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -42,7 +42,11 @@
               <?= form_label('ID','id'); ?>
               <?= form_input($atributos) ?> <br/><br/>
             </div>-->
-
+            <?php
+        		 $atributos = array(
+        				'Id_TipoVotacion' => $tipoVotacion
+        		); ?>
+        		<?= form_hidden($atributos) ?> <br/><br/>
              <div class="form-group">
                <?php
                 $atributos = array(
@@ -363,7 +367,6 @@
   <?php } ?>
 <?php } ?>
 
-
       <!-- BOTÓN ENVIAR -->
         <?php $atributos = array(
             'name' => 'submit_reg',
@@ -371,7 +374,17 @@
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
-        <center><?= form_submit($atributos);?></center>
+        <?= form_submit($atributos);?>
+
+        <br/>
+        <?php $atributos = array(
+            'name' => 'boton_borrador',
+            'class' => 'btn btn-primary',
+            'type' => 'submit',
+            'value' => 'Guardar en borrador'
+        ); ?>
+
+        <?= form_submit($atributos);?>
       <?= form_close(); ?>
 
 

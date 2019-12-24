@@ -79,50 +79,56 @@ class Secretario extends CI_Controller{
     );
     switch($tipo)
     {
-      case 'simple':
+      case 1:
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
-                        'permitirOpciones' => false);
+                        'permitirOpciones' => false,
+                        'tipoVotacion' => 1);
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
-      case 'compleja':
+      case 2:
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
-                      'permitirOpciones' => true);
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => 2);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultasimple':
+      case 3:
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
-                      'permitirOpciones' => false);
+                      'permitirOpciones' => false,
+                      'tipoVotacion' => 3);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultacompleja':
+      case 4:
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
-                      'permitirOpciones' => true);
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => 4);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'representantes':
+      case 5:
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
-                      'permitirOpciones' => true);
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => 5);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'uniponderados':
+      case 6:
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => false,
-                      'permitirOpciones' => true);
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => 6);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -140,8 +146,8 @@ class Secretario extends CI_Controller{
          ) // SI HAS ELEGIDO ASISTENTES
       {
           if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
-          {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
-          else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
+          {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+          else{$this->aceptarInsercion($tipo,false);} // NO HAY ERROR EN VALIDACIONES
       }
       else
       {
@@ -153,7 +159,34 @@ class Secretario extends CI_Controller{
           {
             if($this->validaciones(false,true) == FALSE) // Hay algun error
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
-            else{$this->aceptarInsercion($tipo);}
+            else{$this->aceptarInsercion($tipo,false);}
+
+          }
+        }
+      }
+    }
+    if($this->input->post('boton_borrador'))
+    {
+      if($this->input->post('soloAsistentes') != NULL
+         && $this->input->post('asistentes') != NULL
+         && $this->input->post('censo') != NULL
+         ) // SI HAS ELEGIDO ASISTENTES
+      {
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+          else{$this->aceptarInsercion($tipo,true);} // NO HAY ERROR EN VALIDACIONES
+      }
+      else
+      {
+        if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+        {$this->mostrarAsistentes($tipo);}
+        else
+        {
+          if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+          {
+            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
+            else{$this->aceptarInsercion($tipo,true);}
 
           }
         }
@@ -161,14 +194,14 @@ class Secretario extends CI_Controller{
     }
   }
 
-  private function aceptarInsercion($tipo)
+  private function aceptarInsercion($tipo,$enBorrador)
   {
     // CREAR VOTACION EN BASE A SU TIPO
-    $votacion = $this->prepararVotacion($tipo);
+    $votacion = $this->prepararVotacion($tipo,$enBorrador);
     $this->guardarVotacion($votacion);
   }
 
-  private function prepararVotacion($tipo)
+  private function prepararVotacion($tipo,$enBorrador)
   {
     $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
     $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
@@ -188,7 +221,7 @@ class Secretario extends CI_Controller{
 
     switch($tipo)
     {
-      case 'simple':
+      case 1:
       $votacion = new Votacion(
       //$this->input->post('id'),
           1,
@@ -197,7 +230,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false,
-          false,
+          $enBorrador,
           false,
           false,
           $this->input->post('quorum'),
@@ -208,7 +241,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'compleja':
+        case 2:
         $votacion = new Votacion(
           //$this->input->post('id'),
           2,
@@ -217,7 +250,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -228,7 +261,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'consultasimple':
+        case 3:
         $votacion = new Votacion(
           //$this->input->post('id'),
           3,
@@ -237,7 +270,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -248,7 +281,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'consultacompleja':
+        case 4:
         $votacion = new Votacion(
           //$this->input->post('id'),
           4,
@@ -257,7 +290,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -268,7 +301,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'representantes':
+        case 5:
         $votacion = new Votacion(
           //$this->input->post('id'),
           5,
@@ -277,7 +310,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -288,7 +321,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'uniponderados':
+        case 6:
         $votacion = new Votacion(
           //$this->input->post('id'),
           6,
@@ -297,7 +330,7 @@ class Secretario extends CI_Controller{
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -396,14 +429,14 @@ class Secretario extends CI_Controller{
       }
 
       // MOSTRAR MENSAJE FINAL
-      /*if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
+      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
       {
         $datos = array('mensaje'=>'La votación NO se ha guardado');
         $this->load->view('secretario/crearVotacion_view',$datos);
       }
       else{
         $this->index('La votación se ha guardado correctamente.');
-      }*/
+      }
     }
 
 
@@ -475,14 +508,14 @@ class Secretario extends CI_Controller{
       );
       switch($tipo)
       {
-        case 'simple':
+        case 1:
           $datos += array('permitirAsistentes' => true,
                           'permitirPonderaciones' => false,
                           'permitirRecuento' => false,
                           'permitirOpciones' => false);
           $this->load->view('secretario/crearVotacion_view',$datos);
           break;
-        case 'compleja':
+        case 2:
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
@@ -490,7 +523,7 @@ class Secretario extends CI_Controller{
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
 
-        case 'consultasimple':
+        case 3:
         $datos += array('permitirAsistentes' => false,
                         'permitirPonderaciones' => true,
                         'permitirRecuento' => true,
@@ -498,7 +531,7 @@ class Secretario extends CI_Controller{
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
 
-        case 'consultacompleja':
+        case 4:
         $datos += array('permitirAsistentes' => false,
                         'permitirPonderaciones' => true,
                         'permitirRecuento' => true,
@@ -506,7 +539,7 @@ class Secretario extends CI_Controller{
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
 
-        case 'representantes':
+        case 5:
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
