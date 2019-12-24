@@ -59,10 +59,13 @@ class Secretario extends CI_Controller{
 
   }
 
+
   /************************************/
   /*********** CREAR VOTACION *********/
   /************************************/
+
   //public function encriptado($palabra){echo password_hash($palabra,PASSWORD_DEFAULT);}
+
   // FUNCION QUE LLAMA A LAS VISTAS
   public function crearVotacion($tipo = '')
   {
@@ -72,37 +75,55 @@ class Secretario extends CI_Controller{
     // CENSO
     $nombreCensos = $this->censo_model->getCensos();
     $datos = array(
-      'pulsadoModificar' => true,
-      'pulsadoParalelo' => true,
-      'pulsadoAsistentes' => true,
       'censos' => $nombreCensos
     );
     switch($tipo)
     {
       case 'simple':
-        $datos += array('soloAsistentes' => true);
-        $this->load->view('secretario/votacionSimple_view',$datos);
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => false);
+        $this->load->view('secretario/crearVotacion_view',$datos);
         break;
       case 'compleja':
-      $datos += array('soloAsistentes' => true);
-      $this->load->view('secretario/votacionCompleja_view',$datos);
+      $datos += array('permitirAsistentes' => true,
+                      'permitirPonderaciones' => false,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
       case 'consultasimple':
-      $this->load->view('secretario/consultaSimple_view',$datos);
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => true,
+                      'permitirOpciones' => false);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
       case 'consultacompleja':
-      $this->load->view('secretario/consultaCompleja_view',$datos);
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => true,
+                      'permitirOpciones' => true);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
       case 'representantes':
-      $datos += array('soloAsistentes' => true);
-      $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+      $datos += array('permitirAsistentes' => true,
+                      'permitirPonderaciones' => false,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
       case 'uniponderados':
-      $this->load->view('secretario/cargosUniponderados_view',$datos);
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
     }
@@ -758,6 +779,7 @@ class Secretario extends CI_Controller{
 
 
     }
+
   /************************************/
   /*********** ELIMINAR VOTACION ******/
   /************************************/
@@ -1415,6 +1437,7 @@ class Secretario extends CI_Controller{
     }
     else{return TRUE;}
   }
+
   public function validarFicherosCenso(){
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
