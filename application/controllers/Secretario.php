@@ -967,7 +967,7 @@ class Secretario extends CI_Controller{
           else
           {
             if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
-            
+
           }
 
         }
@@ -978,6 +978,11 @@ class Secretario extends CI_Controller{
             $this->index('La votación se ha modificado correctamente');
           }
     }
+  }
+
+  private function modificarCensoAsistente($idVotacion)
+  {
+
   }
 
   private function mostrarAsistentesModificar($misDatos)
