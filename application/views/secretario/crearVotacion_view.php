@@ -327,9 +327,7 @@
 
     <?php }?>
     <?php
-    if(isset($asistentes))
-    {
-      if($asistentes != NULL){?>
+    if(isset($asistentes) && $asistentes != NULL){?>
       <h2> Censo asistente </h2>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -364,7 +362,6 @@
       </table>
     </div>
     </div>
-  <?php } ?>
 <?php } ?>
 
       <!-- BOTÓN ENVIAR -->

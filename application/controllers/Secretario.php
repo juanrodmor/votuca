@@ -494,7 +494,8 @@ class Secretario extends CI_Controller{
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios,
-          'mensaje' => 'Seleccione abajo el censo asistente'
+          'mensaje' => 'Seleccione abajo el censo asistente',
+          'tipoVotacion' => $tipo
       );
       $this->llamarVistasCrear($tipo,$datos);
 
@@ -503,9 +504,6 @@ class Secretario extends CI_Controller{
     private function llamarVistasCrear($tipo,$datos)
     {
       $this->load->view('elementos/headerSecretario');
-      $datos = array(
-        'censos' => $nombreCensos
-      );
       switch($tipo)
       {
         case 1:
