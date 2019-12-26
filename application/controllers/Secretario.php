@@ -944,7 +944,7 @@ class Secretario extends CI_Controller{
   {
     if($this->input->post($boton))
     {
-      if($this->validaciones(false,false) == FALSE)
+      if($this->validaciones(false,false) == FALSE) // Algun fallo en algun campo
       {$this->mostrarErrores($_POST);}
       else
       {
@@ -960,17 +960,15 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES... ¿Los suficientes?
         {
-          /*if(sizeof($_POST['asistentes']) >= 3)
+          if(sizeof($_POST['asistentes']) >= 3)
           {
-            if($this->validaciones(false,false) == FALSE){$this->mostrarErrores($_POST);}
+            $this->modificarSoloCensos($idVotacion);
           }
           else
           {
             if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
-            else
-            {
-            }
-          }*/
+            
+          }
 
         }
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
