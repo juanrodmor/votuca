@@ -31,7 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion/'.$tipoVotacion);?>
+    <?=form_open(base_url().'secretario/insertarVotacion/');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',

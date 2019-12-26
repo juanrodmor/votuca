@@ -79,7 +79,7 @@ class Secretario extends CI_Controller{
     );
     switch($tipo)
     {
-      case 1:
+      case 'simple':
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
@@ -87,7 +87,7 @@ class Secretario extends CI_Controller{
                         'tipoVotacion' => 1);
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
-      case 2:
+      case 'compleja':
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
@@ -96,7 +96,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 3:
+      case 'consultasimple':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
@@ -105,7 +105,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 4:
+      case 'consultacompleja':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
@@ -114,7 +114,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 5:
+      case 'representantes':
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
@@ -123,7 +123,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 6:
+      case 'uniponderados':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => false,
@@ -136,8 +136,9 @@ class Secretario extends CI_Controller{
     //$this->load->view('elementos/footer');*/
   }
 
-  public function insertarVotacion($tipo)
+  public function insertarVotacion()
   {
+    $tipo = $this->input->post('Id_TipoVotacion');
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
       if($this->input->post('soloAsistentes') != NULL
