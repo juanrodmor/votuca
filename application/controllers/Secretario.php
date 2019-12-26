@@ -401,7 +401,6 @@ class Secretario extends CI_Controller{
 
         // GUARDAR NUM_VOTOS EN RECUENTO
         $this->generarNumeroVotos($idVotacion,$datos->getTipo());
-
       }
      else
       {  // GUARDAR ASISTENTES
@@ -429,14 +428,14 @@ class Secretario extends CI_Controller{
       }
 
       // MOSTRAR MENSAJE FINAL
-      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
+      /*if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
       {
         $datos = array('mensaje'=>'La votación NO se ha guardado');
         $this->load->view('secretario/crearVotacion_view',$datos);
       }
       else{
         $this->index('La votación se ha guardado correctamente.');
-      }
+      }*/
     }
 
 
@@ -1410,10 +1409,6 @@ class Secretario extends CI_Controller{
      $this->load->view('secretario/borradores_view',$datos);
   }
 
-  public function enviar()
-  {
-    echo "Has pulsado enviar";
-  }
   /*******************************************/
   /********* SECRETARIO DELEGADO *************/
   /*******************************************/

@@ -295,17 +295,34 @@
 		/******* FUNCIONES INMA *********************/
 		/********************************************/
 
-		public function votoDefecto($usuarios, $nuevoId, $sinVoto) {
+		private function getUserGroups($idUsuario)
+		{
+			$this->db->select('Id_Grupo');
+			$this->db->where('Id_Usuario',$idUsuario);
+			$this->db->from('usuario_grupo');
+			$query = $this->db->get();
+			return $query->result();
+		}
+
+		public function votoDefecto($usuarios, $nuevoId, $sinVoto)
+		{
 			for($i = 0; $i < sizeof($usuarios); $i++)
-	    	{
+	    {
 				//password_hash($sinVoto, PASSWORD_DEFAULT)
 				$id = (int)$usuarios[$i];
-				$datos = array(
-					'Id_Usuario' => $id,
-					'Id_Votacion' => $nuevoId,
-					'Id_Voto' => $sinVoto
-				);
-				$this->db->insert('usuario_votacion',$datos);
+				//echo 'GRUPOS DEL USUARIO: '.$id. '<br>';
+				$grupos = $this->getUserGroups($id);
+				//echo var_dump($grupos),'<br>';
+				foreach($grupos as $grupo)
+				{
+					$datos = array(
+						'Id_Usuario' => $id,
+						'Id_Grupo' => $grupo->Id_Grupo,
+						'Id_Votacion' => $nuevoId,
+						'Id_Voto' => $sinVoto
+					);
+					$this->db->insert('usuario_votacion',$datos);
+				}
 			}
 		}
 
