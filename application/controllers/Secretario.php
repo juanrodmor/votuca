@@ -997,6 +997,16 @@ class Secretario extends CI_Controller{
         $this->addCensoAsistente($censo,$idVotacion);
       }
     }
+    // ELIMINAR CENSO
+    if($censosEliminar != NULL)
+    {  // Hay censos a eliminar
+      foreach($censosEliminar as $censo)
+      {
+        $this->eliminarCenso($idsCensos,$censo,$idVotacion);
+        $this->eliminarCensoAsistente($idsCensos,$censo,$idVotacion);
+        --$idsCensos;
+      }
+    }
   }
 
   private function mostrarAsistentesModificar($misDatos)
@@ -1226,19 +1236,18 @@ class Secretario extends CI_Controller{
       $this->censo_model->eliminarCenso($idVotacion,$idCenso);
 
     } // Fin hay varios censos
+  }
 
-    /*else
-    {
-      // Extraer usuarios de ese censo concreto que quiero borrar
-      $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);
-      foreach($borrarUsuarios as $usuario)
-      {
-        $this->censo_model->eliminarUsuarios($usuario->Id_Usuario,$idVotacion);
-      }
-      // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
-    }*/
-
+  private function eliminarCensoAsistente($censo,$idVotacion)
+  {
+    //echo var_dump($censo);
+    // Extraer id de ese censo que quiero eliminar
+    $idCenso = $this->censo_model->getId($censo);
+    $usuariosActuales = $this->censo_model->getCensoAsistente($idVotacion);
+    $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+    // Eliminar esos usuarios de una votacion concreta
+    foreach($usuariosEliminar as $usuario)
+    {$this->censo_model->eliminarUsuariosAsistentes($usuario,$idVotacion);}
 
   }
 

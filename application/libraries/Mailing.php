@@ -45,7 +45,7 @@ class Mailing
         }
         else
         {
-            echo $this->email->print_debugger();
+            //echo $this->email->print_debugger();
             return "failure";
         }
 
