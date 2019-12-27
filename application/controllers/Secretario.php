@@ -962,7 +962,7 @@ class Secretario extends CI_Controller{
         {
           if(sizeof($_POST['asistentes']) >= 3)
           {
-            $this->modificarSoloCensos($idVotacion);
+            $this->modificarCensoAsistente($idVotacion);
           }
           else
           {
@@ -982,7 +982,20 @@ class Secretario extends CI_Controller{
 
   private function modificarCensoAsistente($idVotacion)
   {
-
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+    $censosEliminar = $this->input->post('censoEliminacion');
+    $censosAñadir = $this->input->post('censo');
+    $idsCensos = array();
+    foreach($censosVotacion as $censo)
+    {$idsCensos[] = $censo->Id_Fichero;}
+    // AÑADIR CENSOS
+    if($censosAñadir != NULL)
+    {
+      foreach($censosAñadir as $censo)
+      {
+        $this->addCenso($idsCensos,$censo,$idVotacion);
+      }
+    }
   }
 
   private function mostrarAsistentesModificar($misDatos)
