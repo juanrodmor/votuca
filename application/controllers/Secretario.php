@@ -994,6 +994,7 @@ class Secretario extends CI_Controller{
       foreach($censosAñadir as $censo)
       {
         $this->addCenso($idsCensos,$censo,$idVotacion);
+        $this->addCensoAsistente($censo,$idVotacion);
       }
     }
   }
@@ -1241,7 +1242,7 @@ class Secretario extends CI_Controller{
 
   }
 
-  public function addCenso($censosVotacion,$censo,$idVotacion)
+  private function addCenso($censosVotacion,$censo,$idVotacion)
   {
     // Extraer ID del censo que voy a añadir
     $idCenso = $this->censo_model->getId($censo);
@@ -1280,7 +1281,7 @@ class Secretario extends CI_Controller{
     foreach($miMesa as $dato)
     {$usuariosMesa[] = $dato->Id_Usuario;}
 
-    // Notificar a los usuariosMesa de la mesa que se va a la puta pq se añade un censo
+    // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
     foreach($usuariosMesa as $id)
     {
       // Obtener correo de ese miembro
@@ -1310,6 +1311,37 @@ class Secretario extends CI_Controller{
 
     // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
     $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+
+  }
+
+  private function addCensoAsistente($censo,$idVotacion)
+  {
+    // Extraer ID del censo que voy a añadir
+    $idCenso = $this->censo_model->getId($censo);
+    $censoExtraer[] = $idCenso;
+
+    // Extraer usuarios de ese censo a añadir
+    $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+
+    // Extraer usuarios que están actualmente en el censo asistente de esa votacion
+    $totales = $this->censo_model->getCensoAsistente($idVotacion);
+    $idsTotales = array();
+    foreach($totales as $usuario)
+    {$idsTotales[] = $usuario->Id_Usuario;}
+
+    // Obtener solo usuarios sin repetir
+    $finales = array();
+    for($i = 0; $i < sizeof($usuariosAñadir);$i++)
+    {
+      if(!in_array($usuariosAñadir[$i],$idsTotales))
+      {
+        array_push($finales,$usuariosAñadir[$i]);
+      }
+    }
+
+    // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO ASISTENTE
+    $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($finales,$idVotacion);
+
 
   }
 
