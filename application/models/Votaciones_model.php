@@ -65,6 +65,11 @@ class Votaciones_model extends CI_Model{
     return $query->result();
   }
 
+  public function contarUsuariosGrupos($grupo)
+  {
+
+  }
+
   public function getLastId()
   {
     $query = $this->db->query("SELECT Id FROM votacion ORDER BY Id DESC LIMIT 1");

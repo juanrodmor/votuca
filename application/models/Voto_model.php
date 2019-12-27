@@ -384,21 +384,21 @@
 		}
 
 
-		public function recuentoPorDefecto($idVotacion,$opciones,$totalUsuarios)
+		public function recuentoPorDefecto($idVotacion,$grupo,$opciones,$totalUsuarios)
 		{
 			$valor = 0;
-			$usuariosTotales = $totalUsuarios[0]->total;
 			foreach($opciones as $opcion)
 			{
 				$valor = 0;
 				$datos = array(
 					'Id_Votacion' => $idVotacion,
+					'Id_Grupo' => $grupo,
 					'Id_Voto' => $opcion->Id_Voto,
 					'Num_Votos' => $valor
 				);
 				$this->db->insert('recuento',$datos);
 			}
-			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Voto,Num_Votos) VALUES ('.$idVotacion.',1,'.$usuariosTotales.')");
+			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Grupo,Id_Voto,Num_Votos) VALUES ('.$idVotacion.','.$grupo.',1,'.$totalUsuarios.')");
 			}
 }
 ?>

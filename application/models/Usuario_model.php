@@ -334,6 +334,15 @@ class Usuario_model extends CI_Model {
 		return ($consulta->num_rows() == 1);
 
 	}
+
+	public function getUserGroups($idUsuario)
+	{
+		$this->db->select('Id_Grupo');
+		$this->db->where('Id_Usuario',$idUsuario);
+		$this->db->from('usuario_grupo');
+		$query = $this->db->get();
+		return $query->result();
+	}
 	/*public function verify_login() {
 		$consulta = $this->db->get_where('usuario', array('Usuario' => $this->input->post('usuario', true), 'Contraseña' => $this->input->post('contraseña', true)));
 		if ($consulta->num_rows() == 1)

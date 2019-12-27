@@ -821,13 +821,52 @@ class Secretario extends CI_Controller{
 
       // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO
       $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
-      //echo var_dump($hasAsistentes);
+      // Contar usuarios por grupo
+      $alumnos = 0;
+      $profesores = 0;
+      $pas = 0;
+
       if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
-      {$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      {
+        $usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+        $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+
+        foreach($usuariosCenso as $usuario)
+        {
+          $grupo = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
+          switch($grupo[0]->Id_Grupo)
+          {
+            case 1:
+              $pas = $pas + 1;
+              break;
+            case 2:
+              $alumnos = $alumnos + 1;
+              break;
+            case 3:
+              $profesores = $profesores + 1;
+              break;
+          }
+        }
+      }
       else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
 
       // INTRODUCIR DATOS EN RECUENTO
-      $this->voto_model->recuentoPorDefecto($idVotacion,$opciones,$numeroUsuarios);
+      for($i = 1; $i <= 3; $i++)
+      {
+        switch($i)
+        {
+          case 1:
+            $numeroUsuarios = $pas;
+            break;
+          case 2:
+            $numeroUsuarios = $alumnos;
+            break;
+          case 3:
+            $numeroUsuarios = $profesores;
+            break;
+        }
+        $this->voto_model->recuentoPorDefecto($idVotacion,$i,$opciones,$numeroUsuarios);
+      }
       //echo var_dump($numeroUsuarios).'<br>';
 
 
@@ -960,7 +999,7 @@ class Secretario extends CI_Controller{
         {$this->modificarSoloCensos($idVotacion);}
         else // HAY ASISTENTES... ¿Los suficientes?
         {
-          if(sizeof($_POST['asistentes']) >= 3)
+        /*  if(sizeof($_POST['asistentes']) >= 3)
           {
             $this->modificarCensoAsistente($idVotacion);
           }
@@ -968,7 +1007,7 @@ class Secretario extends CI_Controller{
           {
             if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
 
-          }
+          }*/
 
         }
         $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
