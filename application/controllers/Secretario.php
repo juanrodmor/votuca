@@ -833,25 +833,28 @@ class Secretario extends CI_Controller{
 
         foreach($usuariosCenso as $usuario)
         {
-          $grupo = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
-          switch($grupo[0]->Id_Grupo)
+          $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
+          foreach($grupos as $grupo)
           {
-            case 1:
-              $pas = $pas + 1;
-              break;
-            case 2:
-              $alumnos = $alumnos + 1;
-              break;
-            case 3:
-              $profesores = $profesores + 1;
-              break;
+            switch($grupo->Id_Grupo)
+            {
+              case 1:
+                $pas = $pas + 1;
+                break;
+              case 2:
+                $alumnos = $alumnos + 1;
+                break;
+              case 3:
+                $profesores = $profesores + 1;
+                break;
+            }
           }
         }
       }
       else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
 
       // INTRODUCIR DATOS EN RECUENTO
-      for($i = 1; $i <= 3; $i++)
+      for($i = 1; $i < 4; $i++)
       {
         switch($i)
         {
