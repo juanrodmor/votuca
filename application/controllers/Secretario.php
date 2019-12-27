@@ -827,32 +827,30 @@ class Secretario extends CI_Controller{
       $pas = 0;
 
       if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
-      {
-        $usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+      {  //$usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
         $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+      }
+      else{$usuariosCenso = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
 
-        foreach($usuariosCenso as $usuario)
+      foreach($usuariosCenso as $usuario)
+      {
+        $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
+        foreach($grupos as $grupo)
         {
-          $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
-          foreach($grupos as $grupo)
+          switch($grupo->Id_Grupo)
           {
-            switch($grupo->Id_Grupo)
-            {
-              case 1:
-                $pas = $pas + 1;
-                break;
-              case 2:
-                $alumnos = $alumnos + 1;
-                break;
-              case 3:
-                $profesores = $profesores + 1;
-                break;
-            }
+            case 1:
+              $pas = $pas + 1;
+              break;
+            case 2:
+              $alumnos = $alumnos + 1;
+              break;
+            case 3:
+              $profesores = $profesores + 1;
+              break;
           }
         }
       }
-      else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
-
       // INTRODUCIR DATOS EN RECUENTO
       for($i = 1; $i < 4; $i++)
       {
