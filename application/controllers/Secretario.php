@@ -819,18 +819,13 @@ class Secretario extends CI_Controller{
       //$opciones[] = 1;
       //echo var_dump($opciones).'<br>';
 
-      // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO
-      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
       // Contar usuarios por grupo
       $alumnos = 0;
       $profesores = 0;
       $pas = 0;
 
-      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
-      {  //$usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
-        $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
-      }
-      else{$usuariosCenso = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+       //$usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+      $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
 
       foreach($usuariosCenso as $usuario)
       {

@@ -55,6 +55,7 @@
                    'id' => 'titulo',
                    'placeholder' =>'Escribe un titulo',
                    'required' => true,
+                   'autocomplete' => 'off',
                    'value' => set_value('titulo') // Mantiene el valor en el form
                ); ?>
                <?= form_label('Titulo','titulo'); ?>
@@ -69,6 +70,7 @@
                    'placeholder' =>'Escribe una descripción del evento',
                    'id' => 'descripcion',
                    'required' => true,
+                   'autocomplete' => 'off',
                    'value' => set_value('descripcion')
                ); ?>
                <?= form_label('Descripcion','descripcion'); ?>
@@ -86,6 +88,7 @@
               'data-toggle' => 'datetimepicker',
               'placeholder' =>'Selecciona una fecha de inicio',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('fecha_inicio')
           ); ?>
           <?= form_label('Fecha Inicio','fecha_inicio'); ?>
@@ -104,6 +107,7 @@
               'data-toggle' => 'datetimepicker',
               'placeholder' =>'Selecciona una fecha de finalizacion',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('fecha_final')
           ); ?>
           <?= form_label('Fecha Final','fecha_final'); ?>
@@ -120,6 +124,7 @@
               'id' => 'quorum',
               'placeholder' =>'Introduzca el quorum de esta votación',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('quorum') // Mantiene el valor en el form
           ); ?>
           <?= form_label('Quorum','quorum'); ?>
@@ -140,6 +145,7 @@
                     'id' => 'pondPas',
                     'placeholder' =>'Escribe un la ponderacion para el grupo PAS',
                     'required' => true,
+                    'autocomplete' => 'off',
                     'value' => set_value('pondPas') // Mantiene el valor en el form
                 ); ?>
                 <?= form_label('Ponderacion PAS','ponderacionPAS'); ?>
@@ -157,6 +163,7 @@
                     'id' => 'pondAlumnos',
                     'placeholder' =>'Escribe un la ponderacion para el grupo Alumnos',
                     'required' => true,
+                    'autocomplete' => 'off',
                     'value' => set_value('pondAlumnos') // Mantiene el valor en el form
                 ); ?>
                 <?= form_label('Ponderacion Alumnos','ponderacionAlumnos'); ?>
@@ -175,6 +182,7 @@
                     'id' => 'pondProfesores',
                     'placeholder' =>'Escribe un la ponderacion para el grupo Profesores',
                     'required' => true,
+                    'autocomplete' => 'off',
                     'value' => set_value('pondProfesores') // Mantiene el valor en el form
                 ); ?>
                 <?= form_label('Ponderacion Profesores','ponderacionProfesores'); ?>
@@ -196,6 +204,7 @@
                 'class' => 'form-control',
                 'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
                 'required' => true,
+                'autocomplete' => 'off',
                 'value' => set_value('nOpciones')
             ); ?>
             <?= form_label('Total de opciones a votar','nOpciones'); ?>
@@ -215,6 +224,7 @@
                 'class' => 'form-control',
                 'placeholder' =>'Introduzca las opciones posibles',
                 'required' => true,
+                'autocomplete' => 'off',
                 'value' => set_value('opciones')
               ); ?>
             <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
