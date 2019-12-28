@@ -971,49 +971,61 @@ class Secretario extends CI_Controller{
     $this->actualizarVotacionFromBoton($this->input->post('boton_publicar'),true);
   }
 
-  /**********************************************/
-  /********** FUNCIONES AUXILIARES MODIFICAR ****/
-  /**********************************************/
 
   private function actualizarVotacionFromBoton($boton,$publicar)
   {
-    if($this->input->post($boton))
-    {
-      if($this->validaciones(false,false) == FALSE) // Algun fallo en algun campo
-      {$this->mostrarErrores($_POST);}
-      else
+      if($this->input->post($boton))
       {
-        // MODIFICAR DATOS DE LA VOTACION
-        $datos = $this->actualizarVotacionDatos($publicar);
-        $idVotacion = $_POST['id'];
-        $idTipo = $_POST['Id_TipoVotacion'];
-
-        // MODIFICAR CENSOS DE LA VOTACION
-        $soloAsistentes = false;
-        if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
-        if(!$soloAsistentes)
-        {$this->modificarSoloCensos($idVotacion);}
-        else // HAY ASISTENTES... ¿Los suficientes?
+        if($this->validaciones(false,false) == FALSE) // Algun fallo en algun campo
+        {$this->mostrarErrores($_POST);}
+        else
         {
-        /*  if(sizeof($_POST['asistentes']) >= 3)
-          {
-            $this->modificarCensoAsistente($idVotacion);
-          }
-          else
-          {
-            if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
+          // MODIFICAR DATOS DE LA VOTACION
+          $datos = $this->actualizarVotacionDatos($publicar);
+          $idVotacion = $_POST['id'];
+          $idTipo = $_POST['Id_TipoVotacion'];
 
-          }*/
+          // MODIFICAR CENSOS DE LA VOTACION
+          $soloAsistentes = false;
+          if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+          if(!$soloAsistentes)
+          {$this->modificarSoloCensos($idVotacion);}
+          else // Hemos pulsado soloAsistentes
+          {
+            if($this->validaciones(false,true) == FALSE) // Algun fallo en algun campo
+            {$this->mostrarErrores($_POST);}
+            else
+            {
+              if(!isset($_POST['asistentes']))
+              {
+                echo '<br>No hay asistentes en esta votacion<br>';
+              }
+            }
+
+          /*  if(sizeof($_POST['asistentes']) >= 3)
+            {
+              $this->modificarCensoAsistente($idVotacion);
+            }
+            else
+            {
+              if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
+
+            }*/
+
+          }
+          $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
 
         }
-        $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
-
+          /*if($modificada != NULL){
+              $this->index('La votación se ha modificado correctamente');
+            }*/
       }
-        if($modificada != NULL){
-            $this->index('La votación se ha modificado correctamente');
-          }
     }
-  }
+
+
+  /**********************************************/
+  /********** FUNCIONES AUXILIARES MODIFICAR ****/
+  /**********************************************/
 
   private function modificarCensoAsistente($idVotacion)
   {
@@ -1176,10 +1188,8 @@ class Secretario extends CI_Controller{
 
   private function mostrarErrores($misDatos)
   {
-
     $datos = $this->recargarDatosVotacion($misDatos);
     $this->llamarVistasModificar($misDatos['Id_TipoVotacion'],$datos);
-
   }
 
   private function extraerUsuariosCensos($censos)
@@ -1580,11 +1590,24 @@ class Secretario extends CI_Controller{
   }
 
   public function validarFicherosCenso(){
+    $soloAsistentes = $this->input->post('soloAsistentes');
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
-    if($asistentes != NULL)
+    if($soloAsistentes)
     {
-      if(sizeof($asistentes) < 3)
+      if($asistentes != NULL)
+      {
+        if(sizeof($asistentes) < 3)
+        {
+          if($elegidos == NULL || sizeof($elegidos) < 1)
+          {
+            $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+            return FALSE;
+          }
+          else{return TRUE;}
+        }
+      }
+      else // NO HAY ASISTENTES PERO HAS PULSADO ASISTENTES
       {
         if($elegidos == NULL || sizeof($elegidos) < 1)
         {
@@ -1594,9 +1617,8 @@ class Secretario extends CI_Controller{
         else{return TRUE;}
       }
     }
-    else{
-      return TRUE;
-    }
+
+
 
   }
 
