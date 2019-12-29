@@ -2,10 +2,10 @@
 -- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 23-12-2019 a las 19:57:25
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 29-12-2019 a las 20:15:20
 -- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.2.23
+-- Versión de PHP: 7.2.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -141,6 +141,7 @@ CREATE TABLE `ponderaciones` (
 
 CREATE TABLE `recuento` (
   `Id_Votacion` int(32) NOT NULL,
+  `Id_Grupo` int(32) NOT NULL,
   `Id_Voto` int(32) NOT NULL,
   `Num_Votos` int(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -222,20 +223,20 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`, `Email`, `Auth`, `IP`) VALUES
-(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', 'ibsantamaria96@gmail.com', '', ''),
-(3, 3, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(8, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(9, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
-(10, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
-(11, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
-(12, 5, 'm12121212', '$2y$10$ntRq/s8R03qUftM.nFKrkedVsfVx8eTmH7M.DkIB5WMb7LDJ3128e', 'ibsantamaria96@gmmail.com', '', ''),
-(13, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
-(14, 5, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
-(15, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', '');
+(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', '', '', ''),
+(3, 3, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(8, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(9, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(10, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(11, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(12, 5, 'm12121212', '$2y$10$ntRq/s8R03qUftM.nFKrkedVsfVx8eTmH7M.DkIB5WMb7LDJ3128e', '', '', ''),
+(13, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(14, 5, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(15, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -354,56 +355,7 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 (1, 'No votado'),
 (2, 'Sí'),
 (3, 'No'),
-(4, 'En blanco'),
-(5, 'Paco'),
-(6, 'Eugenio'),
-(7, 'Ambrosio'),
-(8, 'Ernesto'),
-(9, 'zipi'),
-(10, 'zape'),
-(11, 'goku'),
-(12, 'vegeta'),
-(13, 'willirex'),
-(14, 'Inma'),
-(15, 'Juanca'),
-(16, 'Miriam'),
-(17, 'a'),
-(18, 'b'),
-(19, 'c'),
-(20, 'd'),
-(21, 'e'),
-(22, 'f'),
-(23, 'as'),
-(24, 'k'),
-(25, 'l'),
-(26, 'o'),
-(27, 'p'),
-(28, 'g'),
-(29, 'ui'),
-(30, 'uo'),
-(31, 'ue'),
-(32, 'ua'),
-(33, 'op'),
-(34, 'shin'),
-(35, 'shan'),
-(36, 'kaka'),
-(37, 'keke'),
-(38, 'lili'),
-(39, 'poo'),
-(40, 'hey'),
-(41, 'hay'),
-(42, 'yupi'),
-(43, 'juh'),
-(44, 't'),
-(45, 'r'),
-(46, 'w'),
-(47, 'q'),
-(48, 'h'),
-(49, 'j'),
-(50, 'y'),
-(51, 'krillin'),
-(52, 'gohan'),
-(53, 'piccolo');
+(4, 'En blanco');
 
 --
 -- Índices para tablas volcadas
@@ -467,8 +419,9 @@ ALTER TABLE `ponderaciones`
 -- Indices de la tabla `recuento`
 --
 ALTER TABLE `recuento`
-  ADD PRIMARY KEY (`Id_Votacion`,`Id_Voto`),
-  ADD KEY `recuento_ibfk_2` (`Id_Voto`);
+  ADD PRIMARY KEY (`Id_Votacion`,`Id_Grupo`,`Id_Voto`),
+  ADD KEY `recuento_ibfk_2` (`Id_Voto`),
+  ADD KEY `Id_Grupo` (`Id_Grupo`);
 
 --
 -- Indices de la tabla `rol`
@@ -582,7 +535,7 @@ ALTER TABLE `votacion`
 -- AUTO_INCREMENT de la tabla `voto`
 --
 ALTER TABLE `voto`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -627,7 +580,8 @@ ALTER TABLE `ponderaciones`
 --
 ALTER TABLE `recuento`
   ADD CONSTRAINT `recuento_ibfk_1` FOREIGN KEY (`Id_Votacion`) REFERENCES `votacion` (`Id`),
-  ADD CONSTRAINT `recuento_ibfk_2` FOREIGN KEY (`Id_Voto`) REFERENCES `voto` (`Id`);
+  ADD CONSTRAINT `recuento_ibfk_2` FOREIGN KEY (`Id_Voto`) REFERENCES `voto` (`Id`),
+  ADD CONSTRAINT `recuento_ibfk_3` FOREIGN KEY (`Id_Grupo`) REFERENCES `grupo` (`Id`);
 
 --
 -- Filtros para la tabla `secretario_delegado`
