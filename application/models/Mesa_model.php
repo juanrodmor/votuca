@@ -161,6 +161,7 @@ class Mesa_model extends CI_Model {
 	//Devuelve toda la información necesaria para que se muestre el recuento.
 	public function getFullVotoData($idVotacion) {
 		$votos = $this->getOptions($idVotacion);
+		$aGrupoPonderacion = $this->getGroupData($idVotacion);
 		$contVotos = array();
 		$totalVotos = 0;
 		$abstenciones = $this->getNVotos($idVotacion, 1);
@@ -169,14 +170,27 @@ class Mesa_model extends CI_Model {
 			array_push($contVotos, $nVotos);
 			$totalVotos = $totalVotos + $nVotos;
 		}
-		$result = array('opciones' => $votos['Nombre'],
-						'cantidad' => $contVotos,
-						'totalVotos' => $totalVotos,
-						'abstenciones' => $abstenciones,
-						'quorum' => $this->getQuorum($idVotacion),
-						'censo' => $this->getCenso($idVotacion),
-						'votacion' => $idVotacion);
+		$result = array('opciones' => $votos['Nombre'],		//Nombres de los votos.
+						'grupos' => $aGrupoPonderacion,		//['Grupo'] contiene los nombres de los grupos.		//['Ponderacion'] contiene los valores de ponderacion.
+						'cantidad' => $contVotos,			//Cantidad de votos, mismo orden que los nombres de voto.
+						'totalVotos' => $totalVotos,		//Suma total de votos.
+						'abstenciones' => $abstenciones,	//Cantidad de personas del censo que no han votado.
+						'quorum' => $this->getQuorum($idVotacion),	//Quorum de la votacion.
+						'censo' => $this->getCenso($idVotacion),	//Tamaño del censo.
+						'votacion' => $idVotacion);			//Id de la votacion actual.	
 		return $result;
+	}
+	
+	//Devuelve un array compuesto de un array de Nombre de grupo y un array de Ponderacion, correspondientes a la votacion dada.
+	private function getGroupData($idVotacion) {
+		$consulta = $this->db->get_where('ponderaciones', array('Id_Votacion' => $idVotacion));
+		$arrayGlobal = array('Grupo' => array(), 'Ponderacion' => array());
+		foreach($consulta->result() as $row) {
+			$consulta2 = $this->db->get_where('grupo', array('Id' => $row->Id_Grupo));
+			array_push($arrayGlobal['Grupo'], $consulta2->result()[0]->Nombre);
+			array_push($arrayGlobal['Ponderacion'], $row->Valor);
+		}
+		return $arrayGlobal;
 	}
 
 	//Establece como finalizada una votación.
