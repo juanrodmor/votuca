@@ -132,6 +132,11 @@ public function getCensosFromUsuarios($usuario)
 
   }
 
+  public function eliminarUsuariosAsistentes($idUsuario,$idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM censo_asistente WHERE Id_Votacion = '$idVotacion' AND Id_Usuario = '$idUsuario'");
+  }
+
   public function getCensoAsistente($idVotacion)
   {
     $this->db->select('Id_Usuario');

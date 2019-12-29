@@ -2,10 +2,10 @@
 -- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2019 a las 17:21:11
+-- Servidor: localhost
+-- Tiempo de generación: 23-12-2019 a las 19:57:25
 -- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.3.11
+-- Versión de PHP: 7.2.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -35,14 +35,6 @@ CREATE TABLE `autorizacion` (
   `blocked` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `autorizacion`
---
-
-INSERT INTO `autorizacion` (`auth_key`, `first_time`, `attemps`, `blocked`) VALUES
-('I46J5QWAX4PCKL7I', 0, 0, 0),
-('IXP5FNAVQVUIPQCP', 0, 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -53,6 +45,7 @@ CREATE TABLE `censo` (
   `Id_Usuario` int(32) NOT NULL,
   `Id_Votacion` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -92,7 +85,8 @@ CREATE TABLE `ficheros_censo` (
 
 INSERT INTO `ficheros_censo` (`Id`, `Nombre`) VALUES
 (1, 'censo1'),
-(2, 'censo2');
+(2, 'censo2'),
+(3, 'censoClientes');
 
 -- --------------------------------------------------------
 
@@ -216,7 +210,6 @@ INSERT INTO `tipo_votacion` (`Id`, `Nombre`) VALUES
 CREATE TABLE `usuario` (
   `Id` int(32) NOT NULL,
   `Id_Rol` int(32) NOT NULL,
-  `Id_Grupo` int(32) NOT NULL,
   `NombreUsuario` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
   `Password` varchar(256) COLLATE utf8_spanish_ci NOT NULL,
   `Email` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
@@ -228,23 +221,21 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`Id`, `Id_Rol`, `Id_Grupo`, `NombreUsuario`, `Password`, `Email`, `Auth`, `IP`) VALUES
-(1, 1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', 'I46J5QWAX4PCKL7I', '::1'),
-(2, 4, 1, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', '', 'IXP5FNAVQVUIPQCP', '192.168.0.1'),
-(3, 3, 1, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(5, 2, 1, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(6, 1, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(7, 1, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(8, 1, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(9, 1, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(10, 1, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(11, 1, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(12, 5, 1, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(13, 5, 1, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(14, 5, 1, 'm12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(15, 5, 1, 'm14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(16, 5, 1, 'm15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1'),
-(17, 5, 1, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '::1');
+INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`, `Email`, `Auth`, `IP`) VALUES
+(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', 'ibsantamaria96@gmail.com', '', ''),
+(3, 3, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(8, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(9, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmail.com', '', ''),
+(10, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
+(11, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
+(12, 5, 'm12121212', '$2y$10$ntRq/s8R03qUftM.nFKrkedVsfVx8eTmH7M.DkIB5WMb7LDJ3128e', 'ibsantamaria96@gmmail.com', '', ''),
+(13, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
+(14, 5, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', ''),
+(15, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', 'ibsantamaria96@gmmail.com', '', '');
 
 -- --------------------------------------------------------
 
@@ -268,6 +259,23 @@ CREATE TABLE `usuario_grupo` (
   `Id_Grupo` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `usuario_grupo`
+--
+
+INSERT INTO `usuario_grupo` (`Id_Usuario`, `Id_Grupo`) VALUES
+(1, 2),
+(1, 3),
+(6, 2),
+(7, 2),
+(7, 3),
+(8, 2),
+(8, 3),
+(9, 1),
+(10, 1),
+(10, 2),
+(11, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -276,6 +284,7 @@ CREATE TABLE `usuario_grupo` (
 
 CREATE TABLE `usuario_votacion` (
   `Id_Usuario` int(32) NOT NULL,
+  `Id_Grupo` int(32) NOT NULL,
   `Id_Votacion` int(32) NOT NULL,
   `Id_Voto` varchar(1024) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -374,7 +383,27 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 (30, 'uo'),
 (31, 'ue'),
 (32, 'ua'),
-(33, 'op');
+(33, 'op'),
+(34, 'shin'),
+(35, 'shan'),
+(36, 'kaka'),
+(37, 'keke'),
+(38, 'lili'),
+(39, 'poo'),
+(40, 'hey'),
+(41, 'hay'),
+(42, 'yupi'),
+(43, 'juh'),
+(44, 't'),
+(45, 'r'),
+(46, 'w'),
+(47, 'q'),
+(48, 'h'),
+(49, 'j'),
+(50, 'y'),
+(51, 'krillin'),
+(52, 'gohan'),
+(53, 'piccolo');
 
 --
 -- Índices para tablas volcadas
@@ -466,7 +495,6 @@ ALTER TABLE `tipo_votacion`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `id_grupo - con grupo` (`Id_Grupo`),
   ADD KEY `id_rol - con rol usario` (`Id_Rol`);
 
 --
@@ -475,6 +503,13 @@ ALTER TABLE `usuario`
 ALTER TABLE `usuario_censo`
   ADD PRIMARY KEY (`Id_Usuario`,`Id_Fichero`),
   ADD KEY `usuario_censo_ibfk_2` (`Id_Fichero`);
+
+--
+-- Indices de la tabla `usuario_grupo`
+--
+ALTER TABLE `usuario_grupo`
+  ADD KEY `Id_Usuario` (`Id_Usuario`,`Id_Grupo`),
+  ADD KEY `id_grupo - con grupo` (`Id_Grupo`);
 
 --
 -- Indices de la tabla `votacion`
@@ -511,7 +546,7 @@ ALTER TABLE `voto`
 -- AUTO_INCREMENT de la tabla `ficheros_censo`
 --
 ALTER TABLE `ficheros_censo`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `grupo`
@@ -535,7 +570,7 @@ ALTER TABLE `tipo_votacion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `votacion`
@@ -547,7 +582,7 @@ ALTER TABLE `votacion`
 -- AUTO_INCREMENT de la tabla `voto`
 --
 ALTER TABLE `voto`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Restricciones para tablas volcadas
@@ -604,7 +639,6 @@ ALTER TABLE `secretario_delegado`
 -- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD CONSTRAINT `id_grupo - con grupo` FOREIGN KEY (`Id_Grupo`) REFERENCES `grupo` (`Id`),
   ADD CONSTRAINT `id_rol - con rol usario` FOREIGN KEY (`Id_Rol`) REFERENCES `rol` (`Id`);
 
 --
@@ -613,6 +647,13 @@ ALTER TABLE `usuario`
 ALTER TABLE `usuario_censo`
   ADD CONSTRAINT `usuario_censo_ibfk_1` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id`),
   ADD CONSTRAINT `usuario_censo_ibfk_2` FOREIGN KEY (`Id_Fichero`) REFERENCES `ficheros_censo` (`Id`);
+
+--
+-- Filtros para la tabla `usuario_grupo`
+--
+ALTER TABLE `usuario_grupo`
+  ADD CONSTRAINT `id_grupo - con grupo` FOREIGN KEY (`Id_Grupo`) REFERENCES `grupo` (`Id`),
+  ADD CONSTRAINT `id_usuario - con usuario` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id`);
 
 --
 -- Filtros para la tabla `votacion`

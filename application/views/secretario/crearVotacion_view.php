@@ -31,8 +31,7 @@
 
   </div>
   <!-- FORMULARIO DE VOTACION -->
-    <?=form_open(base_url().'secretario/insertarVotacion/compleja');?>
-
+    <?=form_open(base_url().'secretario/insertarVotacion/');?>
             <!--<div class="form-group">
               <?php $atributos = array(
                   'name' => 'id',
@@ -43,7 +42,11 @@
               <?= form_label('ID','id'); ?>
               <?= form_input($atributos) ?> <br/><br/>
             </div>-->
-
+            <?php
+        		 $atributos = array(
+        				'Id_TipoVotacion' => $tipoVotacion
+        		); ?>
+        		<?= form_hidden($atributos) ?> <br/><br/>
              <div class="form-group">
                <?php
                 $atributos = array(
@@ -52,6 +55,7 @@
                    'id' => 'titulo',
                    'placeholder' =>'Escribe un titulo',
                    'required' => true,
+                   'autocomplete' => 'off',
                    'value' => set_value('titulo') // Mantiene el valor en el form
                ); ?>
                <?= form_label('Titulo','titulo'); ?>
@@ -66,6 +70,7 @@
                    'placeholder' =>'Escribe una descripción del evento',
                    'id' => 'descripcion',
                    'required' => true,
+                   'autocomplete' => 'off',
                    'value' => set_value('descripcion')
                ); ?>
                <?= form_label('Descripcion','descripcion'); ?>
@@ -83,6 +88,7 @@
               'data-toggle' => 'datetimepicker',
               'placeholder' =>'Selecciona una fecha de inicio',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('fecha_inicio')
           ); ?>
           <?= form_label('Fecha Inicio','fecha_inicio'); ?>
@@ -101,6 +107,7 @@
               'data-toggle' => 'datetimepicker',
               'placeholder' =>'Selecciona una fecha de finalizacion',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('fecha_final')
           ); ?>
           <?= form_label('Fecha Final','fecha_final'); ?>
@@ -117,12 +124,117 @@
               'id' => 'quorum',
               'placeholder' =>'Introduzca el quorum de esta votación',
               'required' => true,
+              'autocomplete' => 'off',
               'value' => set_value('quorum') // Mantiene el valor en el form
           ); ?>
           <?= form_label('Quorum','quorum'); ?>
           <!-- Igual a: <label for="titulo">Titulo</label> -->
           <?= form_input($atributos) ?> <br/><br/>
         </div>
+
+        <!-- PONDERACIONES -->
+        <?php if(isset($permitirPonderaciones) && $permitirPonderaciones == true){?>
+          <h2> Ponderaciones </h2>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <?php
+                 $atributos = array(
+                    'name' => 'ponderacionPAS',
+                    'class' => 'form-control',
+                    'id' => 'pondPas',
+                    'placeholder' =>'Escribe un la ponderacion para el grupo PAS',
+                    'required' => true,
+                    'autocomplete' => 'off',
+                    'value' => set_value('pondPas') // Mantiene el valor en el form
+                ); ?>
+                <?= form_label('Ponderacion PAS','ponderacionPAS'); ?>
+                <?= form_input($atributos) ?> <br/><br/>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <?php
+                 $atributos = array(
+                    'name' => 'ponderacionAlumnos',
+                    'class' => 'form-control',
+                    'id' => 'pondAlumnos',
+                    'placeholder' =>'Escribe un la ponderacion para el grupo Alumnos',
+                    'required' => true,
+                    'autocomplete' => 'off',
+                    'value' => set_value('pondAlumnos') // Mantiene el valor en el form
+                ); ?>
+                <?= form_label('Ponderacion Alumnos','ponderacionAlumnos'); ?>
+                <!-- Igual a: <label for="titulo">Titulo</label> -->
+                <?= form_input($atributos) ?> <br/><br/>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <?php
+                 $atributos = array(
+                    'name' => 'ponderacionProfesores',
+                    'class' => 'form-control',
+                    'id' => 'pondProfesores',
+                    'placeholder' =>'Escribe un la ponderacion para el grupo Profesores',
+                    'required' => true,
+                    'autocomplete' => 'off',
+                    'value' => set_value('pondProfesores') // Mantiene el valor en el form
+                ); ?>
+                <?= form_label('Ponderacion Profesores','ponderacionProfesores'); ?>
+                <!-- Igual a: <label for="titulo">Titulo</label> -->
+                <?= form_input($atributos) ?> <br/><br/>
+              </div>
+            </div>
+          </div>
+        <?php } ?>
+
+        <?php if(isset($permitirOpciones) && $permitirOpciones == true){ ?>
+          <h2> Opciones </h2>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+            <?php $atributos = array(
+                'id' => 'nOpciones',
+                'name' => 'nOpciones',
+                'class' => 'form-control',
+                'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
+                'required' => true,
+                'autocomplete' => 'off',
+                'value' => set_value('nOpciones')
+            ); ?>
+            <?= form_label('Total de opciones a votar','nOpciones'); ?>
+            <?= form_input($atributos) ?> <br/><br/>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+            <?php
+            $totales = array();
+             $atributos = array(
+                'id' => 'opciones',
+                'name' => 'opciones',
+                'class' => 'form-control',
+                'placeholder' =>'Introduzca las opciones posibles',
+                'required' => true,
+                'autocomplete' => 'off',
+                'value' => set_value('opciones')
+              ); ?>
+            <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
+            <p> Separe cada opción por una coma </p>
+            <?= form_input($atributos) ?> <br/><br/>
+            </div>
+            </div>
+          </div>
+
+        <?php } ?>
 
         <!-- CHECK BUTTONS -->
         <div class="form-check">
@@ -144,14 +256,12 @@
         <?= form_label('Voto Modificable','esModificable'); ?>
       </div>
 
-
-    <?php
-      if($soloAsistentes == true){?>
-        <div class="form-check">
-          <?php
-           if(isset($_POST['soloAsistentes'])) $checkAsis = 'checked';
-           else{$checkAsis = false;}
-          ?>
+    <?php if(isset($permitirAsistentes) && $permitirAsistentes == true){?>
+      <div class="form-check">
+        <?php
+         if(isset($_POST['soloAsistentes'])) $checkAsis = 'checked';
+         else{$checkAsis = false;}
+        ?>
         <?php
         $atributos = array(
           'name' => 'soloAsistentes',
@@ -165,53 +275,27 @@
         <?= form_checkbox($atributos); ?>
         <?= form_label('Solo asistentes','soloAsistentes'); ?>
       </div>
-    <?php }?>
+    <?php } ?>
 
-    <h2> Opciones </h2>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-6">
-      <?php $atributos = array(
-          'id' => 'nOpciones',
-          'name' => 'nOpciones',
-          'class' => 'form-control',
-          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
-          'required' => true,
-          'value' => set_value('nOpciones')
-      ); ?>
-      <?= form_label('Total de opciones a votar','nOpciones'); ?>
-      <?= form_input($atributos) ?> <br/><br/>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-6">
+    <?php if(isset($permitirRecuento) && $permitirRecuento == true){ ?>
+      <div class="form-check">
       <?php
-      $totales = array();
-       $atributos = array(
-          'id' => 'opciones',
-          'name' => 'opciones',
-          'class' => 'form-control',
-          'placeholder' =>'Introduzca las opciones posibles',
-          'required' => true,
-          'value' => set_value('opciones')
-        ); ?>
-      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
-      <p> Separe cada opción por una coma </p>
-      <?= form_input($atributos) ?> <br/><br/>
-      </div>
-      </div>
+      $atributos = array(
+        'name' => 'recuentoParalelo',
+        'class' => 'form-check-input',
+        'type' => 'checkbox',
+        'id' => 'recuentoParalelo',
+        'value' => true
+      );
+      ?>
+      <?= form_checkbox($atributos); ?>
+      <?= form_label('Recuento Paralelo','recuentoParalelo'); ?>
     </div>
-    <?php $atributos = array(
-        'name' => 'submit_opc',
-        'class' => 'btn btn-primary',
-        'type' => 'submit',
-        'value' => 'Guardar opción'
-    ); ?>
 
-    <h2> Censo electoral </h2>
+
+    <?php } ?>
+    <?php if(isset($censos)){?>
+        <h2> Censo electoral </h2>
         <p> Escoja el censo electoral que desee </p>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -251,10 +335,9 @@
       </div>
       </div>
 
-      <?php
-    if(isset($asistentes))
-    {
-      if($asistentes != NULL){?>
+    <?php }?>
+    <?php
+    if(isset($asistentes) && $asistentes != NULL){?>
       <h2> Censo asistente </h2>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
@@ -277,7 +360,7 @@
                       'name' => 'asistentes[]',
                       'class' => 'form-control',
                       'type' => 'checkbox',
-                      'id' => 'asistentes',
+                      'id' => 'censo',
                       'value' => $asistente[0]->Id
                   );
                   ?>
@@ -289,9 +372,7 @@
       </table>
     </div>
     </div>
-  <?php } ?>
 <?php } ?>
-
 
       <!-- BOTÓN ENVIAR -->
         <?php $atributos = array(
@@ -300,7 +381,17 @@
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
-        <center><?= form_submit($atributos);?></center>
+        <?= form_submit($atributos);?>
+
+        <br/>
+        <?php $atributos = array(
+            'name' => 'boton_borrador',
+            'class' => 'btn btn-primary',
+            'type' => 'submit',
+            'value' => 'Guardar en borrador'
+        ); ?>
+
+        <?= form_submit($atributos);?>
       <?= form_close(); ?>
 
 
@@ -313,7 +404,7 @@
     <script src="<?php echo base_url(); ?>/assets/js/jquerySlim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
-    <!--<script src="<?php echo base_url(); ?>/assets/js/behaviour/crearVotacion.min.js"></script>-->
+
 
     <!-- DATETIME PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/behaviour/datepicker.js"></script>
