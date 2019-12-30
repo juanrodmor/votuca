@@ -411,5 +411,16 @@
 			$this->db->where('Id_Voto',1);
 			$this->db->update('recuento');
 		}
+
+		public function decrementarAbstenidos($idVotacion,$grupo)
+		{
+			$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion,'Id_Voto' => 1,'Id_Grupo' => $grupo));
+			$abstenidos = $consulta->row()->Num_Votos;
+			$this->db->set('Num_Votos',$abstenidos - 1);
+			$this->db->where('Id_Votacion',$idVotacion);
+			$this->db->where('Id_Grupo',$grupo);
+			$this->db->where('Id_Voto',1);
+			$this->db->update('recuento');
+		}
 }
 ?>

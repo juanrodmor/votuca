@@ -1268,6 +1268,9 @@ class Secretario extends CI_Controller{
     // Eliminar voto de esos usuarios
     $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
 
+    // Eliminar num votos de recuento
+    $this->actualizarRecuento($idVotacion,$usuariosEliminar,'eliminar');
+
 
     // BORRAR MIEMBROS DE LA MESA ELECTORAL
     $miMesa = $this->mesa_model->getMesa($idVotacion);
@@ -1404,12 +1407,17 @@ class Secretario extends CI_Controller{
     {
       // Obtiene grupos de ese usuario
       $grupos = $this->usuario_model->getUserGroups($usuario);
-      if($accion == 'añadir')
+      switch($accion)
       {
+        case 'añadir':
         foreach($grupos as $grupo)
-        {
-         $this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);
-        }
+        {$this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
+
+        case 'eliminar':
+        foreach($grupos as $grupo)
+        {$this->voto_model->decrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
       }
     }
   }
