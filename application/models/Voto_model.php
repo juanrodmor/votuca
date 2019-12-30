@@ -399,6 +399,15 @@
 				$this->db->insert('recuento',$datos);
 			}
 			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Grupo,Id_Voto,Num_Votos) VALUES ('.$idVotacion.','.$grupo.',1,'.$totalUsuarios.')");
-			}
+		}
+
+		public function incrementarAbstenidos($idVotacion,$grupo)
+		{
+			$this->db->set('Num_Votos','Num_Votos+1');
+			$this->db->where('Id_Votacion',$idVotacion);
+			$this->db->where('Id_Grupo',$grupo);
+			$this->db->where('Id_Voto',1);
+			$this->db->update('recuento');
+		}
 }
 ?>

@@ -276,7 +276,7 @@
 											'class' => 'form-control',
 											'type' => 'checkbox',
 											'id' => $censo->Nombre,
-											'value' => $censo->Nombre,
+											'value' => $censo->Id,
 											'checked' => $checkCenso
 									);
 									echo '<td>'.form_checkbox($atributos).'</td>';
