@@ -107,7 +107,6 @@ public function getCensosFromUsuarios($usuario)
     foreach ($censosUsuario as $censo)
     $idsCensos[] = $censo->Id_Fichero;
 
-    echo var_dump($idsCensos);
     if(!in_array($idCenso,$idsCensos))
     {
       $datos = array(
