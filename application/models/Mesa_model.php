@@ -140,9 +140,17 @@ class Mesa_model extends CI_Model {
 	}
 
 	//Devuelve la cantidad de un voto concreto para una votacion.
-	public function getNVotos($idVotacion, $idVoto) {
-		$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $idVoto));
-		return $consulta->result()[0]->Num_Votos;
+	public function getNVotos($idVotacion, $idVoto, $idGrupo = "") {
+		if ($idGrupo == "") {
+			$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $idVoto));
+			$total = 0;
+			foreach($consulta->result() as $row)
+				$total += $row->Num_Votos;
+			return $total;
+		} else {
+			$consulta = $this->db->get_where('recuento', array('Id_Votacion' => $idVotacion, 'Id_Voto' => $idVoto, 'Id_Grupo' => $idGrupo));
+			return $consulta->result()[0]->Num_Votos;
+		}
 	}
 
 	//Devuelve el quorum (%) requerido en una votacion.
@@ -163,16 +171,22 @@ class Mesa_model extends CI_Model {
 		$votos = $this->getOptions($idVotacion);
 		$aGrupoPonderacion = $this->getGroupData($idVotacion);
 		$contVotos = array();
+		foreach($votos['Nombre'] as $opcion) 
+			array_push($contVotos, array($opcion => array()));
 		$totalVotos = 0;
 		$abstenciones = $this->getNVotos($idVotacion, 1);
+		$opcionVoto = 0;
 		foreach($votos['Id'] as $idVoto) {
-			$nVotos = $this->getNVotos($idVotacion, $idVoto);
-			array_push($contVotos, $nVotos);
-			$totalVotos = $totalVotos + $nVotos;
+			foreach($aGrupoPonderacion['Id'] as $idGrupo) {
+				$nVotos = $this->getNVotos($idVotacion, $idVoto, $idGrupo);
+				array_push($contVotos[$votos['Nombre'][$opcionVoto]], $nVotos);
+				$totalVotos = $totalVotos + $nVotos;
+			}
+			$opcionVoto++;
 		}
 		$result = array('opciones' => $votos['Nombre'],		//Nombres de los votos.
-						'grupos' => $aGrupoPonderacion,		//['Grupo'] contiene los nombres de los grupos.		//['Ponderacion'] contiene los valores de ponderacion.
-						'cantidad' => $contVotos,			//Cantidad de votos, mismo orden que los nombres de voto.
+						'grupos' => $aGrupoPonderacion['Grupo'],		//Nombres de los grupos.
+						'matrizVotos' => $contVotos,			//Matriz con el total de votos. El primer [] tiene las opciones de voto en el mismo orden que $opciones. El segundo [] no es nominal, y tiene la cantidad de votos para el grupo i, en el mismo orden que $grupos.
 						'totalVotos' => $totalVotos,		//Suma total de votos.
 						'abstenciones' => $abstenciones,	//Cantidad de personas del censo que no han votado.
 						'quorum' => $this->getQuorum($idVotacion),	//Quorum de la votacion.
@@ -184,9 +198,10 @@ class Mesa_model extends CI_Model {
 	//Devuelve un array compuesto de un array de Nombre de grupo y un array de Ponderacion, correspondientes a la votacion dada.
 	private function getGroupData($idVotacion) {
 		$consulta = $this->db->get_where('ponderaciones', array('Id_Votacion' => $idVotacion));
-		$arrayGlobal = array('Grupo' => array(), 'Ponderacion' => array());
+		$arrayGlobal = array('Id' => array(), 'Grupo' => array(), 'Ponderacion' => array());
 		foreach($consulta->result() as $row) {
 			$consulta2 = $this->db->get_where('grupo', array('Id' => $row->Id_Grupo));
+			array_push($arrayGlobal['Id'], $consulta2->result()[0]->Id);
 			array_push($arrayGlobal['Grupo'], $consulta2->result()[0]->Nombre);
 			array_push($arrayGlobal['Ponderacion'], $row->Valor);
 		}
