@@ -973,7 +973,6 @@ class Secretario extends CI_Controller{
     $this->actualizarVotacionFromBoton('boton_publicar',true);
   }
 
-
   private function actualizarVotacionFromBoton($boton,$publicar)
   {
       if($this->input->post($boton))
@@ -1214,15 +1213,14 @@ class Secretario extends CI_Controller{
   private function extraerUsuariosCensos($censos)
   {
     $usuariosRestantes = array();
-    foreach($censos as $censo)
-    {
-      $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
-    }
-
-    $usuariosFinales = array();
-    foreach($usuariosRestantes as $conjunto)
-      foreach($conjunto as $usuario)
-      $usuariosFinales[] = $usuario->Id_Usuario;
+   foreach($censos as $censo)
+   {
+     $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
+   }
+   $usuariosFinales = array();
+   foreach($usuariosRestantes as $conjunto)
+     foreach($conjunto as $usuario)
+     $usuariosFinales[] = $usuario->Id_Usuario;
 
     return $usuariosFinales;
   }
@@ -1238,7 +1236,7 @@ class Secretario extends CI_Controller{
     $finales = array();
     foreach($borrarUsuarios as $aBorrar)
     {
-      // Obtener los censos de este usuario a borrar
+      // Obtener los ids de los censos de estos usuarios a borrar
       $susCensos = $this->censo_model->getWhereUsuario($aBorrar->Id_Usuario);
 
       if(sizeof($susCensos) == 1)
@@ -1265,6 +1263,7 @@ class Secretario extends CI_Controller{
       // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
       $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
       $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+
       // Eliminar esos usuarios de una votacion concreta
       foreach($usuariosEliminar as $usuario)
       {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
@@ -1319,12 +1318,12 @@ class Secretario extends CI_Controller{
   {
     echo 'VAMOS A AÑADIR EL CENSO: '.$censo.'<br>';
     // Extraer ID del censo que voy a añadir
-    $idCenso = $censo;
+    $idCenso =$this->censo_model->getId($censo);
     $censoExtraer[] = $idCenso;
 
     // Extraer usuarios de ese censo a añadir
-    $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
-    echo var_dump($usuariosAñadir).'<br>';
+    $usuarios = $this->extraerUsuariosFichero($censo);
+    $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
 
     // Extraer usuarios que están actualmente en el censo de esa votacion
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -1373,7 +1372,6 @@ class Secretario extends CI_Controller{
       $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
     }
 
-
     // Borrar la mesa electoral
     $this->mesa_model->deleteMesa($idVotacion);
 
@@ -1397,11 +1395,11 @@ class Secretario extends CI_Controller{
     {
       // Obtiene grupos de ese usuario
       $grupos = $this->usuario_model->getUserGroups($usuario);
-      if($accion = 'añadir')
+      if($accion == 'añadir')
       {
         foreach($grupos as $grupo)
         {
-          $this->voto_model->incrementarAbstenidos($idVotacion,$grupo);
+         $this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);
         }
       }
     }
