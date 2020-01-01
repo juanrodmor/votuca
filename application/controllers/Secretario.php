@@ -418,6 +418,7 @@ class Secretario extends CI_Controller{
         // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO ASISTENTES
         $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
         $this->censo_model->insertar($asistentes,$idVotacion);
+
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
 
@@ -824,9 +825,16 @@ class Secretario extends CI_Controller{
       $profesores = 0;
       $pas = 0;
 
-       //$usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+
+      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
+      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
+      {$censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      else{$censoTotal = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+      $this->voto_model->recuentoPorDefecto($idVotacion,4,1,$censoTotal[0]->total);
+      
       $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
 
+      // CALCULO DE CADA GRUPO
       foreach($usuariosCenso as $usuario)
       {
         $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
@@ -860,7 +868,9 @@ class Secretario extends CI_Controller{
           case 3:
             $numeroUsuarios = $profesores;
             break;
+
         }
+
         $this->voto_model->recuentoPorDefecto($idVotacion,$i,$opciones,$numeroUsuarios);
       }
       //echo var_dump($numeroUsuarios).'<br>';

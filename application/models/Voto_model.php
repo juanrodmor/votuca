@@ -386,20 +386,28 @@
 
 		public function recuentoPorDefecto($idVotacion,$grupo,$opciones,$totalUsuarios)
 		{
-			$valor = 0;
-			foreach($opciones as $opcion)
+			if($grupo == 4)
+			{
+				$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Grupo,Id_Voto,Num_Votos) VALUES ('.$idVotacion.','.$grupo.',1,'.$totalUsuarios.')");
+			}
+			else
 			{
 				$valor = 0;
-				$datos = array(
-					'Id_Votacion' => $idVotacion,
-					'Id_Grupo' => $grupo,
-					'Id_Voto' => $opcion->Id_Voto,
-					'Num_Votos' => $valor
-				);
-				$this->db->insert('recuento',$datos);
+				foreach($opciones as $opcion)
+				{
+					$valor = 0;
+					$datos = array(
+						'Id_Votacion' => $idVotacion,
+						'Id_Grupo' => $grupo,
+						'Id_Voto' => $opcion->Id_Voto,
+						'Num_Votos' => $valor
+					);
+					$this->db->insert('recuento',$datos);
+				}
+				$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Grupo,Id_Voto,Num_Votos) VALUES ('.$idVotacion.','.$grupo.',1,'.$totalUsuarios.')");
 			}
-			$this->db->query("INSERT INTO recuento (Id_Votacion,Id_Grupo,Id_Voto,Num_Votos) VALUES ('.$idVotacion.','.$grupo.',1,'.$totalUsuarios.')");
 		}
+
 
 		public function incrementarAbstenidos($idVotacion,$grupo)
 		{
