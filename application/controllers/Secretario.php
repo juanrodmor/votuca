@@ -831,7 +831,7 @@ class Secretario extends CI_Controller{
       {$censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
       else{$censoTotal = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
       $this->voto_model->recuentoPorDefecto($idVotacion,4,1,$censoTotal[0]->total);
-      
+
       $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
 
       // CALCULO DE CADA GRUPO
@@ -1420,6 +1420,8 @@ class Secretario extends CI_Controller{
       switch($accion)
       {
         case 'añadir':
+        $censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+        $this->voto_model->actualizarRecuentoTotal($idVotacion,4,1,$censoTotal[0]->total);
         foreach($grupos as $grupo)
         {$this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
         break;
@@ -1494,7 +1496,6 @@ class Secretario extends CI_Controller{
 
   private function modificarSoloCensos($idVotacion)
   {
-    echo 'VAMOS A MODIFICAR SOLO LOS CENSOS<br>';
     $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
     $censosEliminar = $this->input->post('censoEliminacion');
     $censosAñadir = $this->input->post('censo');

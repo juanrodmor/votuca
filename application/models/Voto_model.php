@@ -408,6 +408,19 @@
 			}
 		}
 
+		public function actualizarRecuentoTotal($idVotacion,$grupo,$opciones,$totalUsuarios)
+		{
+			$this->db->where('Id_Votacion',$idVotacion);
+			$this->db->where('Id_Grupo',$grupo);
+			$this->db->delete('recuento');
+			$datos = array(
+				'Id_Votacion' => $idVotacion,
+				'Id_Grupo' => $grupo,
+				'Id_Voto' => 1,
+				'Num_Votos' => $totalUsuarios
+			);
+			$this->db->insert('recuento',$datos);
+		}
 
 		public function incrementarAbstenidos($idVotacion,$grupo)
 		{
