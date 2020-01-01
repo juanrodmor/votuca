@@ -418,6 +418,7 @@ class Secretario extends CI_Controller{
         // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO ASISTENTES
         $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
         $this->censo_model->insertar($asistentes,$idVotacion);
+
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
 
@@ -824,9 +825,16 @@ class Secretario extends CI_Controller{
       $profesores = 0;
       $pas = 0;
 
-       //$usuariosTotales = $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+
+      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
+      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
+      {$censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      else{$censoTotal = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+      $this->voto_model->recuentoPorDefecto($idVotacion,4,1,$censoTotal[0]->total);
+      
       $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
 
+      // CALCULO DE CADA GRUPO
       foreach($usuariosCenso as $usuario)
       {
         $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
@@ -860,7 +868,9 @@ class Secretario extends CI_Controller{
           case 3:
             $numeroUsuarios = $profesores;
             break;
+
         }
+
         $this->voto_model->recuentoPorDefecto($idVotacion,$i,$opciones,$numeroUsuarios);
       }
       //echo var_dump($numeroUsuarios).'<br>';
@@ -961,16 +971,17 @@ class Secretario extends CI_Controller{
       );
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
-      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
+      $this->load->view('secretario/modificarVotacion_view', $datos);
 
 	}
 
   public function updateVotacion()
 	{
-    $this->actualizarVotacionFromBoton($this->input->post('boton_borrador'),false);
-    $this->actualizarVotacionFromBoton($this->input->post('boton_publicar'),true);
+    if($this->input->post('boton_borrador'))
+    $this->actualizarVotacionFromBoton('boton_borrador',false);
+    if($this->input->post('boton_publicar'))
+    $this->actualizarVotacionFromBoton('boton_publicar',true);
   }
-
 
   private function actualizarVotacionFromBoton($boton,$publicar)
   {
@@ -978,28 +989,45 @@ class Secretario extends CI_Controller{
       {
         if($this->validaciones(false,false) == FALSE) // Algun fallo en algun campo
         {$this->mostrarErrores($_POST);}
-        else
+        else // No hay ningún fallo en ningun campo campo escrito
         {
           // MODIFICAR DATOS DE LA VOTACION
           $datos = $this->actualizarVotacionDatos($publicar);
           $idVotacion = $_POST['id'];
           $idTipo = $_POST['Id_TipoVotacion'];
 
-          // MODIFICAR CENSOS DE LA VOTACION
+          // MODIFICAR CENSOS DE LA VOTACION (si es necesario)
           $soloAsistentes = false;
           if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+
+          // No hemos pulsado el solo asistentes
           if(!$soloAsistentes)
-          {$this->modificarSoloCensos($idVotacion);}
+          {
+            // Modificar censo si es necesario
+            $this->modificarSoloCensos($idVotacion);
+
+          }
           else // Hemos pulsado soloAsistentes
           {
-            if($this->validaciones(false,true) == FALSE) // Algun fallo en algun campo
-            {$this->mostrarErrores($_POST);}
-            else
+            if(!isset($_POST['asistentes']))
             {
-              if(!isset($_POST['asistentes']))
+              if($this->validaciones(false,true) == FALSE) // Algun fallo en algun campo
+              {$this->mostrarErrores($_POST);}
+              else
               {
-                echo '<br>No hay asistentes en esta votacion<br>';
+                echo 'Es una votacion que has pulsado soloAsistentes y acabas de escoger censo<br>';
+                $this->mostrarAsistentesModificar($_POST);
               }
+            }
+            else // Esta votacion tiene censo asistente
+            {
+              if($this->validaciones(true,true) == FALSE)
+              {$this->mostrarErrores($_POST);}
+              else
+              {
+                echo 'Esta votacion tiene censo asistente y además está bien introducido<br>';
+              }
+
             }
 
           /*  if(sizeof($_POST['asistentes']) >= 3)
@@ -1195,15 +1223,14 @@ class Secretario extends CI_Controller{
   private function extraerUsuariosCensos($censos)
   {
     $usuariosRestantes = array();
-    foreach($censos as $censo)
-    {
-      $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
-    }
-
-    $usuariosFinales = array();
-    foreach($usuariosRestantes as $conjunto)
-      foreach($conjunto as $usuario)
-      $usuariosFinales[] = $usuario->Id_Usuario;
+   foreach($censos as $censo)
+   {
+     $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
+   }
+   $usuariosFinales = array();
+   foreach($usuariosRestantes as $conjunto)
+     foreach($conjunto as $usuario)
+     $usuariosFinales[] = $usuario->Id_Usuario;
 
     return $usuariosFinales;
   }
@@ -1219,7 +1246,7 @@ class Secretario extends CI_Controller{
     $finales = array();
     foreach($borrarUsuarios as $aBorrar)
     {
-      // Obtener los censos de este usuario a borrar
+      // Obtener los ids de los censos de estos usuarios a borrar
       $susCensos = $this->censo_model->getWhereUsuario($aBorrar->Id_Usuario);
 
       if(sizeof($susCensos) == 1)
@@ -1239,48 +1266,58 @@ class Secretario extends CI_Controller{
   {
     // Extraer id de ese censo que quiero eliminar
     $idCenso = $this->censo_model->getId($censo);
-    $numCensos = sizeof($censosVotacion);
 
-    if($numCensos > 1) // Si una votación tiene más de un censo asignado...
+    // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
+    $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+    $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+
+    // Eliminar esos usuarios de una votacion concreta
+    foreach($usuariosEliminar as $usuario)
+    {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
+
+    // Eliminar voto de esos usuarios
+    $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+
+    // Eliminar num votos de recuento
+    $this->actualizarRecuento($idVotacion,$usuariosEliminar,'eliminar');
+
+
+    // BORRAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+    // Notificar a los usuariosMesa de la mesa que se va a la puta
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    // RENOVAR LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+
+    // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
+    $censosRestantes = array();
+    foreach($censosVotacion as $existente)
     {
-      // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
-      $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
-      $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
-      // Eliminar esos usuarios de una votacion concreta
-      foreach($usuariosEliminar as $usuario)
-      {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
-      // Eliminar voto de esos usuarios
-      $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+      if($existente != $idCenso) $censosRestantes[] = $existente;
+    }
 
+    // OBTENER USUARIOS DE ESE CENSO
+    $usuariosRestantes = array();
+    foreach($censosRestantes as $restante)
+    {
+      $nombre = $this->censo_model->getNombreCensoFromId($restante);
+      $usuarios = $this->extraerUsuariosFichero($nombre);
+      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+      foreach($usuariosIds as $id)
+      {$usuariosRestantes[] = $id;}
 
-      // BORRAR MIEMBROS DE LA MESA ELECTORAL
-      $miMesa = $this->mesa_model->getMesa($idVotacion);
-      $usuariosMesa = array();
-      foreach($miMesa as $dato)
-      {$usuariosMesa[] = $dato->Id_Usuario;}
-      // Notificar a los usuariosMesa de la mesa que se va a la puta
+    }
 
-      // Borrar la mesa electoral
-      $this->mesa_model->deleteMesa($idVotacion);
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
 
-      // RENOVAR LA MESA ELECTORAL
-      $miMesa = $this->mesa_model->getMesa($idVotacion);
-
-      // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
-      $censosRestantes = array();
-      foreach($censosVotacion as $censo)
-      {
-        if($censo != $idCenso) $censosRestantes[] = $censo;
-      }
-
-      // OBTENER USUARIOS DE ESE CENSO
-      $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
-      $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
-
-      // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
-
-    } // Fin hay varios censos
+    // Eliminar relacion con el fichero de censo
+    $this->censo_model->eliminarCenso($idVotacion,$idCenso);
   }
 
   private function eliminarCensoAsistente($censo,$idVotacion)
@@ -1299,11 +1336,12 @@ class Secretario extends CI_Controller{
   private function addCenso($censosVotacion,$censo,$idVotacion)
   {
     // Extraer ID del censo que voy a añadir
-    $idCenso = $this->censo_model->getId($censo);
+    $idCenso =$this->censo_model->getId($censo);
     $censoExtraer[] = $idCenso;
 
     // Extraer usuarios de ese censo a añadir
-    $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+    $usuarios = $this->extraerUsuariosFichero($censo);
+    $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
 
     // Extraer usuarios que están actualmente en el censo de esa votacion
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -1324,9 +1362,15 @@ class Secretario extends CI_Controller{
     // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
     $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
 
+    /*// RELACIONAR USUARIOS CON ESTE CENSO
+    foreach($)
+    $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);*/
 
     // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
+
+    // MODIFICAR EL RECUENTO DE DICHA VOTACION
+    $this->actualizarRecuento($idVotacion,$finales,'añadir');
 
     // GENERAR MIEMBROS DE LA MESA ELECTORAL
     $miMesa = $this->mesa_model->getMesa($idVotacion);
@@ -1350,7 +1394,6 @@ class Secretario extends CI_Controller{
       $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
     }
 
-
     // Borrar la mesa electoral
     $this->mesa_model->deleteMesa($idVotacion);
 
@@ -1366,6 +1409,27 @@ class Secretario extends CI_Controller{
     // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
     $this->censo_model->insertarVotacion($idVotacion,$idCenso);
 
+  }
+
+  private function actualizarRecuento($idVotacion,$usuariosFinales,$accion)
+  {
+    foreach($usuariosFinales as $usuario)
+    {
+      // Obtiene grupos de ese usuario
+      $grupos = $this->usuario_model->getUserGroups($usuario);
+      switch($accion)
+      {
+        case 'añadir':
+        foreach($grupos as $grupo)
+        {$this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
+
+        case 'eliminar':
+        foreach($grupos as $grupo)
+        {$this->voto_model->decrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
+      }
+    }
   }
 
   private function addCensoAsistente($censo,$idVotacion)
@@ -1430,6 +1494,7 @@ class Secretario extends CI_Controller{
 
   private function modificarSoloCensos($idVotacion)
   {
+    echo 'VAMOS A MODIFICAR SOLO LOS CENSOS<br>';
     $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
     $censosEliminar = $this->input->post('censoEliminacion');
     $censosAñadir = $this->input->post('censo');
