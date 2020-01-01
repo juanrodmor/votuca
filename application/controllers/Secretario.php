@@ -1005,7 +1005,6 @@ class Secretario extends CI_Controller{
           {
             // Modificar censo si es necesario
             $this->modificarSoloCensos($idVotacion);
-
           }
           else // Hemos pulsado soloAsistentes
           {
@@ -1342,6 +1341,13 @@ class Secretario extends CI_Controller{
     // Extraer usuarios de ese censo a añadir
     $usuarios = $this->extraerUsuariosFichero($censo);
     $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
+    // RELACIONAR USUARIOS CON ESTE CENSO
+    for($j = 0; $j < sizeof($usuariosAñadir); $j++)
+    {
+      // Relacionar este usuario con este censo en la bd
+      $this->censo_model->setUsuarioCenso($usuariosAñadir[$j],$idCenso);
+    }
+
 
     // Extraer usuarios que están actualmente en el censo de esa votacion
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -1362,9 +1368,7 @@ class Secretario extends CI_Controller{
     // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
     $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
 
-    /*// RELACIONAR USUARIOS CON ESTE CENSO
-    foreach($)
-    $this->censo_model->setUsuarioCenso($usuariosIds[$j],$idsFicheros[$i]);*/
+
 
     // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
@@ -1427,6 +1431,8 @@ class Secretario extends CI_Controller{
         break;
 
         case 'eliminar':
+        $censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+        $this->voto_model->actualizarRecuentoTotal($idVotacion,4,1,$censoTotal[0]->total);
         foreach($grupos as $grupo)
         {$this->voto_model->decrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
         break;
