@@ -16,14 +16,29 @@ class Usuario_model extends CI_Model {
 	{
 		$data = array(
 			'Id_Rol' => $id_rol,
-			'Id_Grupo' => $id_grupo,
+			/**'Id_Grupo' => $id_grupo,**/
 			'NombreUsuario' => $username,
 			'Password' => $password,
 			'Email' => $email
 		);
 
 		$this->db->insert('usuario', $data);
+		$this->setUserGroup($this->getId($username), $id_grupo);
+		
 	}
+	
+	// establece el grupo del usuario en la tabla usuario_grupo
+	public function setUserGroup($id_user, $id_grupo)
+	{
+		$data = array(
+			'Id_Usuario' => $id_user,
+			'Id_Grupo' => $id_grupo
+		);
+		
+		$this->db->insert('usuario_grupo', $data);
+		
+	}
+	
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -136,7 +151,7 @@ class Usuario_model extends CI_Model {
 
 	public function getGrupo($usuario)
 	{
-		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
+		$consulta = $this->db->get_where('usuario_grupo', array('Id_Usuario' => $this->getId($usuario)));
 		return $consulta->row()->Id_Grupo;
 	}
 
