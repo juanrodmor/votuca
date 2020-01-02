@@ -52,11 +52,12 @@
           if(isset($mensajeAperturaWait))
                 {
                   echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
-                }
+                }**/
           if (isset($mensajeCierreWait))
           {
             echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
           }
+          /**
           if (isset($mensajeVotacionOK))
           {
             echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionOK .'</div>';
@@ -76,11 +77,63 @@
     ?>
 
     <div id="infoVotacion">
-        <h3 id=votacionName><span class="votacionH3">$titulo</span></h3>
-        <div id="votacionDesc"><p>$descripcion</p></div>
+        <h3 id=votacionName><span class="votacionH3"><?php echo $titulo ?></span></h3>
+        <div id="votacionDesc"><p><?php echo $descripcion ?></p></div>
+
+        <h4><span>Resultados</span></h2>
+
+        <table id="resultTable">
+            <tr id="trHeader">
+              <th id="thHeaderOption">Opciones</th>
+              <?php
+                foreach ($grupos as $group)
+                {
+                  echo '<th id="thHeaderOption">'.$group.'</th>';
+                }
+              ?>
+            </tr>
+            
+              <?php
+                foreach($opciones as $option)
+                {
+                  echo '<tr id="trBody"><th id="thBodyOption>'.$option.'</th>';
+                  foreach($grupos as $group)
+                  {
+                    echo '<th id="thBodyOption'.$matrizVotos[$option][$group].'</th>';
+                  }
+                  echo '</tr>';
+                }
+              ?>                        
+        </table>
+
+        <div id="textInfo">
+          <p class="bold">Número total de electores: <?php echo $censo ?></p>
+          <div class="row">
+            <p class="col-sm-4">Total votos válidos: <?php ?></p>
+            <p class="col-sm-4">Total votos PAS: </p>
+          </div>
+          <div class="row">
+            <p class="col-sm-4">Total votos nulos: </p>
+            <p class="col-sm-4">Total votos Alumnos: </p>
+          </div>
+          <div class="row">
+            <p class="col-sm-4">Participación: <?php echo $totalVotos ?></p>
+            <p class="col-sm-4">Total votos profesores: </p>
+          </div>
+          <p>Abstención: <?php echo $abstenciones ?></p>
+          <p>Quorum: <?php $quorum ?> </p>
+        </div>
+
+        <div id="actionButtons">
+          <form action="<?php echo base_url() . '/MesaElectoral/finalizaVotacion' ?>" method="post">
+            <input type="hidden" value="" name="idVotacion">
+            <div class="form-group row">
+              <div><input type="submit" class="btn-validate form-control" name="boton_finalizar" value="Validar votación"></div>
+              <div><input type="submit" class="btn-error form-control" name="boton_finalizar" value="Invalidar votación"></div>
+            </div>
+            </form>
+        </div>
     </div>
-
-
 </div>
 
   <!-- Bootstrap core JavaScript

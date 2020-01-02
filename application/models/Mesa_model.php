@@ -200,13 +200,13 @@ class Mesa_model extends CI_Model {
 	//Devuelve el titulo de una votacion.
 	private function getVotacionTitle($idVotacion) {
 		$consulta = $this->db->get_where('votacion', array('Id' => $idVotacion));
-		return $consulta->result()[0]->Titulo;
+		return $consulta->row()->Titulo;
 	}
 	
 	//Devuelve la descripcion de una votacion.
-	private function getVotacionTitle($idVotacion) {
+	private function getVotacionDescription($idVotacion) {
 		$consulta = $this->db->get_where('votacion', array('Id' => $idVotacion));
-		return $consulta->result()[0]->Descripcion;
+		return $consulta->row()->Descripcion;
 	}
 	
 	//Devuelve un array compuesto de un array de Nombre de grupo y un array de Ponderacion, correspondientes a la votacion dada.
