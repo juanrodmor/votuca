@@ -76,8 +76,8 @@
     ?>
 
     <div id="infoVotacion">
-        <h3 id=votacionName><span class="votacionH3">Nombre de la votación</span></h3> <!-- $votacionName -->
-        <div id="votacionDesc"><p> Aquí irá la descripción de la votación </p></div> <!-- $votacionDesc -->
+        <h3 id=votacionName><span class="votacionH3">$titulo</span></h3>
+        <div id="votacionDesc"><p>$descripcion</p></div>
     </div>
 
 
