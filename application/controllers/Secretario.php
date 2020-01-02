@@ -1021,7 +1021,7 @@ class Secretario extends CI_Controller{
             {
               echo 'HEMOS PULSADO UN CENSO PARA AÑADIR AL CENSO ASISTENTE<br>';
               foreach($_POST['censo'] as $censo)
-              $this->addCensoAsistente($censo,$idVotacion);
+              {$this->addCensoAsistente($censo,$idVotacion);}
               // Se pasa el nombre del censo
             }
           }
@@ -1198,10 +1198,11 @@ class Secretario extends CI_Controller{
 
   private function extraerUsuariosCensos($censos)
   {
+
     $usuariosRestantes = array();
    foreach($censos as $censo)
    {
-     $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
+    $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
    }
    $usuariosFinales = array();
    foreach($usuariosRestantes as $conjunto)
@@ -1345,8 +1346,6 @@ class Secretario extends CI_Controller{
     // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
     $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
 
-
-
     // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
 
@@ -1421,10 +1420,19 @@ class Secretario extends CI_Controller{
   {
     // Extraer ID del censo que voy a añadir
     $idCenso = $this->censo_model->getId($censo);
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
     $censoExtraer[] = $idCenso;
 
     // Extraer usuarios de ese censo a añadir
-    $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+    //$usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+    $usuarios = $this->extraerUsuariosFichero($censo);
+    $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
+    // RELACIONAR USUARIOS CON ESTE CENSO
+    for($j = 0; $j < sizeof($usuariosAñadir); $j++)
+    {
+      // Relacionar este usuario con este censo en la bd
+      $this->censo_model->setUsuarioCenso($usuariosAñadir[$j],$idCenso);
+    }
 
     // Extraer usuarios que están actualmente en el censo asistente de esa votacion
     $totales = $this->censo_model->getCensoAsistente($idVotacion);
@@ -1446,6 +1454,48 @@ class Secretario extends CI_Controller{
     $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($finales,$idVotacion);
     $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
 
+    // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
+    $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+
+    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
+
+    // MODIFICAR EL RECUENTO DE DICHA VOTACION
+    $this->actualizarRecuento($idVotacion,$finales,'añadir');
+
+    // GENERAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    // Obtener usuarios actuales de la mesa electoral
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+
+    // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
+    foreach($usuariosMesa as $id)
+    {
+      // Obtener correo de ese miembro
+      $miembroNuevo = $this->usuario_model->getUsuario($id);
+      $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+      $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+      Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+    }
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    // Obtener todos los censos que esta votación va a tener ahora
+    $censosRestantes = array($idCenso);
+    foreach($censosVotacion as $censo)
+    {if($censo->Id_Fichero != $idCenso) $censosRestantes[] = $censo->Id_Fichero;}
+
+    // OBTENER USUARIOS DE TODOS CENSOS
+    $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
 
   }
 
