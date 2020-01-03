@@ -443,5 +443,15 @@
 			$this->db->where('Id_Voto',1);
 			$this->db->update('recuento');
 		}
+
+		public function eliminarCestoCompleto($idVotacion)
+		{
+			$query = $this->db->query("DELETE FROM usuario_votacion WHERE Id_Votacion = '$idVotacion'");
+		}
+
+		public function eliminarUrnaCompleta($idVotacion)
+		{
+			$query = $this->db->query("DELETE FROM recuento WHERE Id_Votacion = '$idVotacion'");
+		}
 }
 ?>

@@ -1005,6 +1005,8 @@ class Secretario extends CI_Controller{
           {
             // Modificar censo si es necesario
             $this->modificarSoloCensos($idVotacion);
+
+            // Habrá que quitar la posibilidad de censo asistente de la votacion
           }
           else // Hemos pulsado soloAsistentes
           {
@@ -1015,6 +1017,11 @@ class Secretario extends CI_Controller{
               {
                 if($this->validaciones(true,false) == FALSE) // Algun fallo en algun campo
                 {$this->mostrarErrores($_POST);}
+              }
+              else
+              {
+                echo 'VAMOS A ACTUALIZAR LOS ASISTENTES<br>';
+                $this->actualizarAsistentes($idVotacion,$_POST['asistentes']);
               }
             }
             else
@@ -1031,6 +1038,7 @@ class Secretario extends CI_Controller{
               foreach($_POST['censoEliminacion'] as $censo)
               {$this->eliminarCensoAsistente($censo,$idVotacion);}
             }
+
           }
 
 
@@ -1611,6 +1619,51 @@ class Secretario extends CI_Controller{
     }
   }
 
+  private function actualizarAsistentes($idVotacion,$asistentes)
+  {
+    $votacion = $this->votaciones_model->getVotacion($idVotacion);
+    $this->censo_model->eliminarTodoCenso($idVotacion);
+    $this->censo_model->eliminarTodosAsistentes($idVotacion);
+    $this->voto_model->eliminarCestoCompleto($idVotacion);
+    $this->voto_model->eliminarUrnaCompleta($idVotacion);
+
+    //Metemos los nuevos asistentes (aunque sean los mismos)
+    $noGuardadoCenso = $this->insertarUsuariosCenso($asistentes,$idVotacion);
+    $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
+    $this->generarNumeroVotos($idVotacion,$votacion->Id_TipoVotacion);
+
+
+    // GENERAR MESA ELECTORAL
+    // GENERAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    // Obtener usuarios actuales de la mesa electoral
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+
+    // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
+    foreach($usuariosMesa as $id)
+    {
+      // Obtener correo de ese miembro
+      $miembroNuevo = $this->usuario_model->getUsuario($id);
+      $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+      $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+      Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+    }
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    $this->generarMesaElectoral($asistentes,$idVotacion);
+
+
+  }
 
   /************************************/
   /*********** DELEGAR VOTACION *******/
