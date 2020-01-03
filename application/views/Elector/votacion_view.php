@@ -71,6 +71,9 @@
                   <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
                   <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
                   <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
+                  <?php if($objeto->Id_TipoVotacion == '3' OR $objeto->Id_TipoVotacion == '4' OR $objeto->Id_TipoVotacion == '6') { ?>
+                    <input type="hidden" name="id_tipoVotacion" value="<?php echo $objeto->Id_TipoVotacion; ?>"/>
+                  <?php } ?>
                   <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
                 </form>
               </td>
@@ -89,6 +92,9 @@
                     <input type="hidden" name="fch" value="<?php echo $objeto->FechaFinal; ?>"/>
                     <input type="hidden" name="modif" value="<?php echo $objeto->VotoModificable; ?>"/>
                     <input type="hidden" name="opc" value="<?php echo $objeto->NumOpciones; ?>"/>
+                    <?php if($objeto->Id_TipoVotacion == '3' OR $objeto->Id_TipoVotacion == '4' OR $objeto->Id_TipoVotacion == '6') { ?>
+                      <input type="hidden" name="id_tipoVotacion" value="<?php echo $objeto->Id_TipoVotacion; ?>"/>
+                    <?php } ?>
                     <br><input style="background-color:#455a64;border-color:#455a64;" class="btn btn-primary" type="submit" value="Votar">
                   </form>
                 </td>

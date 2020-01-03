@@ -12,7 +12,8 @@
 			$sql = "select votacion.Id, votacion.Titulo, votacion.Descripcion,
 							votacion.FechaInicio, votacion.FechaFinal,
 							votacion.VotoModificable, votacion.NumOpciones,
-							votacion.Finalizada, votacion.Invalida
+							votacion.Finalizada, votacion.Invalida,
+							votacion.Id_TipoVotacion
 						from votacion, censo
 						where votacion.Id = censo.Id_Votacion
 							AND censo.Id_Usuario = ".$id_user."
@@ -213,6 +214,13 @@
 				return true;
 			else
 				return false;
+		}
+
+		public function _gruposUsuarioVotacion($id_usuario) {
+			$sql = $this->db->query("select grupo.Nombre from grupo, usuario_grupo 
+										where usuario_grupo.Id_Usuario = ".$id_usuario."
+										AND usuario_grupo.Id_Grupo = grupo.Id ");
+			return $sql->result();
 		}
 
 		public function _usuarioVotacionToRecuento( $id_votacion ) {	// pasar tabla de usuario_votacion a recuento

@@ -54,26 +54,28 @@
             <?php echo "<h4 style='padding-left:2%;'> Información: </h4>";?>
           </td>
         </tr>
-        <tr>
-          <td style="border-style:none;">
-            <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span>";
-                  else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span>"; 
-            ?>
-          </td>
-        </tr>
-        <tr>
-          <td style="border-style:none;">
-            <?php 
-              if($modif == 1)
-                echo "<span class='alert alert-info' role='alert' style='padding-left:2%;margin-left:2%;'> El voto es rectificable </span>";
-              if($modif != 1)
-                echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;margin-left:2%;'> El voto NO es rectificable </span>";
-            ?>
-          </td>
-        </tr>
-        <tr>
-          <td style="border-style:none;">
-          <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post" name="votosdisp">
+
+        <td style="border-style:none;">
+        <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post" name="votosdisp">
+          <?php if(isset($grupos)) { ?> 
+              <span style='padding-left:2%;'> Debe elegir cómo desea votar. </span> <br><br>
+              <select name="grupo" style="margin-left:5%;">
+                <?php foreach($grupos as $grupo) { ?>
+                  <option value="<?php echo $grupo->Nombre; ?>"> <?php echo $grupo->Nombre; ?></option>
+                <?php } ?>
+              </select> <br><br>
+          <?php } ?>
+
+          <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span> <br><br>";
+                else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span> <br><br>"; 
+          ?>
+          
+          <?php 
+            if($modif == 1)
+              echo "<span class='alert alert-info' role='alert' style='padding-left:2%;margin-left:2%;'> El voto es rectificable </span><br>";
+            if($modif != 1)
+              echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;margin-left:2%;'> El voto NO es rectificable </span><br>";
+          ?>
       <center>
         <?php
           if(form_error('voto') != NULL)
@@ -89,6 +91,9 @@
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
               <input type="hidden" name="modif" value="<?php echo $modif; ?>"/>
               <input type="hidden" name="opc" value="<?php echo $opc; ?>"/>
+              <?php if(isset($grupos)) { ?>
+                <input type="hidden" name="id_tipoVotacion" value="<?php echo $id_tipoVotacion; ?>"/>
+              <?php } ?>
               <!-- <div style=""> -->
                 <?php 
                   if($opc > 1) {  //votacion compleja 

@@ -55,30 +55,50 @@ class Elector_controller extends CI_Controller {
 			$modif = $_POST['modif'];
 			$opc = $_POST['opc'];
 
+			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
+			$votos = $this->Voto_model->_votosDisponibles($id_votacion);
+
+			if(isset($_POST['id_tipoVotacion'])) {
+				$id_tipoVotacion = $_POST['id_tipoVotacion'];
+				$grupos = $this->Voto_model->_gruposUsuarioVotacion($id_usuario);
+				$datos = array(
+					'id_votacion' => $id_votacion,
+					'id_usuario' => $id_usuario,
+					'descrip' => $descrip,
+					'titulo' => $titulo,
+					'fch' => $fch,
+					'modif' => $modif,
+					'opc' => $opc,
+					'votos' => $votos,
+					'id_tipoVotacion' => $id_tipoVotacion,
+					'grupos' => $grupos
+				);
+			}
+			else {
+				$datos = array(
+					'id_votacion' => $id_votacion,
+					'id_usuario' => $id_usuario,
+					'descrip' => $descrip,
+					'titulo' => $titulo,
+					'fch' => $fch,
+					'modif' => $modif,
+					'opc' => $opc,
+					'votos' => $votos
+				);
+			}
+
 				$title['titulo'] = 'VOTACION';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$title);
 				//$this->load->view('elementos/headerComun',$inicio);
 				$this->load->view('elementos/headerVotacion',$inicio);
-			$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-			$votos = $this->Voto_model->_votosDisponibles($id_votacion);
-			$datos = array(
-				'id_votacion' => $id_votacion,
-				'id_usuario' => $id_usuario,
-				'descrip' => $descrip,
-				'titulo' => $titulo,
-				'fch' => $fch,
-				'modif' => $modif,
-				'opc' => $opc,
-				'votos' => $votos
-			);
 			$this->load->view('Elector/voto_view', $datos);
 			//$this->load->view('elementos/footer');	// arreglar footer
 		}
 
     }
 
-    public function guardarVoto() {
+    public function guardarVoto() {	//ahora recibo un parametro más... $_POST['grupo'] y tengo que hacer cambios en _votar() para votar segun el grupo seleccionado
 
     	if(!isset($_POST['id_votacion']) OR !isset($_POST['titulo'])  OR !isset($_POST['descrip']) OR !isset($_POST['fch']) OR !isset($_POST['modif']) OR !isset($_POST['opc']) ){
     		$mensaje = "Acceda debidamente a la opción de votar para poder guardar un voto, por favor.";
@@ -113,16 +133,34 @@ class Elector_controller extends CI_Controller {
 				else {
 			    	$votos = $this->Voto_model->_votosDisponibles($id_votacion);
 			    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-			    	$datos = array(
-		    		'id_votacion' => $id_votacion,
-		    		'id_usuario' => $id_usuario,
-		    		'descrip' => $descrip,
-					'titulo' => $titulo,
-					'fch' => $fch,
-					'modif' => $modif,
-					'opc' => $opc,
-		    		'votos' => $votos
-		    		);
+			    	if(isset($_POST['id_tipoVotacion'])) {
+			    		$id_tipoVotacion = $_POST['id_tipoVotacion'];
+						$grupos = $this->Voto_model->_gruposUsuarioVotacion($id_usuario);
+						$datos = array(
+							'id_votacion' => $id_votacion,
+							'id_usuario' => $id_usuario,
+							'descrip' => $descrip,
+							'titulo' => $titulo,
+							'fch' => $fch,
+							'modif' => $modif,
+							'opc' => $opc,
+							'votos' => $votos,
+							'id_tipoVotacion' => $id_tipoVotacion,
+							'grupos' => $grupos
+						);
+					}
+					else {
+						$datos = array(
+							'id_votacion' => $id_votacion,
+							'id_usuario' => $id_usuario,
+							'descrip' => $descrip,
+							'titulo' => $titulo,
+							'fch' => $fch,
+							'modif' => $modif,
+							'opc' => $opc,
+							'votos' => $votos
+						);
+					}
 				    	$title['titulo'] = 'VOTACION';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
@@ -151,16 +189,34 @@ class Elector_controller extends CI_Controller {
     			else {
     				$votos = $this->Voto_model->_votosDisponibles($id_votacion);
 			    	$id_usuario = $this->Voto_model->_userId($_SESSION['usuario']);
-			    	$datos = array(
-		    		'id_votacion' => $id_votacion,
-		    		'id_usuario' => $id_usuario,
-		    		'descrip' => $descrip,
-					'titulo' => $titulo,
-					'fch' => $fch,
-					'modif' => $modif,
-					'opc' => $opc,
-		    		'votos' => $votos
-		    		);
+			    	if(isset($_POST['id_tipoVotacion'])) {
+			    		$id_tipoVotacion = $_POST['id_tipoVotacion'];
+						$grupos = $this->Voto_model->_gruposUsuarioVotacion($id_usuario);
+						$datos = array(
+							'id_votacion' => $id_votacion,
+							'id_usuario' => $id_usuario,
+							'descrip' => $descrip,
+							'titulo' => $titulo,
+							'fch' => $fch,
+							'modif' => $modif,
+							'opc' => $opc,
+							'votos' => $votos,
+							'id_tipoVotacion' => $id_tipoVotacion,
+							'grupos' => $grupos
+						);
+					}
+					else {
+						$datos = array(
+							'id_votacion' => $id_votacion,
+							'id_usuario' => $id_usuario,
+							'descrip' => $descrip,
+							'titulo' => $titulo,
+							'fch' => $fch,
+							'modif' => $modif,
+							'opc' => $opc,
+							'votos' => $votos
+						);
+					}
 				    	$title['titulo'] = 'LISTA DE VOTACIONES';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
