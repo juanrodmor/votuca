@@ -45,7 +45,7 @@
 		}
 
 		// Votar
-		public function _votar ( $id_usuario, $id_votacion, $voto, $modif )
+		public function _votar ( $id_usuario, $id_votacion, $voto, $modif, $tipoVot = FALSE )
 		{
 			if(gettype($voto) == "string") { 			//votacion simple
 
@@ -117,6 +117,17 @@
 
 						// Decrementar el numero de abstenidos de recuento si aun no se había votado
 						if(!$this->_haVotado($id_votacion)) {
+							//-----
+
+							if($tipoVot == FALSE) {		//implementar
+
+
+
+
+
+
+
+
 							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
 							//$sql = $sql->result();
 							$numVotos = $sql->row()->Num_Votos;
@@ -124,6 +135,7 @@
 
 							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
+							}
 						}
 
 						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
