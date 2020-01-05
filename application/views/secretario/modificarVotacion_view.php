@@ -325,7 +325,9 @@
 							 <?php
 							 $i = 0;
 							 foreach($asistentes as $asistente)
-							 {?>
+							 {
+								 if(isset($asistentesExistentes) && $asistentesExistentes == true) $checkAsis = false;
+								 else{$checkAsis = true;}?>
 							 <td><?php echo $asistente?></td>
 							 <?php
 								 echo '<div class="form-check">';
@@ -334,7 +336,7 @@
 										 'class' => 'form-control',
 										 'type' => 'checkbox',
 										 'id' => 'censo',
-										 'checked' => true,
+										 'checked' => $checkAsis,
 										 'value' => $idsAsistentes[$i]
 								 );
 								 $i++;
@@ -343,6 +345,11 @@
 						 </div>
 						 <?php echo '</tr>'; ?>
 				 <?php } ?>
+				 <?php
+					$atributos = array(
+						 'ultimoPaso' => $ultimoPaso
+				 ); ?>
+				 <?= form_hidden($atributos) ?> <br/><br/>
 			 </tbody>
 		 </table>
 	 </div>
