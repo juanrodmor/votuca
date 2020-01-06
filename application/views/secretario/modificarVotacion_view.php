@@ -154,7 +154,14 @@
 			<div class="form-group">
 			      <div class="row">
 			        <div class="col-sm-6">
-								<?php foreach($nombresVotos as $nombre){ ?>
+								<?php
+
+								 foreach($nombresVotos as $nombre)
+								 {
+									 $opciones[] = $nombre.',';
+								 }
+								 echo var_dump($opciones);
+									?>
 			      <?php
 			       $atributos = array(
 			          'id' => 'opciones',
@@ -162,9 +169,9 @@
 			          'class' => 'form-control',
 			          'placeholder' =>'Introduzca las opciones posibles',
 			          'required' => true,
-			          'value' => $nombre.','
+			          //'value' => null
 			        ); ?>
-						<?php } ?>
+
 			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
 			      <p> Separe cada opción por una coma </p>
 			      <?= form_input($atributos) ?> <br/><br/>
