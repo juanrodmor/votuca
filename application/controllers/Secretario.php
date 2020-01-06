@@ -950,14 +950,15 @@ class Secretario extends CI_Controller{
       }
 
       // SACAR OPCIONES DE UNA VOTACION
-      /*if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
+      $nombresVotos = NULL;
+      if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
          || $votacion->Id_TipoVotacion == 4 || $votacion->Id_TipoVotacion == 6)
       {
         $idsVotos = $this->voto_model->getVotosFromVotacion($votacion->Id);
         foreach($idsVotos as $id)
-        $nombresVotos = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
+        $nombresVotos[] = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
       }
-      echo var_dump($nombresVotos);*/
+      echo var_dump($nombresVotos);
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -968,6 +969,7 @@ class Secretario extends CI_Controller{
         'cambiarOpciones' => $cambiarOpciones,
         'asistentes' => $asistentes,
         'idsAsistentes' => $idsAsistentes,
+        'nombresVotos' => $nombresVotos,
         'ultimoPaso' => false,
       );
       // SACAR TIPO DE VOTACION

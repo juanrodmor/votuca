@@ -151,23 +151,24 @@
 	      </div>
 	    </div>
 
-
 			<div class="form-group">
 			      <div class="row">
 			        <div class="col-sm-6">
+								<?php foreach($nombresVotos as $nombre){ ?>
 			      <?php
-			      $totales = array();
 			       $atributos = array(
 			          'id' => 'opciones',
 			          'name' => 'opciones',
 			          'class' => 'form-control',
 			          'placeholder' =>'Introduzca las opciones posibles',
 			          'required' => true,
-			          'value' => set_value('opciones')
+			          'value' => $nombre.','
 			        ); ?>
+						<?php } ?>
 			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
 			      <p> Separe cada opción por una coma </p>
 			      <?= form_input($atributos) ?> <br/><br/>
+
 			      </div>
 			      </div>
 			    </div>
