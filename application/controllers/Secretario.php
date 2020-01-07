@@ -19,6 +19,7 @@ class Secretario extends CI_Controller{
 
   }
 
+
   public function index($mensaje = ''){
     // SEGURIDAD DEL QR
     $verified = $this->session->userdata('verified');
@@ -995,9 +996,9 @@ class Secretario extends CI_Controller{
         else // No hay ningún fallo en ningun campo campo escrito
         {
           // MODIFICAR DATOS DE LA VOTACION
-          $antesModificar = $this->votaciones_model->getVotacion($_POST['id']);
-          $datos = $this->actualizarVotacionDatos($publicar);
           $idVotacion = $_POST['id'];
+          $antesModificar = $this->votaciones_model->getVotacion($idVotacion);
+          $datos = $this->actualizarVotacionDatos($publicar);
           $idTipo = $_POST['Id_TipoVotacion'];
 
           // MODIFICAR CENSOS DE LA VOTACION (si es necesario)
@@ -1007,12 +1008,6 @@ class Secretario extends CI_Controller{
           // Votacion que nunca ha sido con solo asistentes
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == false)
           {
-            //echo 'Esta votacion no tenia censo asistente y sigue sin tenerlo. Solo se modificaran sus censos en caso de ser necesario<br>';
-            /*if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3)
-            {
-              if($this->validaciones(true,false) == FALSE) // Algun fallo en algun campo
-              {$this->mostrarErrores($_POST);}
-            }*/
             // Modificar censo si es necesario
             $this->modificarSoloCensos($idVotacion);
 
@@ -1037,7 +1032,7 @@ class Secretario extends CI_Controller{
           }
           if($soloAsistentes && $antesModificar->SoloAsistentes == true ) // Hemos pulsado soloAsistentes
           {
-            echo 'Esta votacion tenia censo asistente y SIGUE TENIENDO.<br>';
+            //echo 'Esta votacion tenia censo asistente y SIGUE TENIENDO.<br>';
             if(isset($_POST['censo']) && $_POST['ultimoPaso'] == false)
             {
               $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
@@ -1052,51 +1047,29 @@ class Secretario extends CI_Controller{
             }
             else
             {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
-            /*if(!isset($_POST['censo']))
-            {
-              if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3)
-              {
-                if($this->validaciones(true,false) == FALSE) // Algun fallo en algun campo
-                {$this->mostrarErrores($_POST);}
-              }
-              else
-              {
-                echo 'VAMOS A ACTUALIZAR LOS ASISTENTES<br>';
-                $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');
-              }
-            }
-            else // HAS SELECCIONADO UN CENSO
-            {
-              if(isset($_POST['censo']) && $_POST['ultimoPaso'] == false)
-              {
-                $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
-              }
-              if(isset($_POST['censo']) && isset($_POST['asistentes']) && $_POST['ultimoPaso'] == true)
-              {
-                $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');
-              }
+
               // ESTO ES PARA AÑADIR EL CENSO ENTERO SIN SELECCIONAR ASISTENTES CONCRETOS
               //foreach($_POST['censo'] as $censo)
               //{$this->addCensoAsistente($censo,$idVotacion);}
               // Se pasa el nombre del censo
-            }
-            if(isset($_POST['censoEliminacion']))
+
+            /*if(isset($_POST['censoEliminacion']))
             {
               echo 'SOLO ASISTENTES SIGUE PULSADO Y VAS A BORRAR CENSOS<br>';
               foreach($_POST['censoEliminacion'] as $censo)
               {$this->eliminarCensoAsistente($censo,$idVotacion);}
             }*/
 
-          } // FIN DE BOTON DE SOLO ASISTENTES PULSADO
-
-
           }
-          $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
+
 
         }
-          /*if($modificada != NULL){
-              $this->index('La votación se ha modificado correctamente');
-            }*/
+          $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
+
+      }
+      /*if($modificada != NULL)
+          $this->index('La votación se ha modificado correctamente');*/
+
   }
 
   /**********************************************/

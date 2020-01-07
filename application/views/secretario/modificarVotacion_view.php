@@ -56,6 +56,7 @@
 					'class' => 'form-control',
 					'id' => 'titulo',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Titulo
 			); ?>
 			<?= form_label('Titulo','titulo'); ?>
@@ -68,6 +69,7 @@
 					'class' => 'form-control',
 					'id' => 'descripcion',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Descripcion
 			); ?>
 			<?= form_label('Descripcion','descripcion'); ?>
@@ -86,6 +88,7 @@
 		              'placeholder' =>'Selecciona una fecha de inicio',
 		              'setEndDate' => date('Y-m-d'),
 		              'required' => true,
+									'autocomplete' => 'off',
 		              'value' => $votaciones->FechaInicio
 		          	); ?>
 		    <?= form_label('Fecha Inicio','fecha_inicio'); ?>
@@ -104,6 +107,7 @@
 		              'data-toggle' => 'datetimepicker',
 		              'placeholder' =>'Selecciona una fecha de finalizacion',
 		              'required' => true,
+									'autocomplete' => 'off',
 		              'value' => $votaciones->FechaFinal
 		        	  ); ?>
 		 		<?= form_label('Fecha Final','fecha_final'); ?>
@@ -120,6 +124,7 @@
 					'id' => 'quorum',
 					'placeholder' =>'Introduzca el quorum de esta votación',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Quorum // Mantiene el valor en el form
 			); ?>
 			<?= form_label('Quorum','quorum'); ?>
@@ -143,6 +148,7 @@
 	          'class' => 'form-control',
 	          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
 	          'required' => true,
+						'autocomplete' => 'off',
 	          'value' => $votaciones->NumOpciones
 	      ); ?>
 	      <?= form_label('Total de opciones a votar','nOpciones'); ?>
@@ -169,6 +175,7 @@
 			          'class' => 'form-control',
 			          'placeholder' =>'Introduzca las opciones posibles',
 			          'required' => true,
+								'autocomplete' => 'off',
 			          'value' => $opciones
 			        ); ?>
 
