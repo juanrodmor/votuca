@@ -1019,7 +1019,7 @@ class Secretario extends CI_Controller{
           }
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == true)
           {
-            echo 'Esta votacion tenia censo asistente y ahora se lo hemos quitado.HAY QUE QUITAR EL CENSO ASISTENTE Y DEJAR EL CENSO';
+          $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
           }
           if($soloAsistentes && $antesModificar->SoloAsistentes == false)
           {
