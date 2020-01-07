@@ -1000,6 +1000,7 @@ class Secretario extends CI_Controller{
           $antesModificar = $this->votaciones_model->getVotacion($idVotacion);
           $datos = $this->actualizarVotacionDatos($publicar);
           $idTipo = $_POST['Id_TipoVotacion'];
+          $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
 
           // JUEGO DE ASISTENTES
           $soloAsistentes = false;
@@ -1015,7 +1016,7 @@ class Secretario extends CI_Controller{
           // 2. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION TENIA ASISTENTES
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == true)
           {
-          $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
+            $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
           }
 
           // 3. PULSADO SOLO ASISTENTES Y LA VOTACION NO TENIA ASISTENTES
@@ -1057,6 +1058,13 @@ class Secretario extends CI_Controller{
                 }
                 else
                 {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
+              }
+            }
+            if(isset($_POST['censoEliminacion']) && $_POST['censoEliminacion'] != NULL)
+            {
+              foreach($_POST['censoEliminacion'] as $censo)
+              {
+                $this->eliminarCensoAsistente($censo,$idVotacion);
               }
             }
           }
@@ -1274,6 +1282,7 @@ class Secretario extends CI_Controller{
 
     // Extraer usuarios de ese censo concreto que quiero borrar
     $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);
+
     $finales = array();
     foreach($borrarUsuarios as $aBorrar)
     {
@@ -1287,6 +1296,7 @@ class Secretario extends CI_Controller{
           {$finales[] = $susCensos[0]->Id_Usuario; }
       }
     }
+
     return $finales;
   }
 
@@ -1353,7 +1363,6 @@ class Secretario extends CI_Controller{
 
   private function eliminarCensoAsistente($censo,$idVotacion)
   {
-    //echo var_dump($censo);
     // Extraer id de ese censo que quiero eliminar
     $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
     $idCenso = $this->censo_model->getId($censo);
@@ -1743,6 +1752,14 @@ class Secretario extends CI_Controller{
     {
       $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
       $noGuardadoCenso = $this->insertarUsuariosCenso($asistentes,$idVotacion);
+      $censos = $_POST['censo'];
+      foreach($censos as $nombreCenso)
+      {
+        $idCenso = $this->censo_model->getId($nombreCenso);
+        foreach($asistentes as $asistente)
+        $this->censo_model->setUsuarioCenso($asistente,$idCenso);
+      }
+
 
       // Ver si podemos relacionar un fichero de censo con esta votacion
       $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -1759,9 +1776,21 @@ class Secretario extends CI_Controller{
         // Extraer usuarios de ese censo a añadir
         $usuarios = $this->extraerUsuariosFichero($censo);
         $usuariosCenso = $this->extraerIdsUsuarios($usuarios);
-
-        if($idsTotales == $usuariosCenso)
-          {$this->censo_model->insertarVotacion($idVotacion,$idCenso);}
+        echo 'IDS DEL CENSO ACTUAL DE LA VOTACION<br>';
+        echo var_dump($idsTotales).'<br>';
+        echo 'IDS DEL CENSO MARCADO<br>';
+        echo var_dump($usuariosCenso).'<br>';
+        $totales = sizeof($usuariosCenso);
+        $contador = 0;
+        foreach($idsTotales as $usuarioAnalizar)
+        {
+          if(in_array($usuarioAnalizar,$usuariosCenso))
+          {$contador = $contador + 1;}
+        }
+        if($contador == $totales)
+        {
+          $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+        }
       }
 
       // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
