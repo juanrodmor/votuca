@@ -155,12 +155,12 @@
 			      <div class="row">
 			        <div class="col-sm-6">
 								<?php
-
+								$opciones = NULL;
 								 foreach($nombresVotos as $nombre)
 								 {
-									 $opciones[] = $nombre.',';
+									 $opciones .= $nombre.',';
 								 }
-								 echo var_dump($opciones);
+									$opciones = rtrim($opciones, ", ");
 									?>
 			      <?php
 			       $atributos = array(
@@ -169,7 +169,7 @@
 			          'class' => 'form-control',
 			          'placeholder' =>'Introduzca las opciones posibles',
 			          'required' => true,
-			          //'value' => null
+			          'value' => $opciones
 			        ); ?>
 
 			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
