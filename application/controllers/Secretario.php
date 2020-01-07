@@ -1059,36 +1059,9 @@ class Secretario extends CI_Controller{
                 {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
               }
             }
-
-
-
-
-            /*if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3 && $_POST['ultimoPaso'] == false )
-            {
-              if($this->validaciones(true,false) == FALSE)
-              {$this->mostrarErrores($_POST);}
-            }
-            else
-            {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}*/
-
-              // ESTO ES PARA AÑADIR EL CENSO ENTERO SIN SELECCIONAR ASISTENTES CONCRETOS
-              //foreach($_POST['censo'] as $censo)
-              //{$this->addCensoAsistente($censo,$idVotacion);}
-              // Se pasa el nombre del censo
-
-            /*if(isset($_POST['censoEliminacion']))
-            {
-              echo 'SOLO ASISTENTES SIGUE PULSADO Y VAS A BORRAR CENSOS<br>';
-              foreach($_POST['censoEliminacion'] as $censo)
-              {$this->eliminarCensoAsistente($censo,$idVotacion);}
-            }*/
-
           }
-
-
         }
           $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
-
       }
       /*if($modificada != NULL)
           $this->index('La votación se ha modificado correctamente');*/
@@ -1213,7 +1186,7 @@ class Secretario extends CI_Controller{
 
     // CHECKBOXES ENCENDIDOS
     $soloAsistentes = false;
-    if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
+    if($misDatos['soloAsistentes'] == 1){$soloAsistentes = true;}
 
     $esModificable = false;
     if($votacion->VotoModificable == 1){$esModificable = true;}
@@ -1257,8 +1230,6 @@ class Secretario extends CI_Controller{
       'asistentesExistentes' => true,
       'ultimoPaso' => true
     );
-    $tipoVotacion = $votacion->Id_TipoVotacion;
-
     $this->load->view('secretario/modificarVotacion_view', $datos);
 
 
