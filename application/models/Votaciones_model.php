@@ -25,8 +25,7 @@ class Votaciones_model extends CI_Model{
 
 	public function updateVotacion($votacion,$idVotacion)
   {
-    echo var_dump($votacion);
-  	$realizado = false;
+    $realizado = false;
     $this->db->where('Id', $idVotacion);
     $this->db->update('votacion',$votacion);
     $realizado = true;

@@ -1001,21 +1001,24 @@ class Secretario extends CI_Controller{
           $datos = $this->actualizarVotacionDatos($publicar);
           $idTipo = $_POST['Id_TipoVotacion'];
 
-          // MODIFICAR CENSOS DE LA VOTACION (si es necesario)
+          // JUEGO DE ASISTENTES
           $soloAsistentes = false;
           if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
 
-          // Votacion que nunca ha sido con solo asistentes
+          // 1. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION NO TENIA ASISTENTES
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == false)
           {
             // Modificar censo si es necesario
             $this->modificarSoloCensos($idVotacion);
 
           }
+          // 2. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION TENIA ASISTENTES
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == true)
           {
           $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
           }
+
+          // 3. PULSADO SOLO ASISTENTES Y LA VOTACION NO TENIA ASISTENTES
           if($soloAsistentes && $antesModificar->SoloAsistentes == false)
           {
             // Pasar censo actual de la votacion al censo asistente
@@ -1023,30 +1026,50 @@ class Secretario extends CI_Controller{
             $idsTotales = array();
             foreach($totales as $usuario)
             {$idsTotales[] = $usuario->Id_Usuario;}
-            $this->actualizarAsistentes($idVotacion,$idsTotales,'resetear');
+            $this->actualizarAsistentes($idVotacion,$idsTotales,'transferirCenso');
 
             // Comprobar si se añaden nuevos censos
             if(isset($_POST['censo']) && !isset($_POST['asistentes']))
              $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
 
           }
-          if($soloAsistentes && $antesModificar->SoloAsistentes == true ) // Hemos pulsado soloAsistentes
+
+          // 4. PULSADO SOLO ASISTENTES Y LA VOTACION TENIA ASISTENTES
+          if($soloAsistentes && $antesModificar->SoloAsistentes == true )
           {
             //echo 'Esta votacion tenia censo asistente y SIGUE TENIENDO.<br>';
             if(isset($_POST['censo']) && $_POST['ultimoPaso'] == false)
             {
               $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
             }
-            if(isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
-            {  $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');}
+            else
+            {
+              if(isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
+              {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');}
+              else if(!isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
+              {$this->recargarDatosVotacion($_POST,NULL);}
+              else
+              {
+                if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3 && $_POST['ultimoPaso'] == false )
+                {
+                  if($this->validaciones(true,false) == FALSE)
+                  {$this->mostrarErrores($_POST);}
+                }
+                else
+                {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
+              }
+            }
 
-            if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3)
+
+
+
+            /*if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3 && $_POST['ultimoPaso'] == false )
             {
               if($this->validaciones(true,false) == FALSE)
               {$this->mostrarErrores($_POST);}
             }
             else
-            {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
+            {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}*/
 
               // ESTO ES PARA AÑADIR EL CENSO ENTERO SIN SELECCIONAR ASISTENTES CONCRETOS
               //foreach($_POST['censo'] as $censo)
@@ -1710,15 +1733,21 @@ class Secretario extends CI_Controller{
       $this->generarMesaElectoral($asistentes,$idVotacion);*/
     }
 
+    if($accion == 'transferirCenso')
+    {
+      $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+    }
+
     if($accion == 'llamarNuevos')
     {
+      // Sacar usuarios del censo de esa votacion
       $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
       $idsTotales = array();
       foreach($totales as $usuario)
       {$idsTotales[] = $usuario->Id_Usuario;}
 
       // Obtener usuarios del censo actual
-      $asistentesActuales = $idsTotales ;
+      $asistentesActuales = $idsTotales;
       if(isset($_POST['asistentes']))
       {$asistentesActuales = $_POST['asistentes'];}
 
