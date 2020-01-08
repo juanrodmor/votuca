@@ -169,7 +169,7 @@ class Secretario extends CI_Controller{
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
             else{$this->aceptarInsercion($tipo,false);}
 
-          }          
+          }
         }
       }
     }
@@ -229,7 +229,7 @@ class Secretario extends CI_Controller{
 
     switch($tipo)
     {
-      case 1:
+      case 'VotacionSimple':
       $votacion = new Votacion(
       //$this->input->post('id'),
           1,
@@ -249,7 +249,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 2:
+        case 'VotacionCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
           2,
@@ -269,7 +269,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 3:
+        case 'ConsultaSimple':
         $votacion = new Votacion(
           //$this->input->post('id'),
           3,
@@ -289,7 +289,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 4:
+        case 'ConsultaCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
           4,
@@ -309,7 +309,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 5:
+        case 'EleccionRepresentantes':
         $votacion = new Votacion(
           //$this->input->post('id'),
           5,
@@ -329,7 +329,7 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 6:
+        case 'CargosUniponderados':
         $votacion = new Votacion(
           //$this->input->post('id'),
           6,
