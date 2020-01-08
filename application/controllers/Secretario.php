@@ -68,7 +68,7 @@ class Secretario extends CI_Controller{
   //public function encriptado($palabra){echo password_hash($palabra,PASSWORD_DEFAULT);}
 
   // FUNCION QUE LLAMA A LAS VISTAS
-  public function crearVotacion($tipo = '')
+  public function crearVotacion($nombreTipo = '')
   {
     $adicionales = array();
     $this->load->view('elementos/headerSecretario');
@@ -78,14 +78,15 @@ class Secretario extends CI_Controller{
     $datos = array(
       'censos' => $nombreCensos
     );
-    switch($tipo)
+    $tipoVotacion = $this->votaciones_model->getTipoVotacion($nombreTipo);
+    switch($tipoVotacion->Nombre)
     {
       case 'VotacionSimple':
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
                         'permitirOpciones' => false,
-                        'tipoVotacion' => 1);
+                        'tipoVotacion' => $tipoVotacion->Id);
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
       case 'VotacionCompleja':
@@ -93,7 +94,7 @@ class Secretario extends CI_Controller{
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
                       'permitirOpciones' => true,
-                      'tipoVotacion' => 2);
+                      'tipoVotacion' => $tipoVotacion->Id);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -102,7 +103,7 @@ class Secretario extends CI_Controller{
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
                       'permitirOpciones' => false,
-                      'tipoVotacion' => 3);
+                      'tipoVotacion' => $tipoVotacion->Id);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -111,7 +112,7 @@ class Secretario extends CI_Controller{
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
                       'permitirOpciones' => true,
-                      'tipoVotacion' => 4);
+                      'tipoVotacion' => $tipoVotacion->Id);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -120,7 +121,7 @@ class Secretario extends CI_Controller{
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
                       'permitirOpciones' => true,
-                      'tipoVotacion' => 5);
+                      'tipoVotacion' => $tipoVotacion->Id);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -129,7 +130,7 @@ class Secretario extends CI_Controller{
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => false,
                       'permitirOpciones' => true,
-                      'tipoVotacion' => 6);
+                      'tipoVotacion' => $tipoVotacion->Id);
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
@@ -231,7 +232,7 @@ class Secretario extends CI_Controller{
     $this->guardarVotacion($votacion);
   }
 
-  private function prepararVotacion($tipo,$enBorrador)
+  private function prepararVotacion($nombreTipo,$enBorrador)
   {
     $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
     $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
@@ -248,13 +249,13 @@ class Secretario extends CI_Controller{
     if($this->input->post('soloAsistentes') != NULL)
         $soloAsistentes = true;
 
-
-    switch($tipo)
+    $tipoVotacion = $this->votaciones_model->getTipoVotacion($nombreTipo);
+    switch($tipoVotacion->Nombre)
     {
       case 'VotacionSimple':
       $votacion = new Votacion(
       //$this->input->post('id'),
-          1,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -274,7 +275,7 @@ class Secretario extends CI_Controller{
         case 'VotacionCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          2,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -294,7 +295,7 @@ class Secretario extends CI_Controller{
         case 'ConsultaSimple':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          3,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -314,7 +315,7 @@ class Secretario extends CI_Controller{
         case 'ConsultaCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          4,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -334,7 +335,7 @@ class Secretario extends CI_Controller{
         case 'EleccionRepresentantes':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          5,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
@@ -354,7 +355,7 @@ class Secretario extends CI_Controller{
         case 'CargosUniponderados':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          6,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
