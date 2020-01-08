@@ -80,7 +80,7 @@ class Secretario extends CI_Controller{
     );
     switch($tipo)
     {
-      case 'simple':
+      case 'VotacionSimple':
         $datos += array('permitirAsistentes' => true,
                         'permitirPonderaciones' => false,
                         'permitirRecuento' => false,
@@ -88,7 +88,7 @@ class Secretario extends CI_Controller{
                         'tipoVotacion' => 1);
         $this->load->view('secretario/crearVotacion_view',$datos);
         break;
-      case 'compleja':
+      case 'VotacionCompleja':
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
@@ -97,7 +97,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultasimple':
+      case 'ConsultaSimple':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
@@ -106,7 +106,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultacompleja':
+      case 'ConsultaCompleja':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => true,
@@ -115,7 +115,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'representantes':
+      case 'EleccionRepresentantes':
       $datos += array('permitirAsistentes' => true,
                       'permitirPonderaciones' => false,
                       'permitirRecuento' => false,
@@ -124,7 +124,7 @@ class Secretario extends CI_Controller{
       $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'uniponderados':
+      case 'CargosUniponderados':
       $datos += array('permitirAsistentes' => false,
                       'permitirPonderaciones' => true,
                       'permitirRecuento' => false,
@@ -139,7 +139,8 @@ class Secretario extends CI_Controller{
 
   public function insertarVotacion()
   {
-    $tipo = $this->input->post('Id_TipoVotacion');
+    $idTipo = $this->input->post('Id_TipoVotacion');
+    $tipo = $this->votaciones_model->getNombreTipo($idTipo);
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
       if($this->input->post('soloAsistentes') != NULL
@@ -153,17 +154,22 @@ class Secretario extends CI_Controller{
       }
       else
       {
+
         if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
         {$this->mostrarAsistentes($tipo);}
         else
         {
-          if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+
+          if($this->input->post('soloAsistentes') != NULL && !isset($_POST['censo']))
+          {if($this->validaciones(false,true) == FALSE)
+            {$this->crearVotacion($tipo);}}
+          else if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
           {
-            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            if($this->validaciones(false,true) == FALSE)
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
             else{$this->aceptarInsercion($tipo,false);}
 
-          }
+          }          
         }
       }
     }
@@ -1776,10 +1782,6 @@ class Secretario extends CI_Controller{
         // Extraer usuarios de ese censo a añadir
         $usuarios = $this->extraerUsuariosFichero($censo);
         $usuariosCenso = $this->extraerIdsUsuarios($usuarios);
-        echo 'IDS DEL CENSO ACTUAL DE LA VOTACION<br>';
-        echo var_dump($idsTotales).'<br>';
-        echo 'IDS DEL CENSO MARCADO<br>';
-        echo var_dump($usuariosCenso).'<br>';
         $totales = sizeof($usuariosCenso);
         $contador = 0;
         foreach($idsTotales as $usuarioAnalizar)

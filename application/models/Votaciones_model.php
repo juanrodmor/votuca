@@ -77,7 +77,12 @@ class Votaciones_model extends CI_Model{
     return $query->result();
   }
 
-
+  public function getNombreTipo($idTipo)
+  {
+   $consulta = $this->db->get_where('tipo_votacion', array('Id' => $idTipo));
+   return $consulta->row()->Nombre;
+   
+  }
 
 
 
