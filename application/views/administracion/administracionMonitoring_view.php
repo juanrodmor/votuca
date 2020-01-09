@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Panel de administración - Gestionar roles</title>
+    <title>Panel de administración - Auditorías</title>
 
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
@@ -33,6 +33,7 @@
             <div class="col-xs-12 col-sm-8" id="linkBox">
               <a href="#" class="marked">Auditoría</a>
               <a href="<?= base_url().'administrador_controller/gestionusuarios'?>" class="unmarked">Modificar rol</a>
+              <a href="<?= base_url().'administrador_controller/unblockUsers'?>" class="unmarked">Desbloquear usuarios</a>
             </div>
         </div>
     </div>

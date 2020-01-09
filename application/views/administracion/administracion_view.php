@@ -32,6 +32,7 @@
             <div class="col-xs-12 col-sm-8" id="linkBox">
               <a href="<?= base_url().'administrador_controller/monitoring'?>" class="unmarked">Auditoría</a>
               <a href="#" class="marked">Modificar rol</a>
+              <a href="<?= base_url().'administrador_controller/unblockUsers'?>" class="unmarked">Desbloquear usuarios</a>
             </div>
         </div>
     </div>

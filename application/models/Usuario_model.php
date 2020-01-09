@@ -39,6 +39,29 @@ class Usuario_model extends CI_Model {
 		
 	}
 	
+	//Devuelve un array de usuarios bloqueados en el sistema
+	public function getBlocked()
+	{
+		$consulta = $this->db->get_where('autorizacion', array('blocked' => 1));
+		if($consulta->num_rows() > 0) 
+		{	
+			//$authKeyBlocked = $consulta->row_array(); print_r($authKeyBlocked);
+			$returnData = array();
+			foreach($consulta->result() as $individual)
+			{
+				//print_r($individual->auth_key);
+				//$this->db->get_where('usuario', array('Auth' => $individual->auth_key));
+				//print_r($this->db->row()->NombreUsuario);
+				array_push($returnData, $this->db->get_where('usuario', array('Auth' => $individual->auth_key))->row()->NombreUsuario);
+			}		
+			return $returnData;
+		}
+		else
+		{
+			return array();
+		}
+	}
+	
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
