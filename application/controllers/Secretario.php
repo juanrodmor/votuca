@@ -1033,6 +1033,7 @@ class Secretario extends CI_Controller{
           $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
 
           // JUEGO DE ASISTENTES
+          $finalizado = false;
           $soloAsistentes = false;
           if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
 
@@ -1041,12 +1042,14 @@ class Secretario extends CI_Controller{
           {
             // Modificar censo si es necesario
             $this->modificarSoloCensos($idVotacion);
+            $finalizado = true;
 
           }
           // 2. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION TENIA ASISTENTES
           if(!$soloAsistentes && $antesModificar->SoloAsistentes == true)
           {
             $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
+            $finalizado = true;
           }
 
           // 3. PULSADO SOLO ASISTENTES Y LA VOTACION NO TENIA ASISTENTES
@@ -1076,7 +1079,10 @@ class Secretario extends CI_Controller{
             else
             {
               if(isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
-              {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');}
+              {
+                $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');
+                $finalizado = true;
+              }
               else if(!isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
               {$this->recargarDatosVotacion($_POST,NULL);}
               else
@@ -1087,7 +1093,10 @@ class Secretario extends CI_Controller{
                   {$this->mostrarErrores($_POST);}
                 }
                 else
-                {$this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');}
+                {
+                  $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');
+                  $finalizado = true;
+                }
               }
             }
             if(isset($_POST['censoEliminacion']) && $_POST['censoEliminacion'] != NULL)
@@ -1095,14 +1104,15 @@ class Secretario extends CI_Controller{
               foreach($_POST['censoEliminacion'] as $censo)
               {
                 $this->eliminarCensoAsistente($censo,$idVotacion);
+                $finalizado = true;
               }
             }
           }
         }
           $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
       }
-      /*if($modificada != NULL)
-          $this->index('La votación se ha modificado correctamente');*/
+      if($modificada != NULL && $finalizado)
+          $this->index('La votación se ha modificado correctamente');
 
   }
 
@@ -1233,6 +1243,7 @@ class Secretario extends CI_Controller{
     $idsAsistentes = array();
     $asistentesNombre = array();
     $asistentes = array();
+    $mensaje = null;
     if($soloAsistentes && $asistentesRecibidos == NULL )
     {
       $usuariosAsistentes = $this->censo_model->getCensoAsistente($misDatos['id']);
@@ -1255,7 +1266,7 @@ class Secretario extends CI_Controller{
 
       foreach($asistentesNombre as $nombre)
       {$asistentes[] = $nombre[0]->NombreUsuario;}
-
+      $mensaje = 'Seleccione abajo el censo asistente';
     }
     $datos = array(
       'censos' => $nombreCensos,
@@ -1266,6 +1277,7 @@ class Secretario extends CI_Controller{
       'asistentes' => $asistentes,
       'idsAsistentes' => $idsAsistentes,
       'asistentesExistentes' => true,
+      'mensaje' => $mensaje,
       'ultimoPaso' => true
     );
     $this->load->view('secretario/modificarVotacion_view', $datos);
