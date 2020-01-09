@@ -25,8 +25,7 @@ class Votaciones_model extends CI_Model{
 
 	public function updateVotacion($votacion,$idVotacion)
   {
-    echo var_dump($votacion);
-  	$realizado = false;
+    $realizado = false;
     $this->db->where('Id', $idVotacion);
     $this->db->update('votacion',$votacion);
     $realizado = true;
@@ -65,11 +64,6 @@ class Votaciones_model extends CI_Model{
     return $query->result();
   }
 
-  public function contarUsuariosGrupos($grupo)
-  {
-
-  }
-
   public function getLastId()
   {
     $query = $this->db->query("SELECT Id FROM votacion ORDER BY Id DESC LIMIT 1");
@@ -83,7 +77,18 @@ class Votaciones_model extends CI_Model{
     return $query->result();
   }
 
+  public function getNombreTipo($idTipo)
+  {
+   $consulta = $this->db->get_where('tipo_votacion', array('Id' => $idTipo));
+   return $consulta->row()->Nombre;
 
+  }
+
+  public function getTipoVotacion($nombre)
+  {
+    $consulta = $this->db->get_where('tipo_votacion', array('Nombre' => $nombre));
+    return $consulta->row();
+  }
 
 
 

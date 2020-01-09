@@ -31,6 +31,7 @@ class Mailing
 
       public function sendEmail($username, $asunto, $mensaje)
       {
+        //$email = $username;
         $email = $this->CI->usuario_model->getEmail($username);
         $this->CI->email->from($this->config['smtp_user'], 'VOTUCA');
         $this->CI->email->to($email);

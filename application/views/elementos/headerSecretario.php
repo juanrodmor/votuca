@@ -17,12 +17,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Crear votaciones</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/simple'?>">Simple</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/compleja'?>">Compleja</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/consultasimple'?>">Consulta simple</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/consultacompleja'?>">Consulta compleja</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/representantes'?>">Elección representantes</a>
-            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/uniponderados'?>">Cargos uniponderados</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/VotacionSimple'?>">Simple</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/VotacionCompleja'?>">Compleja</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/ConsultaSimple'?>">Consulta simple</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/ConsultaCompleja'?>">Consulta compleja</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/EleccionRepresentantes'?>">Elección representantes</a>
+            <a class="dropdown-item" href="<?= base_url().'secretario/crearVotacion/CargosUniponderados'?>">Cargos uniponderados</a>
           </div>
         </li>
         <li class="nav-item active">
