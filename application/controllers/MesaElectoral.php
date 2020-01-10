@@ -39,7 +39,11 @@ class MesaElectoral extends CI_Controller{
           $inicio['inicio'] = '/MesaElectoral';
           $votaciones = $this->obtenerVotaciones();
   		$data = array_merge(array('votaciones'=> $votaciones), $votos);
-            $this->load->view('MesaElectoral/MesaElectoral_view',$data);
+            
+			if(isset($data['votacion']))
+				$this->load->view('MesaElectoral/MesaElectoral_enVotacion_view', $data);	
+			else
+				$this->load->view('MesaElectoral/MesaElectoral_view',$data);
             //$this->load->view('elementos/footer');
           break;
 

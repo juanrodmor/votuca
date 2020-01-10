@@ -511,6 +511,19 @@
 			}
 		}
 
+		public function actualizarRecuentoTotal($idVotacion,$grupo,$opciones,$totalUsuarios)
+		{
+			$this->db->where('Id_Votacion',$idVotacion);
+			$this->db->where('Id_Grupo',$grupo);
+			$this->db->delete('recuento');
+			$datos = array(
+				'Id_Votacion' => $idVotacion,
+				'Id_Grupo' => $grupo,
+				'Id_Voto' => 1,
+				'Num_Votos' => $totalUsuarios
+			);
+			$this->db->insert('recuento',$datos);
+		}
 
 		public function incrementarAbstenidos($idVotacion,$grupo)
 		{
@@ -532,6 +545,16 @@
 			$this->db->where('Id_Grupo',$grupo);
 			$this->db->where('Id_Voto',1);
 			$this->db->update('recuento');
+		}
+
+		public function eliminarCestoCompleto($idVotacion)
+		{
+			$query = $this->db->query("DELETE FROM usuario_votacion WHERE Id_Votacion = '$idVotacion'");
+		}
+
+		public function eliminarUrnaCompleta($idVotacion)
+		{
+			$query = $this->db->query("DELETE FROM recuento WHERE Id_Votacion = '$idVotacion'");
 		}
 }
 ?>

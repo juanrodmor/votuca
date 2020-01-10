@@ -249,6 +249,16 @@ class Administrador_controller extends CI_Controller {
 		$this->load->view('administracion/administracion_view');
 		//$this->load->view('elementos/footer');
 	}
+	
+	public function unblockUsers()
+	{
+		$data = array('bloqueados' => $this->Usuario_model->getBlocked());
+		//GENERAR DATOS DE USUARIOS BLOQUEADOS Y PASARLO A LA VISTA
+		// ARRAY CON NOMBRE BLOQUEADOS ---> $data = array('bloqueados' => ...)			
+		
+		$this->load->view('administracion/administracion_unblockUser_view', $data);
+	}
+	
 }
 
 ?>

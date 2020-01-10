@@ -33,8 +33,8 @@
             <div class="col-xs-12 col-sm-8" id="linkBox">
               <a href="<?php echo base_url() . 'MesaElectoral';?>" class="marked">Votaciones</a>
             </div>
-      </div>
     </div>
+ </div>
 
         <!----- AQUI ACABA EL ENCABEZADO --->
 
@@ -52,13 +52,12 @@
           if(isset($mensajeAperturaWait))
                 {
                   echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
-                }
-          */
+                }**/
           if (isset($mensajeCierreWait))
           {
             echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
           }
-          /** 
+          /**
           if (isset($mensajeVotacionOK))
           {
             echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionOK .'</div>';
@@ -77,41 +76,65 @@
         
     ?>
 
-    <?php
-    if(isset($votaciones) && count($votaciones) != 0)
-    {
-      echo'
-      <div class="card" id="card-options">
-       <ul class="list-group list-group-flush">';
-        foreach($votaciones as $objeto){
-          echo'
-            <li id="single-option" class="list-group-item"> 
-            <form action="'. base_url('MesaElectoral/recuentoVotos') . '" method="post">
-                <div id="data-option">
-                    <h4 style="color:black; font-weight: bold;">'.$objeto->Titulo.'</h4>
-                    <p style="margin: 0;">Fecha de inicio: '.$objeto->FechaInicio.'</p>
-                    <p style="margin: 0;">Fecha de fin: '.$objeto->FechaFinal.'</p>
-                    <input type="hidden" id="votacionId" name="recuento" value="'.$objeto->Id.'">
-                </div>
-                <div id="btn-div">';
-                    if($objeto->FechaFinal == date('Y-m-d H:i:s') || $objeto->FechaFinal < date('Y-m-d H:i:s'))
-                      echo '<input type="submit" class="btn-custom" name="boton_recuento" value="Abrir urna">';
-                    else
-                      echo '<input type="submit" class="btn-custom" name="boton_recuento" value="Abrir urna" disabled';
-                echo'
-                </div>
+    <div id="infoVotacion">
+        <h3 id=votacionName><span class="votacionH3"><?php echo $titulo ?></span></h3>
+        <div id="votacionDesc"><p><?php echo $descripcion ?></p></div>
+
+        <h4><span>Resultados</span></h2>
+
+        <table id="resultTable">
+            <tr id="trHeader">
+              <th id="thHeaderOption">Opciones</th>
+              <?php
+                foreach ($grupos as $group)
+                {
+                  echo '<th id="thHeaderOption">'.$group.'</th>';
+                }
+              ?>
+            </tr>
+            
+              <?php
+                foreach($opciones as $option)
+                {
+                  echo '<tr id="trBody"><th id="thBodyOption>'.$option.'</th>';
+                  foreach($grupos as $group)
+                  {
+                    echo '<th id="thBodyOption'.$matrizVotos[$option][$group].'</th>';
+                  }
+                  echo '</tr>';
+                }
+              ?>                        
+        </table>
+
+        <div id="textInfo">
+          <p class="bold">Número total de electores: <?php echo $censo ?></p>
+          <div class="row">
+            <p class="col-sm-4">Total votos válidos: <?php ?></p>
+            <p class="col-sm-4">Total votos PAS: </p>
+          </div>
+          <div class="row">
+            <p class="col-sm-4">Total votos nulos: </p>
+            <p class="col-sm-4">Total votos Alumnos: </p>
+          </div>
+          <div class="row">
+            <p class="col-sm-4">Participación: <?php echo $totalVotos ?></p>
+            <p class="col-sm-4">Total votos profesores: </p>
+          </div>
+          <p>Abstención: <?php echo $abstenciones ?></p>
+          <p>Quorum: <?php $quorum ?> </p>
+        </div>
+
+        <div id="actionButtons">
+          <form action="<?php echo base_url() . '/MesaElectoral/finalizaVotacion' ?>" method="post">
+            <input type="hidden" value="" name="idVotacion">
+            <div class="form-group row">
+              <div><input type="submit" class="btn-validate form-control" name="boton_finalizar" value="Validar votación"></div>
+              <div><input type="submit" class="btn-error form-control" name="boton_finalizar" value="Invalidar votación"></div>
+            </div>
             </form>
-            </li>';
-          }
-          echo '
-            </ul></div>
-          ';
-      }
-    ?>
+        </div>
+    </div>
 </div>
-
-
-
 
   <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -119,16 +142,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <!-- Scripts para la tabla de votaciones -->
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-   <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-   <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-   <!--<script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>-->
-   <script src="<?php echo base_url()."assets/js/behaviour/mesa_electoral.js"?>"></script>
-
-    <!-- DATE PICKER -->
-    <script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>
 
   </body>
 </html>

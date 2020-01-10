@@ -61,6 +61,11 @@ class Censo_model extends CI_Model{
     //return $query->result();
   }
 
+  public function eliminarTodoCenso($idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM censo WHERE Id_Votacion = '$idVotacion'");
+  }
+
   public function eliminarCenso($idVotacion,$idFichero)
   {
     $idFichero = $idFichero;
@@ -134,6 +139,11 @@ public function getCensosFromUsuarios($usuario)
   public function eliminarUsuariosAsistentes($idUsuario,$idVotacion)
   {
     $query = $this->db->query("DELETE FROM censo_asistente WHERE Id_Votacion = '$idVotacion' AND Id_Usuario = '$idUsuario'");
+  }
+
+  public function eliminarTodosAsistentes($idVotacion)
+  {
+    $query = $this->db->query("DELETE FROM censo_asistente WHERE Id_Votacion = '$idVotacion'");
   }
 
   public function getCensoAsistente($idVotacion)
