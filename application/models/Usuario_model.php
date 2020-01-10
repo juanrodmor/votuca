@@ -62,6 +62,14 @@ class Usuario_model extends CI_Model {
 		}
 	}
 	
+	//Elimina el bloqueo de inicio de sesión para el usuario username.
+	public function desbloquearByUsername($username) {
+		$consultaAuth = $this->db->get_where('usuario', array('NombreUsuario' => $username));
+		$auth = $consultaAuth->row()->Auth;
+		$this->db->where('auth', $auth);
+		$this->db->update('autorizacion', array('attemps' => 0, 'blocked' => 0));
+	}
+	
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -177,6 +185,17 @@ class Usuario_model extends CI_Model {
 	{
 		$consulta = $this->db->get_where('usuario_grupo', array('Id_Usuario' => $this->getId($usuario)));
 		return $consulta->row()->Id_Grupo;
+	}
+	
+	//Devuelve un array con los nombres de usuario de aquellos cuyo acceso está bloqueado.
+	public function getNameOfBlockedUsers() {
+		$result = array();
+		$consultaAuth = $this->db->get_where('autorizacion', array('blocked' => 1));
+		foreach($consultaAuth->result() as $auth) {
+			$consultaUser = $this->db->get_where('usuario', array('Auth' => $auth->auth_key));
+			array_push($result, $consultaUser->row()->NombreUsuario);
+		}
+		return $result;
 	}
 
 	public function setAuth($usuario, $auth)

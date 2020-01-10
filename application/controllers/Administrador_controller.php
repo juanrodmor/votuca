@@ -217,6 +217,25 @@ class Administrador_controller extends CI_Controller {
 			$this->index();
 		}
 	}
+	
+	//Función principal de la zona de desbloqueo.
+	public function desbloqueo($data = array()) {
+		$arrayBloqueados = $this->Usuario_model->getNameOfBlockedUsers();
+		$data['bloqueados'] = $arrayBloqueados;
+		$this->load->view('administracion/administracion_unblockUser_view', $data);
+	}
+	
+	public function desbloquearUsuario()
+	{
+		$data = array();
+		if($this->input->post('checkBoxInput'))
+		{
+			$username = $this->input->post('checkBoxInput');
+			$this->Usuario_model->desbloquearByUsername($username);
+			$data['mensajeDesbloqueadoOK'] = 'El usuario '.$username.' fue correctamente desbloqueado!';
+		}
+		$this->desbloqueo($data);
+	}
 
 /**
 	public function nuevoRol() {
