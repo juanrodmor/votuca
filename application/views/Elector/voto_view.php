@@ -57,14 +57,15 @@
 
         <td style="border-style:none;">
         <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post" name="votosdisp">
-          <?php if(isset($grupos)) { ?> 
-              <span style='padding-left:2%;'> Debe elegir cómo desea votar. </span> <br><br>
-              <select name="grupo" style="margin-left:5%;">
-                <?php foreach($grupos as $grupo) { ?>
-                  <option value="<?php echo $grupo->Nombre; ?>"> <?php echo $grupo->Nombre; ?></option>
-                <?php } ?>
-              </select> <br><br>
-          <?php } ?>
+
+          <span style='padding-left:2%;'> Debe elegir cómo desea votar. </span> <br><br>
+          <select name="grupo" style="margin-left:5%;">
+            <?php foreach($grupos as $grupo) { ?>
+              <option value="<?php echo $grupo->Nombre; ?>"> <?php echo $grupo->Nombre; ?></option>
+            <?php } ?>
+          </select> 
+
+          <br><br>
 
           <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span> <br><br>";
                 else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span> <br><br>"; 
@@ -91,9 +92,6 @@
               <input type="hidden" name="fch" value="<?php echo $fch; ?>"/>
               <input type="hidden" name="modif" value="<?php echo $modif; ?>"/>
               <input type="hidden" name="opc" value="<?php echo $opc; ?>"/>
-              <?php if(isset($grupos)) { ?>
-                <input type="hidden" name="id_tipoVotacion" value="<?php echo $id_tipoVotacion; ?>"/>
-              <?php } ?>
               <!-- <div style=""> -->
                 <?php 
                   if($opc > 1) {  //votacion compleja 
