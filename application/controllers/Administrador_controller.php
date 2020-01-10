@@ -15,7 +15,7 @@ class Administrador_controller extends CI_Controller {
 
 	public function index() {
 		$verified = $this->session->userdata('verified');
-		if(isset($verified) && $verified == true)
+		if(isset($verified) && $verified == 'true')
 		{
 			switch ($this->session->userdata('rol')) {
 				case 'Administrador':

@@ -19,10 +19,11 @@ class Secretario extends CI_Controller{
 
   }
 
+
   public function index($mensaje = ''){
     // SEGURIDAD DEL QR
     $verified = $this->session->userdata('verified');
-    if(isset($verified) && $verified == true)
+    if(isset($verified) && $verified == 'true')
     {
       // Seguridad Básica URL
       switch ($this->session->userdata('rol')) {
@@ -59,12 +60,15 @@ class Secretario extends CI_Controller{
 
   }
 
+
   /************************************/
   /*********** CREAR VOTACION *********/
   /************************************/
+
   //public function encriptado($palabra){echo password_hash($palabra,PASSWORD_DEFAULT);}
+
   // FUNCION QUE LLAMA A LAS VISTAS
-  public function crearVotacion($tipo = '')
+  public function crearVotacion($nombreTipo = '')
   {
     $adicionales = array();
     $this->load->view('elementos/headerSecretario');
@@ -72,45 +76,72 @@ class Secretario extends CI_Controller{
     // CENSO
     $nombreCensos = $this->censo_model->getCensos();
     $datos = array(
-      'pulsadoModificar' => true,
-      'pulsadoParalelo' => true,
-      'pulsadoAsistentes' => true,
       'censos' => $nombreCensos
     );
-    switch($tipo)
+    $tipoVotacion = $this->votaciones_model->getTipoVotacion($nombreTipo);
+    switch($tipoVotacion->Nombre)
     {
-      case 'simple':
-        $datos += array('soloAsistentes' => true);
-        $this->load->view('secretario/votacionSimple_view',$datos);
+      case 'VotacionSimple':
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => false,
+                        'tipoVotacion' => $tipoVotacion->Id);
+        $this->load->view('secretario/crearVotacion_view',$datos);
         break;
-      case 'compleja':
-      $datos += array('soloAsistentes' => true);
-      $this->load->view('secretario/votacionCompleja_view',$datos);
+      case 'VotacionCompleja':
+      $datos += array('permitirAsistentes' => true,
+                      'permitirPonderaciones' => false,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => $tipoVotacion->Id);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultasimple':
-      $this->load->view('secretario/consultaSimple_view',$datos);
+      case 'ConsultaSimple':
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => true,
+                      'permitirOpciones' => false,
+                      'tipoVotacion' => $tipoVotacion->Id);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'consultacompleja':
-      $this->load->view('secretario/consultaCompleja_view',$datos);
+      case 'ConsultaCompleja':
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => true,
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => $tipoVotacion->Id);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'representantes':
-      $datos += array('soloAsistentes' => true);
-      $this->load->view('secretario/eleccionRepresentantes_view',$datos);
+      case 'EleccionRepresentantes':
+      $datos += array('permitirAsistentes' => true,
+                      'permitirPonderaciones' => false,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => $tipoVotacion->Id);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
-      case 'uniponderados':
-      $this->load->view('secretario/cargosUniponderados_view',$datos);
+      case 'CargosUniponderados':
+      $datos += array('permitirAsistentes' => false,
+                      'permitirPonderaciones' => true,
+                      'permitirRecuento' => false,
+                      'permitirOpciones' => true,
+                      'tipoVotacion' => $tipoVotacion->Id);
+      $this->load->view('secretario/crearVotacion_view',$datos);
       break;
 
     }
     //$this->load->view('elementos/footer');*/
   }
 
-  public function insertarVotacion($tipo)
+  public function insertarVotacion()
   {
+    $idTipo = $this->input->post('Id_TipoVotacion');
+    $tipo = $this->votaciones_model->getNombreTipo($idTipo);
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
       if($this->input->post('soloAsistentes') != NULL
@@ -118,21 +149,75 @@ class Secretario extends CI_Controller{
          && $this->input->post('censo') != NULL
          ) // SI HAS ELEGIDO ASISTENTES
       {
-          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
-          {{$this->mostrarAsistentes($tipo);}} // Hay que arreglarla para los asistentes
-          else{$this->aceptarInsercion($tipo);} // NO HAY ERROR EN VALIDACIONES
+        if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+        {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+        else{$this->aceptarInsercion($tipo,false);} // NO HAY ERROR EN VALIDACIONES
       }
       else
       {
-        if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+        if($this->input->post('soloAsistentes') != NULL
+           && $this->input->post('asistentes') == NULL
+           && $this->input->post('censo') != NULL
+           ) // SI NO HAS ELIGIDO ASISTENTES
+        {
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+          else{$this->aceptarInsercion($tipo,false);} // NO HAY ERROR EN VALIDACIONES
+        }
+        else if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
         {$this->mostrarAsistentes($tipo);}
         else
         {
-          if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+
+          if($this->input->post('soloAsistentes') != NULL && !isset($_POST['censo']))
+          {if($this->validaciones(false,true) == FALSE)
+            {$this->crearVotacion($tipo);}}
+          else if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
           {
-            if($this->validaciones(false,true) == FALSE) // Hay algun error
+            if($this->validaciones(false,true) == FALSE)
             {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
-            else{$this->aceptarInsercion($tipo);}
+            else{$this->aceptarInsercion($tipo,false);}
+
+          }
+        }
+      }
+    }
+
+    if($this->input->post('boton_borrador'))
+    {
+      if($this->input->post('soloAsistentes') != NULL
+         && $this->input->post('asistentes') != NULL
+         && $this->input->post('censo') != NULL
+         ) // SI HAS ELEGIDO ASISTENTES
+      {
+        if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+        {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+        else{$this->aceptarInsercion($tipo,true);} // NO HAY ERROR EN VALIDACIONES
+      }
+      else
+      {
+        if($this->input->post('soloAsistentes') != NULL
+           && $this->input->post('asistentes') == NULL
+           && $this->input->post('censo') != NULL
+           ) // SI NO HAS ELIGIDO ASISTENTES
+        {
+          if($this->validaciones(true,true) == FALSE) // HAY ALGUN ERROR AL INTRODUCIR DATOS
+          {$this->mostrarAsistentes($tipo);} // Hay que arreglarla para los asistentes
+          else{$this->aceptarInsercion($tipo,true);} // NO HAY ERROR EN VALIDACIONES
+        }
+        else if($this->input->post('soloAsistentes') != NULL && $this->input->post('censo') != NULL)
+        {$this->mostrarAsistentes($tipo);}
+        else
+        {
+
+          if($this->input->post('soloAsistentes') != NULL && !isset($_POST['censo']))
+          {if($this->validaciones(false,true) == FALSE)
+            {$this->crearVotacion($tipo);}}
+          else if($this->input->post('asistentes') == NULL) // NO HAY ASISTENTES, SOLO CENSO
+          {
+            if($this->validaciones(false,true) == FALSE)
+            {$this->crearVotacion($tipo);} // Mostrar mensajes de error en la vista
+            else{$this->aceptarInsercion($tipo,true);}
 
           }
         }
@@ -140,14 +225,14 @@ class Secretario extends CI_Controller{
     }
   }
 
-  private function aceptarInsercion($tipo)
+  private function aceptarInsercion($tipo,$enBorrador)
   {
     // CREAR VOTACION EN BASE A SU TIPO
-    $votacion = $this->prepararVotacion($tipo);
+    $votacion = $this->prepararVotacion($tipo,$enBorrador);
     $this->guardarVotacion($votacion);
   }
 
-  private function prepararVotacion($tipo)
+  private function prepararVotacion($nombreTipo,$enBorrador)
   {
     $fechaInicio = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_inicio')));
     $fechaFin = date('Y-m-d H:i:s',strtotime($this->input->post('fecha_final')));
@@ -164,19 +249,19 @@ class Secretario extends CI_Controller{
     if($this->input->post('soloAsistentes') != NULL)
         $soloAsistentes = true;
 
-
-    switch($tipo)
+    $tipoVotacion = $this->votaciones_model->getTipoVotacion($nombreTipo);
+    switch($tipoVotacion->Nombre)
     {
-      case 'simple':
+      case 'VotacionSimple':
       $votacion = new Votacion(
       //$this->input->post('id'),
-          1,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false,
-          false,
+          $enBorrador,
           false,
           false,
           $this->input->post('quorum'),
@@ -187,16 +272,16 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'compleja':
+        case 'VotacionCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          2,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -207,16 +292,16 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'consultasimple':
+        case 'ConsultaSimple':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          3,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -227,16 +312,16 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'consultacompleja':
+        case 'ConsultaCompleja':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          4,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -247,16 +332,16 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'representantes':
+        case 'EleccionRepresentantes':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          5,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -267,16 +352,16 @@ class Secretario extends CI_Controller{
         );
         break;
 
-        case 'uniponderados':
+        case 'CargosUniponderados':
         $votacion = new Votacion(
           //$this->input->post('id'),
-          6,
+          $tipoVotacion->Id,
           $this->input->post('titulo'),
           $this->input->post('descripcion'),
           $fechaInicio,
           $fechaFin,
           false, // Deleted
-          false, // EsBorrador
+          $enBorrador, // EsBorrador
           false, // Finalizada
           false, //Invalida
           $this->input->post('quorum'),
@@ -342,12 +427,11 @@ class Secretario extends CI_Controller{
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($totales,$idVotacion,1);
 
-        // MESA ELECTORAL
-        $this->generarMesaElectoral($totales,$idVotacion);
+        // MESA ELECTORAL Y CORREOS
+        $correoEnviado = $this->generarMesaElectoral($totales,$idVotacion);
 
         // GUARDAR NUM_VOTOS EN RECUENTO
         $this->generarNumeroVotos($idVotacion,$datos->getTipo());
-
       }
      else
       {  // GUARDAR ASISTENTES
@@ -364,37 +448,37 @@ class Secretario extends CI_Controller{
         // METER TODOS LOS USUARIOS EXTRAIDOS EN EL CENSO ASISTENTES
         $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
         $this->censo_model->insertar($asistentes,$idVotacion);
+
         // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
         $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
 
-        // MESA ELECTORAL
-        $this->generarMesaElectoral($asistentes,$idVotacion);
+        // MESA ELECTORAL Y CORREOS
+        $correoEnviado = $this->generarMesaElectoral($asistentes,$idVotacion);
 
         // GUARDAR NUM_VOTOS EN RECUENTO
         $this->generarNumeroVotos($idVotacion,$datos->getTipo());
       }
 
-      // FINAL DE ESTA MIERDA
-
-      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto )
+      // MOSTRAR MENSAJE FINAL
+      if($noGuardado && $noGuardadoCenso && $votoUsuarioDefecto && $correoEnviado != 'success')
       {
         $datos = array('mensaje'=>'La votación NO se ha guardado');
         $this->load->view('secretario/crearVotacion_view',$datos);
       }
       else{
-        $datos = array('mensaje'=>'La votación se ha guardado correctamente');
-        $this->index('La votación se ha guardado correctamente');
+        $this->index('La votación se ha guardado correctamente.');
       }
     }
 
 
-  /****************************************/
-  /********* FUNCIONES AUXILIARES *********/
-  /****************************************/
+  /**************************************************/
+  /********* FUNCIONES AUXILIARES INSERTAR  *********/
+  /**************************************************/
 
     // LLAMA A LA VISTA MOSTRANDO ASISTENTES
     private function mostrarAsistentes($tipo)
     {
+      $idTipo = $this->input->post('Id_TipoVotacion');
       $esModificable = false;
       if($this->input->post('esModificable') != NULL)
           $esModificable = true;
@@ -442,7 +526,8 @@ class Secretario extends CI_Controller{
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios,
-          'mensaje' => 'Seleccione abajo el censo asistente'
+          'mensaje' => 'Seleccione abajo el censo asistente',
+          'tipoVotacion' => $idTipo
       );
       $this->llamarVistasCrear($tipo,$datos);
 
@@ -451,35 +536,56 @@ class Secretario extends CI_Controller{
     private function llamarVistasCrear($tipo,$datos)
     {
       $this->load->view('elementos/headerSecretario');
-        switch($tipo)
-        {
-          case 'simple':
-            $datos += array('soloAsistentes' => true);
-            $this->load->view('secretario/votacionSimple_view',$datos);
-            break;
-          case 'compleja':
-          $datos += array('soloAsistentes' => true);
-          $this->load->view('secretario/votacionCompleja_view',$datos);
+      switch($tipo)
+      {
+        case 'VotacionSimple':
+          $datos += array('permitirAsistentes' => true,
+                          'permitirPonderaciones' => false,
+                          'permitirRecuento' => false,
+                          'permitirOpciones' => false);
+          $this->load->view('secretario/crearVotacion_view',$datos);
           break;
+        case 'VotacionCompleja':
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'consultasimple':
-          $this->load->view('secretario/consultaSimple_view',$datos);
-          break;
+        case 'ConsultaSimple':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => true,
+                        'permitirOpciones' => false);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'consultacompleja':
-          $this->load->view('secretario/consultaCompleja_view',$datos);
-          break;
+        case 'ConsultaCompleja':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => true,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'representantes':
-          $datos += array('soloAsistentes' => true);
-          $this->load->view('secretario/eleccionRepresentantes_view',$datos);
-          break;
+        case 'EleccionRepresentantes':
+        $datos += array('permitirAsistentes' => true,
+                        'permitirPonderaciones' => false,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-          case 'uniponderados':
-          $this->load->view('secretario/cargosUniponderados_view',$datos);
-          break;
+        case 'CargosUniponderados':
+        $datos += array('permitirAsistentes' => false,
+                        'permitirPonderaciones' => true,
+                        'permitirRecuento' => false,
+                        'permitirOpciones' => true);
+        $this->load->view('secretario/crearVotacion_view',$datos);
+        break;
 
-        }
+      }
     }
 
     private function obtenerNombreElectoral($idUsuario,$letra)
@@ -498,31 +604,49 @@ class Secretario extends CI_Controller{
         $elegidos[$i] = $usuarios[$elegidos[$i]];
 
         // CREAR EL USUARIO CON ROL DE MESA ELECTORAL
-        $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
+        $insertado = $this->usuario_model->insertUserAs((int)$elegidos[$i],5,'m');
 
         // Crear el nuevo nombre de usuario
         $idUsuario = (int)$elegidos[$i];
         $nombre = $this->obtenerNombreElectoral($idUsuario,'m');
         $miembro = $this->usuario_model->getIdFromUserName($nombre);
         $this->mesa_model->insertar($miembro[0]->Id,$idVotacion);
-        // Crear tiempo de expiracion para ese usuario
-        if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
-        {$this->usuario_model->setUserTimeLimit($nombre);}
 
-        // Obtener correo de ese miembro
+        // Obtener correo de ese miembro insertado o no insertado
         $miembroNuevo = $this->usuario_model->getUsuario($miembro[0]->Id);
+
+        // Crear tiempo de expiracion para ese usuario y correo
+        $asunto = 0;
+        $mensaje = 0;
+        if($insertado)
+        {
+          if(!$this->usuario_model->comprobarExpiracion($miembro[0]->Id))
+          {$this->usuario_model->setUserTimeLimit($nombre);}
+          // Enviar correo a cada elegido en la mesa electoral
+          $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+          $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+          Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña de elector.</p>
+          <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
+          <p>Coordialmente, la administración de VotUCA.</p>
+          ';
+        }
+        else
+        {
+          // Enviar correo a cada elegido en la mesa electoral
+          $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
+          $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
+          Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
+
+          <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña de elector.</p>
+          <p>Coordialmente, la administración de VotUCA.</p>
+          ';
+        }
+
         //echo var_dump($existe);
 
       }
-      // Enviar correo a cada elegido en la mesa electoral
-      $asunto = '[NOTIFICACIÓN VOTUCA] Miembro electoral.';
-      $mensaje = '<h1>Eres miembro de la mesa electoral</h1>
-      Eres miembro de la mesa electoral de la votacion '.$idVotacion.'
-
-      <p>Puede loguearse como usuario: <h2>'.$nombre.'</h2> y su misma contraseña.</p>
-      <p> Disponie de un período de 24 horas para modificar su contraseña, de no ser asi se borrará su usuario de la mesa electoral.</p>
-      <p>Coordialmente, la administración de VotUCA.</p>
-      ';
       //echo var_dump($miembroNuevo);
       $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
       /*$data = array('mensaje_success' => 'Se ha enviado la notificacion de miembro electoral al usuario ' . $miembroNuevo[0]->NombreUsuario . '.');
@@ -533,7 +657,7 @@ class Secretario extends CI_Controller{
       }
       else
       {$data['mensaje_failure'] = 'La notificación por correo ha fallado.';}*/
-
+      return $result;
     }
 
     private function extraerIdsFicheros($nombreCensos)
@@ -727,19 +851,64 @@ class Secretario extends CI_Controller{
       //$opciones[] = 1;
       //echo var_dump($opciones).'<br>';
 
-      // VER SI LA VOTACION TIENE CENSO ASISTENTE O NO
-      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
-      //echo var_dump($hasAsistentes);
-      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
-      {$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
-      else{$numeroUsuarios = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+      // Contar usuarios por grupo
+      $alumnos = 0;
+      $profesores = 0;
+      $pas = 0;
 
+
+      $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
+      if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
+      {$censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);}
+      else{$censoTotal = $this->votaciones_model->contarUsuarios('censo_asistente',$idVotacion);}
+      $this->voto_model->recuentoPorDefecto($idVotacion,4,1,$censoTotal[0]->total);
+
+      $usuariosCenso = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+
+      // CALCULO DE CADA GRUPO
+      foreach($usuariosCenso as $usuario)
+      {
+        $grupos = $this->usuario_model->getUserGroups($usuario->Id_Usuario);
+        foreach($grupos as $grupo)
+        {
+          switch($grupo->Id_Grupo)
+          {
+            case 1:
+              $pas = $pas + 1;
+              break;
+            case 2:
+              $alumnos = $alumnos + 1;
+              break;
+            case 3:
+              $profesores = $profesores + 1;
+              break;
+          }
+        }
+      }
       // INTRODUCIR DATOS EN RECUENTO
-      $this->voto_model->recuentoPorDefecto($idVotacion,$opciones,$numeroUsuarios);
+      for($i = 1; $i < 4; $i++)
+      {
+        switch($i)
+        {
+          case 1:
+            $numeroUsuarios = $pas;
+            break;
+          case 2:
+            $numeroUsuarios = $alumnos;
+            break;
+          case 3:
+            $numeroUsuarios = $profesores;
+            break;
+
+        }
+
+        $this->voto_model->recuentoPorDefecto($idVotacion,$i,$opciones,$numeroUsuarios);
+      }
       //echo var_dump($numeroUsuarios).'<br>';
 
 
     }
+
   /************************************/
   /*********** ELIMINAR VOTACION ******/
   /************************************/
@@ -758,7 +927,7 @@ class Secretario extends CI_Controller{
   /*********** MODIFICAR VOTACION *****/
   /************************************/
 
-  // FUNCIÓN QUE MUESTRA LA VISTA DE MODIFICAR VOTACION
+  // FUNCIÓN QUE MUESTRA LA VISTA DE MODIFICAR VOTACION LA PRIMERA VEZ
   public function modificarVotacion()
 	{
     if($this->session->userdata('rol') == 'Secretario')
@@ -812,14 +981,15 @@ class Secretario extends CI_Controller{
       }
 
       // SACAR OPCIONES DE UNA VOTACION
-      /*if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
+      $nombresVotos = NULL;
+      if($votacion->Id_TipoVotacion == 2 || $votacion->Id_TipoVotacion == 5
          || $votacion->Id_TipoVotacion == 4 || $votacion->Id_TipoVotacion == 6)
       {
         $idsVotos = $this->voto_model->getVotosFromVotacion($votacion->Id);
         foreach($idsVotos as $id)
-        $nombresVotos = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
+        $nombresVotos[] = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
       }
-      echo var_dump($nombresVotos);*/
+      echo var_dump($nombresVotos);
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -829,63 +999,153 @@ class Secretario extends CI_Controller{
         'pulsadoRecuento' => $recuentoParalelo,
         'cambiarOpciones' => $cambiarOpciones,
         'asistentes' => $asistentes,
-        'idsAsistentes' => $idsAsistentes
+        'idsAsistentes' => $idsAsistentes,
+        'nombresVotos' => $nombresVotos,
+        'ultimoPaso' => false,
       );
       // SACAR TIPO DE VOTACION
       $tipoVotacion = $votacion->Id_TipoVotacion;
-      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
+      $this->load->view('secretario/modificarVotacion_view', $datos);
 
 	}
 
   public function updateVotacion()
 	{
-    $this->actualizarVotacionFromBoton($this->input->post('boton_borrador'),false);
-    $this->actualizarVotacionFromBoton($this->input->post('boton_publicar'),true);
+    if($this->input->post('boton_borrador'))
+    $this->actualizarVotacionFromBoton('boton_borrador',false);
+    if($this->input->post('boton_publicar'))
+    $this->actualizarVotacionFromBoton('boton_publicar',true);
+  }
+
+  private function actualizarVotacionFromBoton($boton,$publicar)
+  {
+      if($this->input->post($boton))
+      {
+        if($this->validaciones(false,false) == FALSE) // Algun fallo en algun campo
+        {$this->mostrarErrores($_POST);}
+        else // No hay ningún fallo en ningun campo campo escrito
+        {
+          // MODIFICAR DATOS DE LA VOTACION
+          $idVotacion = $_POST['id'];
+          $antesModificar = $this->votaciones_model->getVotacion($idVotacion);
+          $datos = $this->actualizarVotacionDatos($publicar);
+          $idTipo = $_POST['Id_TipoVotacion'];
+          $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+
+          // JUEGO DE ASISTENTES
+          $finalizado = false;
+          $soloAsistentes = false;
+          if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
+
+          // 1. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION NO TENIA ASISTENTES
+          if(!$soloAsistentes && $antesModificar->SoloAsistentes == false)
+          {
+            // Modificar censo si es necesario
+            $this->modificarSoloCensos($idVotacion);
+            $finalizado = true;
+
+          }
+          // 2. NO PULSADO SOLO ASISTENTES Y ADEMÁS LA VOTACION TENIA ASISTENTES
+          if(!$soloAsistentes && $antesModificar->SoloAsistentes == true)
+          {
+            $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'eliminarAsistencia');
+            $finalizado = true;
+          }
+
+          // 3. PULSADO SOLO ASISTENTES Y LA VOTACION NO TENIA ASISTENTES
+          if($soloAsistentes && $antesModificar->SoloAsistentes == false)
+          {
+            // Pasar censo actual de la votacion al censo asistente
+            $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+            $idsTotales = array();
+            foreach($totales as $usuario)
+            {$idsTotales[] = $usuario->Id_Usuario;}
+            $this->actualizarAsistentes($idVotacion,$idsTotales,'transferirCenso');
+
+            // Comprobar si se añaden nuevos censos
+            if(isset($_POST['censo']) && !isset($_POST['asistentes']))
+             $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
+
+          }
+
+          // 4. PULSADO SOLO ASISTENTES Y LA VOTACION TENIA ASISTENTES
+          if($soloAsistentes && $antesModificar->SoloAsistentes == true )
+          {
+            //echo 'Esta votacion tenia censo asistente y SIGUE TENIENDO.<br>';
+            if(isset($_POST['censo']) && $_POST['ultimoPaso'] == false)
+            {
+              $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
+            }
+            else
+            {
+              if(isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
+              {
+                $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'añadirAsistentes');
+                $finalizado = true;
+              }
+              else if(!isset($_POST['asistentes']) && isset($_POST['censo']) && $_POST['ultimoPaso'] == true)
+              {$this->recargarDatosVotacion($_POST,NULL);}
+              else
+              {
+                if(isset($_POST['asistentes']) && sizeof($_POST['asistentes']) < 3 && $_POST['ultimoPaso'] == false )
+                {
+                  if($this->validaciones(true,false) == FALSE)
+                  {$this->mostrarErrores($_POST);}
+                }
+                else
+                {
+                  $this->actualizarAsistentes($idVotacion,$_POST['asistentes'],'resetear');
+                  $finalizado = true;
+                }
+              }
+            }
+            if(isset($_POST['censoEliminacion']) && $_POST['censoEliminacion'] != NULL)
+            {
+              foreach($_POST['censoEliminacion'] as $censo)
+              {
+                $this->eliminarCensoAsistente($censo,$idVotacion);
+                $finalizado = true;
+              }
+            }
+          }
+        }
+          $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
+      }
+      if($modificada != NULL && $finalizado)
+          $this->index('La votación se ha modificado correctamente');
+
   }
 
   /**********************************************/
   /********** FUNCIONES AUXILIARES MODIFICAR ****/
   /**********************************************/
 
-  private function actualizarVotacionFromBoton($boton,$publicar)
+  private function modificarCensoAsistente($idVotacion)
   {
-    if($this->input->post($boton))
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+    $censosEliminar = $this->input->post('censoEliminacion');
+    $censosAñadir = $this->input->post('censo');
+    $idsCensos = array();
+    foreach($censosVotacion as $censo)
+    {$idsCensos[] = $censo->Id_Fichero;}
+    // AÑADIR CENSOS
+    if($censosAñadir != NULL)
     {
-      if($this->validaciones(false,false) == FALSE)
-      {$this->mostrarErrores($_POST);}
-      else
+      foreach($censosAñadir as $censo)
       {
-        // MODIFICAR DATOS DE LA VOTACION
-        $datos = $this->actualizarVotacionDatos($publicar);
-        $idVotacion = $_POST['id'];
-        $idTipo = $_POST['Id_TipoVotacion'];
-
-        // MODIFICAR CENSOS DE LA VOTACION
-        $soloAsistentes = false;
-        if(isset($_POST['soloAsistentes']) && $_POST['soloAsistentes']  == 1){$soloAsistentes = true;}
-        if(!$soloAsistentes)
-        {$this->modificarSoloCensos($idVotacion);}
-        else // HAY ASISTENTES... ¿Los suficientes?
-        {
-          /*if(sizeof($_POST['asistentes']) >= 3)
-          {
-            if($this->validaciones(false,false) == FALSE){$this->mostrarErrores($_POST);}
-          }
-          else
-          {
-            if($this->validaciones(true,false) == FALSE){$this->mostrarErrores($_POST);}
-            else
-            {
-            }
-          }*/
-
-        }
-        $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
-
+        $this->addCenso($idsCensos,$censo,$idVotacion);
+        $this->addCensoAsistente($censo,$idVotacion);
       }
-        if($modificada != NULL){
-            $this->index('La votación se ha modificado correctamente');
-          }
+    }
+    // ELIMINAR CENSO
+    if($censosEliminar != NULL)
+    {  // Hay censos a eliminar
+      foreach($censosEliminar as $censo)
+      {
+        $this->eliminarCenso($idsCensos,$censo,$idVotacion);
+        $this->eliminarCensoAsistente($idsCensos,$censo,$idVotacion);
+        --$idsCensos;
+      }
     }
   }
 
@@ -910,6 +1170,7 @@ class Secretario extends CI_Controller{
     // Incorporar asistentes del censo seleccionado
     $censosSeleccionados = $this->input->post('censo');
     $totales = array();
+    if(isset($_POST['asistentes'])){$totales = $_POST['asistentes'];}
     // Extraer IDS de los ficheros de esos censos seleccionados
     $idsFicheros = array();
     $idsFicheros = $this->extraerIdsFicheros($censosSeleccionados);
@@ -949,15 +1210,23 @@ class Secretario extends CI_Controller{
     $datos['asistentes'] = $asistentesActuales;
     $datos['idsAsistentes'] = $idsActuales;
     $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
-    $this->llamarVistasModificar($votacion->Id_TipoVotacion,$datos);
+    $this->load->view('secretario/modificarVotacion_view', $datos);
+    //$this->llamarVistasModificar($votacion->Id_TipoVotacion,$datos);
 
 
   }
 
-  private function recargarDatosVotacion($misDatos)
+  private function recargarDatosVotacion($misDatos,$asistentesRecibidos)
   {
+    if($this->session->userdata('rol') == 'Secretario')
+      {
+        $this->load->view('elementos/headerSecretario');
+      }
+      if($this->session->userdata('rol') == 'SecretarioDelegado')
+      {
+      $this->load->view('elementos/headerDelegado');
+      }
     $votacion = $this->votaciones_model->getVotacion($misDatos['id']);
-
 
     // SACAR CENSOS
     $censosVotacion = $this->censo_model->getCensosfromVotacion($misDatos['id']);
@@ -965,7 +1234,7 @@ class Secretario extends CI_Controller{
 
     // CHECKBOXES ENCENDIDOS
     $soloAsistentes = false;
-    if($votacion->SoloAsistentes == 1){$soloAsistentes = true;}
+    if($misDatos['soloAsistentes'] == 1){$soloAsistentes = true;}
 
     $esModificable = false;
     if($votacion->VotoModificable == 1){$esModificable = true;}
@@ -974,7 +1243,8 @@ class Secretario extends CI_Controller{
     $idsAsistentes = array();
     $asistentesNombre = array();
     $asistentes = array();
-    if($soloAsistentes)
+    $mensaje = null;
+    if($soloAsistentes && $asistentesRecibidos == NULL )
     {
       $usuariosAsistentes = $this->censo_model->getCensoAsistente($misDatos['id']);
       foreach($usuariosAsistentes as $asistente)
@@ -988,6 +1258,16 @@ class Secretario extends CI_Controller{
       {$asistentes[] = $nombre[0]->NombreUsuario;}
 
     }
+    else
+    {
+      $idsAsistentes = $asistentesRecibidos;
+      foreach($idsAsistentes as $id)
+      {$asistentesNombre[] = $this->usuario_model->getUserNameFromId($id);}
+
+      foreach($asistentesNombre as $nombre)
+      {$asistentes[] = $nombre[0]->NombreUsuario;}
+      $mensaje = 'Seleccione abajo el censo asistente';
+    }
     $datos = array(
       'censos' => $nombreCensos,
       'votaciones' => $votacion,
@@ -995,50 +1275,43 @@ class Secretario extends CI_Controller{
       'pulsadoAsistentes' => $soloAsistentes,
       'pulsadoModificar' => $esModificable,
       'asistentes' => $asistentes,
-      'idsAsistentes' => $idsAsistentes
+      'idsAsistentes' => $idsAsistentes,
+      'asistentesExistentes' => true,
+      'mensaje' => $mensaje,
+      'ultimoPaso' => true
     );
-    // SACAR TIPO DE VOTACION
-    $tipoVotacion = $votacion->Id_TipoVotacion;
-    return $datos;
+    $this->load->view('secretario/modificarVotacion_view', $datos);
+
 
   }
 
-  private function llamarVistasModificar($tipo,$datos)
+  private function mostrarErrores($misDatos)
   {
     if($this->session->userdata('rol') == 'Secretario')
     {$this->load->view('elementos/headerSecretario');}
     if($this->session->userdata('rol') == 'SecretarioDelegado')
     {$this->load->view('elementos/headerDelegado');}
 
-    switch($tipo)
-    {
-      case 1:
-      $this->load->view('secretario/modificarVotacionSimple_view', $datos);
-      break;
-    }
-
-  }
-
-  private function mostrarErrores($misDatos)
-  {
-
-    $datos = $this->recargarDatosVotacion($misDatos);
-    $this->llamarVistasModificar($misDatos['Id_TipoVotacion'],$datos);
-
+    $totales = $this->censo_model->getUsuariosfromVotacion($misDatos['id']);
+    $idsTotales = array();
+    foreach($totales as $usuario)
+    {$idsTotales[] = $usuario->Id_Usuario;}
+    $this->recargarDatosVotacion($misDatos,$idsTotales);
+    //$this->load->view('secretario/modificarVotacion_view', $datos);
   }
 
   private function extraerUsuariosCensos($censos)
   {
-    $usuariosRestantes = array();
-    foreach($censos as $censo)
-    {
-      $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
-    }
 
-    $usuariosFinales = array();
-    foreach($usuariosRestantes as $conjunto)
-      foreach($conjunto as $usuario)
-      $usuariosFinales[] = $usuario->Id_Usuario;
+    $usuariosRestantes = array();
+   foreach($censos as $censo)
+   {
+    $usuariosRestantes[] = $this->censo_model->getUsuariosFromCenso($censo);
+   }
+   $usuariosFinales = array();
+   foreach($usuariosRestantes as $conjunto)
+     foreach($conjunto as $usuario)
+     $usuariosFinales[] = $usuario->Id_Usuario;
 
     return $usuariosFinales;
   }
@@ -1051,10 +1324,11 @@ class Secretario extends CI_Controller{
 
     // Extraer usuarios de ese censo concreto que quiero borrar
     $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);
+
     $finales = array();
     foreach($borrarUsuarios as $aBorrar)
     {
-      // Obtener los censos de este usuario a borrar
+      // Obtener los ids de los censos de estos usuarios a borrar
       $susCensos = $this->censo_model->getWhereUsuario($aBorrar->Id_Usuario);
 
       if(sizeof($susCensos) == 1)
@@ -1064,6 +1338,7 @@ class Secretario extends CI_Controller{
           {$finales[] = $susCensos[0]->Id_Usuario; }
       }
     }
+
     return $finales;
   }
 
@@ -1074,72 +1349,137 @@ class Secretario extends CI_Controller{
   {
     // Extraer id de ese censo que quiero eliminar
     $idCenso = $this->censo_model->getId($censo);
-    $numCensos = sizeof($censosVotacion);
 
-    if($numCensos > 1) // Si una votación tiene más de un censo asignado...
+    // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
+    $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+    $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+
+    // Eliminar esos usuarios de una votacion concreta
+    foreach($usuariosEliminar as $usuario)
+    {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
+
+    // Eliminar voto de esos usuarios
+    $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+
+    // Eliminar num votos de recuento
+    $this->actualizarRecuento($idVotacion,$usuariosEliminar,'eliminar');
+
+
+    // BORRAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+    // Notificar a los usuariosMesa de la mesa que se va a la puta
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    // RENOVAR LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+
+    // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
+    $censosRestantes = array();
+    foreach($censosVotacion as $existente)
     {
-      // BORRAR USUARIOS DEL CENSO DE UNA VOTACION
-      $usuariosActuales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
-      $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
-      // Eliminar esos usuarios de una votacion concreta
-      foreach($usuariosEliminar as $usuario)
-      {$this->censo_model->eliminarUsuarios($usuario,$idVotacion);}
-      // Eliminar voto de esos usuarios
-      $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+      if($existente != $idCenso) $censosRestantes[] = $existente;
+    }
 
-
-      // BORRAR MIEMBROS DE LA MESA ELECTORAL
-      $miMesa = $this->mesa_model->getMesa($idVotacion);
-      $usuariosMesa = array();
-      foreach($miMesa as $dato)
-      {$usuariosMesa[] = $dato->Id_Usuario;}
-      // Notificar a los usuariosMesa de la mesa que se va a la puta
-
-      // Borrar la mesa electoral
-      $this->mesa_model->deleteMesa($idVotacion);
-
-      // RENOVAR LA MESA ELECTORAL
-      $miMesa = $this->mesa_model->getMesa($idVotacion);
-
-      // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
-      $censosRestantes = array();
-      foreach($censosVotacion as $censo)
-      {
-        if($censo != $idCenso) $censosRestantes[] = $censo;
-      }
-
-      // OBTENER USUARIOS DE ESE CENSO
-      $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
-      $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
-
-      // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
-
-    } // Fin hay varios censos
-
-    /*else
+    // OBTENER USUARIOS DE ESE CENSO
+    $usuariosRestantes = array();
+    foreach($censosRestantes as $restante)
     {
-      // Extraer usuarios de ese censo concreto que quiero borrar
-      $borrarUsuarios = $this->censo_model->getUsuariosFromCenso($idCenso);
-      foreach($borrarUsuarios as $usuario)
-      {
-        $this->censo_model->eliminarUsuarios($usuario->Id_Usuario,$idVotacion);
-      }
-      // Eliminar relacion con el fichero de censo
-      $this->censo_model->eliminarCenso($idVotacion,$idCenso);
-    }*/
+      $nombre = $this->censo_model->getNombreCensoFromId($restante);
+      $usuarios = $this->extraerUsuariosFichero($nombre);
+      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+      foreach($usuariosIds as $id)
+      {$usuariosRestantes[] = $id;}
 
+    }
+
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
+
+    // Eliminar relacion con el fichero de censo
+    $this->censo_model->eliminarCenso($idVotacion,$idCenso);
+  }
+
+  private function eliminarCensoAsistente($censo,$idVotacion)
+  {
+    // Extraer id de ese censo que quiero eliminar
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+    $idCenso = $this->censo_model->getId($censo);
+    $usuariosActuales = $this->censo_model->getCensoAsistente($idVotacion);
+    $usuariosEliminar = $this->getUsuariosAEliminar($usuariosActuales,$idVotacion,$idCenso);
+
+    // Eliminar esos usuarios del censo asistente y del censo
+    foreach($usuariosEliminar as $usuario)
+    {
+      $this->censo_model->eliminarUsuariosAsistentes($usuario,$idVotacion);
+      $this->censo_model->eliminarUsuarios($usuario,$idVotacion);
+    }
+    // Eliminar relacion con el fichero de censo
+    $this->censo_model->eliminarCenso($idVotacion,$idCenso);
+
+    // Eliminar voto de esos usuarios
+    $this->eliminarVotoUsuarios($usuariosEliminar,$idVotacion);
+
+    // Eliminar num votos de recuento
+    $this->actualizarRecuento($idVotacion,$usuariosEliminar,'eliminar');
+
+    // BORRAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+    // Notificar a los usuariosMesa de la mesa que se va a la puta
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    // RENOVAR LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+
+    // Obtener censos restantes de esa votacion (excluyendo el que se va a eliminar)
+    $censosRestantes = array();
+    foreach($censosVotacion as $censo)
+    {if($censo->Id_Fichero != $idCenso) $censosRestantes[] = $censo->Id_Fichero;}
+
+    // OBTENER USUARIOS DE TODOS CENSOS
+    $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
+
+    /*// OBTENER USUARIOS DE ESE CENSO
+    $usuariosRestantes = array();
+    foreach($censosRestantes as $restante)
+    {
+      $nombre = $this->censo_model->getNombreCensoFromId($restante);
+      $usuarios = $this->extraerUsuariosFichero($nombre);
+      $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+      foreach($usuariosIds as $id)
+      {$usuariosRestantes[] = $id;}
+
+    }
+
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);*/
 
   }
 
-  public function addCenso($censosVotacion,$censo,$idVotacion)
+  private function addCenso($censosVotacion,$censo,$idVotacion)
   {
     // Extraer ID del censo que voy a añadir
-    $idCenso = $this->censo_model->getId($censo);
+    $idCenso =$this->censo_model->getId($censo);
     $censoExtraer[] = $idCenso;
 
     // Extraer usuarios de ese censo a añadir
-    $usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+    $usuarios = $this->extraerUsuariosFichero($censo);
+    $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
+    // RELACIONAR USUARIOS CON ESTE CENSO
+    for($j = 0; $j < sizeof($usuariosAñadir); $j++)
+    {
+      // Relacionar este usuario con este censo en la bd
+      $this->censo_model->setUsuarioCenso($usuariosAñadir[$j],$idCenso);
+    }
+
 
     // Extraer usuarios que están actualmente en el censo de esa votacion
     $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
@@ -1160,9 +1500,11 @@ class Secretario extends CI_Controller{
     // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO
     $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
 
-
     // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
     $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
+
+    // MODIFICAR EL RECUENTO DE DICHA VOTACION
+    $this->actualizarRecuento($idVotacion,$finales,'añadir');
 
     // GENERAR MIEMBROS DE LA MESA ELECTORAL
     $miMesa = $this->mesa_model->getMesa($idVotacion);
@@ -1171,7 +1513,7 @@ class Secretario extends CI_Controller{
     foreach($miMesa as $dato)
     {$usuariosMesa[] = $dato->Id_Usuario;}
 
-    // Notificar a los usuariosMesa de la mesa que se va a la puta pq se añade un censo
+    // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
     foreach($usuariosMesa as $id)
     {
       // Obtener correo de ese miembro
@@ -1185,7 +1527,6 @@ class Secretario extends CI_Controller{
       //echo var_dump($miembroNuevo);
       $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
     }
-
 
     // Borrar la mesa electoral
     $this->mesa_model->deleteMesa($idVotacion);
@@ -1201,6 +1542,114 @@ class Secretario extends CI_Controller{
 
     // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
     $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+
+  }
+
+  private function actualizarRecuento($idVotacion,$usuariosFinales,$accion)
+  {
+    foreach($usuariosFinales as $usuario)
+    {
+      // Obtiene grupos de ese usuario
+      $grupos = $this->usuario_model->getUserGroups($usuario);
+      switch($accion)
+      {
+        case 'añadir':
+        $censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+        $this->voto_model->actualizarRecuentoTotal($idVotacion,4,1,$censoTotal[0]->total);
+        foreach($grupos as $grupo)
+        {$this->voto_model->incrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
+
+        case 'eliminar':
+        $censoTotal= $this->votaciones_model->contarUsuarios('censo',$idVotacion);
+        $this->voto_model->actualizarRecuentoTotal($idVotacion,4,1,$censoTotal[0]->total);
+        foreach($grupos as $grupo)
+        {$this->voto_model->decrementarAbstenidos($idVotacion,$grupo->Id_Grupo);}
+        break;
+      }
+    }
+  }
+
+  private function addCensoAsistente($censo,$idVotacion)
+  {
+    // Extraer ID del censo que voy a añadir
+    $idCenso = $this->censo_model->getId($censo);
+    $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+    $censoExtraer[] = $idCenso;
+
+    // Extraer usuarios de ese censo a añadir
+    //$usuariosAñadir = $this->extraerUsuariosCensos($censoExtraer);
+    $usuarios = $this->extraerUsuariosFichero($censo);
+    $usuariosAñadir = $this->extraerIdsUsuarios($usuarios);
+    // RELACIONAR USUARIOS CON ESTE CENSO
+    for($j = 0; $j < sizeof($usuariosAñadir); $j++)
+    {
+      // Relacionar este usuario con este censo en la bd
+      $this->censo_model->setUsuarioCenso($usuariosAñadir[$j],$idCenso);
+    }
+
+    // Extraer usuarios que están actualmente en el censo asistente de esa votacion
+    $totales = $this->censo_model->getCensoAsistente($idVotacion);
+    $idsTotales = array();
+    foreach($totales as $usuario)
+    {$idsTotales[] = $usuario->Id_Usuario;}
+
+    // Obtener solo usuarios sin repetir
+    $finales = array();
+    for($i = 0; $i < sizeof($usuariosAñadir);$i++)
+    {
+      if(!in_array($usuariosAñadir[$i],$idsTotales))
+      {
+        array_push($finales,$usuariosAñadir[$i]);
+      }
+    }
+
+    // METER TODOS LOS USUARIOS EXTRAIDOS SIN REPETIR EN EL CENSO ASISTENTE
+    $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($finales,$idVotacion);
+    $noGuardadoCenso = $this->insertarUsuariosCenso($finales,$idVotacion);
+
+    // RELACIONAR EL FICHERO DE ESE CENSO CON LA VOTACION
+    $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+
+    // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+    $votoUsuarioDefecto = $this->voto_model->votoDefecto($finales,$idVotacion,1);
+
+    // MODIFICAR EL RECUENTO DE DICHA VOTACION
+    $this->actualizarRecuento($idVotacion,$finales,'añadir');
+
+    // GENERAR MIEMBROS DE LA MESA ELECTORAL
+    $miMesa = $this->mesa_model->getMesa($idVotacion);
+    // Obtener usuarios actuales de la mesa electoral
+    $usuariosMesa = array();
+    foreach($miMesa as $dato)
+    {$usuariosMesa[] = $dato->Id_Usuario;}
+
+    // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
+    foreach($usuariosMesa as $id)
+    {
+      // Obtener correo de ese miembro
+      $miembroNuevo = $this->usuario_model->getUsuario($id);
+      $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+      $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+      Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+      <p>Coordialmente, la administración de VotUCA.</p>
+      ';
+      //echo var_dump($miembroNuevo);
+      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+    }
+
+    // Borrar la mesa electoral
+    $this->mesa_model->deleteMesa($idVotacion);
+
+    // Obtener todos los censos que esta votación va a tener ahora
+    $censosRestantes = array($idCenso);
+    foreach($censosVotacion as $censo)
+    {if($censo->Id_Fichero != $idCenso) $censosRestantes[] = $censo->Id_Fichero;}
+
+    // OBTENER USUARIOS DE TODOS CENSOS
+    $usuariosRestantes = $this->extraerUsuariosCensos($censosRestantes);
+    $this->generarMesaElectoral($usuariosRestantes,$idVotacion);
 
   }
 
@@ -1260,6 +1709,173 @@ class Secretario extends CI_Controller{
     }
   }
 
+  private function actualizarAsistentes($idVotacion,$asistentes,$accion)
+  {
+    if($accion == 'resetear')
+    {
+      $votacion = $this->votaciones_model->getVotacion($idVotacion);
+      $this->censo_model->eliminarTodoCenso($idVotacion);
+      $this->censo_model->eliminarTodosAsistentes($idVotacion);
+      $this->voto_model->eliminarCestoCompleto($idVotacion);
+      $this->voto_model->eliminarUrnaCompleta($idVotacion);
+
+      //Metemos los nuevos asistentes (aunque sean los mismos)
+      $noGuardadoCenso = $this->insertarUsuariosCenso($asistentes,$idVotacion);
+      $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+      $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
+      $this->generarNumeroVotos($idVotacion,$votacion->Id_TipoVotacion);
+
+
+      /*// GENERAR MESA ELECTORAL
+      // GENERAR MIEMBROS DE LA MESA ELECTORAL
+      $miMesa = $this->mesa_model->getMesa($idVotacion);
+      // Obtener usuarios actuales de la mesa electoral
+      $usuariosMesa = array();
+      foreach($miMesa as $dato)
+      {$usuariosMesa[] = $dato->Id_Usuario;}
+
+      // Notificar a los usuariosMesa de la mesa que se modifica pq se añade un censo
+      foreach($usuariosMesa as $id)
+      {
+        // Obtener correo de ese miembro
+        $miembroNuevo = $this->usuario_model->getUsuario($id);
+        $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+        $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+        Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+        <p>Coordialmente, la administración de VotUCA.</p>
+        ';
+        //echo var_dump($miembroNuevo);
+        $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+      }
+
+      // Borrar la mesa electoral
+      $this->mesa_model->deleteMesa($idVotacion);
+
+      $this->generarMesaElectoral($asistentes,$idVotacion);*/
+    }
+
+    if($accion == 'transferirCenso')
+    {
+      $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+    }
+
+    if($accion == 'llamarNuevos')
+    {
+      // Sacar usuarios del censo de esa votacion
+      $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+      $idsTotales = array();
+      foreach($totales as $usuario)
+      {$idsTotales[] = $usuario->Id_Usuario;}
+
+      // Obtener usuarios del censo actual
+      $asistentesActuales = $idsTotales;
+      if(isset($_POST['asistentes']))
+      {$asistentesActuales = $_POST['asistentes'];}
+
+      $censos = $asistentes;
+      $totales = array();
+      foreach ($censos as $nombreCenso)
+      {
+        $usuarios = $this->extraerUsuariosFichero($nombreCenso);
+        $usuariosIds = $this->extraerIdsUsuarios($usuarios);
+        for($j = 0; $j < sizeof($usuariosIds); $j++)
+        {
+          if(!in_array($usuariosIds[$j],$asistentesActuales))
+          {array_push($totales,$usuariosIds[$j]);}
+        }
+      }
+      $this->recargarDatosVotacion($_POST,$totales);
+
+
+    }
+
+    if($accion == 'añadirAsistentes')
+    {
+      $noGuardadoCenso = $this->censo_model->insertarCensoAsistente($asistentes,$idVotacion);
+      $noGuardadoCenso = $this->insertarUsuariosCenso($asistentes,$idVotacion);
+      $censos = $_POST['censo'];
+      foreach($censos as $nombreCenso)
+      {
+        $idCenso = $this->censo_model->getId($nombreCenso);
+        foreach($asistentes as $asistente)
+        $this->censo_model->setUsuarioCenso($asistente,$idCenso);
+      }
+
+
+      // Ver si podemos relacionar un fichero de censo con esta votacion
+      $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+      $idsTotales = array();
+      foreach($totales as $usuario)
+      {$idsTotales[] = $usuario->Id_Usuario;}
+
+      $censos = $_POST['censo'];
+      foreach($censos as $censo)
+      {
+        $idCenso =$this->censo_model->getId($censo);
+        $censoExtraer[] = $idCenso;
+
+        // Extraer usuarios de ese censo a añadir
+        $usuarios = $this->extraerUsuariosFichero($censo);
+        $usuariosCenso = $this->extraerIdsUsuarios($usuarios);
+        $totales = sizeof($usuariosCenso);
+        $contador = 0;
+        foreach($idsTotales as $usuarioAnalizar)
+        {
+          if(in_array($usuarioAnalizar,$usuariosCenso))
+          {$contador = $contador + 1;}
+        }
+        if($contador == $totales)
+        {
+          $this->censo_model->insertarVotacion($idVotacion,$idCenso);
+        }
+      }
+
+      // ENCRIPTAR USUARIOS PARA QUE TENGAN ABSTENIDOS POR DEFECTO
+      $votoUsuarioDefecto = $this->voto_model->votoDefecto($asistentes,$idVotacion,1);
+
+      // MODIFICAR EL RECUENTO DE DICHA VOTACION
+      $this->actualizarRecuento($idVotacion,$asistentes,'añadir');
+
+      // GENERAR MIEMBROS DE LA MESA ELECTORAL
+      /*$miMesa = $this->mesa_model->getMesa($idVotacion);
+      // Obtener usuarios actuales de la mesa electoral
+      $usuariosMesa = array();
+      foreach($miMesa as $dato)
+      {$usuariosMesa[] = $dato->Id_Usuario;}
+
+      // Notificar a los usuariosMesa de la mesa que se modifica pq se añade algo al censo
+      foreach($usuariosMesa as $id)
+      {
+        // Obtener correo de ese miembro
+        $miembroNuevo = $this->usuario_model->getUsuario($id);
+        $asunto = '[NOTIFICACIÓN VOTUCA] Modificación mesa electoral.';
+        $mensaje = '<h1>Su mesa electoral ha sido modificada</h1>
+        Se ha modificado el censo de la votación '.$idVotacion.'. Usted ya no es miembro de la mesa hasta nuevo aviso.
+
+        <p>Coordialmente, la administración de VotUCA.</p>
+        ';
+        //echo var_dump($miembroNuevo);
+        $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
+      }
+
+      // Borrar la mesa electoral
+      $this->mesa_model->deleteMesa($idVotacion);
+
+
+      $totales = $this->censo_model->getUsuariosfromVotacion($idVotacion);
+      foreach($totales as $usuario)
+      {$idsTotales[] = $usuario->Id_Usuario;}
+      $this->generarMesaElectoral($idsTotales,$idVotacion);*/
+
+    }
+
+    if($accion == 'eliminarAsistencia')
+    {
+      $this->censo_model->eliminarTodosAsistentes($idVotacion);
+    }
+  }
+
 
   /************************************/
   /*********** DELEGAR VOTACION *******/
@@ -1315,10 +1931,6 @@ class Secretario extends CI_Controller{
      $this->load->view('secretario/borradores_view',$datos);
   }
 
-  public function enviar()
-  {
-    echo "Has pulsado enviar";
-  }
   /*******************************************/
   /********* SECRETARIO DELEGADO *************/
   /*******************************************/
@@ -1397,12 +2009,26 @@ class Secretario extends CI_Controller{
     }
     else{return TRUE;}
   }
+
   public function validarFicherosCenso(){
+    $soloAsistentes = $this->input->post('soloAsistentes');
     $asistentes = $this->input->post('asistentes');
     $elegidos = $this->input->post('censo');
-    if($asistentes != NULL)
+    if($soloAsistentes)
     {
-      if(sizeof($asistentes) < 3)
+      if($asistentes != NULL)
+      {
+        if(sizeof($asistentes) < 3)
+        {
+          if($elegidos == NULL || sizeof($elegidos) < 1)
+          {
+            $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+            return FALSE;
+          }
+          else{return TRUE;}
+        }
+      }
+      else // NO HAY ASISTENTES PERO HAS PULSADO ASISTENTES
       {
         if($elegidos == NULL || sizeof($elegidos) < 1)
         {
@@ -1412,9 +2038,8 @@ class Secretario extends CI_Controller{
         else{return TRUE;}
       }
     }
-    else{
-      return TRUE;
-    }
+
+
 
   }
 
