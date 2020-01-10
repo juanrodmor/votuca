@@ -43,8 +43,13 @@
 			return $sql->row()->NombreUsuario;
 		}
 
+
+		/********************************************************************/
+		/*************************** FUNCION VOTAR **************************/
+		/********************************************************************/
+
 		// Votar
-		public function _votar ( $id_usuario, $id_votacion, $voto, $modif )
+		public function _votar ( $id_usuario, $id_votacion, $voto, $modif, $grupo )
 		{
 			if(gettype($voto) == "string") { 			//votacion simple
 
@@ -53,26 +58,75 @@
 				//echo var_dump($sql->row()->Id);
 
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {	//comprobar votacion valida
+
+					//obtener el id del grupo
+					$sql = $this->db->get_where('grupo', array('Nombre' => $grupo));
+					$id_grupo = $sql->row()->Id;
+
 					if($modif == TRUE) {
 
-						// Decrementar el numero de abstenidos de recuento si aun no se había votado
 						if(!$this->_haVotado($id_votacion)) {
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
-							//$sql = $sql->result();
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
+
 							$numVotos = $sql->row()->Num_Votos;
 							$numVotos--;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
 						}
+						else {
+							// Decrementar el numero de abstenidos de recuento del grupo nuevo (si se ha cambiado de grupo al votar)
+							$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Usuario' => $id_usuario));
+							$grupoAnterior = $sql->row()->Id_Grupo;
+
+							if($grupoAnterior != $id_grupo) {
+
+								$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
+
+								$numVotos = $sql->row()->Num_Votos;
+								$numVotos--;
+
+								$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
+								$query = $this -> db -> query($sql);
+							}
+
+							// Incrementamos el numero de abstenidos de recuento del grupo anterior (si se ha cambiado de grupo al votar)
+							$sql = $this-> db ->query("select Id_Usuario, Id_Grupo from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';");
+							if( $sql->num_rows() == 1 ) {	
+
+								$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Usuario' => $id_usuario));
+								$grupoAnterior = $sql->row()->Id_Grupo;
+
+								if($grupoAnterior != $id_grupo) {
+
+									$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $grupoAnterior, 'Id_voto' => '1'));
+									$numVotos = $sql->row()->Num_Votos;
+									$numVotos++;
+
+									$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$grupoAnterior."' AND Id_Voto = '1';";
+									$query = $this -> db -> query($sql);
+								}
+							}
+						}
+
+						//quitamos el voto abstenido por defecto del usuario en la votacion con todos los grupos en los que está
+						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
 
 						$sql = $this->db->get_where('voto', array('Nombre' => $voto));
 						$id_voto = $sql->row()->Id;
 
-						$sql = "update usuario_votacion set Id_voto = '".password_hash($id_voto, PASSWORD_DEFAULT)."' where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';";
-						$query = $this -> db -> query($sql);
+						// insertamos el nuevo voto en usuario_votacion segun el grupo que haya escogido el usuario
+						$datos = array(
+								'Id_Usuario' => $id_usuario,
+								'Id_Grupo' => $id_grupo,
+								'Id_Votacion' => $id_votacion,
+								'Id_Voto' => password_hash($id_voto, PASSWORD_DEFAULT)
+							);
+
+						$sql = $this->db->insert('usuario_votacion', $datos);
 
 						return TRUE;	// has votado/rectificado correctamente
+
 					}
 					else {
 						// Eliminamos el registro de usuario_votacion
@@ -80,26 +134,24 @@
 
 
 						// Sumamos el voto del elector
-							$sql = $this->db->get_where('voto', array('Nombre' => $voto));
-							$id_voto = $sql->row()->Id;
+						$sql = $this->db->get_where('voto', array('Nombre' => $voto));
+						$id_voto = $sql->row()->Id;
 
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => $id_voto));
-							//$sql = $sql->result();
-							$numVotos = $sql->row()->Num_Votos;
-							$numVotos++;
+						$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => $id_voto));
+						$numVotos = $sql->row()->Num_Votos;
+						$numVotos++;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '".$id_voto."';";
-							$query = $this -> db -> query($sql);
+						$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '".$id_voto."';";
+						$query = $this -> db -> query($sql);
 
 
 						// Decrementar el numero de abstenidos
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
-							//$sql = $sql->result();
-							$numVotos = $sql->row()->Num_Votos;
-							$numVotos--;
+						$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
+						$numVotos = $sql->row()->Num_Votos;
+						$numVotos--;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
-							$query = $this -> db -> query($sql);
+						$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
+						$query = $this -> db -> query($sql);
 
 						return TRUE;
 					}
@@ -108,24 +160,64 @@
 					//echo var_dump($sql->result());
 			}
 
+
 			if(gettype($voto) == "array") {				//votacion compleja
 				$sql = $sql = $this->db->get_where('votacion', array('Id' => $id_votacion, 'isDeleted' => FALSE, 'esBorrador' => FALSE, 'Finalizada' => FALSE));
 
 				if(($sql->num_rows() != 0) and ($sql->row()->FechaInicio <= date('Y-m-d H:i:s')) and ($sql->row()->FechaFinal >= date('Y-m-d H:i:s'))) {
+					
+					//obtener el id del grupo
+					$sql = $this->db->get_where('grupo', array('Nombre' => $grupo));
+					$id_grupo = $sql->row()->Id;
+
 					if($modif == TRUE) {
 
-						// Decrementar el numero de abstenidos de recuento si aun no se había votado
 						if(!$this->_haVotado($id_votacion)) {
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
-							//$sql = $sql->result();
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
+
 							$numVotos = $sql->row()->Num_Votos;
 							$numVotos--;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
+						}
+						else {
+							// Decrementar el numero de abstenidos de recuento del grupo nuevo (si se ha cambiado de grupo al votar)
+							$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Usuario' => $id_usuario));
+							$grupoAnterior = $sql->row()->Id_Grupo;
+
+							if($grupoAnterior != $id_grupo) {
+
+								$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
+
+								$numVotos = $sql->row()->Num_Votos;
+								$numVotos--;
+
+								$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
+								$query = $this -> db -> query($sql);
+							}
+
+							// Incrementamos el numero de abstenidos de recuento del grupo anterior (si se ha cambiado de grupo al votar)
+							$sql = $this-> db ->query("select Id_Usuario, Id_Grupo from usuario_votacion where Id_Usuario = '".$id_usuario."' and Id_Votacion = '".$id_votacion."';");
+							if( $sql->num_rows() == 1 ) {	
+
+								$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Usuario' => $id_usuario));
+								$grupoAnterior = $sql->row()->Id_Grupo;
+
+								if($grupoAnterior != $id_grupo) {
+
+									$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $grupoAnterior, 'Id_voto' => '1'));
+									$numVotos = $sql->row()->Num_Votos;
+									$numVotos++;
+
+									$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$grupoAnterior."' AND Id_Voto = '1';";
+									$query = $this -> db -> query($sql);
+								}
+							}
 						}
 
 						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));
+
 						foreach($voto as $nuevoVoto) {
 							//echo $nuevoVoto->Id_Voto;
 							$sql = $this->db->get_where('voto', array('Nombre' => $nuevoVoto));
@@ -134,6 +226,7 @@
 							$datos = array(
 								'Id_Usuario' => $id_usuario,
 								'Id_Votacion' => $id_votacion,
+								'Id_Grupo' => $id_grupo,
 								'Id_Voto' => password_hash($id_voto, PASSWORD_DEFAULT)
 							);
 							$sql = $this->db->insert('usuario_votacion', $datos);
@@ -145,31 +238,30 @@
 						// Eliminamos el registro de usuario_votacion
 						$sql = $this->db->delete('usuario_votacion', array('Id_Usuario' => $id_usuario, 'Id_Votacion' => $id_votacion));	//quitar de la cesta
 
-
 						// Sumamos el voto del elector
 						foreach($voto as $unico) {
 
 							$sql = $this->db->get_where('voto', array('Nombre' => $unico));
 							$id_voto = $sql->row()->Id;
 
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => $id_voto));
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => $id_voto));
 							//$sql = $sql->result();
 							$numVotos = $sql->row()->Num_Votos;
 							$numVotos++;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '".$id_voto."';";
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '".$id_voto."';";
 							$query = $this -> db -> query($sql);
 
 						}
 
 
 						// Decrementar el numero de abstenidos
-							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_voto' => '1'));
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => $id_grupo, 'Id_voto' => '1'));
 							//$sql = $sql->result();
 							$numVotos = $sql->row()->Num_Votos;
 							$numVotos--;
 
-							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Voto = '1';";
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
 
 						return TRUE;
@@ -181,6 +273,11 @@
 			else return FALSE;
 
 		}
+
+		/********************************************************************/
+		/*************************** //FUNCION VOTAR ************************/
+		/********************************************************************/
+
 
 		public function _votosDisponibles ($id_votacion) {
 			//1 -> obtener los votos de la votacion
@@ -215,6 +312,13 @@
 				return false;
 		}
 
+		public function _gruposUsuarioVotacion($id_usuario) {
+			$sql = $this->db->query("select grupo.Nombre from grupo, usuario_grupo 
+										where usuario_grupo.Id_Usuario = ".$id_usuario."
+										AND usuario_grupo.Id_Grupo = grupo.Id ");
+			return $sql->result();
+		}
+
 		public function _usuarioVotacionToRecuento( $id_votacion ) {	// pasar tabla de usuario_votacion a recuento
 
 			$sql = $this->db->get_where('usuario_votacion', array('Id_Votacion' => $id_votacion, 'Id_Voto !=' => '1') );
@@ -226,15 +330,14 @@
 				$rec = $rec->result();
 
 				foreach($rec as $voto) {
-					if(password_verify($voto->Id_Voto, $voto_E->Id_Voto)) {
+					if( password_verify($voto->Id_Voto, $voto_E->Id_Voto) AND $voto->Id_Grupo == $voto_E->Id_Grupo) {
 
 						$numVotos = $voto->Num_Votos;
 						$numVotos++;
-						$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' and Id_Voto = '".$voto->Id_Voto."';";
+						$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$voto->Id_Grupo."' AND Id_Voto = '".$voto->Id_Voto."';";
 						$query = $this -> db -> query($sql);
 					}
 				}
-
 			}
 
 			$sql = $this->db->delete('usuario_votacion', array('Id_Votacion' => $id_votacion));
