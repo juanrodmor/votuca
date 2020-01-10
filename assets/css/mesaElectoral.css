@@ -32,6 +32,7 @@
     margin-left: 8%;
    margin-right: 8%;
    padding-right: 5%;
+   margin-top: 3%;
 }
 
 div > a
@@ -61,9 +62,9 @@ div > a:hover
 	color: white;
 }
 
-.h3, .h5, h3, h5
+.h3, .h4, .h5, h3, h4, h5
 {
-	color: black !important;
+	color: #3c3c3b !important;
 }
 
 body {
@@ -80,21 +81,6 @@ body {
 #cerrar-ses
 {
     margin-top: 1%;
-}
-
-.btn-custom
-{
-    display: block;
-    margin-left: 50%;
-    color: #fff;
-    background-color: #306056;
-    border-color: #306056;
-    text-decoration: none;
-    padding: 6px 20px;
-    font-size: inherit;
-    border-radius: 0;
-    line-height: 1;
-    border: 1px solid transparent;
 }
 
 #monitoring_search
@@ -169,12 +155,128 @@ body {
     border: 1px solid transparent;
 }
 
-#error_alert
-{
-    margin-top: 3%;
-}
-
 #data-div
 {
     margin-right: 10%;
+}
+
+.btn-custom
+{
+    display: block;
+    margin-left: 50%;
+    color: #fff;
+    background-color: #62485e;
+    border-color: #62485e;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+.btn-custom:enabled:hover
+{
+    color: white;
+}
+
+.btn-custom:disabled:hover
+{
+    color: white;
+}
+
+#single-option
+{
+    padding: 3%;
+}
+
+#btn-div
+{
+    margin-left: 60%;
+    margin-top: -5%;
+    padding-bottom: 2%;
+}
+
+#votacionName
+{
+    font-weight: bold;   
+    border-bottom: 1px solid #62485e;
+}
+
+.votacionH3
+{
+    border-bottom: 5px solid #62485e;
+}
+
+#votacionDesc
+{
+    margin-top: 1%;
+    margin-bottom: 4%;
+}
+
+#resultTable
+{
+    width: 100%;
+    margin-bottom: 4%;
+}
+
+#trHeader
+{
+    background-color: #62485e;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+#trBody
+{
+    text-align: center;
+}
+
+#thBodyOption
+{
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    border-top: 1px solid gray;
+    font-weight: 400;
+}
+
+#thHeaderOption
+{
+    font-weight: 400;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+}
+
+.btn-error
+{
+    display: block;
+    color: #fff;
+    background-color: #d43f3a;
+    border-color: #d43f3a;
+
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+.btn-validate
+{
+    display: block;
+    color: #fff;
+    background-color: #62485e;
+    border-color: #62485e;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;   
+}
+
+#actionButtons
+{
+    float: right;
 }
