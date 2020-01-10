@@ -47,11 +47,11 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			//$verified = $this->session->userdata('verified');
-			//if(isset($verified) && $verified == 'true')
+			$verified = $this->session->userdata('verified');
+			if(isset($verified) && $verified == 'true')
 				$this->redireccionar();
-			//else
-				//$this->authentication($this->session->userdata('usuario'));
+			else
+				$this->authentication($this->session->userdata('usuario'));
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}

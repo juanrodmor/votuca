@@ -21,9 +21,9 @@ class MesaElectoral extends CI_Controller{
 
   public function index($votos = array())
   {
-  //$verified = $this->session->userdata('verified');
-  //if(isset($verified) && $verified == true)
-  //{
+  $verified = $this->session->userdata('verified');
+  if(isset($verified) && $verified == true)
+  {
       switch ($this->session->userdata('rol')) {
          case 'Administrador':
   		redirect('/Administrador_controller');
@@ -54,8 +54,8 @@ class MesaElectoral extends CI_Controller{
           break;
       }
 
-    //}
-    //else{redirect('/Login_controller');}
+    }
+    else{redirect('/Login_controller');}
 
   }
 

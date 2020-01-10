@@ -22,9 +22,9 @@ class Secretario extends CI_Controller{
 
   public function index($mensaje = ''){
     // SEGURIDAD DEL QR
-    //$verified = $this->session->userdata('verified');
-    //if(isset($verified) && $verified == true)
-    //{
+    $verified = $this->session->userdata('verified');
+    if(isset($verified) && $verified == true)
+    {
       // Seguridad Básica URL
       switch ($this->session->userdata('rol')) {
          case 'Administrador':
@@ -53,8 +53,8 @@ class Secretario extends CI_Controller{
           redirect('/Login_controller');
           break;
       }
-    //}
-    //else{redirect('/Login_controller');}
+    }
+    else{redirect('/Login_controller');}
 
 
 
