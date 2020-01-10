@@ -147,7 +147,6 @@
             <input type="hidden" value="" name="idVotacion">
             <div class="form-group row">
               <div><input type="submit" class="btn-validate form-control" name="boton_finalizar" value="Validar votación"></div>
-              <div><input type="submit" class="btn-error form-control" name="boton_finalizar" value="Invalidar votación"></div>
             </div>
             </form>
         </div>

@@ -97,7 +97,8 @@
                     if($objeto->FechaFinal == date('Y-m-d H:i:s') || $objeto->FechaFinal < date('Y-m-d H:i:s'))
                       echo '<input type="submit" class="btn-custom" name="boton_recuento" value="Abrir urna">';
                     else
-                      echo '<input type="submit" class="btn-custom" name="boton_recuento" value="Abrir urna" disabled';
+                      echo '<p style="float: right; margin-right: 23%;">No disponible<p>';
+                        
                 echo'
                 </div>
             </form>

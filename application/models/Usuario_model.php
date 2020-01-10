@@ -66,7 +66,7 @@ class Usuario_model extends CI_Model {
 	public function desbloquearByUsername($username) {
 		$consultaAuth = $this->db->get_where('usuario', array('NombreUsuario' => $username));
 		$auth = $consultaAuth->row()->Auth;
-		$this->db->where('auth', $auth);
+		$this->db->where('Auth_key', $auth);
 		$this->db->update('autorizacion', array('attemps' => 0, 'blocked' => 0));
 	}
 	
