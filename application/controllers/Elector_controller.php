@@ -10,9 +10,9 @@ class Elector_controller extends CI_Controller {
 	}
 
 	public function index($mensaje = FALSE) {
-		$verified = $this->session->userdata('verified');
-		if(isset($verified) && $verified == true)
-		{
+		//$verified = $this->session->userdata('verified');
+		//if(isset($verified) && $verified == true)
+		//{
 			if ($this->session->userdata('rol') != 'Elector') {
 				redirect('/Login_controller');
 		    }
@@ -31,8 +31,8 @@ class Elector_controller extends CI_Controller {
 				$this->load->view('Elector/votacion_view', $votos);
 				//$this->load->view('elementos/footer');
 		    }	
-		}
-		else{redirect('/Login_controller');}
+		//}
+		//else{redirect('/Login_controller');}
 		
 
     }

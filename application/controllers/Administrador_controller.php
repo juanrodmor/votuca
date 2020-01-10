@@ -14,9 +14,9 @@ class Administrador_controller extends CI_Controller {
 	}
 
 	public function index() {
-		$verified = $this->session->userdata('verified');
-		if(isset($verified) && $verified == true)
-		{
+		//$verified = $this->session->userdata('verified');
+		//if(isset($verified) && $verified == true)
+		//{
 			switch ($this->session->userdata('rol')) {
 				case 'Administrador':
 					$this->monitoring();
@@ -37,8 +37,8 @@ class Administrador_controller extends CI_Controller {
 					redirect('/Login_controller');
 					break;
 			}
-		}
-		else{redirect('/Login_controller');}
+		//}
+		//else{redirect('/Login_controller');}
 	}
 
 	private function logs() {

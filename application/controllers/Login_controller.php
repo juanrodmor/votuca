@@ -47,11 +47,11 @@ class Login_controller extends CI_Controller {
 	public function index() {
 		$loggeado = $this->session->userdata('usuario');
 		if (isset($loggeado)) {	//Si estaba loggeado...
-			$verified = $this->session->userdata('verified');
-			if(isset($verified) && $verified == 'true')
+			//$verified = $this->session->userdata('verified');
+			//if(isset($verified) && $verified == 'true')
 				$this->redireccionar();
-			else
-				$this->authentication($this->session->userdata('usuario'));
+			//else
+				//$this->authentication($this->session->userdata('usuario'));
 		} else {	//Si no...
 			$this->load->view('login_view');
 		}
@@ -109,9 +109,9 @@ class Login_controller extends CI_Controller {
 				$this->monitoring->register_action_login($this->session->userdata('usuario'), 'success');	//Almacena la info del login exitoso en un log.
 				//$this->evaluaRol();	//Para multirol
 				
-				$this->authentication($usuario->getId());
+				//$this->authentication($usuario->getId());
 				
-				//$this->redireccionar();
+				$this->redireccionar();
 				break;
 			case 'EXPIRA': 
 				$this->session->set_userdata(array('usuario' => $usuario->getId(), 'rol' => 'Temporal'));
