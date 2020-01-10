@@ -48,15 +48,15 @@
         }  
         else
         {
-          /** 
+           
           if(isset($mensajeAperturaWait))
                 {
-                  echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
+                  echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
                 }
-          */
+          
           if (isset($mensajeCierreWait))
           {
-            echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
+            echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
           }
           /** 
           if (isset($mensajeVotacionOK))

@@ -80,14 +80,15 @@ class Usuario_model extends CI_Model {
 	//Elimina un usuario de la BD.
 	public function deleteUsuario($usuario) {
 		$idUsuario = $this->getId($usuario);
-		if($idUsuario[0] == 's' && $this->userExistsTable($idUsuario, 'secretarios_delegados')) {	//Si era secretario delegado
+		if($usuario[0] == 's' && $this->userExistsTable($idUsuario, 'secretarios_delegados')) {	//Si era secretario delegado
 			$this->db->delete('secretarios_delegados', array('Id_Usuario' => $idUsuario));
-		} else if ($idUsuario[0] == 'm' && $this->userExistsTable($idUsuario, 'mesa_electoral')) {	//Si era miembro electoral
+		} else if ($usuario[0] == 'm' && $this->userExistsTable($idUsuario, 'mesa_electoral')) {	//Si era miembro electoral
 			$this->db->delete('mesa_electoral', array('Id_Usuario' => $idUsuario));
 		}
 		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
 		$this->db->delete('usuario', array('Id' => $idUsuario));
 	}
+	
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
