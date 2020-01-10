@@ -56,6 +56,7 @@
 					'class' => 'form-control',
 					'id' => 'titulo',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Titulo
 			); ?>
 			<?= form_label('Titulo','titulo'); ?>
@@ -68,6 +69,7 @@
 					'class' => 'form-control',
 					'id' => 'descripcion',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Descripcion
 			); ?>
 			<?= form_label('Descripcion','descripcion'); ?>
@@ -86,6 +88,7 @@
 		              'placeholder' =>'Selecciona una fecha de inicio',
 		              'setEndDate' => date('Y-m-d'),
 		              'required' => true,
+									'autocomplete' => 'off',
 		              'value' => $votaciones->FechaInicio
 		          	); ?>
 		    <?= form_label('Fecha Inicio','fecha_inicio'); ?>
@@ -104,6 +107,7 @@
 		              'data-toggle' => 'datetimepicker',
 		              'placeholder' =>'Selecciona una fecha de finalizacion',
 		              'required' => true,
+									'autocomplete' => 'off',
 		              'value' => $votaciones->FechaFinal
 		        	  ); ?>
 		 		<?= form_label('Fecha Final','fecha_final'); ?>
@@ -120,6 +124,7 @@
 					'id' => 'quorum',
 					'placeholder' =>'Introduzca el quorum de esta votación',
 					'required' => true,
+					'autocomplete' => 'off',
 					'value' => $votaciones->Quorum // Mantiene el valor en el form
 			); ?>
 			<?= form_label('Quorum','quorum'); ?>
@@ -143,6 +148,7 @@
 	          'class' => 'form-control',
 	          'placeholder' =>'Introduzca un número de opciones que podrá votar un usuario en total',
 	          'required' => true,
+						'autocomplete' => 'off',
 	          'value' => $votaciones->NumOpciones
 	      ); ?>
 	      <?= form_label('Total de opciones a votar','nOpciones'); ?>
@@ -151,23 +157,32 @@
 	      </div>
 	    </div>
 
-
 			<div class="form-group">
 			      <div class="row">
 			        <div class="col-sm-6">
+								<?php
+								$opciones = NULL;
+								 foreach($nombresVotos as $nombre)
+								 {
+									 $opciones .= $nombre.',';
+								 }
+									$opciones = rtrim($opciones, ", ");
+									?>
 			      <?php
-			      $totales = array();
 			       $atributos = array(
 			          'id' => 'opciones',
 			          'name' => 'opciones',
 			          'class' => 'form-control',
 			          'placeholder' =>'Introduzca las opciones posibles',
 			          'required' => true,
-			          'value' => set_value('opciones')
+								'autocomplete' => 'off',
+			          'value' => $opciones
 			        ); ?>
+
 			      <strong><h2><?= form_label('Opciones disponibles','opciones'); ?></h2></strong>
 			      <p> Separe cada opción por una coma </p>
 			      <?= form_input($atributos) ?> <br/><br/>
+
 			      </div>
 			      </div>
 			    </div>
@@ -325,7 +340,9 @@
 							 <?php
 							 $i = 0;
 							 foreach($asistentes as $asistente)
-							 {?>
+							 {
+								 if(isset($asistentesExistentes) && $asistentesExistentes == true) $checkAsis = false;
+								 else{$checkAsis = true;}?>
 							 <td><?php echo $asistente?></td>
 							 <?php
 								 echo '<div class="form-check">';
@@ -334,7 +351,7 @@
 										 'class' => 'form-control',
 										 'type' => 'checkbox',
 										 'id' => 'censo',
-										 'checked' => true,
+										 'checked' => $checkAsis,
 										 'value' => $idsAsistentes[$i]
 								 );
 								 $i++;
@@ -343,6 +360,11 @@
 						 </div>
 						 <?php echo '</tr>'; ?>
 				 <?php } ?>
+				 <?php
+					$atributos = array(
+						 'ultimoPaso' => $ultimoPaso
+				 ); ?>
+				 <?= form_hidden($atributos) ?> <br/><br/>
 			 </tbody>
 		 </table>
 	 </div>

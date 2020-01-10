@@ -24,7 +24,6 @@ class MesaElectoral extends CI_Controller{
   //$verified = $this->session->userdata('verified');
   //if(isset($verified) && $verified == true)
   //{
-
       switch ($this->session->userdata('rol')) {
          case 'Administrador':
   		redirect('/Administrador_controller');
