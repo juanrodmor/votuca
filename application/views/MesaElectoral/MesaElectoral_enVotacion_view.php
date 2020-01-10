@@ -94,11 +94,14 @@
             </tr>
             
               <?php
+              global $votosLocal;
+              $votosLocal = array();
                 foreach($opciones as $option)
                 {
                   echo '<tr id="trBody"><th id="thBodyOption>'.$option.'</th>';
                   foreach($grupos as $group)
                   {
+                   // $votosLocal[$group] += $matrizVotos[$option][$group];
                     echo '<th id="thBodyOption'.$matrizVotos[$option][$group].'</th>';
                   }
                   echo '</tr>';
@@ -107,21 +110,20 @@
         </table>
 
         <div id="textInfo">
+          <?php global $votosLocal; print_r($votosLocal); ?>
           <p class="bold">Número total de electores: <?php echo $censo ?></p>
           <div class="row">
-            <p class="col-sm-4">Total votos válidos: <?php ?></p>
+            <p class="col-sm-4">Participación: <?php echo $totalVotos ?></p>
             <p class="col-sm-4">Total votos PAS: </p>
           </div>
           <div class="row">
-            <p class="col-sm-4">Total votos nulos: </p>
+            <p class="col-sm-4">Abstención: <?php echo $abstenciones ?></p>
             <p class="col-sm-4">Total votos Alumnos: </p>
           </div>
           <div class="row">
-            <p class="col-sm-4">Participación: <?php echo $totalVotos ?></p>
+            <p class="col-sm-4">Quorum: <?php $quorum ?> </p>
             <p class="col-sm-4">Total votos profesores: </p>
           </div>
-          <p>Abstención: <?php echo $abstenciones ?></p>
-          <p>Quorum: <?php $quorum ?> </p>
         </div>
 
         <div id="actionButtons">
