@@ -22,58 +22,57 @@
 
   <body style="overflow:hidden;">
   <div class="container">
-  <div style="overflow: inherit;z-index:200;margin-top:8%;position:fixed;width:85%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+  <div style="overflow: inherit;z-index:200;margin-top:11%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="table" id="voto_usuario" >
        <thead>
          <tr>
             <th style="border:0px;background-color:#7C9024;color:white;align:left;"><h2 style="padding-left:2%;">Elector</h2></th>
          </tr>
          <tr style="">
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:1%;">Votaciones</h4></td>
+            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:0%;"><a href="<?= base_url().'Elector_controller/index/'?>" style="text-decoration:none;color:white;">Votaciones</a></h4></td>
          </tr>
        </thead>
       <tbody>
         <tr>
           <th>
-            <?php echo "<h2 style='padding-left:2%;'>".$titulo."</h2>";?>
+            <?php echo "<h2 style='padding-left:5%;'>".$titulo."</h2>";?>
           </th>
-          <hr style="background-color: #7C9024;position: relative;top: 53%;width: 50%;float: left;height: 1%;border-style: hidden;">
         </tr>
         <!-- <hr style="width: 50%;color: red;z-index: 200;float: left;background-color: #7C9024;position: relative;top: 56%;border-top-width: 3px;"> -->
         <tr>
-          <td>
+          <td style="border-style:none;">
             <?php echo "<span style='padding-left:2%;'>".$descrip."</span>";?>
           </td>
         </tr>
         <tr>
-          <td>
+          <td style="border-style:none;">
             <?php echo "<span style='padding-left:2%;'><b>Fecha de cierre: </b>".$fch."</span>";?>
           </td>
         </tr>
         <tr>
-          <td>
+          <td style="border-style:none;">
             <?php echo "<h4 style='padding-left:2%;'> Información: </h4>";?>
           </td>
         </tr>
         <tr>
-          <td>
+          <td style="border-style:none;">
             <?php if($opc > 1) echo "<span style='padding-left:2%;'> Puede seleccionar hasta ".$opc." opciones. </span>";
                   else echo "<span style='padding-left:2%;'> Debe seleccionar 1 opcion. </span>"; 
             ?>
           </td>
         </tr>
         <tr>
-          <td>
+          <td style="border-style:none;">
             <?php 
               if($modif == 1)
-                echo "<span class='alert alert-info' role='alert' style='padding-left:2%;'> El voto es rectificable </span>";
+                echo "<span class='alert alert-info' role='alert' style='padding-left:2%;margin-left:2%;'> El voto es rectificable </span>";
               if($modif != 1)
-                echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;'> El voto NO es rectificable </span>";
+                echo "<span class='alert alert-warning' role='alert' style='padding-left:2%;margin-left:2%;'> El voto NO es rectificable </span>";
             ?>
           </td>
         </tr>
         <tr>
-          <td>
+          <td style="border-style:none;">
           <form action="<?= base_url().'Elector_controller/guardarVoto/'?>" method="post" name="votosdisp">
       <center>
         <?php
@@ -93,9 +92,9 @@
               <!-- <div style=""> -->
                 <?php 
                   if($opc > 1) {  //votacion compleja 
-                    echo '<input class="single-checkbox" type="checkbox" name="voto[]" value="'.$voto.'">'.$voto;
+                    echo '<input class="single-checkbox" type="checkbox" name="voto[]" value="'.$voto.'" style="margin-left:3%;margin-right:0.2em;">'.$voto;
                   }
-                  else echo '<input type="radio" name="voto" value="'.$voto.'">'.$voto; // votacion simple
+                  else echo '<input type="radio" name="voto" value="'.$voto.'" style="margin-left:3%;margin-right:0.2em;">'.$voto; // votacion simple
                 ?>
               <!-- </div> -->
 

@@ -33,7 +33,7 @@
             </div>
             <hr class="divider">
             <div class="col-xs-12 col-sm-8" id="linkBox">
-              <a href="#" class="marked">Votaciones</a>
+              <a href="<?php echo base_url() . 'MesaElectoral';?>" class="marked">Votaciones</a>
             </div>
         </div>
     </div>
@@ -50,10 +50,22 @@
         }  
         else
         {
-           if(isset($mensaje) && $mensaje != '')
+			if(isset($mensajeAperturaWait))
             {
-              echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensaje .'</div>';
+              echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
             }
+			if (isset($mensajeCierreWait))
+			{
+				echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
+			}
+			if (isset($mensajeVotacionOK))
+			{
+				echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionOK .'</div>';
+			}
+			if (isset($mensajeVotacionInvalida))
+			{
+				echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionInvalida .'</div>';
+			}
             else
             {
               if(isset($success))
@@ -70,11 +82,11 @@
     if(isset($cantidad)){
     echo'
       <div id="graphic-info">
-      <h2>Porcentaje de voto</h2>
+      <h2 id="title-porcentaje">Porcentaje de participación</h2>
       </div>
         <div id="vote-info">
-            <div class="c100 p'.$totalVotos*100/$censo.' big center" style="float:left;">
-                <span>'.$totalVotos*100/$censo.'</span>
+            <div class="c100 p'.(100-($abstenciones*100)/$censo).' big center" style="float:left;">
+                <span>'.(100-($abstenciones*100)/$censo).'%</span>
                 <div class="slice">
                   <div class="bar"></div>
                     <div class="fill"></div>
@@ -86,7 +98,7 @@
                   Número de votos
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text">'.$totalVotos.'</h3>
+                  <h3 class="card-text"><center>'.$totalVotos.'</center></h3>
                 </div>
               </div>   
               <div class="card">
@@ -94,7 +106,7 @@
                   Tamaño del censo
                 </div>
                 <div class="card-body">
-                  <h3 class="card-text">'.$censo.'</h3>
+                  <h3 class="card-text"><center>'.$censo.'</center></h3>
                 </div>
               </div>  
               <div class="card">
@@ -107,7 +119,7 @@
                   {
                     echo '<h5 class="card-text">'.$opciones[$i].': '.$cantidad[$i].'</h5>';
                   } 
-                echo'
+                echo'<h5 class="card-text">No han votado: '.$abstenciones.'</h5>
                 </div>
               </div>    
           </div>
@@ -118,7 +130,7 @@
                   <input id="endButton" type="submit" name="boton_finalizar" value="Finalizar" class="btn btn-primary">
                 </form>
               </div>
-
+            <br><br>
         </div>
     ';
     }
@@ -154,8 +166,12 @@
 
                   );
                 echo form_hidden($atributos);
-                  if($objeto->FechaFinal == date('Y-m-d H:i:s') || $objeto->FechaFinal < date('Y-m-d H:i:s'))  
+                  if($objeto->FechaFinal <= date('Y-m-d H:i:s'))  
                     echo '<td><input class="btn btn-primary" type="submit" value="Recuento" name="boton_recuento"></td>';
+                  if($objeto->FechaInicio <= date('Y-m-d H:i:s') && $objeto->FechaFinal > date('Y-m-d H:i:s'))
+                    echo '<td> Aún en votación </td>';
+                  if($objeto->FechaInicio > date('Y-m-d H:i:s'))
+                    echo '<td> No comenzada </td>';
                 echo form_close(); 
               echo'
           </tr>';
@@ -186,6 +202,7 @@
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
    <!--<script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>-->
+   <script src="<?php echo base_url()."assets/js/behaviour/mesa_electoral.js"?>"></script>
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>

@@ -19,7 +19,6 @@ window.addEventListener("load", () => {
 
   $(document).ready(function(){
     $('#fecha_inicio').datetimepicker({
-      todayBtn:  1,
       todayHighlight: true,
       autoclose: true,
       startDate: '+1d', // Solo puede empezar a partir de hoy

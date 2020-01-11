@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<body style="overflow:hidden;">
+<body>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,24 +22,10 @@
           <br/><br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
-  
 
   <div class = "container">
-  <div style="background-color:#7E392B;color:white;z-indez:300;position:absolute;top:13%;width:80%;height: 15%;">
-      <h2>&nbsp;&nbsp;&nbsp;Secretario</h2>
-      <hr style="width:95%;background-color:white;">
-      <div style="background-color:#8C240E;width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;margin-left: 2%;width: 12%;">
-        <h5>&nbsp;&nbsp;&nbsp;Votaciones</h5>
-      </div>
-      <div style="width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;left: 15%;width: 15%;">
-        <h5>&nbsp;&nbsp;&nbsp;Crear Votación</h5>
-      </div>
-      <div style="width:10%;position: absolute;top: 55%;padding-top: 1%;height: 45%;left: 30%;width: 15%;">
-        <h5>&nbsp;&nbsp;&nbsp;Borradores</h5>
-      </div>
-  </div>
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-striped" id="votaciones_secretario" style="margin-top:8%;">
+    <table class="display table table-striped" id="votaciones_secretario">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>

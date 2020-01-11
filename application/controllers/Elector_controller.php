@@ -10,25 +10,30 @@ class Elector_controller extends CI_Controller {
 	}
 
 	public function index($mensaje = FALSE) {
-		if ($this->session->userdata('rol') != 'Elector') {
-			redirect('/Login_controller');
-	    }
-	    else {
-	    	//$this->Voto_model->_actualizarFechasVotaciones();		// esto lo hacen los miembros de la mesa electoral para abrir las urnas
-				$titulo['titulo'] = 'MIS VOTACIONES';
-				$inicio['inicio'] = 'Elector_controller/';
-				$this->load->view('elementos/head',$titulo);
-					//$this->load->view('elementos/headerComun',$inicio);
-				$this->load->view('elementos/headerVotacion',$inicio);
-	    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
-	        $datos = $this->Voto_model->_listar($id_user);
-        	$votos = array(
-	        	'datos' => $datos,
-	        	'mensaje' => $mensaje
-	        );
-			$this->load->view('Elector/votacion_view', $votos);
-			//$this->load->view('elementos/footer');
-	    }
+		$verified = $this->session->userdata('verified');
+		if(isset($verified) && $verified == 'true')
+		{
+			if ($this->session->userdata('rol') != 'Elector') {
+				redirect('/Login_controller');
+		    }
+		    else {
+					$titulo['titulo'] = 'LISTA DE VOTACIONES';
+					$inicio['inicio'] = 'Elector_controller/';
+					$this->load->view('elementos/head',$titulo);
+						//$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);
+		    	$id_user = $this->Voto_model->_userId($_SESSION['usuario']);
+		        $datos = $this->Voto_model->_listar($id_user);
+	        	$votos = array(
+		        	'datos' => $datos,
+		        	'mensaje' => $mensaje
+		        );
+				$this->load->view('Elector/votacion_view', $votos);
+				//$this->load->view('elementos/footer');
+		    }	
+		}
+		else{redirect('/Login_controller');}
+		
 
     }
 
@@ -50,7 +55,7 @@ class Elector_controller extends CI_Controller {
 			$modif = $_POST['modif'];
 			$opc = $_POST['opc'];
 
-				$title['titulo'] = 'MIS VOTACIONES';
+				$title['titulo'] = 'VOTACION';
 				$inicio['inicio'] = 'Elector_controller/';
 				$this->load->view('elementos/head',$title);
 				//$this->load->view('elementos/headerComun',$inicio);
@@ -118,7 +123,7 @@ class Elector_controller extends CI_Controller {
 					'opc' => $opc,
 		    		'votos' => $votos
 		    		);
-				    	$title['titulo'] = 'MIS VOTACIONES';
+				    	$title['titulo'] = 'VOTACION';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
@@ -156,7 +161,7 @@ class Elector_controller extends CI_Controller {
 					'opc' => $opc,
 		    		'votos' => $votos
 		    		);
-				    	$title['titulo'] = 'MIS VOTACIONES';
+				    	$title['titulo'] = 'LISTA DE VOTACIONES';
 						$inicio['inicio'] = 'Elector_controller/';
 						$this->load->view('elementos/head',$title);
 						$this->load->view('elementos/headerVotacion',$inicio);
@@ -186,8 +191,8 @@ class Elector_controller extends CI_Controller {
 		    		$title['titulo'] = 'RESULTADOS';
 					$inicio['inicio'] = 'Elector_controller/';
 					$this->load->view('elementos/head',$title);
-					$this->load->view('elementos/headerComun',$inicio);
-					//$this->load->view('elementos/headerVotacion',$inicio);		// Avisar a alvaro para que ponga bien los botones y contenido ajustado
+						//$this->load->view('elementos/headerComun',$inicio);
+					$this->load->view('elementos/headerVotacion',$inicio);		// Avisar a alvaro para que ponga bien los botones y contenido ajustado
 				$total = 0;
 				foreach($datos as $voto) {
 					if($voto->Id_Voto != 1)
