@@ -23,7 +23,7 @@ class Usuario_model extends CI_Model {
 		);
 
 		$this->db->insert('usuario', $data);
-		$this->setUserGroup($this->getId($username), $id_grupo);
+		//$this->setUserGroup($this->getId($username), $id_grupo);
 		
 	}
 	
