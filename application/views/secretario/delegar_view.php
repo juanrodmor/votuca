@@ -22,7 +22,7 @@
 
 <br><br><br><br>
 <div class = "container">
-    <table class="display table table-striped table-responsive" id="votaciones_admin">
+    <table class="display table table-striped table-responsive" id="tabla_secretario">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>
@@ -50,7 +50,7 @@
          <?= form_hidden($atributos);?>
          <?php $atributos = array(
              'name' => 'boton_finalizar',
-             'class' => 'btn btn-primary',
+             'class' => 'btn btn-primary botones',
              'type' => 'submit',
              'onclick' => "return confirm('¿Estás seguro de que quieres delegar en este secretario esta votación?')",
              'value' => 'Delegar Secretario'
