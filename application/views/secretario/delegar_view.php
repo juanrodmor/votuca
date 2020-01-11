@@ -11,7 +11,7 @@
     <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.css" rel="stylesheet">-->
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
 
   </head>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">

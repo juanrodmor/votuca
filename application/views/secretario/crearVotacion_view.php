@@ -11,7 +11,7 @@
     <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">-->
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
     <!-- DATETIME PICKER -->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -296,10 +296,9 @@
     <?php } ?>
     <?php if(isset($censos)){?>
         <h2> Censo electoral </h2>
-        <p> Escoja el censo electoral que desee </p>
         <div class = "container">
-          <div class="table-wrapper-scroll-y my-custom-scrollbar">
-          <table class="display table table-striped table-bordered" id="votaciones_admin">
+          <!--<div class="table-wrapper-scroll-y my-custom-scrollbar">-->
+          <table class="display table table-striped table-bordered">
             <thead>
               <tr>
                 <th>Censo</th>
@@ -332,7 +331,7 @@
             <?php }?>
           </tbody>
         </table>
-      </div>
+      <!--</div>-->
       </div>
 
     <?php }?>

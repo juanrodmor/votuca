@@ -10,7 +10,7 @@
 	<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-
+	<link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
 	<!-- DATETIME PICKER -->
 	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">

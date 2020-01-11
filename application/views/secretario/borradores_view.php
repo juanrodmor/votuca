@@ -11,7 +11,7 @@
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
     <!-- GOOOGLE FONTS -->
 
   </head>
@@ -23,7 +23,7 @@
       <?php endif; ?>
   </div>
 
-  
+
   <div style="margin-top:17%;">
   <!-- FORMULARIO DE VOTACION -->
   <div style="margin-top: 5%;color: black;">
