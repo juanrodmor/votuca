@@ -789,6 +789,9 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('descripcion','Descripcion','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','required');
       $this->form_validation->set_rules('final','Fecha Final','required');
+      $this->form_validation->set_rules('ponderacionPAS','Ponderaciones PAS','required');
+      $this->form_validation->set_rules('ponderacionAumnos','Ponderaciones Alumnos','required');
+      $this->form_validation->set_rules('ponderacionProfesores','Ponderaciones Profesores','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
