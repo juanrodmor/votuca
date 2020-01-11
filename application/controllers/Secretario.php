@@ -142,6 +142,7 @@ class Secretario extends CI_Controller{
   {
     $idTipo = $this->input->post('Id_TipoVotacion');
     $tipo = $this->votaciones_model->getNombreTipo($idTipo);
+    // VALIDACIÓN
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
       if($this->input->post('soloAsistentes') != NULL
@@ -2038,9 +2039,15 @@ class Secretario extends CI_Controller{
         else{return TRUE;}
       }
     }
-
-
-
+    else
+    {
+      if($elegidos == NULL || sizeof($elegidos) < 1)
+      {
+        $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+        return FALSE;
+      }
+      else{return TRUE;}
+    }
   }
 
   public function validarAsistentes(){
