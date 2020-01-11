@@ -11,7 +11,7 @@
           </ul>
            <ul class="navbar-nav ">
          <li class="nav-item my-2 my-lg-0 mr-sm-8">
-        <span id="cerrar-ses" class="nav-link" onclick="location='<?= base_url().'login_controller/logout'?>'">Cerrar sesión</span>
+        <a id="cerrar-ses" class="nav-link" href="<?= base_url().'login_controller/logout'?>">Cerrar sesión</a>
       </li>
     </ul>
       </div>
@@ -24,7 +24,7 @@
         <hr class="divider">
 		<ul class="nav nav-pills">
   			<li class="nav-item">
-          <a style="background-color: #6b2818;border-radius: 0px; color: white" class="nav-link active" href="<?= base_url().'secretario/'?>">Votaciones</a>
+          <a style="border-radius: 0px;color: white" class="nav-link" href="<?= base_url().'secretario/'?>">Votaciones</a>
   			</li>
 	  		<li class="nav-item dropdown">
 	    		<a style="border-radius: 0px;color: white" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Crear votación</a>

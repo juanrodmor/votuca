@@ -18,8 +18,18 @@
     <!-- Aqui se importa headerSecretario.php de elementos -->
     <!--- FIN ENCABEZADO --->
 <div class="containerTabla">
-  <!--<div class="table-wrapper-scroll-y my-custom-scrollbar">-->
-<table id="tablaSecre" class="table table-striped table-bordered table-sm">
+  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+<table class="display table table-striped" id="tabla_secretario">
+    <thead>
+      <tr>
+           <th scope="col" class="no-sort">ID</th>
+           <th scope="col">Titulo</th>
+           <th scope="col">Inicio</th>
+           <th scope="col">Fin</th>
+           <th scope="col">Borrador</th>
+           <th scope="col"></th>
+      </tr>
+    </thead>
      <tbody>
        <?php
         foreach($votaciones as $votacion){?>
@@ -33,17 +43,19 @@
             if($objeto->FechaFinal > date('Y-m-d')) // Está disponible
             {echo "<th scope=row class=table-success>";}
          ?>
+         <?php echo $objeto->Id;?>
          </th>
-         <?php echo "<br><td scope=row><h4 style='float:left;color:black'><b>".$objeto->Id." ".$objeto->Titulo."</b></h4><br><br><span style='float:left;color:black'>Fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;color:black'>Fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
+        <td><?php echo $objeto->Titulo;?></td>
+        <td><?php echo $objeto->FechaInicio;?></td>
+        <td><?php echo $objeto->FechaFinal;?></td>
+
         <?php
-          if($objeto->esBorrador == 1){
-            echo "<td><br><span style='color:black'> En borrador </span></td>";
-          }
-          else{echo "<td><br><span style='color:black'> Publicada </span></td>";}
-        ?>
-
-
-          <!-- BOTON DE ELIMINAR -->
+        if($objeto->esBorrador == 1){
+          echo '<td> En borrador </td>';
+        }
+        else{echo '<td> Publicada </td>';}
+      ?>
+      <!-- BOTON DE ELIMINAR -->
           <?=form_open(base_url().'secretario/eliminarVotacion',
          		    array('name'=>'eliminarVotacion'));?>
                 <?php
@@ -54,12 +66,12 @@
           <?= form_hidden($atributos);?>
           <?php $atributos = array(
               'name' => 'boton_eliminar',
-              'class' => 'btn btn-primary',
+              'class' => 'btn btn-primary botones',
               'type' => 'submit',
               'value' => 'Eliminar',
               'onclick' => "return confirm('¿Estás seguro de que quieres eliminar esta votación?')"
           ); ?>
-          <td><?= form_submit($atributos);?></td>
+          <td><center><?= form_submit($atributos);?></center></td>
           <?= form_close(); ?>
 
          <?php if($objeto->FechaFinal >= date('Y-m-d')){?>
@@ -74,7 +86,7 @@
              <?= form_hidden($atributos);?>
              <?php $atributos = array(
                  'name' => 'boton_delegar',
-                 'class' => 'btn btn-primary',
+                 'class' => 'btn btn-primary botones',
                  'type' => 'submit',
                  'value' => 'Delegar'
              ); ?>
@@ -97,7 +109,7 @@
          <?= form_hidden($atributos);?>
          <?php $atributos = array(
              'name' => 'boton_modificar',
-             'class' => 'btn btn-primary',
+             'class' => 'btn btn-primary botones',
              'type' => 'submit',
              'value' => 'Modificar'
          ); ?>
@@ -110,7 +122,7 @@
      <?php }?>
      </tbody>
 </table>
-<!--</div>-->
+</div>
 </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -123,7 +135,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-   <script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>
+   <!--<script src="<?php echo base_url()."assets/js/behaviour/tabla_secretario.js"?>"></script>-->
 
     <!-- DATE PICKER -->
     <script src="<?php echo base_url(); ?>/assets/js/bootstrap-datepicker.js"></script>

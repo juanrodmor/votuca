@@ -1,9 +1,8 @@
-var base_url = window.location.origin+"/votuca/";
 window.addEventListener("load", () => {
-  /*$(document).ready(function(){
-      $('#votaciones_admin').DataTable({
+  $(document).ready(function(){
+      $('#tabla_secretario').DataTable({
         serverSide: false,
-        paging: false,
+        paging: true,
         "scrollY": 300,
         ordering: false,
         "language": {
@@ -21,8 +20,8 @@ window.addEventListener("load", () => {
               }
           }
 
-      });*/
-      var miTabla = document.querySelector("#votaciones_secretario");
+      });
+
   });
 
 

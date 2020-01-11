@@ -370,9 +370,12 @@
 	 </div>
 	 </div>
  <?php } ?>
+
+ <br><br>
+ <div class="row">
 					 <?php $atributos = array(
 							 'name' => 'boton_borrador',
-							 'class' => 'btn btn-primary',
+							 'class' => 'btn btn-primary botones',
 							 'type' => 'submit',
 							 'value' => 'Guardar en borrador'
 					 ); ?>
@@ -381,12 +384,14 @@
 
 			 <?php $atributos = array(
 					 'name' => 'boton_publicar',
-					 'class' => 'btn btn-primary',
+					 'class' => 'btn btn-primary botones',
 					 'type' => 'submit',
 					 'value' => 'Publicar'
 			 ); ?>
 			  <?= form_submit($atributos);?>
+			</div>
 	<?= form_close(); ?>
+	<br><br>
 </div>
 
 <!-- Bootstrap core JavaScript

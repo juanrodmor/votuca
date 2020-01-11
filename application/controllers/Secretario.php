@@ -1012,9 +1012,9 @@ class Secretario extends CI_Controller{
   public function updateVotacion()
 	{
     if($this->input->post('boton_borrador'))
-    $this->actualizarVotacionFromBoton('boton_borrador',false);
+    $this->actualizarVotacionFromBoton('boton_borrador',true);
     if($this->input->post('boton_publicar'))
-    $this->actualizarVotacionFromBoton('boton_publicar',true);
+    $this->actualizarVotacionFromBoton('boton_publicar',false);
   }
 
   private function actualizarVotacionFromBoton($boton,$publicar)

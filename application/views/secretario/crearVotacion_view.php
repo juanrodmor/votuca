@@ -19,16 +19,14 @@
   </head>
 
   <body>
-
-  <br><br>
 <div class="container">
+  
   <div class ="mensaje">
     <h3><?=   validation_errors();  ?></h3>
     <?php if(isset($mensaje)): ?>
           <br/><h1><?= $mensaje ?></h1><br/>
 
       <?php endif; ?>
-
   </div>
   <!-- FORMULARIO DE VOTACION -->
     <?=form_open(base_url().'secretario/insertarVotacion/');?>
@@ -374,25 +372,28 @@
 <?php } ?>
 
       <!-- BOTÓN ENVIAR -->
-        <?php $atributos = array(
+      <br><br>
+      <div class="row">
+      <?php $atributos = array(
             'name' => 'submit_reg',
-            'class' => 'btn btn-primary',
+            'class' => 'btn btn-primary botones',
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
         <?= form_submit($atributos);?>
 
-        <br/>
+
         <?php $atributos = array(
             'name' => 'boton_borrador',
-            'class' => 'btn btn-primary',
+            'class' => 'btn btn-primary botones',
             'type' => 'submit',
             'value' => 'Guardar en borrador'
         ); ?>
 
         <?= form_submit($atributos);?>
       <?= form_close(); ?>
-
+    </div>
+    <br><br>
 
 </div>
 
