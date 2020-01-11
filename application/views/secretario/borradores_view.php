@@ -21,11 +21,7 @@
           <br/><br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
-
-
-
   <!-- FORMULARIO DE VOTACION -->
-
   <div class = "containerTabla">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table table-striped" id="tabla_secretario">
@@ -141,10 +137,9 @@
      <?php }?>
      </tbody>
     </table>
-    <br><br><br>
   </div>
   </div>
-
+  <br><br><br>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

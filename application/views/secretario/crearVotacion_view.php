@@ -20,7 +20,7 @@
 
   <body>
 <div class="container">
-  
+
   <div class ="mensaje">
     <h3><?=   validation_errors();  ?></h3>
     <?php if(isset($mensaje)): ?>
@@ -115,6 +115,8 @@
         </div>
 
         <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
           <?php
            $atributos = array(
               'name' => 'quorum',
@@ -129,10 +131,12 @@
           <!-- Igual a: <label for="titulo">Titulo</label> -->
           <?= form_input($atributos) ?> <br/><br/>
         </div>
+      </div>
+    </div>
 
         <!-- PONDERACIONES -->
         <?php if(isset($permitirPonderaciones) && $permitirPonderaciones == true){?>
-          <h2> Ponderaciones </h2>
+          <strong><h2><?= form_label('Ponderaciones',''); ?></h2></strong>
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
@@ -192,7 +196,7 @@
         <?php } ?>
 
         <?php if(isset($permitirOpciones) && $permitirOpciones == true){ ?>
-          <h2> Opciones </h2>
+            <strong><h2><?= form_label('Opciones',''); ?></h2></strong>
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
@@ -293,9 +297,10 @@
 
     <?php } ?>
     <?php if(isset($censos)){?>
-        <h2> Censo electoral </h2>
+      <br><br>
+          <strong><h2><?= form_label('Censo',''); ?></h2></strong>
         <div class = "container">
-          <!--<div class="table-wrapper-scroll-y my-custom-scrollbar">-->
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered">
             <thead>
               <tr>
@@ -329,13 +334,13 @@
             <?php }?>
           </tbody>
         </table>
-      <!--</div>-->
+      </div>
       </div>
 
     <?php }?>
     <?php
     if(isset($asistentes) && $asistentes != NULL){?>
-      <h2> Censo asistente </h2>
+      <h3> Censo asistente </h3>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
@@ -391,8 +396,9 @@
         ); ?>
 
         <?= form_submit($atributos);?>
+        </div>
       <?= form_close(); ?>
-    </div>
+
     <br><br>
 
 </div>

@@ -962,6 +962,11 @@ class Secretario extends CI_Controller{
       $cambiarOpciones = false;
       if($votacion->NumOpciones > 1){$cambiarOpciones = true;}
 
+      $cambiarPonderaciones = false;
+      if($votacion->Id_TipoVotacion == 3 || $votacion->Id_TipoVotacion == 4
+         || $votacion->Id_TipoVotacion == 6)
+      {$cambiarPonderaciones = true;}
+
       // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
       $idsAsistentes = array();
       $asistentesNombre = array();
@@ -990,7 +995,12 @@ class Secretario extends CI_Controller{
         foreach($idsVotos as $id)
         $nombresVotos[] = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
       }
-      echo var_dump($nombresVotos);
+
+      // SACAR PONDERACIONES DE UNA VOTACION
+      $pondPAS = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,1);
+      $pondAlumnos = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,2);
+      $pondProfesores = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,3);
+
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -999,13 +1009,16 @@ class Secretario extends CI_Controller{
         'pulsadoModificar' => $esModificable,
         'pulsadoRecuento' => $recuentoParalelo,
         'cambiarOpciones' => $cambiarOpciones,
+        'cambiarPonderaciones' => $cambiarPonderaciones,
+        'pondPAS' => $pondPAS,
+        'pondAlumnos' => $pondAlumnos,
+        'pondProfesores' => $pondProfesores,
         'asistentes' => $asistentes,
         'idsAsistentes' => $idsAsistentes,
         'nombresVotos' => $nombresVotos,
         'ultimoPaso' => false,
       );
       // SACAR TIPO DE VOTACION
-      $tipoVotacion = $votacion->Id_TipoVotacion;
       $this->load->view('secretario/modificarVotacion_view', $datos);
 
 	}
@@ -1032,6 +1045,15 @@ class Secretario extends CI_Controller{
           $datos = $this->actualizarVotacionDatos($publicar);
           $idTipo = $_POST['Id_TipoVotacion'];
           $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+
+          // ACTUALIZAR PONDERACIONES
+          if(isset($_POST['ponderacionPAS']) && isset($_POST['ponderacionAlumnos']) && ($_POST['ponderacionProfesores']))
+          {
+            $pondPas = $_POST['ponderacionPAS'];
+            $pondAlum = $_POST['ponderacionAlumnos'];
+            $pondProfesores = $_POST['ponderacionProfesores'];
+            $this->votaciones_model->updatePonderaciones($idVotacion,$pondPas,$pondAlum,$pondProfesores);
+          }
 
           // JUEGO DE ASISTENTES
           $finalizado = false;
@@ -1112,8 +1134,8 @@ class Secretario extends CI_Controller{
         }
           $modificada = $this->votaciones_model->updateVotacion($datos,$idVotacion);
       }
-      if($modificada != NULL && $finalizado)
-          $this->index('La votación se ha modificado correctamente');
+      /*if($modificada != NULL && $finalizado)
+          $this->index('La votación se ha modificado correctamente');*/
 
   }
 
