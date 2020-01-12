@@ -526,7 +526,7 @@ class Secretario extends CI_Controller{
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios,
-          'mensaje' => 'Seleccione al menos tres asistentes',
+          'mensaje' => 'Seleccione abajo un censo asistente',
           'tipoVotacion' => $idTipo
       );
       $this->llamarVistasCrear($tipo,$datos);
