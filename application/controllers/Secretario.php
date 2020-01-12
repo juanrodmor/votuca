@@ -2066,6 +2066,7 @@ class Secretario extends CI_Controller{
     }
     else
     {
+
       if($elegidos == NULL || sizeof($elegidos) < 1)
       {
         $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
