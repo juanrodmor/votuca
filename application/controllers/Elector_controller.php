@@ -11,7 +11,7 @@ class Elector_controller extends CI_Controller {
 
 	public function index($mensaje = FALSE) {
 		$verified = $this->session->userdata('verified');
-		if(isset($verified) && $verified == 'true')
+		if(isset($verified) && $verified == true)
 		{
 			if ($this->session->userdata('rol') != 'Elector') {
 				redirect('/Login_controller');

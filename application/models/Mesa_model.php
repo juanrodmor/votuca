@@ -175,14 +175,17 @@ class Mesa_model extends CI_Model {
 			array_push($contVotos, array($opcion => array()));
 		$totalVotos = 0;
 		$abstenciones = $this->getNVotos($idVotacion, 1, 4);
-		$opcionVoto = 0;
+		$itVoto = 0;
+		$itGrupo = 0;
 		foreach($votos['Id'] as $idVoto) {
 			foreach($aGrupoPonderacion['Id'] as $idGrupo) {
 				$nVotos = $this->getNVotos($idVotacion, $idVoto, $idGrupo);
-				array_push($contVotos[$votos['Nombre'][$opcionVoto]], $nVotos);
+				$contVotos[$votos['Nombre'][$itVoto]][$aGrupoPonderacion['Grupo'][$itGrupo]] = $nVotos;
 				$totalVotos = $totalVotos + $nVotos;
+				$itGrupo++;
 			}
-			$opcionVoto++;
+			$itVoto++;
+			$itGrupo = 0;
 		}
 		$result = array('opciones' => $votos['Nombre'],		//Nombres de los votos.
 						'grupos' => $aGrupoPonderacion['Grupo'],		//Nombres de los grupos.

@@ -23,7 +23,7 @@ class Usuario_model extends CI_Model {
 		);
 
 		$this->db->insert('usuario', $data);
-		$this->setUserGroup($this->getId($username), $id_grupo);
+		//$this->setUserGroup($this->getId($username), $id_grupo);
 		
 	}
 	
@@ -62,6 +62,14 @@ class Usuario_model extends CI_Model {
 		}
 	}
 	
+	//Elimina el bloqueo de inicio de sesión para el usuario username.
+	public function desbloquearByUsername($username) {
+		$consultaAuth = $this->db->get_where('usuario', array('NombreUsuario' => $username));
+		$auth = $consultaAuth->row()->Auth;
+		$this->db->where('Auth_key', $auth);
+		$this->db->update('autorizacion', array('attemps' => 0, 'blocked' => 0));
+	}
+	
 	//Devuelve la contraseña de un usuario específico.
 	public function getPass($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -80,14 +88,15 @@ class Usuario_model extends CI_Model {
 	//Elimina un usuario de la BD.
 	public function deleteUsuario($usuario) {
 		$idUsuario = $this->getId($usuario);
-		if($idUsuario[0] == 's' && $this->userExistsTable($idUsuario, 'secretarios_delegados')) {	//Si era secretario delegado
+		if($usuario[0] == 's' && $this->userExistsTable($idUsuario, 'secretarios_delegados')) {	//Si era secretario delegado
 			$this->db->delete('secretarios_delegados', array('Id_Usuario' => $idUsuario));
-		} else if ($idUsuario[0] == 'm' && $this->userExistsTable($idUsuario, 'mesa_electoral')) {	//Si era miembro electoral
+		} else if ($usuario[0] == 'm' && $this->userExistsTable($idUsuario, 'mesa_electoral')) {	//Si era miembro electoral
 			$this->db->delete('mesa_electoral', array('Id_Usuario' => $idUsuario));
 		}
 		$this->db->delete('expiracion', array('Id_Usuario' => $idUsuario));
 		$this->db->delete('usuario', array('Id' => $idUsuario));
 	}
+	
 	//Comprueba si el usuario recibido existe en la base de datos.
 	public function userExists($usuario) {
 		$consulta = $this->db->get_where('usuario', array('NombreUsuario' => $usuario));
@@ -176,6 +185,17 @@ class Usuario_model extends CI_Model {
 	{
 		$consulta = $this->db->get_where('usuario_grupo', array('Id_Usuario' => $this->getId($usuario)));
 		return $consulta->row()->Id_Grupo;
+	}
+	
+	//Devuelve un array con los nombres de usuario de aquellos cuyo acceso está bloqueado.
+	public function getNameOfBlockedUsers() {
+		$result = array();
+		$consultaAuth = $this->db->get_where('autorizacion', array('blocked' => 1));
+		foreach($consultaAuth->result() as $auth) {
+			$consultaUser = $this->db->get_where('usuario', array('Auth' => $auth->auth_key));
+			array_push($result, $consultaUser->row()->NombreUsuario);
+		}
+		return $result;
 	}
 
 	public function setAuth($usuario, $auth)

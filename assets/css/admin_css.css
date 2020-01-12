@@ -191,3 +191,23 @@ body {
     padding-top: 1.5%;
     padding-bottom: 1.5%;
 }
+
+.btn-custom-for-options
+{
+    margin-left: 80%;
+	margin-top: -5%;
+    color: #fff;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+#card-options
+{
+	margin-top: 5%;
+}
