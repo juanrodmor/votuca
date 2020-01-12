@@ -1092,6 +1092,7 @@ class Secretario extends CI_Controller{
             if(isset($_POST['censo']) && !isset($_POST['asistentes']))
              $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
 
+            $finalizado = true;
           }
 
           // 4. PULSADO SOLO ASISTENTES Y LA VOTACION TENIA ASISTENTES
@@ -1313,11 +1314,6 @@ class Secretario extends CI_Controller{
 
   private function mostrarErrores($misDatos)
   {
-    if($this->session->userdata('rol') == 'Secretario')
-    {$this->load->view('elementos/headerSecretario');}
-    if($this->session->userdata('rol') == 'SecretarioDelegado')
-    {$this->load->view('elementos/headerDelegado');}
-
     $totales = $this->censo_model->getUsuariosfromVotacion($misDatos['id']);
     $idsTotales = array();
     foreach($totales as $usuario)
