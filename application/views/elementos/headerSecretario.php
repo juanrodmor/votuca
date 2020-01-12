@@ -16,7 +16,7 @@
     </ul>
       </div>
     </nav> <!-- FIN MENU SUPERIOR -->
-    
+
     <nav class="row is-flex see-overflow fixed" id="title-container"> <!-- MENU INFERIOR -->
     <!--<div class="row is-flex see-overflow fixed" id="title-container">-->
         <div class="col-xs-12 col-sm-8">
@@ -24,7 +24,7 @@
         </div>
         <hr class="divider">
 		<ul class="nav nav-pills">
-  			<li class="nav-item">
+  			<li class="nav-item ">
           <a style="border-radius: 0px;color: white" class="nav-link" href="<?= base_url().'secretario/'?>">Votaciones</a>
   			</li>
 	  		<li class="nav-item dropdown">

@@ -1,3 +1,4 @@
+'use strict'
 window.addEventListener("load", () => {
   $(document).ready(function(){
       $('#tabla_secretario').DataTable({

@@ -34,7 +34,6 @@ class Secretario extends CI_Controller{
           redirect('/Elector_controller');
           break;
          case 'Secretario':
-
          $this->load->view('elementos/headerSecretario');
          // VOTACIONES QUE NO ESTÁN ELIMINADAS
          $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();

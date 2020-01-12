@@ -11,8 +11,7 @@
   <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
-  <!-- GOOOGLE FONTS -->
-
+  
 </head>
 <body>
 <div class="container">
