@@ -526,7 +526,7 @@ class Secretario extends CI_Controller{
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios,
-          'mensaje' => 'Seleccione abajo el censo asistente',
+          'mensaje' => 'Seleccione abajo un censo asistente',
           'tipoVotacion' => $idTipo
       );
       $this->llamarVistasCrear($tipo,$datos);
@@ -1092,6 +1092,7 @@ class Secretario extends CI_Controller{
             if(isset($_POST['censo']) && !isset($_POST['asistentes']))
              $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
 
+            $finalizado = true;
           }
 
           // 4. PULSADO SOLO ASISTENTES Y LA VOTACION TENIA ASISTENTES
@@ -1313,11 +1314,6 @@ class Secretario extends CI_Controller{
 
   private function mostrarErrores($misDatos)
   {
-    if($this->session->userdata('rol') == 'Secretario')
-    {$this->load->view('elementos/headerSecretario');}
-    if($this->session->userdata('rol') == 'SecretarioDelegado')
-    {$this->load->view('elementos/headerDelegado');}
-
     $totales = $this->censo_model->getUsuariosfromVotacion($misDatos['id']);
     $idsTotales = array();
     foreach($totales as $usuario)
@@ -2066,6 +2062,7 @@ class Secretario extends CI_Controller{
     }
     else
     {
+
       if($elegidos == NULL || sizeof($elegidos) < 1)
       {
         $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');

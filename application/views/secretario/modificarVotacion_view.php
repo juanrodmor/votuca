@@ -389,7 +389,7 @@
 	 <!-- CENSO ASISTENTE -->
 	 <?php
 	 if(isset($asistentes) && $asistentes != NULL && isset($idsAsistentes)){?>
-		 <h2> Censo asistente </h2>
+			<strong><h2><?= form_label('Asistentes',''); ?></h2></strong>
 			 <div class = "container">
 				 <div class="table-wrapper-scroll-y my-custom-scrollbar">
 				 <table class="display table table-striped table-bordered" id="votaciones_admin">
