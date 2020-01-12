@@ -11,7 +11,7 @@
     <!--<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">-->
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-
+    <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
     <!-- DATETIME PICKER -->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,16 +19,14 @@
   </head>
 
   <body>
-
-  <br><br>
 <div class="container">
+
   <div class ="mensaje">
     <h3><?=   validation_errors();  ?></h3>
     <?php if(isset($mensaje)): ?>
           <br/><h1><?= $mensaje ?></h1><br/>
 
       <?php endif; ?>
-
   </div>
   <!-- FORMULARIO DE VOTACION -->
     <?=form_open(base_url().'secretario/insertarVotacion/');?>
@@ -117,6 +115,8 @@
         </div>
 
         <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
           <?php
            $atributos = array(
               'name' => 'quorum',
@@ -131,10 +131,12 @@
           <!-- Igual a: <label for="titulo">Titulo</label> -->
           <?= form_input($atributos) ?> <br/><br/>
         </div>
+      </div>
+    </div>
 
         <!-- PONDERACIONES -->
         <?php if(isset($permitirPonderaciones) && $permitirPonderaciones == true){?>
-          <h2> Ponderaciones </h2>
+          <strong><h2><?= form_label('Ponderaciones',''); ?></h2></strong>
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
@@ -194,7 +196,7 @@
         <?php } ?>
 
         <?php if(isset($permitirOpciones) && $permitirOpciones == true){ ?>
-          <h2> Opciones </h2>
+            <strong><h2><?= form_label('Opciones',''); ?></h2></strong>
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
@@ -295,11 +297,11 @@
 
     <?php } ?>
     <?php if(isset($censos)){?>
-        <h2> Censo electoral </h2>
-        <p> Escoja el censo electoral que desee </p>
+      <br><br>
+          <strong><h2><?= form_label('Censo',''); ?></h2></strong>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
-          <table class="display table table-striped table-bordered" id="votaciones_admin">
+          <table class="display table table-striped table-bordered">
             <thead>
               <tr>
                 <th>Censo</th>
@@ -338,7 +340,7 @@
     <?php }?>
     <?php
     if(isset($asistentes) && $asistentes != NULL){?>
-      <h2> Censo asistente </h2>
+      <h3> Censo asistente </h3>
         <div class = "container">
           <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table class="display table table-striped table-bordered" id="votaciones_admin">
@@ -375,25 +377,29 @@
 <?php } ?>
 
       <!-- BOTÓN ENVIAR -->
-        <?php $atributos = array(
+      <br><br>
+      <div class="row">
+      <?php $atributos = array(
             'name' => 'submit_reg',
-            'class' => 'btn btn-primary',
+            'class' => 'btn btn-primary botones',
             'type' => 'submit',
             'value' => 'Enviar'
         ); ?>
         <?= form_submit($atributos);?>
 
-        <br/>
+
         <?php $atributos = array(
             'name' => 'boton_borrador',
-            'class' => 'btn btn-primary',
+            'class' => 'btn btn-primary botones',
             'type' => 'submit',
             'value' => 'Guardar en borrador'
         ); ?>
 
         <?= form_submit($atributos);?>
+        </div>
       <?= form_close(); ?>
 
+    <br><br>
 
 </div>
 

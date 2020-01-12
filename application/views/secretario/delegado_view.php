@@ -10,7 +10,7 @@
   <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-
+  <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
   <!-- GOOOGLE FONTS -->
 
 </head>
@@ -23,7 +23,7 @@
           <br/><h1><?= $mensaje ?></h1><br/>
       <?php endif; ?>
   </div>
-  <table class="display table table-striped"id="votaciones_admin">
+  <table class="display table table-striped"id="tabla_secretario">
       <thead>
         <tr>
           <th scope="col" class="no-sort">ID</th>

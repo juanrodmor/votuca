@@ -10,7 +10,7 @@
 	<link href="<?php echo base_url(); ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-
+	<link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
 	<!-- DATETIME PICKER -->
 	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -27,7 +27,7 @@
 	      <?php endif; ?>
 
 	  </div>
-<br><br><br><br>
+<br><br>
 <div class = "container">
 	  <?=form_open(base_url().'secretario/updateVotacion/');?>
 		<div class="form-group">
@@ -117,6 +117,8 @@
 		</div>
 
 		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6">
 			<?php
 			 $atributos = array(
 					'name' => 'quorum',
@@ -130,7 +132,69 @@
 			<?= form_label('Quorum','quorum'); ?>
 			<!-- Igual a: <label for="titulo">Titulo</label> -->
 			<?= form_input($atributos) ?> <br/><br/>
+			</div>
 		</div>
+	</div>
+	<!-- PONDERACIONES -->
+	<?php if(isset($cambiarPonderaciones) && $cambiarPonderaciones == true){?>
+		<strong><h2><?= form_label('Ponderaciones',''); ?></h2></strong>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6">
+					<?php
+					 $atributos = array(
+							'name' => 'ponderacionPAS',
+							'class' => 'form-control',
+							'id' => 'pondPas',
+							'placeholder' =>'Escribe un la ponderacion para el grupo PAS',
+							'required' => true,
+							'autocomplete' => 'off',
+							'value' => $pondPAS // Mantiene el valor en el form
+					); ?>
+					<?= form_label('Ponderacion PAS','ponderacionPAS'); ?>
+					<?= form_input($atributos) ?> <br/><br/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6">
+					<?php
+					 $atributos = array(
+							'name' => 'ponderacionAlumnos',
+							'class' => 'form-control',
+							'id' => 'pondAlumnos',
+							'placeholder' =>'Escribe un la ponderacion para el grupo Alumnos',
+							'required' => true,
+							'autocomplete' => 'off',
+							'value' => $pondAlumnos // Mantiene el valor en el form
+					); ?>
+					<?= form_label('Ponderacion Alumnos','ponderacionAlumnos'); ?>
+					<!-- Igual a: <label for="titulo">Titulo</label> -->
+					<?= form_input($atributos) ?> <br/><br/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6">
+					<?php
+					 $atributos = array(
+							'name' => 'ponderacionProfesores',
+							'class' => 'form-control',
+							'id' => 'pondProfesores',
+							'placeholder' =>'Escribe un la ponderacion para el grupo Profesores',
+							'required' => true,
+							'autocomplete' => 'off',
+							'value' => $pondProfesores // Mantiene el valor en el form
+					); ?>
+					<?= form_label('Ponderacion Profesores','ponderacionProfesores'); ?>
+					<!-- Igual a: <label for="titulo">Titulo</label> -->
+					<?= form_input($atributos) ?> <br/><br/>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
 			<?php
 			 $atributos = array(
 					'NumOpciones' => $votaciones->NumOpciones
@@ -138,7 +202,7 @@
   		<?= form_hidden($atributos) ?> <br/><br/>
 
 <?php if(isset($cambiarOpciones) && $cambiarOpciones == true){ ?>
-			<h2> Opciones </h2>
+			<strong><h2><?= form_label('Opciones',''); ?></h2></strong>
 	    <div class="form-group">
 	      <div class="row">
 	        <div class="col-sm-6">
@@ -242,7 +306,8 @@
 	<?php } ?>
 
 	<!-- CENSO ELECTORAL -->
-		<h2> Censo electoral </h2>
+	<br><br>
+		<strong><h2><?= form_label('Censo',''); ?></h2></strong>
 		<p> Escoja el censo electoral que desee </p>
 		<!-- TABLA DE CENSO -->
 		<div class = "container">
@@ -321,7 +386,6 @@
 		    </table>
 		  </div>
 	 </div>
-
 	 <!-- CENSO ASISTENTE -->
 	 <?php
 	 if(isset($asistentes) && $asistentes != NULL && isset($idsAsistentes)){?>
@@ -370,9 +434,12 @@
 	 </div>
 	 </div>
  <?php } ?>
+</div>
+
+ <div class="row">
 					 <?php $atributos = array(
 							 'name' => 'boton_borrador',
-							 'class' => 'btn btn-primary',
+							 'class' => 'btn btn-primary botones',
 							 'type' => 'submit',
 							 'value' => 'Guardar en borrador'
 					 ); ?>
@@ -381,13 +448,20 @@
 
 			 <?php $atributos = array(
 					 'name' => 'boton_publicar',
-					 'class' => 'btn btn-primary',
+					 'class' => 'btn btn-primary botones',
 					 'type' => 'submit',
 					 'value' => 'Publicar'
 			 ); ?>
 			  <?= form_submit($atributos);?>
+			</div>
 	<?= form_close(); ?>
+
+	<br><br>
 </div>
+
+
+</div>
+
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
