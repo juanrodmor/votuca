@@ -1,7 +1,7 @@
 <div id="header">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      	<a class="navbar-brand">
-        	<img id="logo-btn" src="<?php echo base_url('assets/img/logo_menus.png')?>" style="height:5em;" alt="">
+      	<a class="navbar-brand" href="<?= base_url().'secretario/'?>">
+        	<img id="logo-btn"  src="<?php echo base_url('assets/img/logo_menus.png')?>" style="height:5em;" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

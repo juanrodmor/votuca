@@ -1963,7 +1963,7 @@ class Secretario extends CI_Controller{
     $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
 
     $inicio['inicio'] = 'secretario/delegado';
-    $this->load->view('elementos/headerComun',$inicio);
+    $this->load->view('elementos/headerDelegado',$inicio);
     $votaciones = array();
     foreach($encontradas as $votacion){
     $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
@@ -1973,8 +1973,7 @@ class Secretario extends CI_Controller{
         'mensaje' => $mensaje
       );
     $this->load->view('secretario/delegado_view',$datos);
-    $this->load->view('elementos/footer');
-
+    
   }
 
   /*******************************************/
