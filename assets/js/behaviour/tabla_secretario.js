@@ -8,10 +8,10 @@ window.addEventListener("load", () => {
         ordering: false,
         "language": {
               "lengthMenu": "Muestra _MENU_ votaciones por pagina",
-              "zeroRecords": "Votación no encontrada",
+              "zeroRecords": "Resultados no encontrados",
               "info": "Mostrando página _PAGE_ de _PAGES_",
-              "infoEmpty": "Votaciones no disponible",
-              "infoFiltered": "(Filtrando desde _MAX_ votaciones totales)",
+              "infoEmpty": "Resultado no disponible",
+              "infoFiltered": "(Filtrando desde _MAX_ elementos totales)",
               "search": "Buscar",
               "paginate": {
                   "first": "Primera página",
