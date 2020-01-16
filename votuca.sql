@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-12-2019 a las 20:15:20
+-- Tiempo de generación: 16-01-2020 a las 23:30:28
 -- Versión del servidor: 10.4.8-MariaDB
 -- Versión de PHP: 7.2.24
 
@@ -35,6 +35,15 @@ CREATE TABLE `autorizacion` (
   `blocked` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `autorizacion`
+--
+
+INSERT INTO `autorizacion` (`auth_key`, `first_time`, `attemps`, `blocked`) VALUES
+('5BL37I6EPPZLEJGT', 0, 0, 0),
+('H4RX7YT74RDNYTVV', 0, 0, 0),
+('S2M7IPUJ4QHL4YGH', 0, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -45,6 +54,24 @@ CREATE TABLE `censo` (
   `Id_Usuario` int(32) NOT NULL,
   `Id_Votacion` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `censo`
+--
+
+INSERT INTO `censo` (`Id_Usuario`, `Id_Votacion`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(6, 1),
+(6, 2),
+(6, 3),
+(8, 1),
+(8, 2),
+(8, 3),
+(9, 1),
+(9, 2),
+(9, 3);
 
 -- --------------------------------------------------------
 
@@ -106,7 +133,8 @@ CREATE TABLE `grupo` (
 INSERT INTO `grupo` (`Id`, `Nombre`) VALUES
 (1, 'PAS'),
 (2, 'Alumnos'),
-(3, 'Profesores');
+(3, 'Profesores'),
+(4, 'Todos');
 
 -- --------------------------------------------------------
 
@@ -121,6 +149,21 @@ CREATE TABLE `mesa_electoral` (
   `seCierra` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `mesa_electoral`
+--
+
+INSERT INTO `mesa_electoral` (`Id_Usuario`, `Id_Votacion`, `seAbre`, `seCierra`) VALUES
+(12, 1, 0, 0),
+(12, 2, 0, 0),
+(12, 3, 0, 0),
+(13, 1, 0, 0),
+(13, 2, 0, 0),
+(13, 3, 0, 0),
+(14, 3, 0, 0),
+(15, 1, 0, 0),
+(15, 2, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -132,6 +175,21 @@ CREATE TABLE `ponderaciones` (
   `Id_Grupo` int(32) NOT NULL,
   `Valor` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `ponderaciones`
+--
+
+INSERT INTO `ponderaciones` (`Id_Votacion`, `Id_Grupo`, `Valor`) VALUES
+(1, 1, 1),
+(1, 2, 1),
+(1, 3, 1),
+(2, 1, 1),
+(2, 2, 1),
+(2, 3, 2),
+(3, 1, 1),
+(3, 2, 1),
+(3, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -145,6 +203,51 @@ CREATE TABLE `recuento` (
   `Id_Voto` int(32) NOT NULL,
   `Num_Votos` int(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `recuento`
+--
+
+INSERT INTO `recuento` (`Id_Votacion`, `Id_Grupo`, `Id_Voto`, `Num_Votos`) VALUES
+(1, 1, 1, 1),
+(1, 1, 9, 0),
+(1, 1, 12, 0),
+(1, 2, 1, 3),
+(1, 2, 9, 0),
+(1, 2, 12, 0),
+(1, 3, 1, 2),
+(1, 3, 9, 0),
+(1, 3, 12, 0),
+(1, 4, 1, 4),
+(2, 1, 1, 1),
+(2, 1, 2, 0),
+(2, 1, 3, 0),
+(2, 1, 4, 0),
+(2, 2, 1, 3),
+(2, 2, 2, 0),
+(2, 2, 3, 0),
+(2, 2, 4, 0),
+(2, 3, 1, 2),
+(2, 3, 2, 0),
+(2, 3, 3, 0),
+(2, 3, 4, 0),
+(2, 4, 1, 4),
+(3, 1, 1, 1),
+(3, 1, 9, 0),
+(3, 1, 12, 0),
+(3, 1, 13, 0),
+(3, 1, 16, 0),
+(3, 2, 1, 3),
+(3, 2, 9, 0),
+(3, 2, 12, 0),
+(3, 2, 13, 0),
+(3, 2, 16, 0),
+(3, 3, 1, 2),
+(3, 3, 9, 0),
+(3, 3, 12, 0),
+(3, 3, 13, 0),
+(3, 3, 16, 0),
+(3, 4, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -223,11 +326,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`, `Email`, `Auth`, `IP`) VALUES
-(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(1, 1, 'u00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '5BL37I6EPPZLEJGT', '::1'),
 (2, 4, 'a00000000', '$2y$12$sZ9YHmBqYETwRKfIKGSUT.4ti4rlapaM5uYNj2M.tn21KxSGlytLG', '', '', ''),
 (3, 3, 's12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
-(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
-(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(5, 2, 's00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', 'H4RX7YT74RDNYTVV', '::1'),
+(6, 1, 'u12121212', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', 'S2M7IPUJ4QHL4YGH', '::1'),
 (7, 1, 'u13131313', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
 (8, 1, 'u12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
 (9, 1, 'u11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
@@ -248,6 +351,16 @@ CREATE TABLE `usuario_censo` (
   `Id_Usuario` int(32) NOT NULL,
   `Id_Fichero` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuario_censo`
+--
+
+INSERT INTO `usuario_censo` (`Id_Usuario`, `Id_Fichero`) VALUES
+(1, 1),
+(6, 1),
+(8, 1),
+(9, 1);
 
 -- --------------------------------------------------------
 
@@ -290,6 +403,30 @@ CREATE TABLE `usuario_votacion` (
   `Id_Voto` varchar(1024) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `usuario_votacion`
+--
+
+INSERT INTO `usuario_votacion` (`Id_Usuario`, `Id_Grupo`, `Id_Votacion`, `Id_Voto`) VALUES
+(1, 2, 1, '1'),
+(1, 3, 1, '1'),
+(8, 2, 1, '1'),
+(8, 3, 1, '1'),
+(9, 1, 1, '1'),
+(6, 2, 1, '1'),
+(1, 2, 2, '1'),
+(1, 3, 2, '1'),
+(8, 2, 2, '1'),
+(8, 3, 2, '1'),
+(9, 1, 2, '1'),
+(6, 2, 2, '1'),
+(1, 2, 3, '1'),
+(1, 3, 3, '1'),
+(8, 2, 3, '1'),
+(8, 3, 3, '1'),
+(9, 1, 3, '1'),
+(6, 2, 3, '1');
+
 -- --------------------------------------------------------
 
 --
@@ -314,6 +451,15 @@ CREATE TABLE `votacion` (
   `NumOpciones` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `votacion`
+--
+
+INSERT INTO `votacion` (`Id`, `Id_TipoVotacion`, `Titulo`, `Descripcion`, `FechaInicio`, `FechaFinal`, `isDeleted`, `esBorrador`, `Finalizada`, `Quorum`, `Invalida`, `VotoModificable`, `SoloAsistentes`, `RecuentoParalelo`, `NumOpciones`) VALUES
+(1, 2, 'Votación compleja 1', 'Desc1', '2020-01-01 19:45:00', '2020-02-01 00:00:00', 0, 0, 0, 0.1, 0, 1, 0, 0, 2),
+(2, 3, 'Votación consulta simple 2', 'Desc2', '2020-01-01 19:45:00', '2020-02-01 00:00:00', 0, 0, 0, 0.1, 0, 1, 0, 0, 1),
+(3, 4, 'Votación consulta compleja 3', 'Desc3', '2020-01-01 19:50:00', '2020-02-01 00:00:00', 0, 0, 0, 0.3, 0, 1, 0, 0, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -325,6 +471,15 @@ CREATE TABLE `votacion_censo` (
   `Id_Fichero` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `votacion_censo`
+--
+
+INSERT INTO `votacion_censo` (`Id_Votacion`, `Id_Fichero`) VALUES
+(1, 1),
+(2, 1),
+(3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -335,6 +490,21 @@ CREATE TABLE `votacion_voto` (
   `Id_Votacion` int(32) NOT NULL,
   `Id_Voto` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `votacion_voto`
+--
+
+INSERT INTO `votacion_voto` (`Id_Votacion`, `Id_Voto`) VALUES
+(1, 9),
+(1, 12),
+(2, 2),
+(2, 3),
+(2, 4),
+(3, 9),
+(3, 12),
+(3, 13),
+(3, 16);
 
 -- --------------------------------------------------------
 
@@ -355,7 +525,19 @@ INSERT INTO `voto` (`Id`, `Nombre`) VALUES
 (1, 'No votado'),
 (2, 'Sí'),
 (3, 'No'),
-(4, 'En blanco');
+(4, 'En blanco'),
+(5, 'opc1'),
+(6, ' opc2'),
+(7, ' opc3'),
+(8, ' opc4'),
+(9, 'hola'),
+(10, 'adios'),
+(11, 'hasta nunca'),
+(12, ' adios'),
+(13, ' hasta nunca'),
+(14, ' bye'),
+(15, ' byebye'),
+(16, ' auxilio me desmayo');
 
 --
 -- Índices para tablas volcadas
@@ -529,13 +711,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `votacion`
 --
 ALTER TABLE `votacion`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `voto`
 --
 ALTER TABLE `voto`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
