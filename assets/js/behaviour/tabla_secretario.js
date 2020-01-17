@@ -1,17 +1,17 @@
-var base_url = window.location.origin+"/votuca/";
+'use strict'
 window.addEventListener("load", () => {
-  /*$(document).ready(function(){
-      $('#votaciones_admin').DataTable({
+  $(document).ready(function(){
+      $('#tabla_secretario').DataTable({
         serverSide: false,
-        paging: false,
+        paging: true,
         "scrollY": 300,
         ordering: false,
         "language": {
               "lengthMenu": "Muestra _MENU_ votaciones por pagina",
-              "zeroRecords": "Votación no encontrada",
+              "zeroRecords": "Resultados no encontrados",
               "info": "Mostrando página _PAGE_ de _PAGES_",
-              "infoEmpty": "Votaciones no disponible",
-              "infoFiltered": "(Filtrando desde _MAX_ votaciones totales)",
+              "infoEmpty": "Resultado no disponible",
+              "infoFiltered": "(Filtrando desde _MAX_ elementos totales)",
               "search": "Buscar",
               "paginate": {
                   "first": "Primera página",
@@ -21,8 +21,8 @@ window.addEventListener("load", () => {
               }
           }
 
-      });*/
-      var miTabla = document.querySelector("#votaciones_secretario");
+      });
+
   });
 
 

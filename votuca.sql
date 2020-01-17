@@ -5,7 +5,7 @@
 -- Servidor: 127.0.0.1
 -- Tiempo de generación: 16-01-2020 a las 23:30:28
 -- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.2.24
+-- Versión de PHP: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -94,6 +94,16 @@ CREATE TABLE `expiracion` (
   `Id_Usuario` int(32) NOT NULL,
   `Fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `expiracion`
+--
+
+INSERT INTO `expiracion` (`Id_Usuario`, `Fecha`) VALUES
+(12, '2020-01-10 09:01:49'),
+(14, '2020-01-10 09:01:48'),
+(15, '2020-01-10 09:01:48'),
+(19, '2020-01-02 14:01:07');
 
 -- --------------------------------------------------------
 
@@ -337,9 +347,10 @@ INSERT INTO `usuario` (`Id`, `Id_Rol`, `NombreUsuario`, `Password`, `Email`, `Au
 (10, 1, 'u14141414', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
 (11, 1, 'u15151515', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
 (12, 5, 'm12121212', '$2y$10$ntRq/s8R03qUftM.nFKrkedVsfVx8eTmH7M.DkIB5WMb7LDJ3128e', '', '', ''),
-(13, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(13, 5, 'm00000000', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', 'TOBIUF6DMBFTSNST', '::1'),
 (14, 5, 'm11111111', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
-(15, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '');
+(15, 5, 'm12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', ''),
+(19, 4, 'a12345678', '$2y$12$aecF4Ak8JHHsEWHHoVzs7.UQ/IXMpyekhuG8vXjJ61HXy5aJ84WV.', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -388,7 +399,8 @@ INSERT INTO `usuario_grupo` (`Id_Usuario`, `Id_Grupo`) VALUES
 (9, 1),
 (10, 1),
 (10, 2),
-(11, 3);
+(11, 3),
+(19, 2);
 
 -- --------------------------------------------------------
 
@@ -705,7 +717,7 @@ ALTER TABLE `tipo_votacion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `votacion`

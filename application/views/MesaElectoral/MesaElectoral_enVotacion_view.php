@@ -91,37 +91,55 @@
                   echo '<th id="thHeaderOption">'.$group.'</th>';
                 }
               ?>
+			  <th id="thHeaderOption">Total</th>
             </tr>
             
               <?php
+			  global $votosLocal;
+              $votosLocal = array();
                 foreach($opciones as $option)
                 {
-                  echo '<tr id="trBody"><th id="thBodyOption>'.$option.'</th>';
+                  echo '<tr id="trBody"><th id="thBodyOption">'.$option.'</th>';
+				  $totalIndividual = 0;
                   foreach($grupos as $group)
                   {
-                    echo '<th id="thBodyOption'.$matrizVotos[$option][$group].'</th>';
+                   // $votosLocal[$group] += $matrizVotos[$option][$group];
+                    echo '<th id="thBodyOption">'.$matrizVotos[$option][$group].'</th>';
+					$totalIndividual += $matrizVotos[$option][$group];
                   }
+				  echo '<th id="thBodyOption">'.$totalIndividual.'</th>';
                   echo '</tr>';
                 }
               ?>                        
         </table>
 
         <div id="textInfo">
+          <!--<?php global $votosLocal; print_r($votosLocal); ?>-->
           <p class="bold">Número total de electores: <?php echo $censo ?></p>
           <div class="row">
-            <p class="col-sm-4">Total votos válidos: <?php ?></p>
-            <p class="col-sm-4">Total votos PAS: </p>
+            <p class="col-sm-4">Participación: <?php echo round((($censo-$abstenciones)/$censo*100), 1) ?>%</p>
+			<?php $subtotal = 0;
+			foreach($opciones as $option) {
+				$subtotal += $matrizVotos[$option]['PAS'];
+			}
+			echo '<p class="col-sm-4">Total votos PAS: '.$subtotal.'</p>'?>
           </div>
           <div class="row">
-            <p class="col-sm-4">Total votos nulos: </p>
-            <p class="col-sm-4">Total votos Alumnos: </p>
+            <p class="col-sm-4">Abstención: <?php echo $abstenciones ?></p>
+			<?php $subtotal = 0;
+			foreach($opciones as $option) {
+				$subtotal += $matrizVotos[$option]['Alumnos'];
+			}
+			echo '<p class="col-sm-4">Total votos Alumnos: '.$subtotal.'</p>'?>
           </div>
           <div class="row">
-            <p class="col-sm-4">Participación: <?php echo $totalVotos ?></p>
-            <p class="col-sm-4">Total votos profesores: </p>
+            <p class="col-sm-4">Quorum: <?php echo ($quorum*100).'%' ?> </p>
+			<?php $subtotal = 0;
+			foreach($opciones as $option) {
+				$subtotal += $matrizVotos[$option]['Profesores'];
+			}
+			echo '<p class="col-sm-4">Total votos Profesores: '.$subtotal.'</p>'?>
           </div>
-          <p>Abstención: <?php echo $abstenciones ?></p>
-          <p>Quorum: <?php $quorum ?> </p>
         </div>
 
         <div id="actionButtons">
@@ -129,7 +147,6 @@
             <input type="hidden" value="" name="idVotacion">
             <div class="form-group row">
               <div><input type="submit" class="btn-validate form-control" name="boton_finalizar" value="Validar votación"></div>
-              <div><input type="submit" class="btn-error form-control" name="boton_finalizar" value="Invalidar votación"></div>
             </div>
             </form>
         </div>

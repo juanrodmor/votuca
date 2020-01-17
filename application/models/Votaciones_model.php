@@ -90,6 +90,21 @@ class Votaciones_model extends CI_Model{
     return $consulta->row();
   }
 
+  public function getPonderacionesFromGrupo($idVotacion,$idGrupo)
+  {
+    $consulta = $this->db->get_where('ponderaciones', array('Id_Votacion' => $idVotacion,'Id_Grupo' => $idGrupo));
+    return $consulta->row()->Valor;
+  }
+
+  public function updatePonderaciones($idVotacion,$pas,$alumnos,$profesores)
+  {
+
+      $this->db->query("UPDATE ponderaciones SET Valor = '$pas' WHERE Id_Votacion = '$idVotacion' AND Id_Grupo = 1");
+      $this->db->query("UPDATE ponderaciones SET Valor = '$alumnos' WHERE Id_Votacion = '$idVotacion' AND Id_Grupo = 2");
+      $this->db->query("UPDATE ponderaciones SET Valor = '$profesores' WHERE Id_Votacion = '$idVotacion' AND Id_Grupo = 3");
+      return true;
+
+  }
 
 
 }

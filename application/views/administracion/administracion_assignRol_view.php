@@ -55,8 +55,8 @@
                             <form action="asignaVotaciones" method="post">
                                 <div id="data-option">
                                     <h4 style="color:black; font-weight: bold;">'.$Titulo[$cont].'</h4>
-                                    <p style="margin: 0;">Fecha de inicio:</p>
-                                    <p style="margin: 0;">Fecha de fin:</p>
+                                    <p style="margin: 0;">Fecha de inicio: '.$fechasInicio[$cont].'</p>
+                                    <p style="margin: 0;">Fecha de fin: '.$fechasFin[$cont].'</p>
                                     <input type="hidden" id="votacionId" name="votacionId" value="'.$votation.'">
                                 </div>
                                 <div>

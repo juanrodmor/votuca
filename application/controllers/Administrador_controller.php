@@ -15,7 +15,7 @@ class Administrador_controller extends CI_Controller {
 
 	public function index() {
 		$verified = $this->session->userdata('verified');
-		if(isset($verified) && $verified == 'true')
+		if(isset($verified) && $verified == true)
 		{
 			switch ($this->session->userdata('rol')) {
 				case 'Administrador':
@@ -171,12 +171,18 @@ class Administrador_controller extends CI_Controller {
 							$votaciones = $this->Votaciones_model->recuperarVotaciones();
 							$idVotaciones = array();
 							$tituloVotaciones = array();
+							$fechasInicio = array();
+							$fechasFin = array();
 							foreach($votaciones as $votacion) {
 								array_push($idVotaciones, $votacion->Id);
 								array_push($tituloVotaciones, $votacion->Titulo);
+								array_push($fechasInicio, $votacion->FechaInicio);
+								array_push($fechasFin, $votacion->FechaFinal);
 							}
 							$data['Id_Votacion'] = $idVotaciones;
 							$data['Titulo'] = $tituloVotaciones;
+							$data['fechasInicio'] = $fechasInicio;
+							$data['fechasFin'] = $fechasFin;
 							$data['Id_Usuario'] = $this->Usuario_model->getId($newUsername);
 							$this->load->view('administracion/administracion_assignRol_view', $data);
 						}
@@ -216,6 +222,29 @@ class Administrador_controller extends CI_Controller {
 		} else {
 			$this->index();
 		}
+	}
+	
+	//Función principal de la zona de desbloqueo.
+	public function desbloqueo($data = array()) {
+		$arrayBloqueados = $this->Usuario_model->getNameOfBlockedUsers();
+		$data['bloqueados'] = $arrayBloqueados;
+		$this->load->view('administracion/administracion_unblockUser_view', $data);
+	}
+	
+	public function desbloquearUsuario()
+	{
+		$data = array();
+		if($this->input->post('checkBoxInput'))
+		{
+			$username = $this->input->post('checkBoxInput');
+			//$username = $this->input->post('usuario');
+			$this->Usuario_model->desbloquearByUsername($username);
+			$data['mensajeDesbloqueadoOK'] = 'El usuario '.$username.' fue correctamente desbloqueado!';
+		}
+		
+		
+		$data['value'] = $this->input->post('checkBoxInput');
+		$this->desbloqueo($data);
 	}
 
 /**

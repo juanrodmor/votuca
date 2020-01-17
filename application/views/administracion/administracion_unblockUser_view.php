@@ -43,6 +43,12 @@
 <div class="container">
     <br>
     <?php
+
+        if(isset($mensajeDesbloqueadoOK))
+        {
+          echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'.$mensajeDesbloqueadoOK.'</div>';
+        }
+
         if(!isset($bloqueados) || count($bloqueados) == 0)
         {
             echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">No hay usuarios bloqueados en el sistema. </div>';
@@ -59,8 +65,18 @@
             foreach($bloqueados as $bloqueado)
             {
                   echo '<tr id="trBody">
-                          <th id="thBodyOption">'.$bloqueado.'</th>
-                          <th id="thBodyOption">Aquí checkbox</th>
+                          
+                            
+                            <th id="thBodyOption">'.$bloqueado.'</th>
+                            <th id="thBodyOption">
+                            <div>
+                              <form id="unBlockForm" action="' . base_url().'administrador_controller/desbloquearUsuario' . '" method="post">
+                              <input type=hidden name="usuario" value="'.$bloqueado.'">
+                              <input type="checkbox" name="checkBoxInput" style="margin: -2%;" value="'.$bloqueado.'">
+                              </form>
+                            </div>
+                            
+                            </th>
                         </tr>
                   ';
             }
@@ -80,6 +96,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+    <script>
+      $(document).ready(function(){
+        $("#unBlockForm").on("change", "input:checkbox", function()
+        {
+          $("#unBlockForm").submit();
+        });
+      });
+
+    </script>
 
   </body>
 
