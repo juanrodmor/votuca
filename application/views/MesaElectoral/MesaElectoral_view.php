@@ -6,15 +6,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Mesa Electoral</title>
-    <!-- Bootstrap core CSS -->
+
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/mesaElectoral.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/MesaElectoral.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/behaviour/footer.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>assets/css/circle.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
   </head>
 
@@ -35,7 +33,7 @@
             <div class="col-xs-12 col-sm-8" id="linkBox">
               <a href="<?php echo base_url() . 'MesaElectoral';?>" class="marked">Votaciones</a>
             </div>
-        </div>
+      </div>
     </div>
 
         <!----- AQUI ACABA EL ENCABEZADO --->
@@ -46,151 +44,77 @@
     <?php
         if(isset($votaciones) && count($votaciones) == 0)
         {
-          echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">No hay votaciones asignadas.</div>';
+          echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">Usted no tiene votaciones asignadas.</div>';
         }  
         else
         {
-			if(isset($mensajeAperturaWait))
-            {
-              echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
-            }
-			if (isset($mensajeCierreWait))
-			{
-				echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
-			}
-			if (isset($mensajeVotacionOK))
-			{
-				echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionOK .'</div>';
-			}
-			if (isset($mensajeVotacionInvalida))
-			{
-				echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionInvalida .'</div>';
-			}
-            else
-            {
-              if(isset($success))
-                  echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $success .'</div>';
-            }
+           
+          if(isset($mensajeAperturaWait))
+                {
+                  echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeAperturaWait .'</div>';
+                }
+          
+          if (isset($mensajeCierreWait))
+          {
+            echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeCierreWait .'</div>';
+          }
+          /** 
+          if (isset($mensajeVotacionOK))
+          {
+            echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionOK .'</div>';
+          }
+          if (isset($mensajeVotacionInvalida))
+          {
+            echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $mensajeVotacionInvalida .'</div>';
+          }
+          else
+          {
+            if(isset($success))
+                echo '<div class="alert alert-success alert-dismissible" role="alert" id="error_alert">'. $success .'</div>';
+          }
+          */
         }
         
     ?>
 
-<br><br>
-  <div class = "container">
-    <div id="data-div">
     <?php
-    if(isset($cantidad)){
-    echo'
-      <div id="graphic-info">
-      <h2 id="title-porcentaje">Porcentaje de participación</h2>
-      </div>
-        <div id="vote-info">
-            <div class="c100 p'.(100-($abstenciones*100)/$censo).' big center" style="float:left;">
-                <span>'.(100-($abstenciones*100)/$censo).'%</span>
-                <div class="slice">
-                  <div class="bar"></div>
-                    <div class="fill"></div>
-                </div>
-            </div>
-          <div id="vote-card" class="row">
-              <div class="card" >
-                <div class="card-header">
-                  Número de votos
-                </div>
-                <div class="card-body">
-                  <h3 class="card-text"><center>'.$totalVotos.'</center></h3>
-                </div>
-              </div>   
-              <div class="card">
-                <div class="card-header">
-                  Tamaño del censo
-                </div>
-                <div class="card-body">
-                  <h3 class="card-text"><center>'.$censo.'</center></h3>
-                </div>
-              </div>  
-              <div class="card">
-                <div class="card-header">
-                  Información sobre el voto
-                </div>
-                <div class="card-body">
-                  '; 
-                  for($i = 0 ; $i < count($opciones) ; $i = $i + 1)
-                  {
-                    echo '<h5 class="card-text">'.$opciones[$i].': '.$cantidad[$i].'</h5>';
-                  } 
-                echo'<h5 class="card-text">No han votado: '.$abstenciones.'</h5>
-                </div>
-              </div>    
-          </div>
-
-              <div>
-                <form action="finalizaVotacion" method="post">
-                  <input type="hidden" name="idVotacion" value="'.$votacion.'">
-                  <input id="endButton" type="submit" name="boton_finalizar" value="Finalizar" class="btn btn-primary">
-                </form>
-              </div>
-            <br><br>
-        </div>
-    ';
-    }
-    ?>
-
-    <?php
-    if(!isset($mensaje))
+    if(isset($votaciones) && count($votaciones) != 0)
     {
       echo'
-        <table id="result-table" class="display table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th scope="col" class="no-sort">ID</th>
-            <th scope="col">Titulo</th>
-            <th scope="col">Descripcion</th>
-            <th scope="col">Fecha Inicio</th>
-            <th scope="col">Fecha Final</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-      <tbody>';
+      <div class="card" id="card-options">
+       <ul class="list-group list-group-flush">';
         foreach($votaciones as $objeto){
           echo'
-            <tr>
-            <td scope="row" class="table-danger">'.$objeto->Id.'</td>
-            <td>'.$objeto->Titulo.'</td>
-            <td>'.$objeto->Descripcion.'</td>
-            <td>'.$objeto->FechaInicio.'</td>
-            <td>'.$objeto->FechaFinal.'</td>
-            '; echo form_open(base_url().'MesaElectoral/recuentoVotos');
-                  $atributos = array(
-                      'recuento' => $objeto->Id
-
-                  );
-                echo form_hidden($atributos);
-                  if($objeto->FechaFinal <= date('Y-m-d H:i:s'))  
-                    echo '<td><input class="btn btn-primary" type="submit" value="Recuento" name="boton_recuento"></td>';
-                  if($objeto->FechaInicio <= date('Y-m-d H:i:s') && $objeto->FechaFinal > date('Y-m-d H:i:s'))
-                    echo '<td> Aún en votación </td>';
-                  if($objeto->FechaInicio > date('Y-m-d H:i:s'))
-                    echo '<td> No comenzada </td>';
-                echo form_close(); 
-              echo'
-          </tr>';
+            <li id="single-option" class="list-group-item"> 
+            <form action="'. base_url('MesaElectoral/recuentoVotos') . '" method="post">
+                <div id="data-option">
+                    <h4 style="color:black; font-weight: bold;">'.$objeto->Titulo.'</h4>
+                    <p style="margin: 0;">Fecha de inicio: '.$objeto->FechaInicio.'</p>
+                    <p style="margin: 0;">Fecha de fin: '.$objeto->FechaFinal.'</p>
+                    <input type="hidden" id="votacionId" name="recuento" value="'.$objeto->Id.'">
+                </div>
+                <div id="btn-div">';
+                    if($objeto->FechaFinal == date('Y-m-d H:i:s') || $objeto->FechaFinal < date('Y-m-d H:i:s'))
+                      echo '<input type="submit" class="btn-custom" name="boton_recuento" value="Abrir urna">';
+                    else
+                      echo '<p style="float: right; margin-right: 23%;">No disponible<p>';
+                        
+                echo'
+                </div>
+            </form>
+            </li>';
           }
-          echo'
-      </tbody>
-      </table>';
+          echo '
+            </ul></div>
+          ';
       }
     ?>
-
-  </div>
-
-</div>
 </div>
 
 
 
 
- <!-- Bootstrap core JavaScript
+  <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

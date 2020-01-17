@@ -37,6 +37,11 @@
                     echo form_error('usuario', '<div class="alert alert-danger" id="alerts" role="alert">', '</div>');
                     echo form_error('pass', '<div class="alert alert-danger" id="alerts" role="alert">', '</div>');
 
+					if(isset($mensaje_success))
+                    {
+                        echo '<div class="alert alert-success" id="alerts" role="alert">' . $mensaje_success . '</div>';
+                    }
+					
                     if(isset($mensaje))
                     {
                         echo '<div class="alert alert-danger" id="alerts" role="alert">' . $mensaje . '</div>';

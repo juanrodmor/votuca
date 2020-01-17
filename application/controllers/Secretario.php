@@ -23,7 +23,7 @@ class Secretario extends CI_Controller{
   public function index($mensaje = ''){
     // SEGURIDAD DEL QR
     $verified = $this->session->userdata('verified');
-    if(isset($verified) && $verified == 'true')
+    if(isset($verified) && $verified == true)
     {
       // Seguridad Básica URL
       switch ($this->session->userdata('rol')) {
