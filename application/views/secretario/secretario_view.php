@@ -1,31 +1,29 @@
 <!doctype html>
 <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>SECRETARIO</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
+  
+</head>
 <body>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>SECRETARIO</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-
-    <!-- GOOOGLE FONTS -->
-
-  </head>
-
 <div class="container">
   <div class ="mensaje">
     <?php if(isset($mensaje) && $mensaje != ''): ?>
           <br/><br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
-
-  <div class = "container">
+  <!-- FORMULARIO DE VOTACION -->
+  <div class = "containerTabla">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-striped" id="votaciones_secretario">
+    <table class="display table table-striped" id="tabla_secretario">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
@@ -34,7 +32,8 @@
            <th scope="col">Fin</th>
            <th scope="col">Borrador</th>
            <th scope="col"></th>
-
+           <th scope="col"></th>
+           <th scope="col"></th>
          </tr>
        </thead>
      <tbody>
@@ -78,7 +77,7 @@
           <?= form_hidden($atributos);?>
           <?php $atributos = array(
               'name' => 'boton_eliminar',
-              'class' => 'btn btn-primary',
+              'class' => 'btn btn-primary botones',
               'type' => 'submit',
               'value' => 'Eliminar',
               'onclick' => "return confirm('¿Estás seguro de que quieres eliminar esta votación?')"
@@ -99,7 +98,7 @@
              <?= form_hidden($atributos);?>
              <?php $atributos = array(
                  'name' => 'boton_delegar',
-                 'class' => 'btn btn-primary',
+                 'class' => 'btn btn-primary botones',
                  'type' => 'submit',
                  'value' => 'Delegar'
              ); ?>
@@ -112,7 +111,7 @@
              $objeto->FechaFinal >= date('Y-m-d H:i:s') ){?>
 
         <!-- BOTON DE MODIFICAR -->
-        <?=form_open(base_url().'secretario/modificarVotacion/',
+        <?=form_open(base_url().'secretario/modificarVotacion',
                 array('name'=>'modificarVotacion'));?>
                <?php
                $atributos = array(
@@ -123,7 +122,7 @@
          <?= form_hidden($atributos);?>
          <?php $atributos = array(
              'name' => 'boton_modificar',
-             'class' => 'btn btn-primary',
+             'class' => 'btn btn-primary botones',
              'type' => 'submit',
              'value' => 'Modificar'
          ); ?>
@@ -139,7 +138,7 @@
     </table>
   </div>
   </div>
-</div>
+  <br><br><br>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

@@ -1,35 +1,30 @@
 <!doctype html>
 <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>SECRETARIO</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
+  <!-- GOOOGLE FONTS -->
+
+</head>
 <body style="overflow:hidden;">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>SECRETARIO</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-    <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-
-    <!-- GOOOGLE FONTS -->
-
-  </head>
-
 <div class="container">
   <div class ="mensaje">
     <?php if(isset($mensaje) && $mensaje != ''): ?>
           <br/><br/><div class="alert alert-success" role="alert"><p><?= $mensaje ?></p></div><br/>
       <?php endif; ?>
   </div>
-
-  
-  <div style="margin-top:17%;">
   <!-- FORMULARIO DE VOTACION -->
-  <div style="margin-top: 5%;color: black;">
-  <div class = "container">
+  <div class = "containerTabla">
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table table-striped" id="votaciones_secretario">
+    <table class="display table table-striped" id="tabla_secretario">
        <thead>
          <tr>
            <th scope="col" class="no-sort">ID</th>
@@ -83,7 +78,7 @@
           <?= form_hidden($atributos);?>
           <?php $atributos = array(
               'name' => 'boton_eliminar',
-              'class' => 'btn btn-primary',
+              'class' => 'btn btn-primary botones',
               'type' => 'submit',
               'value' => 'Eliminar',
               'onclick' => "return confirm('¿Estás seguro de que quieres eliminar esta votación?')"
@@ -104,7 +99,7 @@
              <?= form_hidden($atributos);?>
              <?php $atributos = array(
                  'name' => 'boton_delegar',
-                 'class' => 'btn btn-primary',
+                 'class' => 'btn btn-primary botones',
                  'type' => 'submit',
                  'value' => 'Delegar'
              ); ?>
@@ -128,7 +123,7 @@
          <?= form_hidden($atributos);?>
          <?php $atributos = array(
              'name' => 'boton_modificar',
-             'class' => 'btn btn-primary',
+             'class' => 'btn btn-primary botones',
              'type' => 'submit',
              'value' => 'Modificar'
          ); ?>
@@ -144,8 +139,8 @@
     </table>
   </div>
   </div>
-</div>
-</div>
+  <br><br><br>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

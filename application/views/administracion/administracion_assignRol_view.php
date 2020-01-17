@@ -30,8 +30,9 @@
             </div>
             <hr class="divider">
             <div class="col-xs-12 col-sm-8" id="linkBox">
-              <a href="#" class="unmarked">Auditoría</a>
+              <a href="<?= base_url().'administrador_controller/monitoring'?>" class="unmarked">Auditoría</a>
               <a href="<?= base_url().'administrador_controller/gestionusuarios'?>" class="marked">Modificar rol</a>
+              <a href="<?= base_url().'administrador_controller/unblockUsers'?>" class="unmarked">Desbloquear usuarios</a>
             </div>
         </div>
     </div>
@@ -54,8 +55,8 @@
                             <form action="asignaVotaciones" method="post">
                                 <div id="data-option">
                                     <h4 style="color:black; font-weight: bold;">'.$Titulo[$cont].'</h4>
-                                    <p style="margin: 0;">Fecha de inicio:</p>
-                                    <p style="margin: 0;">Fecha de fin:</p>
+                                    <p style="margin: 0;">Fecha de inicio: '.$fechasInicio[$cont].'</p>
+                                    <p style="margin: 0;">Fecha de fin: '.$fechasFin[$cont].'</p>
                                     <input type="hidden" id="votacionId" name="votacionId" value="'.$votation.'">
                                 </div>
                                 <div>

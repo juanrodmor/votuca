@@ -23,7 +23,7 @@ class Secretario extends CI_Controller{
   public function index($mensaje = ''){
     // SEGURIDAD DEL QR
     $verified = $this->session->userdata('verified');
-    if(isset($verified) && $verified == 'true')
+    if(isset($verified) && $verified == true)
     {
       // Seguridad Básica URL
       switch ($this->session->userdata('rol')) {
@@ -34,7 +34,6 @@ class Secretario extends CI_Controller{
           redirect('/Elector_controller');
           break;
          case 'Secretario':
-
          $this->load->view('elementos/headerSecretario');
          // VOTACIONES QUE NO ESTÁN ELIMINADAS
          $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
@@ -142,6 +141,7 @@ class Secretario extends CI_Controller{
   {
     $idTipo = $this->input->post('Id_TipoVotacion');
     $tipo = $this->votaciones_model->getNombreTipo($idTipo);
+    // VALIDACIÓN
     if($this->input->post('submit_reg')) // Si se ha pulsado el botón enviar
     {
       if($this->input->post('soloAsistentes') != NULL
@@ -526,7 +526,7 @@ class Secretario extends CI_Controller{
           'pulsadoAsistentes' => $soloAsistentes,
           'censos' => $nombreCensos,
           'asistentes' => $nombresUsuarios,
-          'mensaje' => 'Seleccione abajo el censo asistente',
+          'mensaje' => 'Seleccione abajo un censo asistente',
           'tipoVotacion' => $idTipo
       );
       $this->llamarVistasCrear($tipo,$datos);
@@ -788,6 +788,10 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('descripcion','Descripcion','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','required');
       $this->form_validation->set_rules('final','Fecha Final','required');
+      /*$this->form_validation->set_rules('ponderacionPAS','Ponderaciones PAS','required');
+      $this->form_validation->set_rules('ponderacionAumnos','Ponderaciones Alumnos','required');
+      $this->form_validation->set_rules('ponderacionProfesores','Ponderaciones Profesores','required');
+      */
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
@@ -961,6 +965,11 @@ class Secretario extends CI_Controller{
       $cambiarOpciones = false;
       if($votacion->NumOpciones > 1){$cambiarOpciones = true;}
 
+      $cambiarPonderaciones = false;
+      if($votacion->Id_TipoVotacion == 3 || $votacion->Id_TipoVotacion == 4
+         || $votacion->Id_TipoVotacion == 6)
+      {$cambiarPonderaciones = true;}
+
       // SACAR ASISTENTES SI LA VOTACIÓN TIENE CENSO ASISTENTE
       $idsAsistentes = array();
       $asistentesNombre = array();
@@ -989,7 +998,12 @@ class Secretario extends CI_Controller{
         foreach($idsVotos as $id)
         $nombresVotos[] = $this->voto_model->getNombreFromIdVoto($id->Id_Voto);
       }
-      echo var_dump($nombresVotos);
+
+      // SACAR PONDERACIONES DE UNA VOTACION
+      $pondPAS = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,1);
+      $pondAlumnos = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,2);
+      $pondProfesores = $this->votaciones_model->getPonderacionesFromGrupo($votacion->Id,3);
+
       $datos = array(
         'censos' => $nombreCensos,
         'votaciones' => $votacion,
@@ -998,13 +1012,16 @@ class Secretario extends CI_Controller{
         'pulsadoModificar' => $esModificable,
         'pulsadoRecuento' => $recuentoParalelo,
         'cambiarOpciones' => $cambiarOpciones,
+        'cambiarPonderaciones' => $cambiarPonderaciones,
+        'pondPAS' => $pondPAS,
+        'pondAlumnos' => $pondAlumnos,
+        'pondProfesores' => $pondProfesores,
         'asistentes' => $asistentes,
         'idsAsistentes' => $idsAsistentes,
         'nombresVotos' => $nombresVotos,
         'ultimoPaso' => false,
       );
       // SACAR TIPO DE VOTACION
-      $tipoVotacion = $votacion->Id_TipoVotacion;
       $this->load->view('secretario/modificarVotacion_view', $datos);
 
 	}
@@ -1012,9 +1029,9 @@ class Secretario extends CI_Controller{
   public function updateVotacion()
 	{
     if($this->input->post('boton_borrador'))
-    $this->actualizarVotacionFromBoton('boton_borrador',false);
+    $this->actualizarVotacionFromBoton('boton_borrador',true);
     if($this->input->post('boton_publicar'))
-    $this->actualizarVotacionFromBoton('boton_publicar',true);
+    $this->actualizarVotacionFromBoton('boton_publicar',false);
   }
 
   private function actualizarVotacionFromBoton($boton,$publicar)
@@ -1031,6 +1048,15 @@ class Secretario extends CI_Controller{
           $datos = $this->actualizarVotacionDatos($publicar);
           $idTipo = $_POST['Id_TipoVotacion'];
           $censosVotacion = $this->censo_model->getCensosfromVotacion($idVotacion);
+
+          // ACTUALIZAR PONDERACIONES
+          if(isset($_POST['ponderacionPAS']) && isset($_POST['ponderacionAlumnos']) && ($_POST['ponderacionProfesores']))
+          {
+            $pondPas = $_POST['ponderacionPAS'];
+            $pondAlum = $_POST['ponderacionAlumnos'];
+            $pondProfesores = $_POST['ponderacionProfesores'];
+            $this->votaciones_model->updatePonderaciones($idVotacion,$pondPas,$pondAlum,$pondProfesores);
+          }
 
           // JUEGO DE ASISTENTES
           $finalizado = false;
@@ -1066,6 +1092,7 @@ class Secretario extends CI_Controller{
             if(isset($_POST['censo']) && !isset($_POST['asistentes']))
              $this->actualizarAsistentes($idVotacion,$_POST['censo'],'llamarNuevos');
 
+            $finalizado = true;
           }
 
           // 4. PULSADO SOLO ASISTENTES Y LA VOTACION TENIA ASISTENTES
@@ -1287,11 +1314,6 @@ class Secretario extends CI_Controller{
 
   private function mostrarErrores($misDatos)
   {
-    if($this->session->userdata('rol') == 'Secretario')
-    {$this->load->view('elementos/headerSecretario');}
-    if($this->session->userdata('rol') == 'SecretarioDelegado')
-    {$this->load->view('elementos/headerDelegado');}
-
     $totales = $this->censo_model->getUsuariosfromVotacion($misDatos['id']);
     $idsTotales = array();
     foreach($totales as $usuario)
@@ -1941,7 +1963,7 @@ class Secretario extends CI_Controller{
     $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
 
     $inicio['inicio'] = 'secretario/delegado';
-    $this->load->view('elementos/headerComun',$inicio);
+    $this->load->view('elementos/headerDelegado',$inicio);
     $votaciones = array();
     foreach($encontradas as $votacion){
     $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
@@ -1951,8 +1973,7 @@ class Secretario extends CI_Controller{
         'mensaje' => $mensaje
       );
     $this->load->view('secretario/delegado_view',$datos);
-    $this->load->view('elementos/footer');
-
+    
   }
 
   /*******************************************/
@@ -2038,9 +2059,16 @@ class Secretario extends CI_Controller{
         else{return TRUE;}
       }
     }
+    else
+    {
 
-
-
+      if($elegidos == NULL || sizeof($elegidos) < 1)
+      {
+        $this->form_validation->set_message('validarFicherosCenso','Introduzca al menos un fichero de censo');
+        return FALSE;
+      }
+      else{return TRUE;}
+    }
   }
 
   public function validarAsistentes(){

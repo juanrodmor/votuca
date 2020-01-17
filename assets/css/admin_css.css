@@ -52,7 +52,7 @@ div > a:hover
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
     font-weight: inherit;
-    line-height: 1.1;
+    btne-height: 1.1;
     color: white;
 }
 
@@ -157,4 +157,57 @@ body {
     border-radius: 0;
     line-height: 1;
     border: 1px solid transparent;
+}
+
+#trHeader
+{
+    background-color: #306056;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+#resultTable
+{
+    width: 100%;
+    margin-bottom: 4%;
+}
+
+#trBody
+{
+    text-align: center;
+}
+
+#thBodyOption
+{
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    border-top: 1px solid gray;
+    font-weight: 400;
+}
+
+#thHeaderOption
+{
+    font-weight: 400;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+}
+
+.btn-custom-for-options
+{
+    margin-left: 80%;
+	margin-top: -5%;
+    color: #fff;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+#card-options
+{
+	margin-top: 5%;
 }

@@ -22,9 +22,8 @@ class MesaElectoral extends CI_Controller{
   public function index($votos = array())
   {
   $verified = $this->session->userdata('verified');
-  if(isset($verified) && $verified == 'true')
+  if(isset($verified) && $verified == true)
   {
-
       switch ($this->session->userdata('rol')) {
          case 'Administrador':
   		redirect('/Administrador_controller');
@@ -39,7 +38,11 @@ class MesaElectoral extends CI_Controller{
           $inicio['inicio'] = '/MesaElectoral';
           $votaciones = $this->obtenerVotaciones();
   		$data = array_merge(array('votaciones'=> $votaciones), $votos);
-            $this->load->view('MesaElectoral/MesaElectoral_view',$data);
+            
+			if(isset($data['votacion']))
+				$this->load->view('MesaElectoral/MesaElectoral_enVotacion_view', $data);	
+			else
+				$this->load->view('MesaElectoral/MesaElectoral_view',$data);
             //$this->load->view('elementos/footer');
           break;
 
