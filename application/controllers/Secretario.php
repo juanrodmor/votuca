@@ -1966,18 +1966,9 @@ class Secretario extends CI_Controller{
           redirect('/Elector_controller');
           break;
          case 'Secretario':
-         $this->load->view('elementos/headerSecretario');
-         // VOTACIONES QUE NO ESTÁN ELIMINADAS
-         $votaciones['votaciones'] = $this->votaciones_model->recuperarVotaciones();
-         $datos = array(
-           'votaciones'=> $votaciones,
-           'mensaje' => $mensaje
-         );
-         //$this->load->view('datetime');
-         $this->load->view('secretario/secretario_view',$datos);
-         //$this->load->view('elementos/footer');
+          redirect('/Secretario');
           break;
-         case 'Secretario delegado':
+         case 'SecretarioDelegado':
          $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
          $idSecretario = $consulta[0]->Id;
          $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
