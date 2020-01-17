@@ -11,7 +11,7 @@
   <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>/assets/css/behaviour/secretario.css" rel="stylesheet">
-  
+
 </head>
 <body>
 <div class="container">
@@ -21,8 +21,8 @@
       <?php endif; ?>
   </div>
   <!-- FORMULARIO DE VOTACION -->
-  <div class = "containerTabla">
-    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+  <!--<div class = "containerTabla">-->
+    <!--<div class="table-wrapper-scroll-y my-custom-scrollbar">-->
     <table class="display table table-striped" id="tabla_secretario">
        <thead>
          <tr>
@@ -136,8 +136,8 @@
      <?php }?>
      </tbody>
     </table>
-  </div>
-  </div>
+  <!--</div>-->
+  <!--</div>-->
   <br><br><br>
 
     <!-- Bootstrap core JavaScript
