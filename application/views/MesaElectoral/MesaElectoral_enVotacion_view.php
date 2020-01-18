@@ -144,7 +144,7 @@
 
         <div id="actionButtons">
           <form action="<?php echo base_url() . '/MesaElectoral/finalizaVotacion' ?>" method="post">
-            <input type="hidden" value="" name="idVotacion">
+            <input type="hidden" value="<?php echo $votacion ?>" name="idVotacion">
             <div class="form-group row">
               <div><input type="submit" class="btn-validate form-control" name="boton_finalizar" value="Validar votación"></div>
             </div>
