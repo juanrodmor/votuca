@@ -11,7 +11,7 @@ Requísitos de la aplicación
 2. Descargar el proyecto e introducirlo dentro de xampp
 3. Importar la base de datos en nuestro gestor de base de datos(phpMyAdmin).
 
-Una copia de la base de datos se puede encontrar en este repositorio con nombr votuca.sql
+Una copia de la base de datos se puede encontrar en este repositorio con nombre votuca.sql
 
 *******************
 Instalación
