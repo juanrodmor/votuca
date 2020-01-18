@@ -644,22 +644,10 @@ class Secretario extends CI_Controller{
           ';
         }
 
-        //echo var_dump($existe);
-
       }
-      //echo var_dump($miembroNuevo);
-      $result = $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
-      /*$data = array('mensaje_success' => 'Se ha enviado la notificacion de miembro electoral al usuario ' . $miembroNuevo[0]->NombreUsuario . '.');
+      return $this->mailing->sendEmail($miembroNuevo[0]->NombreUsuario, $asunto, $mensaje);
 
-      if($result == 'success')
-      {
-        $data['mensaje_success'] .= ' Dicho usuario ha sido notificado por correo.';
-      }
-      else
-      {$data['mensaje_failure'] = 'La notificación por correo ha fallado.';}*/
-      return $result;
     }
-
     private function extraerIdsFicheros($nombreCensos)
     {
       $idCensos = array();
@@ -2103,31 +2091,6 @@ class Secretario extends CI_Controller{
     $elegidos = array_rand($usuariosDisponibles,3);
     return $elegidos;
   }
-
-  /*public function enviarCorreo($elegido,$idVotacion,$titulo,$contenido){
-    $config = array(
-      'protocol' => 'smtp',
-      'smtp_host' => 'ssl://smtp.googlemail.com',
-      'smtp_port' => 465,
-      'smtp_user' => 'votvotuca@gmail.com',
-      'smtp_pass' => 'cadizvotuca19',
-      'mailtype' => 'html',
-      'charset' => 'utf-8',
-      'wordwrap' => TRUE
-
-    );
-
-    $this->email->initialize($config);
-    $this->email->from('votvotuca@gmail.com', 'votuca');
-    $this->email->to($elegido[0]->Email);
-    $this->email->subject($titulo);
-    $this->email->message($contenido);
-
-    $this->email->set_newline("\r\n");
-    if($this->email->send()){
-    }else{echo $this->email->print_debugger();}
-  }*/
-
 
 }
 
