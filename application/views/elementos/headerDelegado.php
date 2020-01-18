@@ -1,4 +1,5 @@
 <div id="header">
+  <meta name="viewport" content="width=1200px, initial-scale=1.0" />
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       	<a class="navbar-brand" href="<?= base_url().'secretario/delegado/'?>">
         	<img id="logo-btn" src="<?php echo base_url('assets/img/logo_menus.png')?>" style="height:5em;" alt="">

@@ -1,4 +1,5 @@
 <header>
+  <meta name="viewport" content="width=1200px, initial-scale=1.0" />
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand">
           <img src="<?php echo base_url('assets/img/logo_menus.png')?>" class="imagenMenu" alt="">

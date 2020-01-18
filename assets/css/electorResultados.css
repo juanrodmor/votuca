@@ -1,0 +1,282 @@
+#title-container
+{
+    background-color: #7c9024;
+    padding: 2%;
+    padding-bottom: 0.8%;
+    position: relative;
+    margin-top: -3%;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.divider
+{
+    width: 100%;
+    border-color: white !important;
+    margin-bottom: 0.9%;
+    margin-top: 0;
+}
+
+.marked
+{
+    background-color: #3d2d3b;
+}
+
+.unmarked:hover
+{
+    background-color: #4f3a4c;
+}
+
+.container
+{
+    margin-left: 8%;
+   margin-right: 8%;
+   padding-right: 5%;
+   margin-top: 3%;
+}
+
+div > a
+{
+    margin-top: -2%;
+    margin-left: -1%;
+    padding: 2%;
+    color: white;
+}
+
+div > a:hover
+{
+    color:white;
+    text-decoration: none;
+}
+
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: 1.1;
+    color: white;
+}
+
+#title-porcentaje
+{
+	color: white;
+}
+
+.h3, .h4, .h5, h3, h4, h5
+{
+	color: #3c3c3b !important;
+}
+
+body {
+    position: relative !important;
+    background-color: #ffffff !important;
+    font-size: 16px !important;
+    font-family: 'Lato', Arial, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+    color: #808080 !important;
+    -webkit-font-smoothing: antialiased !important;
+    background-size: 50% !important;
+}
+
+#cerrar-ses
+{
+    margin-top: 1%;
+}
+
+#monitoring_search
+{
+    margin-top: 4%;
+    margin-right: 5%;
+}
+
+#options_dropdown
+{
+    padding: 2%;
+}
+
+#dropdownMenuButton
+{
+    background-color: #306056;
+}
+
+#header > nav
+{
+    padding-top: 10px;
+    padding-bottom:30px;
+}
+
+#header > nav > a
+{
+    padding-left:7%;
+}
+
+#header > nav > span
+{
+    color:white;
+    position:absolute;
+    right:8%;
+    cursor:pointer;
+}
+
+#card_monitoringView
+{
+    margin-top: 2%;
+    margin-right: 20%;
+}
+
+.bold
+{
+    font-weight: bold;
+}
+
+#search_form
+{
+    margin-top: 2%;
+}
+
+#input-search
+{
+    width: 300px;
+    border-radius: 20px;
+}
+
+#button-search
+{
+    display: block;
+    color: #fff;
+    margin-left: 5%;
+    background-color: #306056;
+    border-color: #306056;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+#data-div
+{
+    margin-right: 10%;
+}
+
+.btn-custom
+{
+    display: block;
+    margin-left: 50%;
+    color: #fff;
+    background-color: #62485e;
+    border-color: #62485e;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+.btn-custom:enabled:hover
+{
+    color: white;
+}
+
+.btn-custom:disabled:hover
+{
+    color: white;
+}
+
+#single-option
+{
+    padding: 3%;
+}
+
+#btn-div
+{
+    margin-left: 60%;
+    margin-top: -5%;
+    padding-bottom: 2%;
+}
+
+#votacionName
+{
+    font-weight: bold;   
+    border-bottom: 1px solid #7c9024;
+}
+
+.votacionH3
+{
+    border-bottom: 5px solid #7c9024;
+}
+
+#votacionDesc
+{
+    margin-top: 1%;
+    margin-bottom: 4%;
+}
+
+#resultTable
+{
+    width: 100%;
+    margin-bottom: 4%;
+}
+
+#trHeader
+{
+    background-color: #7c9024;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+#trBody
+{
+    text-align: center;
+}
+
+#thBodyOption
+{
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    border-top: 1px solid gray;
+    font-weight: 400;
+}
+
+#thHeaderOption
+{
+    font-weight: 400;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+}
+
+.btn-error
+{
+    display: block;
+    color: #fff;
+    background-color: #d43f3a;
+    border-color: #d43f3a;
+
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+.btn-validate
+{
+    display: block;
+    color: #fff;
+    background-color: #62485e;
+    border-color: #62485e;
+    text-decoration: none;
+    padding: 6px 20px;
+    font-size: inherit;
+    border-radius: 0;
+    line-height: 1;
+    border: 1px solid transparent;   
+}
+
+#actionButtons
+{
+    float: right;
+}

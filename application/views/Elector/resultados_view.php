@@ -1,79 +1,84 @@
 <!doctype html>
 <html lang="en">
 
+<head>
+
   <link href="<?php echo base_url(); ?>assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>assets/css/prueba.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>assets/css/circle.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>assets/css/mesaElectoral.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>assets/css/behaviour/footer.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/css/electorResultados.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
-  <body>
+</head>
 
-<br><br><br><br>
+<body style="margin-bottom: 7%;">
+
   <div class="container">
-    
-    <div style="overflow: inherit;z-index:200;margin-top:11%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="display table" id="votaciones_usuario" >
-       <thead>
-         <tr>
-            <th style="border:0px;background-color:#7C9024;color:white;align:left;"><h2 style="padding-left:2%;">Elector</h2></th>
-            <th style="border:0px;background-color:#7C9024;color:white;align:left;"></th>
-         </tr>
-         <tr style="margin-top:-1%;">
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:0%;"><a href="<?= base_url().'Elector_controller/index/'?>" style="text-decoration:none;color:white;">Votaciones</a></h4></td>
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"></td>
-         </tr>
-       </thead>
-    </table>
-    </div>
-    <div class = "container" style="position:absolute;margin-top:11%;">
-      <h2 style="color:black;"><?php echo 'Resultados '.$titulo; ?> </h2>
 
-      <div id="graphic-info">
-      <h2 id="title-porcentaje" style="color:black;margin-left:2%">Participación</h2>
-      </div>
-        <div id="vote-info">
-            <div class="c100 p<?php echo (100-($datos[0]->Num_Votos*100)/$censo) ?> big center" style="float:left;color:black;margin-top:2%;">
-                <span><?php echo (100-($datos[0]->Num_Votos*100)/$censo).'%'; ?></span>
-                <div class="slice">
-                  <div class="bar"></div>
-                    <div class="fill"></div>
-                </div>
+      <div id="infoVotacion" style="margin-top:5%;">
+          <h3 id=votacionName><span class="votacionH3"><?php echo $titulo ?></span></h3>
+          <div id="votacionDesc"><p><?php echo $descripcion ?></p></div>
+
+          <h4 style="color:black;"><span>Resultados</span></h2>
+
+          <table id="resultTable">
+              <tr id="trHeader">
+                <th id="thHeaderOption">Votos</th>
+                <?php
+                  foreach ($grupos as $group)
+                  {
+                    echo '<th id="thHeaderOption">'.$group.'</th>';
+                  }
+                ?>
+          <th id="thHeaderOption">Total</th>
+              </tr>
+              
+                <?php
+          global $votosLocal;
+                $votosLocal = array();
+                  foreach($opciones as $option)
+                  {
+                    echo '<tr id="trBody"><th id="thBodyOption">'.$option.'</th>';
+            $totalIndividual = 0;
+                    foreach($grupos as $group)
+                    {
+                     // $votosLocal[$group] += $matrizVotos[$option][$group];
+                      echo '<th id="thBodyOption">'.$matrizVotos[$option][$group].'</th>';
+            $totalIndividual += $matrizVotos[$option][$group];
+                    }
+            echo '<th id="thBodyOption">'.$totalIndividual.'</th>';
+                    echo '</tr>';
+                  }
+                ?>                        
+          </table>
+
+          <div id="textInfo">
+            <!--<?php global $votosLocal; print_r($votosLocal); ?>-->
+            <p style="font-weight: bold;">Número total de electores: <?php echo $censo ?></p>
+            <div class="row">
+              <p class="col-sm-4">Participación: <?php echo round((($censo-$abstenciones)/$censo*100), 1) ?>%</p>
+        <?php $subtotal = 0;
+        foreach($opciones as $option) {
+          $subtotal += $matrizVotos[$option]['PAS'];
+        }
+        echo '<p class="col-sm-4">Total votos PAS: '.$subtotal.'</p>'?>
             </div>
-          <div id="vote-card" class="row">
-              <div class="card" style="margin-left:5%;margin-top:3%;">
-                <div class="card-header" style="color:black;">
-                  Número de votos
-                </div>
-                <div class="card-body">
-                  <h3 class="card-text" style="color:black;"><center><?php echo $total; ?></center></h3>
-                </div>
-              </div>   
-              <div class="card" style="margin-left:5%;margin-top:3%;">
-                <div class="card-header" style="color:black;">
-                  Tamaño del censo
-                </div>
-                <div class="card-body">
-                  <h3 class="card-text" style="color:black;"><center><?php echo $censo; ?></center></h3>
-                </div>
-              </div>  
-              <div class="card" style="margin-left:5%;margin-top:3%;">
-                <div class="card-header" style="color:black;">
-                  <center>
-                    Resultados
-                  </center>
-                </div>
-                <div class="card-body" style="color:black;">
-                  <?php 
-                  for($i=0; $i<sizeof($datos); ++$i) {
-                    echo '<h5 class="card-text" style="color:black;">'.$nomVotos[$i].': '.$datos[$i]->Num_Votos.'</h5>';
-                  } ?>
-                </div>
-              </div>    
+            <div class="row">
+              <p class="col-sm-4">Abstención: <?php echo $abstenciones ?></p>
+        <?php $subtotal = 0;
+        foreach($opciones as $option) {
+          $subtotal += $matrizVotos[$option]['Alumnos'];
+        }
+        echo '<p class="col-sm-4">Total votos Alumnos: '.$subtotal.'</p>'?>
+            </div>
+            <div class="row">
+              <p class="col-sm-4">Quorum: <?php echo ($quorum*100).'%' ?> </p>
+        <?php $subtotal = 0;
+        foreach($opciones as $option) {
+          $subtotal += $matrizVotos[$option]['Profesores'];
+        }
+        echo '<p class="col-sm-4">Total votos Profesores: '.$subtotal.'</p>'?>
+            </div>
           </div>
-        </div>
-    </div>
+      </div>
   </div>
 
 </body>
