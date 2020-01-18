@@ -788,10 +788,6 @@ class Secretario extends CI_Controller{
       $this->form_validation->set_rules('descripcion','Descripcion','required');
       $this->form_validation->set_rules('inicio','Fecha Inicio','required');
       $this->form_validation->set_rules('final','Fecha Final','required');
-      /*$this->form_validation->set_rules('ponderacionPAS','Ponderaciones PAS','required');
-      $this->form_validation->set_rules('ponderacionAumnos','Ponderaciones Alumnos','required');
-      $this->form_validation->set_rules('ponderacionProfesores','Ponderaciones Profesores','required');
-      */
       $this->form_validation->set_rules('inicio','Fecha Inicio','callback_validarFechaInicio');
       $this->form_validation->set_rules('final','Fecha Final','callback_validarFechaFinal');
       $this->form_validation->set_rules('opciones',"Opciones",'callback_validarOpciones');
@@ -852,14 +848,11 @@ class Secretario extends CI_Controller{
       $numeroUsuarios = 0;
       // EXTRAER OPCIONES
       $opciones = $this->voto_model->getVotosFromVotacion($idVotacion);
-      //$opciones[] = 1;
-      //echo var_dump($opciones).'<br>';
 
       // Contar usuarios por grupo
       $alumnos = 0;
       $profesores = 0;
       $pas = 0;
-
 
       $hasAsistentes = $this->votaciones_model->hasSoloAsistentes($idVotacion);
       if($hasAsistentes[0]->soloAsistentes == 0) // NO TIENE ASISTENTES
@@ -1957,23 +1950,47 @@ class Secretario extends CI_Controller{
   /********* SECRETARIO DELEGADO *************/
   /*******************************************/
 
-  public function delegado($mensaje = ''){
-    $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
-    $idSecretario = $consulta[0]->Id;
-    $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
 
-    $inicio['inicio'] = 'secretario/delegado';
-    $this->load->view('elementos/headerDelegado',$inicio);
-    $votaciones = array();
-    foreach($encontradas as $votacion){
-    $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
+  public function delegado($mensaje = '')
+  {
+    // SEGURIDAD DEL QR
+    $verified = $this->session->userdata('verified');
+    if(isset($verified) && $verified == true)
+    {
+      // Seguridad Básica URL
+      switch ($this->session->userdata('rol')) {
+         case 'Administrador':
+         redirect('/Administrador_controller');
+          break;
+         case 'Elector':
+          redirect('/Elector_controller');
+          break;
+         case 'Secretario':
+          redirect('/Secretario');
+          break;
+         case 'SecretarioDelegado':
+         $consulta = $this->usuario_model->getIdFromUserName($_SESSION['usuario']);
+         $idSecretario = $consulta[0]->Id;
+         $encontradas = $this->SecretariosDelegados_model->getVotacionesSecretario($idSecretario);
+
+         $inicio['inicio'] = 'secretario/delegado';
+         $this->load->view('elementos/headerDelegado',$inicio);
+         $votaciones = array();
+         foreach($encontradas as $votacion){
+         $votaciones[] = $this->votaciones_model->getVotacion($votacion->Id_Votacion);
+         }
+         $datos = array(
+             'votaciones'=> $votaciones,
+             'mensaje' => $mensaje
+           );
+         $this->load->view('secretario/delegado_view',$datos);
+          break;
+         default:
+          redirect('/Login_controller');
+          break;
+      }
     }
-    $datos = array(
-        'votaciones'=> $votaciones,
-        'mensaje' => $mensaje
-      );
-    $this->load->view('secretario/delegado_view',$datos);
-    
+    else{redirect('/Login_controller');}
   }
 
   /*******************************************/
