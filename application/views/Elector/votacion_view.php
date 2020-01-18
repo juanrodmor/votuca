@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-  <body style="overflow:hidden;">
+  <body>
   <div class="container">
     <?php
       if($mensaje == "correcto"){ //mensaje de exito al votar
@@ -38,16 +38,12 @@
         echo '</div>';
       }
     ?>
-    <div style="overflow: inherit;z-index:200;margin-top:11%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+    <div style="overflow:inherit;z-index:200;margin-top:5%;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="display table" id="votaciones_usuario" >
        <thead>
-         <tr>
-            <th style="border:0px;background-color:#7C9024;color:white;align:left;"><h2 style="padding-left:2%;">Elector</h2></th>
-            <th style="border:0px;background-color:#7C9024;color:white;align:left;"></th>
-         </tr>
          <tr style="margin-top:-1%;">
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:0%;">Votaciones</h4></td>
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"></td>
+            <td></td>
+            <td></td>
          </tr>
        </thead>
       <tbody>
@@ -57,7 +53,7 @@
         else {
           foreach($datos as $objeto) { ?>
             <tr align="center">
-              <?php echo "<td scope=row><h5 style='float:left;'><b>".$objeto->Titulo."</b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
+              <?php echo "<td scope=row><h5 style='float:left;color:black;'><b>".$objeto->Titulo."</b></h5><br><br><span style='float:left;'>fecha de inicio: ".$objeto->FechaInicio."</span><br><span style='float:left;'>fecha de finalización: ".$objeto->FechaFinal."</span></td>";?>
 
         <?php
           if($objeto->FechaInicio <= date('Y-m-d H:i:s') AND $objeto->FechaFinal >= date('Y-m-d H:i:s')) {
@@ -129,6 +125,7 @@
 
   </div>
 </div>
+<br><br>
 
 
     <!-- Bootstrap core JavaScript

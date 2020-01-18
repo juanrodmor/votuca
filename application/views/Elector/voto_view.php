@@ -20,22 +20,14 @@
   }
 </script>
 
-  <body style="overflow:hidden;">
+  <body>
   <div class="container">
-  <div style="overflow: inherit;z-index:200;margin-top:11%;position:fixed;width:81%;height:54%;top: -4%;" class="table-wrapper-scroll-y my-custom-scrollbar">
+  <div style="z-index:200;margin-top:4%;height:auto;" class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="table" id="voto_usuario" >
-       <thead>
-         <tr>
-            <th style="border:0px;background-color:#7C9024;color:white;align:left;"><h2 style="padding-left:2%;">Elector</h2></th>
-         </tr>
-         <tr style="">
-            <td style="background-color:#7C9024;color:white;align:left;padding:0%;height:38px;widht:auto;"><h4 style="cursor:pointer;background-color:#425002;padding-left:2%;height: 38px;width: 160px;margin-bottom:0px;margin-left:0%;"><a href="<?= base_url().'Elector_controller/index/'?>" style="text-decoration:none;color:white;">Votaciones</a></h4></td>
-         </tr>
-       </thead>
       <tbody>
         <tr>
-          <th>
-            <?php echo "<h2 style='padding-left:5%;'>".$titulo."</h2>";?>
+          <th style="border-style:none;">
+            <?php echo "<h3 style='padding-left:3%;color:black;font-weight:bold;'>".$titulo."</h3>";?>
           </th>
         </tr>
         <!-- <hr style="width: 50%;color: red;z-index: 200;float: left;background-color: #7C9024;position: relative;top: 56%;border-top-width: 3px;"> -->
@@ -51,7 +43,7 @@
         </tr>
         <tr>
           <td style="border-style:none;">
-            <?php echo "<h4 style='padding-left:2%;'> Información: </h4>";?>
+            <?php echo "<h4 style='padding-left:2%;color:black;'> Información: </h4>";?>
           </td>
         </tr>
 

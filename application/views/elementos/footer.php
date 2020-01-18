@@ -1,5 +1,5 @@
 <br>
-<footer class="footer">
+<footer class="footer" style="position:relative;">
   <div class="container">
       <div class="row">
         <div class="col-sm-3">

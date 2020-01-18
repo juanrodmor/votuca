@@ -73,6 +73,15 @@
 
 							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
+
+							// Decrementar numero TOTAL de abstenidos
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => '4', 'Id_voto' => '1'));
+
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '4' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
 						}
 						else {
 							// Decrementar el numero de abstenidos de recuento del grupo nuevo (si se ha cambiado de grupo al votar)
@@ -179,6 +188,15 @@
 							$numVotos--;
 
 							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '".$id_grupo."' AND Id_Voto = '1';";
+							$query = $this -> db -> query($sql);
+
+							// Decrementar numero TOTAL de abstenidos
+							$sql = $this->db->get_where('recuento', array('Id_Votacion' => $id_votacion, 'Id_Grupo' => '4', 'Id_voto' => '1'));
+
+							$numVotos = $sql->row()->Num_Votos;
+							$numVotos--;
+
+							$sql = "update recuento set Num_Votos = '".$numVotos."' where Id_Votacion = '".$id_votacion."' AND Id_Grupo = '4' AND Id_Voto = '1';";
 							$query = $this -> db -> query($sql);
 						}
 						else {
