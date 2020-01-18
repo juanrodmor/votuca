@@ -1,26 +1,21 @@
 ###################
-What is CodeIgniter
+Votuca
 ###################
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
+Votuca es una aplicación web cuyo cometido consiste en facilitar las realización y gestión de los procesos electorales de la Universidad de Cádiz. 
 
 *******************
-Release Information
+Cómo instalar
 *******************
-
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
+1. Instalar Xampp para poder ejecutar la web de forma local
+2. Descargar el proyecto e introducirlo dentro de xampp
+3. Importar la base de datos en nuestro gestor de la base de datos
 
 **************************
-Changelog and New Features
+Instalación Xampp
 **************************
+1. Dirígase a la web de xampp haciendo uso del navegador web. Debe seleccionarse una versión de xampp 7.4.1 que tenga una versión de PHP 7.2.23 o superior. <https://www.apachefriends.org/download.html>
+
 
 You can find a list of all changes for each release in the `user
 guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
