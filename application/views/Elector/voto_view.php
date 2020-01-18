@@ -27,7 +27,7 @@
       <tbody>
         <tr>
           <th style="border-style:none;">
-            <?php echo "<h3 style='padding-left:3%;color:black;font-weight:bold;'>".$titulo."</h3>";?>
+            <?php echo "<h3 style='border-bottom: 1px solid #7c9024;font-weight: bold;'> <span style='border-bottom: 5px solid #7c9024;'> ".$titulo." </span></h3>";?>
           </th>
         </tr>
         <!-- <hr style="width: 50%;color: red;z-index: 200;float: left;background-color: #7C9024;position: relative;top: 56%;border-top-width: 3px;"> -->
