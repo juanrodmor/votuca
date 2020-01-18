@@ -51,7 +51,7 @@
 
         if(!isset($bloqueados) || count($bloqueados) == 0)
         {
-            echo '<div class="alert alert-danger alert-dismissible" role="alert" id="error_alert">No hay usuarios bloqueados en el sistema. </div>';
+            echo '<div class="alert alert-info alert-dismissible" role="alert" id="error_alert">No hay usuarios bloqueados en el sistema. </div>';
         }
         else
         {

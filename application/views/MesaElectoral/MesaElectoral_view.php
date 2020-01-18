@@ -11,7 +11,7 @@
     <link href="<?php echo base_url(); ?>/assets/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/behaviour/footer.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>/assets/css/prueba.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>/assets/css/MesaElectoral.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/assets/css/mesaElectoral.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/behaviour/footer.css" rel="stylesheet">
 
   </head>
