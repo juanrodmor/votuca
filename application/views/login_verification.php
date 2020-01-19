@@ -60,7 +60,7 @@
                 <form id="login-form" class="form-horizontal" action="<?php echo base_url() . 'login_controller/pass_auth';?>" method="post">
                     <div class="input-group mb-3" id="input-key">
                         <label id="labelUser" for="username" class="col-xs-5 col-form-label text-right">Clave</label>
-                        <input name="key" type="text" class="form-control col-sm-5 col-xs-7" id="u" placeholder="Clave">
+                        <input name="key" autocomplete="off" type="text" class="form-control col-sm-5 col-xs-7" id="u" placeholder="Clave">
                     </div>
                     <input id="button-form" class="btn btn-primary" type="submit" name="enviar" value="Enviar" >
                 </form>
